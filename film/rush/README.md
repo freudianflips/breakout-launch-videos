@@ -6,12 +6,21 @@ The hook (0 to 3.4 s): "Someone / is on your / pricing page. / Right now." with 
 
 Its own palette (black, white, acid yellow, hot pink, electric blue), Anton slams, the white Breakout logo throughout, and real product screens from `film/assets/screens/` (customer data blurred).
 
+## Stories
+
+| Story | File | Opener | Renders |
+|---|---|---|---|
+| who | `film.json` | "Someone / is on your / pricing page. / Right now." then "Who?" | `rush-wide.mp4`, `rush-feed.mp4` |
+| headcount | `film-headcount.json` | "Stop / hiring / SDRs." then "Your buyers / are already / on your site. / Nobody / answers." | `rush-headcount-wide.mp4`, `rush-headcount-feed.mp4` |
+
+The headcount body is Breakout's own copy: "Inbound is the future.", "Watch signals, not lists.", "Attention is earned, not interrupted.", the features (engages, qualifies, books, follows up), "Speed-to-lead beats bloated headcount." (from "Speed-to-lead and orchestration beat bloated headcount.") and "Always on." Neither story states a number, customer or result from customer data.
+
 | File | What it is |
 |---|---|
 | `film.json` | Every shot on the beat grid: ground, words, screen crops, chips, the logo hits and flicks. An item's `wide` or `feed` block overrides its layout in that format; `"hide": true` drops it there |
 | `template.html` | The look and the motion. Every frame is a pure function of t |
 | `build.py` | `build.py wide` or `build.py feed` writes `index-<format>.html` (and `index.html` for snapshots) and copies fonts, logos, screens and GSAP into `assets/` |
 | `sound.py` | `sound.py <format>`: a free, seeded 140 BPM track and a snappy SFX stem from the shots, then the -14 LUFS master and the mux |
-| `render.sh` | All of it, to `renders/rush-wide.mp4` and `renders/rush-feed.mp4` (`render.sh wide` for 1) |
+| `render.sh` | All of it, to `renders/rush-wide.mp4` and `renders/rush-feed.mp4` (`render.sh wide` for 1; `STORY=headcount render.sh` for another story) |
 
 Words are Breakout's own lines ("Inbound SDR, powered by AI.", "Every visitor.", "700+ signals", "In real time.", "Signal in. Meeting out.", "Pageview to pipeline."), except the hook's scene-setting lines, which state no number, customer or result. Ground flips stay at or under 1 per beat (2.3 a second), under the 3-flash limit.

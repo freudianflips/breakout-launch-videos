@@ -2,7 +2,7 @@
 """Free sound for 'Rush': a synthesised 140 BPM track and a snappy SFX stem, both on the shot grid
 in film.json, then the -14 LUFS master and the mux onto renders/rush-<format>-picture.mp4.
 
-  .venv/bin/python film/rush/sound.py [wide|feed]
+  .venv/bin/python film/rush/sound.py [wide|feed] [story]
 
 Everything is seeded, so the same film.json always gives the same audio. Scratch only: swap in a
 real track before anyone judges the music.
@@ -18,14 +18,16 @@ import soundfile as sf
 HERE = os.path.dirname(os.path.abspath(__file__))
 os.chdir(HERE)
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
-F = json.load(open("film.json"))
+STORY = sys.argv[2] if len(sys.argv) > 2 else ""
+TAG = f"{STORY}-" if STORY else ""
+F = json.load(open(f"film-{STORY}.json" if STORY else "film.json"))
 SR = 48000
 BEAT = 60 / F["bpm"]
 END = F["beats"] * BEAT
 N = int((END + 1.5) * SR)
 FMT = sys.argv[1] if len(sys.argv) > 1 else "wide"
 # the markers the music follows, read from the shots
-first = lambda ty: next(s["at"] for s in F["shots"] if any(i["type"] == ty for i in s["items"]))
+first = lambda ty: next((s["at"] for s in F["shots"] if any(i["type"] == ty for i in s["items"])), None)
 DROP, BOOKED, LOCK = first("logo"), first("booked"), first("lockup")
 COUNT = first("counter")
 rng = np.random.default_rng(140)
@@ -207,7 +209,7 @@ for s in F["shots"]:
             put(sfx, chime(659.3, 2.4), t + 0.3, -14)
     if s.get("ground") and s["at"] > 0:
         put(sfx, tick(5200, 0.02), a, -20)
-for k in range(13):  # the 700+ counter rattles
+for k in range(13 if COUNT is not None else 0):  # the 700+ counter rattles
     put(sfx, tick(3000 + 60 * k, 0.03), COUNT * BEAT + k * BEAT * 1.6 / 13, -16)
 
 os.makedirs("mix", exist_ok=True)
@@ -215,16 +217,29 @@ os.makedirs("mix", exist_ok=True)
 pk = max(np.abs(music).max(), np.abs(sfx).max())
 sf.write("mix/music.wav", music * 10 ** (-12 / 20) / pk, SR)
 sf.write("mix/sfx.wav", sfx * 10 ** (-12 / 20) / pk, SR)
-video = f"renders/rush-{FMT}-picture.mp4"
+video = f"renders/rush-{TAG}{FMT}-picture.mp4"
 cfg = {"duration": round(END + 0.4, 3), "out": os.path.abspath("mix/master.wav"),
        "music": {"file": os.path.abspath("mix/music.wav"), "gain_db": -1, "start": 0.0, "offset": 0.0, "fade_out": 0.5},
-       "sfx": {"file": os.path.abspath("mix/sfx.wav"), "gain_db": -2}, "target_lufs": -14.0, "ceiling_dbtp": -2.8}
+       "sfx": {"file": os.path.abspath("mix/sfx.wav"), "gain_db": -2}, "target_lufs": -14.0}
+
+
+def true_peak(path):
+    r = subprocess.run(["ffmpeg", "-hide_banner", "-i", path, "-af", "ebur128=peak=true", "-f", "null", "-"], capture_output=True, text=True).stderr
+    return float(r[r.rfind("Peak:"):].split()[1])
+
+
+# the glitch hits and clicks peak between samples, so the sample ceiling steps down until the
+# master's true peak is at or under -1 dBTP
+for ceiling in (-2.8, -3.4, -4.0, -4.6, -5.2):
+    cfg["ceiling_dbtp"] = ceiling
+    json.dump(cfg, open("mix/mix.json", "w"), indent=1)
+    subprocess.run([sys.executable, os.path.join(REPO, "skills/launch-mix/scripts/mixdown.py"), "mix/mix.json"], check=True, capture_output=True)
+    tp = true_peak("mix/master.wav")
+    print(f"ceiling {ceiling} dB: true peak {tp} dBTP")
+    if tp <= -1.0:
+        break
 if os.path.exists(video):
-    cfg.update({"video": os.path.abspath(video), "video_out": os.path.abspath(f"renders/rush-{FMT}-full.mp4")})
-json.dump(cfg, open("mix/mix.json", "w"), indent=1)
-subprocess.run([sys.executable, os.path.join(REPO, "skills/launch-mix/scripts/mixdown.py"), "mix/mix.json"], check=True)
-if os.path.exists(video):
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"renders/rush-{FMT}-full.mp4", "-c:v", "libx264", "-preset", "slow", "-crf", "18",
-                    "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", f"renders/rush-{FMT}.mp4"], check=True)
-    os.remove(f"renders/rush-{FMT}-full.mp4")
-    print(f"master: film/rush/renders/rush-{FMT}.mp4")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", "mix/master.wav", "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-preset", "slow",
+                    "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "256k", "-shortest", "-movflags", "+faststart",
+                    f"renders/rush-{TAG}{FMT}.mp4"], check=True)
+    print(f"master: film/rush/renders/rush-{TAG}{FMT}.mp4")
