@@ -1,6 +1,6 @@
 # Storyboard: Breakout Plays
 
-**Status:** draft for the owner's review. Nothing is rendered or generated until this is approved.
+**Status:** approved by the owner on 2026-10-05; the first cut is built in `film/plays/`. Defaults taken for the open questions: the swarm concept, 16:9, engraved typographic hook (nothing paid), a free scratch bed, Frame 12 as type only (no meeting screen yet), the sequencer framed out, and "Watch signals, *not lists.*" to close.
 
 This film tells demand gen and RevOps leaders that **any signal can start a play: Breakout researches the account, finds the whole buying committee, writes the email and books the meeting.**
 

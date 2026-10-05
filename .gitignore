@@ -30,3 +30,15 @@ film/score/bed.json
 
 # local private-term list for scripts/check-template.py
 scripts/private-terms.txt
+
+# the Plays film regenerates these
+film/plays/assets/
+film/plays/compositions/
+film/plays/index.html
+film/plays/timing.json
+film/plays/renders/
+film/plays/snapshots/
+film/plays/mix/
+film/plays/sfx/
+film/plays/score/
+film/plays/review/

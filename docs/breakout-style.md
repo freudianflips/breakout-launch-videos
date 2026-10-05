@@ -31,3 +31,4 @@ The look of Breakout's launch films, decided one round at a time. Change 1 varia
 |---|---|---|---|---|
 | 2026-10-05 | 1 | attention | Awaiting the owner's verdict. Changed: logo and colours taken from the app ("break" `#1C1778`, "out" `#4E46DC`); real screens with customer data blurred, replacing round 0's placeholders | |
 | 2026-10-05 | 2 | attention | Awaiting the owner's verdict. Changed: the homepage's type system (New Kansas or Fraunces headlines, italic key words, Manrope), the hero's violet mesh on dark scenes, the site's palette, and "Pageview to *pipeline.*" on the end card | |
+| 2026-10-05 | 3 | plays (first cut) | Awaiting the owner's verdict. The Plays film from the approved storyboard: the honeybee-quorum hook on 1950s field-guide paper, a film burn into the violet liquid, real Plays screens with echo trails, serif captions with italic key words, a free psych scratch bed and analog sound effects, no narrator | |

@@ -1,0 +1,609 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <!-- Breakout Plays launch film. build.py fills the __TOKENS__ from film.json and brand.json.
+           Edit the look here, never a generated compositions/plays.html. Every frame is a pure function of t. -->
+      <style>
+        __FONTFACES__
+        [data-composition-id="plays"] {
+          --cream: #f1e6cf; --cream-hi: #f8f0de; --ink: #2a1d14; --ink2: #6b4e33;
+          --violet: #4c00ff; --indigo: #261678; --plum: #280961; --magenta: #ff4fd8; --amber: #ff9a3c; --night: #12062e;
+          --text: #fff6ea; --key: #ffd1a3;
+          --serif: __SERIF__; --sans: __SANS__;
+        }
+        #root { position: absolute; inset: 0; overflow: hidden; background: #0b0710; font-family: var(--serif); }
+        #stage { position: absolute; inset: 0; overflow: hidden; border-radius: 40px; }
+        .serif { font-family: var(--serif); font-weight: 340; letter-spacing: -0.035em; line-height: 1;
+          font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 1; }
+        .k { font-style: italic; }
+        .sans { font-family: var(--sans); font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; }
+        .w { display: inline-block; opacity: 0; will-change: transform, opacity; }
+
+        /* ---------------- the paper world (the hook) */
+        #paper { position: absolute; inset: 0; background: radial-gradient(90% 85% at 42% 40%, var(--cream-hi), var(--cream) 62%, #d6c29b 100%); }
+        #paper .halftone { position: absolute; inset: 0; background-image: radial-gradient(rgba(42, 29, 20, 0.2) 1.25px, transparent 1.6px);
+          background-size: 9px 9px; mix-blend-mode: multiply; opacity: 0.5; }
+        #paper .slug { position: absolute; top: 96px; font-size: 20px; color: var(--ink2); }
+        #paper .rule { position: absolute; left: 140px; right: 140px; top: 136px; height: 2px; background: var(--ink2); opacity: 0.45; }
+        #paper svg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+        .comb { fill: none; stroke: var(--ink); stroke-width: 1.6; opacity: 0.32; }
+        .ink { fill: none; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round; }
+        .prow { position: absolute; left: 0; right: 0; display: flex; justify-content: center; gap: 0.24em; white-space: nowrap; color: var(--ink); }
+        .prow .k { color: #5a2a14; }
+        #counter { position: absolute; right: 190px; top: 560px; width: 250px; text-align: center; font-family: var(--sans); font-weight: 600;
+          font-size: 150px; letter-spacing: 0.02em; color: var(--ink); opacity: 0; font-variant-numeric: tabular-nums; }
+        #counter small { display: block; font-size: 20px; letter-spacing: 0.22em; color: var(--ink2); margin-top: 6px; }
+        #scorch { position: absolute; inset: 0; opacity: 0; }
+        #burnrim { position: absolute; inset: 0; opacity: 0; mix-blend-mode: screen; }
+
+        /* ---------------- the liquid world (Breakout) */
+        #liquid { position: absolute; inset: 0; background: var(--night); overflow: hidden; visibility: hidden; }
+        .blob { position: absolute; left: 0; top: 0; border-radius: 50%; }
+        #swirl { position: absolute; left: -40%; top: -40%; width: 180%; height: 180%; opacity: 0.16; mix-blend-mode: soft-light;
+          background: repeating-conic-gradient(from 0deg at 50% 50%, #fff 0deg 7deg, transparent 7deg 19deg); }
+        #bands { position: absolute; left: -30%; top: -30%; width: 160%; height: 160%; opacity: 0.12; mix-blend-mode: soft-light;
+          background: repeating-radial-gradient(circle at 50% 50%, #fff 0 12px, transparent 12px 44px); }
+
+        .cap { position: absolute; left: 0; right: 0; top: 66px; height: 130px; }
+        .cap .row { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: center; gap: 0.24em; white-space: nowrap; font-size: 104px; }
+        .cap .row.e2 { color: rgba(255, 154, 60, 0.42); }
+        .cap .row.e1 { color: rgba(255, 79, 216, 0.55); }
+        .cap .row.main { color: var(--text); text-shadow: -3px 0 rgba(255, 40, 120, 0.5), 3px 0 rgba(0, 210, 255, 0.4), 0 0 26px rgba(255, 140, 90, 0.35); }
+        .cap .row.main .k { color: var(--key); }
+        .tick { position: absolute; left: 0; right: 0; top: 206px; display: flex; justify-content: center; gap: 44px; font-size: 20px; color: rgba(255, 246, 234, 0.82); }
+        .tick span { opacity: 0; }
+
+        /* the product: a fixed frame, the camera moves inside it */
+        .shot { position: absolute; left: 210px; top: 262px; width: 1500px; height: 735px; visibility: hidden; }
+        .shot .echo { position: absolute; inset: 0; border-radius: 26px; overflow: hidden; }
+        .shot .echo img { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+        .shot .echo.a { opacity: 0.42; filter: hue-rotate(70deg) saturate(2.2); }
+        .shot .echo.b { opacity: 0.32; filter: hue-rotate(-50deg) saturate(2.2); }
+        .shot .win { position: absolute; inset: 0; border-radius: 26px; overflow: hidden; background: #fff;
+          box-shadow: 0 60px 140px -50px rgba(10, 0, 30, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.25); }
+        .shot .cam { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+        .shot .cam img { position: absolute; left: 0; top: 0; display: block; }
+        .glow { position: absolute; left: 0; top: 0; width: 90px; height: 90px; margin: -45px 0 0 -45px; border-radius: 50%; opacity: 0;
+          background: radial-gradient(circle, rgba(255, 190, 120, 0.95) 0%, rgba(255, 79, 216, 0.55) 38%, transparent 70%); mix-blend-mode: multiply; }
+        .cover { position: absolute; background: rgb(240, 243, 246); }
+        #stamp { position: absolute; left: 1388px; top: 238px; padding: 14px 26px; border: 5px solid #ff4fd8; border-radius: 12px; color: #ff4fd8;
+          font-family: var(--sans); font-weight: 800; font-size: 40px; letter-spacing: 0.08em; opacity: 0; transform-origin: 50% 50%;
+          box-shadow: inset 0 0 0 2px rgba(255, 79, 216, 0.4); mix-blend-mode: screen; }
+        .pt { position: absolute; left: 0; top: 0; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; opacity: 0;
+          background: radial-gradient(circle, #fff 0%, #ffd1a3 30%, rgba(255, 79, 216, 0.6) 55%, transparent 72%); }
+        #cursor { position: absolute; left: 0; top: 0; width: 52px; height: 52px; opacity: 0; z-index: 40; }
+        #ring { position: absolute; left: 0; top: 0; width: 80px; height: 80px; margin: -40px 0 0 -40px; border-radius: 50%; border: 3px solid #ffd1a3; opacity: 0; z-index: 39; }
+        #trail { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; z-index: 38; }
+
+        .big { position: absolute; left: 0; right: 0; display: flex; justify-content: center; gap: 0.24em; white-space: nowrap; }
+        #meeting .big.main { color: var(--text); text-shadow: -4px 0 rgba(255, 40, 120, 0.5), 4px 0 rgba(0, 210, 255, 0.4), 0 0 30px rgba(255, 140, 90, 0.4); }
+        #meeting .big.main .k { color: var(--key); }
+        #meeting .big.e1 { color: rgba(255, 79, 216, 0.5); }
+        #meeting .big.e2 { color: rgba(255, 154, 60, 0.4); }
+        #meeting, #lockup, #drop { position: absolute; inset: 0; visibility: hidden; }
+        #hexes { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+        #hexes path { fill: none; stroke: rgba(255, 220, 190, 0.5); stroke-width: 2; }
+        .logo { position: absolute; left: 50%; width: auto; opacity: 0; }
+        .title { position: absolute; left: 0; right: 0; text-align: center; white-space: nowrap; opacity: 0; }
+        .title.main { color: var(--text); text-shadow: -4px 0 rgba(255, 40, 120, 0.5), 4px 0 rgba(0, 210, 255, 0.4), 0 0 34px rgba(255, 150, 90, 0.45); }
+        .title.e1 { color: rgba(255, 79, 216, 0.5); }
+        .title.e2 { color: rgba(255, 154, 60, 0.42); }
+        #lockup .line { position: absolute; left: 0; right: 0; top: 770px; display: flex; justify-content: center; gap: 0.24em; font-size: 58px; color: var(--text); white-space: nowrap; }
+        #lockup .line .k { color: var(--key); }
+        #lockup .url { position: absolute; left: 0; right: 0; top: 930px; text-align: center; font-size: 20px; color: rgba(255, 246, 234, 0.6); opacity: 0; }
+
+        /* ---------------- the analog layer, always on */
+        #leak1, #leak2 { position: absolute; border-radius: 50%; mix-blend-mode: screen; pointer-events: none; }
+        #grain { position: absolute; inset: -64px; opacity: 0.32; mix-blend-mode: overlay; pointer-events: none; background-repeat: repeat; }
+        #vig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(118% 92% at 50% 50%, transparent 56%, rgba(18, 5, 28, 0.58) 100%); }
+        #flick { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+        #gate { position: absolute; inset: 0; pointer-events: none; border-radius: 40px; box-shadow: inset 0 0 0 10px #0b0710, inset 0 0 70px 26px rgba(0, 0, 0, 0.5); }
+      </style>
+      <div id="root" data-composition-id="plays" data-width="1920" data-height="1080">
+        <div id="stage">
+          <div id="liquid">
+            <div class="blob" style="width:1500px;height:1500px;background:radial-gradient(circle, rgba(76,0,255,0.95) 0%, rgba(76,0,255,0.5) 32%, transparent 66%)"></div>
+            <div class="blob" style="width:1200px;height:1200px;background:radial-gradient(circle, rgba(255,79,216,0.85) 0%, rgba(255,79,216,0.35) 36%, transparent 68%)"></div>
+            <div class="blob" style="width:1000px;height:1000px;background:radial-gradient(circle, rgba(255,154,60,0.8) 0%, rgba(255,154,60,0.3) 36%, transparent 68%)"></div>
+            <div class="blob" style="width:1600px;height:1600px;background:radial-gradient(circle, rgba(38,22,120,0.95) 0%, transparent 66%)"></div>
+            <div class="blob" style="width:1400px;height:1400px;background:radial-gradient(circle, rgba(40,9,97,0.95) 0%, transparent 66%)"></div>
+            <div id="swirl"></div><div id="bands"></div>
+
+            __SHOTS__
+            <svg id="trail" viewBox="0 0 1920 1080"><path id="trailp" d="" fill="none" stroke="rgba(255,209,163,0.55)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 10"/></svg>
+            <div id="stamp">700+ SIGNALS</div>
+            __CAPTIONS__
+            __TICKERS__
+            <div id="drop">
+              <img class="logo" id="dlogo" src="__LOGO__" alt="" style="top:330px;height:120px">
+              <div class="title serif k e2" id="dt2" style="top:520px;font-size:230px">Plays</div>
+              <div class="title serif k e1" id="dt1" style="top:520px;font-size:230px">Plays</div>
+              <div class="title serif k main" id="dt0" style="top:520px;font-size:230px">Plays</div>
+            </div>
+            <div id="meeting">__MEETING__</div>
+            <div id="lockup">
+              <svg id="hexes" viewBox="0 0 1920 1080"><path id="hexp" d=""/></svg>
+              <img class="logo" id="llogo" src="__LOGO__" alt="" style="top:250px;height:132px">
+              <div class="title serif k e2" id="lt2" style="top:440px;font-size:200px">__TITLE__</div>
+              <div class="title serif k e1" id="lt1" style="top:440px;font-size:200px">__TITLE__</div>
+              <div class="title serif k main" id="lt0" style="top:440px;font-size:200px">__TITLE__</div>
+              <div class="line serif">__LINE__</div>
+              <div class="url sans">__URL__</div>
+            </div>
+            <div class="pt" id="pt0"></div><div class="pt" id="pt1"></div><div class="pt" id="pt2"></div>
+            <div id="ring"></div>
+            <svg id="cursor" viewBox="0 0 24 24"><path d="M4.2 2.6 19 12.1l-6.7 1.4-3.6 6.3z" fill="#1a0c2e" stroke="#ffd1a3" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          </div>
+
+          <div id="paper">
+            <div class="halftone"></div>
+            <div class="slug sans" style="left:140px">Plate XV · Apis mellifera</div>
+            <div class="slug sans" style="right:140px">The swarm</div>
+            <div class="rule"></div>
+            <svg viewBox="0 0 1920 1080">
+              <path class="comb" id="comb" d=""/>
+              <g id="dance"><path class="ink" id="dancep" d="" stroke-width="5"/><path class="ink" id="bearing" d="" stroke-width="2.5" stroke-dasharray="6 12" opacity="0"/></g>
+              <g id="sites"></g>
+              <path class="ink" id="cavity" d="" stroke-width="6" opacity="0"/>
+              <g id="scouts"></g>
+            </svg>
+            __PAPER__
+            <div id="counter">00<small>scouts</small></div>
+            <div id="scorch"></div>
+          </div>
+          <div id="burnrim"></div>
+
+          <div id="leak1"></div><div id="leak2"></div>
+          <div id="grain"></div>
+          <div id="vig"></div>
+          <div id="flick"></div>
+        </div>
+        <div id="gate"></div>
+        <div id="err" style="display:none;position:absolute;left:20px;top:20px;right:20px;z-index:999;background:#000;color:#0f0;font:20px monospace;padding:10px"></div>
+      </div>
+      <script>
+        (function () {
+          var S = '[data-composition-id="plays"] ';
+          function one(s) { return document.querySelector(S + s); }
+          function all(s) { return Array.prototype.slice.call(document.querySelectorAll(S + s)); }
+          function cl(u) { return Math.max(0, Math.min(1, u)); }
+          function out3(u) { u = cl(u); return 1 - Math.pow(1 - u, 3); }
+          function out4(u) { u = cl(u); return 1 - Math.pow(1 - u, 4); }
+          function io(u) { u = cl(u); return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+          function mix(a, b, u) { return a + (b - a) * u; }
+          function hash(a, b) { var h = (a * 374761393 + b * 668265263) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return Math.abs(h ^ (h >>> 16)); }
+          function rnd(a, b) { return (hash(a, b) % 10000) / 10000; }
+          function blur(v) { return v > 0.05 ? "blur(" + v.toFixed(2) + "px)" : "none"; }
+          var T = __T__;
+          var BAR = 240 / T.bpm, BEAT = BAR / 4, END = T.bars * BAR;
+          function B(x) { return x * BAR; }
+
+          // ---------------------------------------------------------------- shared geometry
+          function hexPath(cx, cy, r) {
+            var d = "";
+            for (var i = 0; i < 6; i++) { var a = Math.PI / 3 * i + Math.PI / 6; d += (i ? "L" : "M") + (cx + r * Math.cos(a)).toFixed(1) + "," + (cy + r * Math.sin(a)).toFixed(1); }
+            return d + "Z";
+          }
+          function combPath(x0, y0, cols, rows, r) {
+            var d = "", w = Math.sqrt(3) * r;
+            for (var j = 0; j < rows; j++) for (var i = 0; i < cols; i++) d += hexPath(x0 + i * w + (j % 2) * w / 2, y0 + j * 1.5 * r, r);
+            return d;
+          }
+          // the engraved comb in the paper's margins
+          one("#comb").setAttribute("d", combPath(-30, 760, 6, 6, 44) + combPath(1650, -20, 6, 5, 44));
+
+          // the waggle dance: a straight waggle run up the middle, a return loop right, the run again, a loop left
+          var DC = { x: 900, y: 690 }, RUN = 360;
+          function waggle(x, y0, y1, n, amp) { var d = ""; for (var i = 0; i <= n; i++) { var u = i / n; d += "L" + (x + (i % 2 ? amp : -amp) * (i && i < n ? 1 : 0)).toFixed(1) + "," + mix(y0, y1, u).toFixed(1); } return d; }
+          var y0 = DC.y + RUN / 2, y1 = DC.y - RUN / 2;
+          var dance = "M" + DC.x + "," + y0 + waggle(DC.x, y0, y1, 16, 16).slice(0) +
+            " C" + (DC.x + 420) + "," + (y1 - 60) + " " + (DC.x + 420) + "," + (y0 + 60) + " " + DC.x + "," + y0 +
+            waggle(DC.x, y0, y1, 16, 16) +
+            " C" + (DC.x - 420) + "," + (y1 - 60) + " " + (DC.x - 420) + "," + (y0 + 60) + " " + DC.x + "," + y0;
+          var dp = one("#dancep"); dp.setAttribute("d", dance.replace(/^M([^L]+)L/, "M$1L"));
+          var DL = dp.getTotalLength(); dp.style.strokeDasharray = DL; dp.style.strokeDashoffset = DL;
+          // candidate sites around the plate; the chosen one up and to the right of the run's bearing
+          var SITES = [[1500, 820], [330, 460], [300, 880], [1260, 980], [620, 330]], CHOSEN = [1520, 400];
+          var sg = one("#sites"), sh = "";
+          SITES.forEach(function (p) { sh += '<path class="ink" stroke-width="2.5" opacity="0.55" d="' + hexPath(p[0], p[1], 34) + '"/>'; });
+          sh += '<path class="ink" id="chosen" stroke-width="3.5" d="' + hexPath(CHOSEN[0], CHOSEN[1], 46) + '"/>';
+          sg.innerHTML = sh;
+          one("#bearing").setAttribute("d", "M" + DC.x + "," + (DC.y - RUN / 2 - 20) + "L" + (CHOSEN[0] - 40) + "," + (CHOSEN[1] + 20));
+          // the quorum: a big cavity and 15 scouts flying in
+          var CAV = { x: 860, y: 660, r: 260 };
+          one("#cavity").setAttribute("d", hexPath(CAV.x, CAV.y, CAV.r));
+          var SC = [], scg = one("#scouts"), sch = "";
+          for (var i = 0; i < 15; i++) {
+            var ang = rnd(i, 3) * Math.PI * 2, rr = rnd(i, 5) * 150;
+            SC.push({ fx: CAV.x + Math.cos(ang) * 1300, fy: CAV.y + Math.sin(ang) * 900, x: CAV.x + Math.cos(ang) * rr, y: CAV.y + Math.sin(ang) * rr * 0.9, g: i % 3 });
+            sch += '<circle r="11" fill="#2a1d14" opacity="0"/>';
+          }
+          scg.innerHTML = sch;
+          var scouts = Array.prototype.slice.call(scg.children);
+          var GROUP = [[CAV.x - 120, CAV.y + 40], [CAV.x, CAV.y - 90], [CAV.x + 120, CAV.y + 40]];
+
+          // grain: 1 seeded noise tile, shifted every 1/24 s
+          var gc = document.createElement("canvas"); gc.width = gc.height = 384;
+          var gg = gc.getContext("2d"), gi = gg.createImageData(384, 384), sd = 1337;
+          for (var q = 0; q < gi.data.length; q += 4) { sd = (sd * 16807) % 2147483647; var gv = 40 + (sd % 176); gi.data[q] = gi.data[q + 1] = gi.data[q + 2] = gv; gi.data[q + 3] = 255; }
+          gg.putImageData(gi, 0, 0);
+          var grain = one("#grain"); grain.style.backgroundImage = "url(" + gc.toDataURL() + ")";
+
+          // fit a row of words into the frame once
+          function fit(el, max) { var k = el.children; if (!k.length) return; var w = k[k.length - 1].offsetLeft + k[k.length - 1].offsetWidth - k[0].offsetLeft;
+            if (w > max) el.style.fontSize = (parseFloat(getComputedStyle(el).fontSize) * max / w).toFixed(1) + "px"; }
+          all(".prow, .cap .row, .big, #lockup .line").forEach(function (el) { fit(el, 1640); });
+
+          // ---------------------------------------------------------------- words
+          // a word lands: rises, sharpens; a key word also wobbles (a skew that rings out)
+          function word(el, t, at, key) {
+            var u = (t - at) / 0.34;
+            if (u <= 0) { el.style.opacity = 0; return; }
+            var e = out4(u), wob = key ? Math.sin((t - at) * 26) * 9 * Math.exp(-(t - at) * 4.5) : 0;
+            el.style.opacity = cl(u * 1.6);
+            el.style.transform = "translateY(" + ((1 - e) * 26).toFixed(1) + "px) skewX(" + wob.toFixed(2) + "deg)";
+            el.style.filter = blur((1 - e) * 8);
+          }
+          function rowWords(row, t, from, to, lag) {
+            var vis = t >= from && t < to + 0.25;
+            if (!vis) { row.style.opacity = 0; return; }
+            var fade = 1 - cl((t - to) / 0.18);
+            row.style.opacity = fade;
+            Array.prototype.forEach.call(row.children, function (w) { word(w, t - (lag || 0), +w.dataset.at, w.classList.contains("k")); });
+          }
+          var prows = all(".prow");
+          var caps = all(".cap");
+          var ticks = all(".tick");
+
+          // ---------------------------------------------------------------- the liquid
+          var blobs = all(".blob");
+          var BL = [[900, 420, 360, 0.11, 0.08, 0.0], [380, 760, 300, 0.09, 0.13, 1.9], [1560, 860, 280, 0.13, 0.07, 3.3], [200, 120, 260, 0.06, 0.09, 4.4], [1700, 80, 300, 0.08, 0.05, 2.6]];
+          function liquid(t) {
+            // it slows to a near stop in the last 3 bars
+            var tt = t < B(17) ? t : B(17) + (1 - Math.exp(-(t - B(17)) / 2.2)) * 2.2;
+            blobs.forEach(function (b, i) {
+              var p = BL[i], w = parseFloat(b.style.width);
+              var x = p[0] + Math.sin(tt * p[3] * 2 * Math.PI + p[5]) * p[2], y = p[1] + Math.cos(tt * p[4] * 2 * Math.PI + p[5] * 1.3) * p[2] * 0.7;
+              b.style.transform = "translate(" + (x - w / 2).toFixed(1) + "px," + (y - w / 2).toFixed(1) + "px) scale(" + (1 + 0.12 * Math.sin(tt * 0.7 + i)).toFixed(3) + ")";
+            });
+            one("#swirl").style.transform = "rotate(" + (tt * 9).toFixed(2) + "deg) scale(" + (1 + 0.05 * Math.sin(tt * 0.5)).toFixed(3) + ")";
+            one("#bands").style.transform = "scale(" + (1 + 0.18 * Math.sin(tt * 0.9)).toFixed(3) + ") rotate(" + (-tt * 4).toFixed(2) + "deg)";
+            var hue = Math.sin(tt * 0.35) * 16 + (t > B(12) && t < B(16) ? Math.sin((t - B(12)) * 1.6) * 22 : 0);
+            one("#liquid").style.filter = "hue-rotate(" + hue.toFixed(1) + "deg) saturate(1.15)";
+          }
+
+          // ---------------------------------------------------------------- product shots
+          var FW = 1500, FH = 735, FX = 210, FY = 262;
+          var SHOTS = {
+            new:   { from: 8, to: 9, keys: [[8, [0, 0, 2000, 980]], [8.2, [0, 0, 2000, 980]], [8.6, [1000, 205, 590, 260]], [9, [1020, 215, 550, 240]]] },
+            aud1:  { from: 9, to: 10, keys: [[9, [1530, 170, 450, 240]], [9.68, [1530, 175, 450, 240]], [9.95, [300, 88, 1160, 200]], [10, [300, 88, 1160, 200]]] },
+            filt:  { from: 10, to: 11, keys: [[10, [300, 88, 1160, 200]], [10.3, [300, 88, 1160, 200]], [10.6, [330, 360, 1080, 120]], [11, [700, 370, 560, 90]]] },
+            aud2:  { from: 11, to: 12, keys: [[11, [300, 560, 1150, 370]], [12, [300, 545, 1150, 400]]] },
+            pers:  { from: 12, to: 14, keys: [[12, [300, 380, 1150, 160]], [12.85, [300, 380, 1150, 160]], [13.1, [300, 620, 1150, 270]], [14, [300, 650, 1150, 250]]] },
+            dest:  { from: 14, to: 15, keys: [[14, [1140, 95, 440, 190]], [14.49, [1180, 105, 380, 175]], [14.5, [1140, 880, 330, 110]], [15, [1140, 880, 330, 110]]] }
+          };
+          var SRC = { new: [2000, 980], aud1: [2000, 982], filt: [2000, 978], aud2: [2000, 982], pers: [2000, 981], dest: [2000, 976] };
+          function view(r, sw, sh) {
+            var s = Math.min(FW / (r[2] * 1.12), FH / (r[3] * 1.12));
+            s = Math.max(s, Math.max(FW / sw, FH / sh));
+            var tx = FW / 2 - (r[0] + r[2] / 2) * s, ty = FH / 2 - (r[1] + r[3] / 2) * s;
+            tx = Math.min(0, Math.max(FW - sw * s, tx)); ty = Math.min(0, Math.max(FH - sh * s, ty));
+            return [tx, ty, s];
+          }
+          function camAt(name, t) {
+            var k = SHOTS[name].keys, sz = SRC[name], b = t / BAR;
+            if (b <= k[0][0]) return view(k[0][1], sz[0], sz[1]);
+            for (var i = 0; i < k.length - 1; i++) {
+              if (b <= k[i + 1][0]) {
+                var u = io((b - k[i][0]) / (k[i + 1][0] - k[i][0])), r0 = k[i][1], r1 = k[i + 1][1];
+                if (k[i + 1][0] - k[i][0] < 0.02) u = 1;          // a hard cut
+                var a = view(r0, sz[0], sz[1]), c = view(r1, sz[0], sz[1]);
+                return [mix(a[0], c[0], u), mix(a[1], c[1], u), Math.exp(mix(Math.log(a[2]), Math.log(c[2]), u))];
+              }
+            }
+            return view(k[k.length - 1][1], sz[0], sz[1]);
+          }
+          function toScreen(c, x, y) { return [FX + c[0] + x * c[2], FY + c[1] + y * c[2]]; }
+          var shotEls = {};
+          all(".shot").forEach(function (el) { shotEls[el.dataset.shot] = el; });
+          function camCss(c) { return "translate(" + c[0].toFixed(2) + "px," + c[1].toFixed(2) + "px) scale(" + c[2].toFixed(4) + ")"; }
+          function shot(name, t) {
+            var d = SHOTS[name], el = shotEls[name], a = B(d.from), b = B(d.to);
+            var vis = t >= a && t < b;
+            el.style.visibility = vis ? "visible" : "hidden";
+            if (!vis) return null;
+            var c = camAt(name, t), lt = t - a;
+            el.querySelector(".cam").style.transform = camCss(c);
+            // the echoes trail the camera by a few frames
+            var c1 = camAt(name, t - 0.09), c2 = camAt(name, t - 0.18);
+            el.querySelector(".echo.a img").style.transform = camCss(c1);
+            el.querySelector(".echo.b img").style.transform = camCss(c2);
+            var ent = out4(lt / 0.42), sway = Math.sin(t * 1.3) * 0.5;
+            var ex = name === "dest" ? io((t - (b - 0.36)) / 0.36) : 0;
+            el.style.transform = "translate(" + (ex * 2100).toFixed(1) + "px," + ((1 - ent) * 40).toFixed(1) + "px) scale(" + mix(0.94, 1, ent).toFixed(4) + ") rotate(" + (sway + ex * 6).toFixed(2) + "deg)";
+            el.querySelector(".echo.a").style.transform = "translate(" + (-22 * (1 - ent) - 10).toFixed(1) + "px," + (14 + 10 * (1 - ent)).toFixed(1) + "px) rotate(-1.2deg)";
+            el.querySelector(".echo.b").style.transform = "translate(" + (-40 * (1 - ent) - 20).toFixed(1) + "px," + (28 + 20 * (1 - ent)).toFixed(1) + "px) rotate(-2.4deg)";
+            return c;
+          }
+          function glowAt(g, c, x, y, t, at, size) {
+            if (!g) return;
+            var u = t - at;
+            if (u < 0) { g.style.opacity = 0; return; }
+            var s = (size || 1) * (0.6 + 0.4 * out3(u / 0.3)) * (1 + 0.08 * Math.sin(u * 9));
+            g.style.left = x + "px"; g.style.top = y + "px";
+            g.style.opacity = cl(u / 0.15) * 0.95;
+            g.style.transform = "scale(" + (s * 2.6 / c[2] * 0.75).toFixed(3) + ")";
+          }
+
+          // the cursor flies the waggle dance's figure-eight into the "Use" link
+          var cursor = one("#cursor"), ring = one("#ring"), trailp = one("#trailp");
+          function figure8(u, cx, cy, w, h) { var a = u * Math.PI * 2; return [cx + Math.sin(a) * w, cy + Math.sin(a * 2) * h / 2]; }
+          function cursorAt(t, c) {
+            var a = B(8) + 0.05, click = B(8.75);
+            if (t < a || t > B(9) || !c) { cursor.style.opacity = 0; ring.style.opacity = 0; trailp.setAttribute("d", ""); return; }
+            var tgt = toScreen(c, 1088, 395), u = cl((t - a) / (click - a)), p;
+            function pathAt(v) { var f = figure8(v * 1.0, 960, 640, 420, 260), e = io(v); return [mix(f[0], tgt[0], Math.pow(e, 1.6)), mix(f[1], tgt[1], Math.pow(e, 1.6))]; }
+            p = pathAt(u);
+            var d = "", n = 40;
+            for (var i = 0; i <= n; i++) { var v = Math.max(0, u - 0.45 + 0.45 * i / n); var q = pathAt(v); d += (i ? "L" : "M") + q[0].toFixed(1) + "," + q[1].toFixed(1); }
+            trailp.setAttribute("d", d); trailp.style.opacity = u < 1 ? 1 : cl(1 - (t - click) / 0.3);
+            cursor.style.left = (p[0] - 6) + "px"; cursor.style.top = (p[1] - 4) + "px";
+            var press = t >= click && t < click + 0.12 ? 0.86 : 1;
+            cursor.style.opacity = cl((t - a) / 0.12) * (1 - cl((t - B(9) + 0.15) / 0.15));
+            cursor.style.transform = "scale(" + press + ")";
+            var r = t - click;
+            ring.style.left = tgt[0] + "px"; ring.style.top = tgt[1] + "px";
+            ring.style.opacity = r > 0 ? cl(1 - r / 0.5) : 0;
+            ring.style.transform = "scale(" + (0.5 + out3(r / 0.5) * 1.4).toFixed(3) + ")";
+          }
+          // the second click, on Test
+          function clickAt(t, c, x, y, at) {
+            var a = at - 0.5;
+            if (t < a || t > at + 0.6 || !c) return false;
+            var tgt = toScreen(c, x, y), u = out3((t - a) / 0.5);
+            cursor.style.left = (mix(tgt[0] + 260, tgt[0], u) - 6) + "px"; cursor.style.top = (mix(tgt[1] + 180, tgt[1], u) - 4) + "px";
+            cursor.style.opacity = cl((t - a) / 0.1);
+            cursor.style.transform = "scale(" + (t >= at && t < at + 0.12 ? 0.86 : 1) + ")";
+            var r = t - at;
+            ring.style.left = tgt[0] + "px"; ring.style.top = tgt[1] + "px";
+            ring.style.opacity = r > 0 ? cl(1 - r / 0.5) : 0;
+            ring.style.transform = "scale(" + (0.5 + out3(r / 0.5) * 1.4).toFixed(3) + ")";
+            return true;
+          }
+
+          // the chat prompt types itself out, line by line (covers over the real text, lifted on the beat)
+          var cov1 = one('[data-shot="aud1"] .cov1'), cov2 = one('[data-shot="aud1"] .cov2');
+          var PR = { x: 1586, y: 199, w: 352, lh: 26.4, n: 7 };
+          function typing(t) {
+            var u = cl((t - B(9) - 0.08) / (B(0.85))), pos = u * PR.n, line = Math.floor(pos), frac = pos - line;
+            if (u >= 1) { cov1.style.display = cov2.style.display = "none"; return; }
+            cov1.style.display = cov2.style.display = "block";
+            cov1.style.left = PR.x + "px"; cov1.style.width = PR.w + 6 + "px";
+            cov1.style.top = (PR.y + (line + 1) * PR.lh) + "px"; cov1.style.height = Math.max(0, (PR.n - line - 1) * PR.lh + 4) + "px";
+            cov2.style.top = (PR.y + line * PR.lh) + "px"; cov2.style.height = PR.lh + "px";
+            cov2.style.left = (PR.x + frac * PR.w) + "px"; cov2.style.width = ((1 - frac) * PR.w + 6) + "px";
+          }
+
+          var stamp = one("#stamp"), pts = [one("#pt0"), one("#pt1"), one("#pt2")];
+          var drop = one("#drop"), meeting = one("#meeting"), lockup = one("#lockup");
+
+          // ---------------------------------------------------------------- the paper world
+          var paper = one("#paper"), scorch = one("#scorch"), burnrim = one("#burnrim"), counter = one("#counter");
+          var cav = one("#cavity"), chosen = one("#chosen"), bearing = one("#bearing"), danceG = one("#dance"), sitesG = one("#sites");
+          var HOLES = [[GROUP[0][0], GROUP[0][1]], [GROUP[1][0], GROUP[1][1]], [GROUP[2][0], GROUP[2][1]]];
+          function paperWorld(t) {
+            var vis = t < B(7) + 1.1;
+            paper.style.display = vis ? "block" : "none";
+            if (!vis) { burnrim.style.opacity = 0; return; }
+            // a slow push on the plate, all hook long
+            var push = 1 + t * 0.006;
+            var lens = "";
+            // frame 2 into 3: the plate pushes into the chosen site
+            var z = io((t - B(4)) / 0.75);
+            var px = mix(0, -(CHOSEN[0] - 960), z), py = mix(0, -(CHOSEN[1] - 540), z), ps = mix(1, 3.2, z);
+            var svgEls = [danceG, sitesG];
+            svgEls.forEach(function (g) {
+              g.style.transformOrigin = CHOSEN[0] + "px " + CHOSEN[1] + "px";
+              g.style.transform = "translate(" + (px / ps * 0).toFixed(1) + "px,0) scale(" + ps.toFixed(3) + ")";
+              g.style.opacity = t < B(4) ? 1 : 1 - z;
+            });
+            // the dance draws in frame 2
+            var du = cl((t - B(2) - 0.15) / (B(1.85)));
+            dp.style.strokeDashoffset = (DL * (1 - du)).toFixed(1);
+            danceG.style.visibility = t >= B(2) && t < B(4) + 0.8 ? "visible" : "hidden";
+            sitesG.style.visibility = t >= B(2) && t < B(4) + 0.8 ? "visible" : "hidden";
+            sitesG.style.opacity = (t < B(4) ? cl((t - B(2)) / 0.5) : 1 - z);
+            bearing.style.opacity = cl((t - B(3.25)) / 0.4) * 0.8;
+            chosen.style.strokeWidth = (3.5 + 3 * cl((t - B(3.5)) / 0.4)).toFixed(2);
+            // frame 3: the cavity and the scouts
+            var cv = t >= B(4) && t < B(7) + 1.1;
+            cav.style.opacity = cv ? cl((t - B(4) - 0.35) / 0.4) : 0;
+            var n = 0;
+            scouts.forEach(function (c, i) {
+              if (!cv) { c.setAttribute("opacity", 0); return; }
+              var at = B(4) + 0.55 + Math.pow(i / 15, 0.75) * (B(1.9) - 0.75);
+              var u = out3((t - at) / 0.45);
+              if (t >= at + 0.2) n++;
+              var x = mix(SC[i].fx, SC[i].x, u), y = mix(SC[i].fy, SC[i].y, u);
+              // frame 4: they regroup into 3
+              var g = io((t - B(6) - 0.1) / (B(0.6)));
+              x = mix(x, GROUP[SC[i].g][0], g); y = mix(y, GROUP[SC[i].g][1], g);
+              c.setAttribute("cx", x.toFixed(1)); c.setAttribute("cy", y.toFixed(1));
+              c.setAttribute("opacity", t < at ? 0 : 1);
+              var hot = t >= B(6) ? 1 : 0;
+              c.setAttribute("fill", hot ? "#c2410c" : "#2a1d14");
+              c.setAttribute("r", (11 + g * 9).toFixed(1));
+            });
+            counter.style.opacity = t >= B(4) + 0.4 && t < B(6) + 0.2 ? 1 : 0;
+            counter.firstChild.nodeValue = (n < 10 ? "0" : "") + n;
+            // at 15 the cavity flashes warm
+            var flash = t >= B(5.85) ? Math.exp(-(t - B(5.85)) * 3) : 0;
+            cav.style.stroke = flash > 0.05 ? "rgb(" + Math.round(mix(42, 214, flash)) + "," + Math.round(mix(29, 90, flash)) + "," + Math.round(mix(20, 30, flash)) + ")" : "";
+            // frame 4: the scorch closes in from the edges
+            var sc = cl((t - B(6)) / B(1));
+            scorch.style.opacity = sc > 0 ? 1 : 0;
+            var r = mix(150, 62, io(sc));
+            scorch.style.background = "radial-gradient(" + r + "% " + (r * 0.9) + "% at 50% 52%, transparent 70%, rgba(90,40,10,0.55) 86%, rgba(30,10,4,0.95) 100%)";
+            // frame 5: the film burn opens from the 3 scouts
+            var bu = t - B(7) + 0.12;
+            if (bu > 0) {
+              var R = Math.pow(bu / 1.0, 1.7) * 1500, m = "";
+              HOLES.forEach(function (h, i) { var rr = Math.max(0, R * (1 - i * 0.12) + Math.sin(bu * 9 + i) * 8); m += (i ? "," : "") + "radial-gradient(circle at " + h[0] + "px " + h[1] + "px, transparent " + rr.toFixed(0) + "px, #000 " + (rr + 3).toFixed(0) + "px)"; });
+              paper.style.webkitMaskImage = paper.style.maskImage = m;
+              paper.style.webkitMaskComposite = "source-in"; paper.style.maskComposite = "intersect";
+              var rim = "";
+              HOLES.forEach(function (h, i) { var rr = Math.max(0, R * (1 - i * 0.12)); rim += (i ? "," : "") + "radial-gradient(circle at " + h[0] + "px " + h[1] + "px, transparent " + Math.max(0, rr - 40).toFixed(0) + "px, rgba(255,150,40,0.95) " + rr.toFixed(0) + "px, rgba(255,60,20,0.6) " + (rr + 14).toFixed(0) + "px, transparent " + (rr + 46).toFixed(0) + "px)"; });
+              burnrim.style.background = rim; burnrim.style.opacity = cl(1.6 - bu);
+            } else {
+              paper.style.webkitMaskImage = paper.style.maskImage = "none"; burnrim.style.opacity = 0;
+            }
+            paper.style.transform = "scale(" + push.toFixed(4) + ")";
+            prows.forEach(function (row) { rowWords(row, t, +row.dataset.from, +row.dataset.to); });
+          }
+
+          // ---------------------------------------------------------------- the analog layer
+          var leak1 = one("#leak1"), leak2 = one("#leak2"), flick = one("#flick"), stage = one("#stage");
+          function analog(t) {
+            var f = Math.floor(t * 24);
+            grain.style.backgroundPosition = (hash(f, 1) % 384) + "px " + (hash(f, 2) % 384) + "px";
+            var dx = Math.sin(t * 7.3) * 1.1 + Math.sin(t * 13.7) * 0.6 + (rnd(f, 7) - 0.5) * 0.8;
+            var dy = Math.sin(t * 5.1) * 0.9 + (rnd(f, 9) - 0.5) * 0.8;
+            stage.style.transform = "translate(" + dx.toFixed(2) + "px," + dy.toFixed(2) + "px)";
+            flick.style.opacity = (0.03 + 0.025 * Math.sin(t * 23) * Math.sin(t * 5.7) + (rnd(f, 11) - 0.5) * 0.02).toFixed(3);
+            var hook = t < B(7);
+            leak1.style.cssText = "left:" + (1300 + Math.sin(t * 0.4) * 200) + "px;top:" + (-300 + Math.cos(t * 0.3) * 80) + "px;width:1000px;height:800px;" +
+              "background:radial-gradient(circle, " + (hook ? "rgba(255,140,60,0.42)" : "rgba(255,120,80,0.25)") + " 0%, transparent 65%);opacity:" + (0.75 + 0.25 * Math.sin(t * 0.9)).toFixed(2);
+            leak2.style.cssText = "left:" + (-400 + Math.sin(t * 0.27 + 2) * 160) + "px;top:" + (600 + Math.sin(t * 0.33) * 120) + "px;width:1100px;height:900px;" +
+              "background:radial-gradient(circle, " + (hook ? "rgba(255,80,160,0.22)" : "rgba(255,79,216,0.2)") + " 0%, transparent 65%);opacity:" + (0.6 + 0.4 * Math.sin(t * 0.6 + 1)).toFixed(2);
+          }
+
+          // ---------------------------------------------------------------- the body
+          function echoTitle(ids, t, at, y0) {
+            ids.forEach(function (id, i) {
+              var el = one("#" + id), lt = t - at - i * 0.07;
+              var u = out4(lt / 0.5);
+              el.style.opacity = lt > 0 ? cl(lt / 0.2) : 0;
+              el.style.transform = "translate(" + (i * -10).toFixed(0) + "px," + (i * 10 + (1 - u) * 60).toFixed(1) + "px) scale(" + mix(1.25, 1, u).toFixed(4) + ")";
+              el.style.filter = blur((1 - u) * 14);
+            });
+          }
+          function capRows(cap, t) {
+            var from = B(+cap.dataset.from), to = B(+cap.dataset.to);
+            var vis = t >= from && t < to;
+            cap.style.visibility = vis ? "visible" : "hidden";
+            if (!vis) return;
+            var rows = cap.children;
+            rowWords(rows[0], t, from, to - 0.1, 0.14);
+            rowWords(rows[1], t, from, to - 0.1, 0.07);
+            rowWords(rows[2], t, from, to - 0.1, 0);
+            rows[0].style.transform = "translate(-14px,12px)"; rows[1].style.transform = "translate(-7px,6px)";
+          }
+          function tickRow(tk, t) {
+            var from = B(+tk.dataset.from), to = B(+tk.dataset.to);
+            var vis = t >= from && t < to;
+            tk.style.visibility = vis ? "visible" : "hidden";
+            if (!vis) return;
+            Array.prototype.forEach.call(tk.children, function (s, i) {
+              var at = from + i * BEAT * (tk.children.length > 3 ? 1 : 1);
+              var u = out3((t - at) / 0.3);
+              s.style.opacity = t < at ? 0 : cl((t - at) / 0.2) * (1 - cl((t - to + 0.12) / 0.12));
+              s.style.transform = "translateY(" + ((1 - u) * 14).toFixed(1) + "px)";
+            });
+          }
+
+          function body(t) {
+            var on = t >= B(7) - 0.2;
+            one("#liquid").style.visibility = on ? "visible" : "hidden";
+            if (!on) return;
+            liquid(t);
+            // frame 5: the logo and the title on the drop
+            var dv = t >= B(7) && t < B(8);
+            drop.style.visibility = dv ? "visible" : "hidden";
+            if (dv) {
+              var dl = one("#dlogo"), u = out4((t - B(7) - 0.2) / 0.5);
+              dl.style.opacity = cl((t - B(7) - 0.2) / 0.2);
+              dl.style.transform = "translateX(-50%) scale(" + mix(1.4, 1, u).toFixed(4) + ")"; dl.style.filter = blur((1 - u) * 16);
+              echoTitle(["dt0", "dt1", "dt2"], t, B(7.5), 520);
+              var outF = cl((t - B(8) + 0.12) / 0.12);
+              drop.style.opacity = 1 - outF;
+            }
+            // frames 6 to 11: the product
+            var c6 = shot("new", t), c7 = shot("aud1", t), c8 = shot("filt", t), c9 = shot("aud2", t), c10 = shot("pers", t), c11 = shot("dest", t);
+            if (c7) typing(t);
+            cursorAt(t, c6);
+            if (!c6 && !(c11 && clickAt(t, c11, 1373, 945, B(14.75)))) { cursor.style.opacity = 0; ring.style.opacity = 0; }
+            // the 700+ stamp
+            var st = t - B(9.5);
+            stamp.style.opacity = st > 0 && t < B(10) - 0.05 ? 1 : 0;
+            stamp.style.transform = "rotate(-8deg) scale(" + (st > 0 ? mix(1.7, 1, out4(st / 0.16)) : 1).toFixed(3) + ")";
+            // glows on the real UI
+            var g8 = shotEls.filt.querySelector(".g1");
+            if (c8) glowAt(g8, c8, 952, 410, t, B(10.5), 1.2);
+            if (c10) {
+              var gs = shotEls.pers.querySelectorAll(".glow");
+              glowAt(gs[0], c10, 385, 486, t, B(12.25), 1.3); glowAt(gs[1], c10, 562, 486, t, B(12.5), 1.6);
+              glowAt(gs[2], c10, 505, 789, t, B(13.25), 1.6); glowAt(gs[3], c10, 398, 842, t, B(13.5), 1.3);
+            }
+            if (c11) glowAt(shotEls.dest.querySelector(".g1"), c11, 1363, 195, t, B(14.25), 1.0);
+            // frames 8 to 9: the 3 glows split and land on the committee
+            var p0 = c8 ? toScreen(c8, 952, 410) : [960, 560];
+            var TG = c9 ? [toScreen(c9, 333, 600), toScreen(c9, 333, 752), toScreen(c9, 1360, 868)] : null;
+            pts.forEach(function (p, i) {
+              var a = B(10.85), on = t >= a && t < B(12) - 0.1;
+              p.style.opacity = on ? 1 : 0;
+              if (!on) return;
+              var x, y;
+              if (t < B(11) || !TG) { var u = out3((t - a) / (B(11) - a)); x = p0[0] + (i - 1) * 40 * u; y = p0[1] - 20 * u * (i === 1 ? 1 : 0); }
+              else { var v = out4((t - B(11) - i * BEAT * 0.5) / (BEAT * 1.6)); x = mix(960 + (i - 1) * 40, TG[i][0], v); y = mix(540, TG[i][1], v); }
+              p.style.left = x + "px"; p.style.top = y + "px";
+              p.style.transform = "scale(" + (1.3 + 0.25 * Math.sin(t * 8 + i)).toFixed(3) + ")";
+            });
+            caps.forEach(function (c) { capRows(c, t); });
+            ticks.forEach(function (k) { tickRow(k, t); });
+            // frame 12: the meeting
+            var mv = t >= B(15) && t < B(16);
+            meeting.style.visibility = mv ? "visible" : "hidden";
+            if (mv) {
+              all("#meeting .big").forEach(function (row, i) { rowWords(row, t, B(15), B(16) - 0.05, [0.14, 0.07, 0][i]); });
+              var ring2 = Math.exp(-(t - B(15)) * 2.4);
+              meeting.style.transform = "scale(" + (1 + ring2 * 0.03 * Math.sin((t - B(15)) * 40)).toFixed(4) + ")";
+            }
+            // frame 13: the honeycomb folds into the lockup
+            var lv = t >= B(16);
+            lockup.style.visibility = lv ? "visible" : "hidden";
+            if (lv) {
+              var lt = t - B(16), k = io(lt / B(1.5));
+              var hx = one("#hexp"), d = "", R0 = mix(260, 40, k);
+              for (var rg = 0; rg < 5; rg++) for (var j = 0; j < (rg ? rg * 6 : 1); j++) {
+                var ang = (j / Math.max(1, rg * 6)) * Math.PI * 2 + lt * 0.15 * (rg % 2 ? 1 : -1);
+                var rr = rg * R0 * 1.75;
+                d += hexPath(960 + Math.cos(ang) * rr, 540 + Math.sin(ang) * rr, R0 * 0.92);
+              }
+              hx.setAttribute("d", d);
+              one("#hexes").style.opacity = (1 - cl((lt - B(1.2)) / 0.6)) * 0.9;
+              one("#hexes").style.transform = "rotate(" + (lt * 6).toFixed(2) + "deg)";
+              var lg = one("#llogo"), u = out4((lt - B(1.1)) / 0.6);
+              lg.style.opacity = cl((lt - B(1.1)) / 0.3);
+              lg.style.transform = "translateX(-50%) scale(" + mix(1.35, 1, u).toFixed(4) + ")"; lg.style.filter = blur((1 - u) * 14);
+              echoTitle(["lt0", "lt1", "lt2"], t, B(17.5), 440);
+              Array.prototype.forEach.call(one("#lockup .line").children, function (w, i) { word(w, t, B(18) + i * BEAT * 0.5, w.classList.contains("k")); });
+              one("#lockup .url").style.opacity = cl((t - B(18.6)) / 0.4);
+            }
+          }
+
+          var drv = { t: 0 };
+          function render() {
+            var t = drv.t;
+            try { paperWorld(t); body(t); analog(t); }
+            catch (e) { var d = one("#err"); if (d) { d.textContent = "t=" + t.toFixed(2) + " " + e.message + " | " + (e.stack || "").split("\n").slice(0, 3).join(" / "); d.style.display = "block"; } }
+          }
+          var tl = gsap.timeline({ paused: true });
+          tl.fromTo(drv, { t: 0.001 }, { t: END, duration: END - 0.001, ease: "none", onUpdate: render, immediateRender: false }, 0.001);
+          render();
+          window.__timelines["plays"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
