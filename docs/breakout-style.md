@@ -2,13 +2,13 @@
 
 The look of Breakout's launch films, decided one round at a time. Change 1 variable per round, and write each verdict in the owner's words in the table at the bottom.
 
-## Where it stands (round 1)
+## Where it stands (round 2)
 
 | Lever | Now | Where it lives |
 |---|---|---|
-| Grounds | The app's white `#fdfdfd` for statement scenes, deep indigo `#1c1778` for dark cards, indigo `#4e46dc` for 1 accent card | `brand/brand.json` `colors` |
-| Key words | A soft indigo marker on light grounds, lilac `#9a95ff` on dark | `highlight`, `accent_on_dark` |
-| Type | Inter 700, tracking -0.045em, hero words at 110 to 150 px | `fonts.display` |
+| Grounds | The site's light grey `#f4f4f4` with a soft violet bloom; dark scenes on the homepage hero's violet mesh; electric violet `#4c00ff` for 1 accent card | `brand/brand.json` `colors`, `gradients.dark_mesh` |
+| Key words | *Italic* serif, as on the site ("Pageview to *pipeline.*"); lilac `#be79ff` on dark, no highlighter marker | `fonts.display.key_style`, `accent_on_dark` |
+| Type | Headlines in New Kansas (Fraunces stand-in, weight 340, soft), sublines and UI chips in Manrope 500 | `fonts.display`, `fonts.body` |
 | Logo | The two-tone wordmark exactly as the app shows it, no mark | `film.json` `"lockup": "logo"` |
 | Motion | The kit's Apple and Lovable grammar: hard cuts on the voice, dives and collapses, a push into the product, a quiet end | `film/templates/body.html` |
 | Voice | Challenger: direct, confident, 1 idea per line | `film/film.json` `lines` |
@@ -16,10 +16,10 @@ The look of Breakout's launch films, decided one round at a time. Change 1 varia
 
 ## Open questions to settle together
 
-0. **The homepage.** Its styles could not be read from the build container (network policy). Check them against `brand/preview.png`, or allow getbreakout.ai and re-extract.
+0. **New Kansas.** Render on a machine with New Kansas active in Adobe Fonts for the final cut; Fraunces is close but not the brand face.
 1. **Light or dark world.** Light statement scenes with dark punch cards (now), or a fully dark, indigo-glow film that feels more "AI"?
 2. **How much indigo.** 1 accent card per film (now), or indigo as the main ground with white type?
-3. **Type.** Inter as a stand-in, or the site's own face (needs its files and a video licence)?
+3. **Weight.** The site's New Kansas is light; is the film's 340 right on a 1080p screen, or one step heavier for legibility?
 4. **Hook direction.** Type-only problem lines (now), a stylised "visitor leaves the site" moment, or a real website recording with the AI SDR opening a conversation?
 5. **Product shots.** Accounts, the account Browsing Summary, All Chats and Contacts are in. Missing: a live AI SDR conversation (the engage beat shows a list, not a chat) and a follow-up email. Contacts is mostly blurred; a demo workspace with sample data would read better.
 6. **Narrator.** Gender, age, pace. The kit's default is brisk and clear, 2.2 to 2.7 words a second, never performed.
@@ -30,3 +30,4 @@ The look of Breakout's launch films, decided one round at a time. Change 1 varia
 | Date | Round | Film | Approved | Rejected |
 |---|---|---|---|---|
 | 2026-10-05 | 1 | attention | Awaiting the owner's verdict. Changed: logo and colours taken from the app ("break" `#1C1778`, "out" `#4E46DC`); real screens with customer data blurred, replacing round 0's placeholders | |
+| 2026-10-05 | 2 | attention | Awaiting the owner's verdict. Changed: the homepage's type system (New Kansas or Fraunces headlines, italic key words, Manrope), the hero's violet mesh on dark scenes, the site's palette, and "Pageview to *pipeline.*" on the end card | |

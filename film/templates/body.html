@@ -7,13 +7,14 @@
       <style>
         __FONTFACES__
         [data-composition-id="film"] { __VARS__; }
-        #root { position: absolute; inset: 0; overflow: hidden; background: var(--dark); font-family: var(--font); color: var(--ink); }
+        #root { position: absolute; inset: 0; overflow: hidden; background: var(--dark); font-family: var(--font); color: var(--ink); font-variation-settings: var(--font-vars); }
+        .hw.k, .hp.k, .nw.k, .bw.k, .cw.k { font-style: var(--key-style); }
         .late { visibility: hidden; }
 
         /* the hook: its own picture (or a ground), its lines, a push into the cut */
         .hook { position: absolute; inset: 0; transform-origin: 50% 50%; }
         .hookg { position: absolute; inset: 0; }
-        .hookg.hg-dark { background: radial-gradient(1400px 800px at 50% 115%, var(--acc-a2), transparent 70%), var(--dark); }
+        .hookg.hg-dark { background: var(--dark-mesh); }
         .hookg.hg-accent { background: radial-gradient(140% 110% at 50% 118%, var(--acc-glow) 0%, var(--accent) 36%, var(--acc-deep) 78%, var(--dark) 100%); }
         .hookg.hg-light { background: radial-gradient(1200px 700px at 50% 50%, var(--ground-hi), transparent 70%), var(--ground); }
         .hookv { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; }
@@ -45,7 +46,7 @@
         .nrow.only .nmk { height: 170px; }
         .nword { font-size: 150px; font-weight: var(--weight); letter-spacing: var(--tracking); line-height: 1; white-space: nowrap; color: var(--ink); }
         .ntag { position: absolute; left: 0; right: 0; top: 575px; display: flex; justify-content: center; gap: 0.24em; font-size: 62px;
-          font-weight: var(--weight); letter-spacing: -0.035em; line-height: 1.1; white-space: nowrap; }
+          font-family: var(--font-body); font-weight: 500; letter-spacing: -0.035em; line-height: 1.1; white-space: nowrap; }
         .nw, .bw, .cw { position: relative; display: inline-block; isolation: isolate; }
         .nw { opacity: 0; color: var(--ink-soft); }
         .nw.k { color: var(--ink); }
@@ -54,7 +55,7 @@
         /* hero cards: 1 line, full frame, the ground is the colour; exit by dive, collapse or cut */
         .hero { z-index: 20; }
         .hbg { position: absolute; inset: 0; }
-        .hg-dark .hbg { background: radial-gradient(1200px 700px at 50% 122%, var(--acc-a1), transparent 70%), var(--dark); }
+        .hg-dark .hbg { background: var(--dark-mesh); }
         .hg-accent .hbg { background: radial-gradient(140% 110% at 50% 118%, var(--acc-glow) 0%, var(--accent) 36%, var(--acc-deep) 78%, var(--dark) 100%); }
         .hg-light .hbg { background: radial-gradient(900px 600px at 50% 50%, var(--ground-hi), transparent 70%), var(--ground); }
         .hl { position: absolute; left: 0; right: 0; top: 50%; height: 1em; margin-top: -0.5em; display: flex; justify-content: center; align-items: center;
@@ -78,7 +79,7 @@
           box-shadow: 0 70px 130px -56px var(--shadow), 0 2px 8px rgba(0, 0, 0, 0.05), 0 0 0 1px var(--line); }
         .pmedia { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
         .chip { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 14px; padding: 18px 30px 18px 22px; border-radius: 999px;
-          background: var(--surface); color: var(--ink); font-size: 34px; font-weight: var(--weight); letter-spacing: -0.02em; white-space: nowrap; opacity: 0;
+          background: var(--surface); color: var(--ink); font-family: var(--font-body); font-size: 34px; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; opacity: 0;
           box-shadow: 0 34px 80px -28px var(--shadow), 0 0 0 1px var(--line); }
         .chip svg { width: 36px; height: 36px; color: var(--success); }
         .cursor { position: absolute; left: 0; top: 0; width: 58px; height: 58px; opacity: 0; z-index: 40; transform-origin: 10px 6px; }
@@ -90,7 +91,7 @@
         .blk { position: relative; width: 310px; height: 310px; background: var(--surface); display: flex; flex-direction: column; align-items: center; justify-content: center;
           gap: 22px; opacity: 0; box-shadow: 0 34px 80px -40px var(--shadow), 0 0 0 1px var(--line); }
         .blk img { width: 104px; height: 104px; object-fit: contain; }
-        .blk span { font-size: 46px; font-weight: var(--weight); letter-spacing: -0.03em; color: var(--ink); white-space: nowrap; }
+        .blk span { font-family: var(--font-body); font-size: 46px; font-weight: 600; letter-spacing: -0.03em; color: var(--ink); white-space: nowrap; }
         .blk .div { position: absolute; right: 0; top: 44px; bottom: 44px; width: 2px; background: var(--line); opacity: 0; }
         .blab { position: absolute; left: 0; right: 0; top: 215px; display: flex; justify-content: center; gap: 0.24em; font-size: 88px;
           font-weight: var(--weight); letter-spacing: var(--tracking); line-height: 1.05; white-space: nowrap; opacity: 0; transform-origin: 50% 50%; }
@@ -117,7 +118,8 @@
         .erow.only .emk { height: 170px; }
         .eword { display: flex; font-size: 150px; font-weight: var(--weight); letter-spacing: var(--tracking); line-height: 1; white-space: nowrap; color: var(--ink); }
         .eword span { display: inline-block; opacity: 0; }
-        .etag { position: absolute; left: 0; right: 0; top: 585px; text-align: center; font-size: 52px; font-weight: var(--weight); letter-spacing: -0.03em; color: var(--ink2); opacity: 0; }
+        .etag { position: absolute; left: 0; right: 0; top: 585px; text-align: center; font-size: 60px; font-weight: var(--weight); letter-spacing: -0.03em; color: var(--ink2); opacity: 0; }
+        .etag em { font-style: var(--key-style); }
         .eurl { position: absolute; left: 0; right: 0; bottom: 92px; text-align: center; font-family: var(--mono); font-size: 26px; letter-spacing: 0.02em; color: var(--ink-soft); opacity: 0; }
       </style>
       <div id="root" data-composition-id="film" data-width="1920" data-height="1080">

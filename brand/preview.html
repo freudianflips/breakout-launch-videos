@@ -1,10 +1,11 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><title>Breakout brand preview</title>
 <style>
-@font-face { font-family: "Inter"; src: url("fonts/inter-100-900.woff2"); font-weight: 100 900; font-style: normal; }
-@font-face { font-family: "Inter"; src: url("fonts/inter-100-900.woff2"); font-weight: 100 900; font-style: normal; }
+@font-face { font-family: "Fraunces"; src: url("fonts/fraunces-100-900.woff2"); font-weight: 100 900; font-style: normal; }
+@font-face { font-family: "Fraunces"; src: url("fonts/fraunces-100-900-italic.woff2"); font-weight: 100 900; font-style: italic; }
+@font-face { font-family: "Manrope"; src: url("fonts/manrope-200-800.woff2"); font-weight: 200 800; font-style: normal; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { width: 1600px; height: 1000px; background: #eceae6; font-family: "Inter", system-ui, sans-serif; color: #222; padding: 36px; display: grid; grid-template-columns: 520px 1fr; grid-template-rows: auto 1fr; gap: 24px; }
+body { width: 1600px; height: 1000px; background: #eceae6; font-family: "Manrope", system-ui, sans-serif; color: #222; padding: 36px; display: grid; grid-template-columns: 520px 1fr; grid-template-rows: auto 1fr; gap: 24px; }
 .h { grid-column: 1 / 3; display: flex; align-items: baseline; gap: 16px; font: 600 15px/1 system-ui, sans-serif; color: #555; }
 .h b { font-size: 22px; color: #111; }
 .card { border-radius: 20px; overflow: hidden; position: relative; }
@@ -19,33 +20,33 @@ body { width: 1600px; height: 1000px; background: #eceae6; font-family: "Inter",
 .sw b { font: 600 12px system-ui; }
 .sw span { font: 12px ui-monospace, monospace; color: #666; }
 .right { display: grid; gap: 24px; grid-template-rows: 1fr 300px; }
-.stage { background: #fdfdfd; color: #232323; padding: 56px 60px; display: flex; flex-direction: column; justify-content: center; gap: 26px; }
-.hero { font-family: "Inter", system-ui, sans-serif; font-weight: 700; letter-spacing: -0.045em; font-size: 92px; line-height: 1.02; }
-.k { position: relative; isolation: isolate; }
-.k::before { content: ""; position: absolute; left: -0.06em; right: -0.06em; top: 0.18em; bottom: -0.02em; border-radius: 0.08em; background: rgba(78, 70, 220, 0.16); z-index: -1; }
-.body { font-size: 22px; line-height: 1.45; color: #595959; max-width: 760px; }
+.stage { background: #f4f4f4; color: #040405; padding: 56px 60px; display: flex; flex-direction: column; justify-content: center; gap: 26px; }
+.hero { font-family: "Fraunces", system-ui, sans-serif; font-weight: 340; letter-spacing: -0.035em; font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 0; font-size: 92px; line-height: 1.02; }
+.k { position: relative; isolation: isolate; font-style: italic; }
+.k::before { content: ""; position: absolute; left: -0.06em; right: -0.06em; top: 0.18em; bottom: -0.02em; border-radius: 0.08em; background: rgba(76, 0, 255, 0); z-index: -1; }
+.body { font-size: 22px; line-height: 1.45; color: #5c5850; max-width: 760px; }
 .row { display: flex; gap: 14px; align-items: center; }
-.btn { background: #4e46dc; color: #ffffff; padding: 14px 26px; border-radius: 16px; font-weight: 600; font-size: 18px; }
-.surf { background: #ffffff; border-radius: 16px; padding: 14px 20px; font-size: 16px; color: #232323; box-shadow: 0 10px 30px -18px rgba(0,0,0,0.35); }
+.btn { background: #4c00ff; color: #ffffff; padding: 14px 26px; border-radius: 16px; font-weight: 600; font-size: 18px; }
+.surf { background: #ffffff; border-radius: 16px; padding: 14px 20px; font-size: 16px; color: #040405; box-shadow: 0 10px 30px -18px rgba(0,0,0,0.35); }
 .ok { color: #1f8a5b; font-weight: 600; } .bad { color: #d2432f; font-weight: 600; }
-.darkcard { background: #1c1778; color: #ffffff; display: grid; place-items: center; }
-.darkcard .hero { font-size: 104px; color: #ffffff; }
-.darkcard .hero .acc { color: #9a95ff; }
+.darkcard { background: radial-gradient(60% 75% at 60.6% 41.3%, rgba(76, 0, 255, 0.64) 0%, rgba(76, 0, 255, 0.5) 22%, rgba(0, 0, 0, 0) 60%), radial-gradient(55% 70% at 3.8% 63%, rgba(38, 22, 120, 0.9) 0%, rgba(38, 22, 120, 0.6) 22%, rgba(0, 0, 0, 0) 60%), radial-gradient(55% 60% at 61.8% 3.5%, rgba(40, 9, 97, 0.9) 0%, rgba(40, 9, 97, 0.6) 22%, rgba(0, 0, 0, 0) 60%), #140b3c; color: #fafafa; display: grid; place-items: center; }
+.darkcard .hero { font-size: 104px; color: #fafafa; }
+.darkcard .hero .acc { color: #be79ff; font-style: italic; }
 .meta { position: absolute; right: 18px; bottom: 14px; font: 12px ui-monospace, monospace; opacity: 0.6; }
 </style></head>
 <body>
-<div class="h"><b>Breakout</b><span>getbreakout.ai</span><span>display: Inter 700</span><span>body: Inter 400</span><span>mode: light</span><span>reviewed: false</span></div>
+<div class="h"><b>Breakout</b><span>getbreakout.ai</span><span>display: Fraunces 340</span><span>body: Manrope 500</span><span>mode: light</span><span>reviewed: false</span></div>
 <div class="col">
-  <div class="card lg" style="background:#fdfdfd"><small style="color:#232323">logo on ground</small><img src="logo.svg" alt=""></div>
-  <div class="card lg" style="background:#1c1778"><small style="color:#ffffff">logo on dark</small><img src="logo-on-dark.svg" alt=""></div>
-  <div class="card sws"><div class="sw"><i style="background:#fdfdfd"></i><b>ground</b><span>#fdfdfd</span></div><div class="sw"><i style="background:#ffffff"></i><b>surface</b><span>#ffffff</span></div><div class="sw"><i style="background:#232323"></i><b>ink</b><span>#232323</span></div><div class="sw"><i style="background:#595959"></i><b>ink_secondary</b><span>#595959</span></div><div class="sw"><i style="background:#4e46dc"></i><b>accent</b><span>#4e46dc</span></div><div class="sw"><i style="background:#ffffff"></i><b>accent_ink</b><span>#ffffff</span></div><div class="sw"><i style="background:#1c1778"></i><b>dark</b><span>#1c1778</span></div><div class="sw"><i style="background:#ffffff"></i><b>dark_ink</b><span>#ffffff</span></div><div class="sw"><i style="background:#9a95ff"></i><b>accent_on_dark</b><span>#9a95ff</span></div><div class="sw"><i style="background:rgba(78, 70, 220, 0.16)"></i><b>highlight</b><span>rgba(78, 70, 220, 0.16)</span></div><div class="sw"><i style="background:#1f8a5b"></i><b>success</b><span>#1f8a5b</span></div><div class="sw"><i style="background:#d2432f"></i><b>danger</b><span>#d2432f</span></div></div>
+  <div class="card lg" style="background:#f4f4f4"><small style="color:#040405">logo on ground</small><img src="logo.svg" alt=""></div>
+  <div class="card lg" style="background:#140b3c"><small style="color:#fafafa">logo on dark</small><img src="logo-on-dark.svg" alt=""></div>
+  <div class="card sws"><div class="sw"><i style="background:#f4f4f4"></i><b>ground</b><span>#f4f4f4</span></div><div class="sw"><i style="background:#ffffff"></i><b>surface</b><span>#ffffff</span></div><div class="sw"><i style="background:#040405"></i><b>ink</b><span>#040405</span></div><div class="sw"><i style="background:#5c5850"></i><b>ink_secondary</b><span>#5c5850</span></div><div class="sw"><i style="background:#4c00ff"></i><b>accent</b><span>#4c00ff</span></div><div class="sw"><i style="background:#ffffff"></i><b>accent_ink</b><span>#ffffff</span></div><div class="sw"><i style="background:#140b3c"></i><b>dark</b><span>#140b3c</span></div><div class="sw"><i style="background:#fafafa"></i><b>dark_ink</b><span>#fafafa</span></div><div class="sw"><i style="background:#be79ff"></i><b>accent_on_dark</b><span>#be79ff</span></div><div class="sw"><i style="background:rgba(76, 0, 255, 0)"></i><b>highlight</b><span>rgba(76, 0, 255, 0)</span></div><div class="sw"><i style="background:#1f8a5b"></i><b>success</b><span>#1f8a5b</span></div><div class="sw"><i style="background:#d2432f"></i><b>danger</b><span>#d2432f</span></div></div>
 </div>
 <div class="right">
   <div class="card stage">
-    <div class="hero">Inbound SDR, powered by <span class="k">AI.</span></div>
+    <div class="hero">Pageview to <span class="k">pipeline.</span></div>
     <div class="body">Breakout turns your website visitors into qualified meetings, without adding headcount.</div>
     <div class="row"><span class="btn">See an AI SDR qualify and book in minutes, not months.</span><span class="surf">A card on the ground <span class="ok">done</span> <span class="bad">failed</span></span></div>
   </div>
-  <div class="card darkcard"><div class="hero">Every <span class="acc">launch.</span></div><span class="meta" style="color:#ffffff">dark hero card</span></div>
+  <div class="card darkcard"><div class="hero">Every <span class="acc">launch.</span></div><span class="meta" style="color:#fafafa">dark hero card</span></div>
 </div>
 </body></html>

@@ -179,11 +179,16 @@ for role in ("display", "body", "mono"):
             FONTFACES.append(f'@font-face {{ font-family: "{fam}"; src: url("{dst}") format("{FMT.get(os.path.splitext(dst)[1], "woff2")}"); '
                              f'font-weight: {weight}; font-style: {style};{rng} }}')
 disp = (BRAND.get("fonts") or {}).get("display") or {}
-VARS["--font"] = f'"{FAMILY.get("display", "system-ui")}", "{FAMILY.get("body", "system-ui")}", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif'
+LOCAL = "".join(f'"{f}", ' for f in disp.get("local") or [])   # installed faces that win over the bundled files (a licensed font)
+VARS["--font"] = f'{LOCAL}"{FAMILY.get("display", "system-ui")}", "{FAMILY.get("body", "system-ui")}", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif'
 VARS["--font-body"] = f'"{FAMILY.get("body", FAMILY.get("display", "system-ui"))}", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif'
 VARS["--mono"] = f'"{FAMILY.get("mono", "ui-monospace")}", ui-monospace, "SF Mono", Menlo, monospace'
 VARS["--weight"] = str(disp.get("weight", 600))
 VARS["--tracking"] = disp.get("tracking", "-0.045em")
+VARS["--font-vars"] = disp.get("variation", "normal")            # e.g. '"SOFT" 100, "opsz" 144' for a variable display font
+VARS["--key-style"] = disp.get("key_style", "normal")            # "italic" sets key words in the italic, as many serif brands do
+GRAD = BRAND.get("gradients") or {}
+VARS["--dark-mesh"] = GRAD.get("dark_mesh") or f'radial-gradient(1200px 700px at 50% 122%, {VARS["--acc-a1"]}, transparent 70%), {VARS["--dark"]}'
 
 
 # ------------------------------------------------------------------ voice and timing
@@ -440,7 +445,7 @@ plate_html = f'<div class="endp"><img src="{plate}" alt=""></div>' if plate else
 end_mark = logo_img("emk") if LOCKUP in ("mark+name", "logo") else ""
 end_word = f'<div class="eword">{letters}</div>' if LOCKUP in ("mark+name", "name") else ""
 beats_html.append(f'<div class="beat end" data-i="end">{plate_html}<div class="erow{" only" if LOCKUP == "logo" else ""}">{end_mark}{end_word}</div>'
-                  f'<div class="etag">{html.escape(end_beat.get("tagline", BRAND.get("tagline", "")))}</div>'
+                  f'<div class="etag">{" ".join(f"<em>{html.escape(w)}</em>" if k else html.escape(w) for w, k in words_of(end_beat.get("tagline", BRAND.get("tagline", ""))))}</div>'
                   f'<div class="eurl">{html.escape(end_beat.get("url", BRAND.get("domain", "")))}</div></div>')
 data.append({"type": "end", "a": round(EA, 3), "b": END, "logo": round(EA + 0.25, 3)})
 EVENTS.append({"t": round(EA + 0.25, 3), "ev": "logo"})

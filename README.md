@@ -10,7 +10,7 @@ The first version of every film is free and needs no accounts: a placeholder nar
 
 | Included | What it does |
 |---|---|
-| [Breakout brand kit](brand/README.md) | `brand/brand.json`: the logo from the team Drive, the indigo palette, Inter, and the copy from the Brand Guide for Writers. `brand/preview.png` shows it at a glance |
+| [Breakout brand kit](brand/README.md) | `brand/brand.json`: the logo from the team Drive, the homepage's fonts (New Kansas or its open stand-in Fraunces, and Manrope), its violet mesh and palette, and copy from the site and the Brand Guide for Writers. `brand/preview.png` shows it at a glance |
 | [The film template](film/README.md) | 2 hooks on a shared body. The story lives in `film/film.json`, and every picture cue lands on the narrator's words |
 | [10 agent skills](skills/README.md) | Story, voice, music, sound, mix, review, motion and 3D. Each is a short manual your agent follows |
 | [Style log](docs/breakout-style.md) | The look decisions for Breakout so far, the open questions, and a verdict log for each round |

@@ -1088,13 +1088,13 @@ async function main() {
 
 function previewHtml(b) {
   const c = b.colors;
-  const face = (f) => (f.faces || []).map((x) => `@font-face { font-family: "${f.family}"; src: url("${x.file}"); font-weight: ${x.weight}; font-style: normal;${x.unicodeRange ? ` unicode-range: ${x.unicodeRange};` : ''} }`).join('\n');
+  const face = (f) => (f.faces || []).map((x) => `@font-face { font-family: "${f.family}"; src: url("${x.file}"); font-weight: ${x.weight}; font-style: ${x.style || 'normal'};${x.unicodeRange ? ` unicode-range: ${x.unicodeRange};` : ''} }`).join('\n');
   const fam = (f) => `"${f.family}", system-ui, sans-serif`;
   const esc = (s) => String(s || '').replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
   const logoLight = b.logo.file ? `<img src="${b.logo.file}" alt="">` : `<span class="nologo">no logo found</span>`;
   const logoDark = b.logo.on_dark || b.logo.file ? `<img src="${b.logo.on_dark || b.logo.file}" alt="">` : `<span class="nologo">no logo</span>`;
   const sw = (k) => `<div class="sw"><i style="background:${c[k]}"></i><b>${k}</b><span>${c[k]}</span></div>`;
-  const words = (b.tagline || b.name).split(/\s+/).slice(0, 7);
+  const words = (b.tagline || b.name).replace(/\*/g, '').split(/\s+/).slice(0, 7);
   const key = words.length > 1 ? words.length - 1 : 0;
   return `<!doctype html>
 <html><head><meta charset="utf-8"><title>${esc(b.name)} brand preview</title>
@@ -1118,17 +1118,17 @@ body { width: 1600px; height: 1000px; background: #eceae6; font-family: ${fam(b.
 .sw span { font: 12px ui-monospace, monospace; color: #666; }
 .right { display: grid; gap: 24px; grid-template-rows: 1fr 300px; }
 .stage { background: ${c.ground}; color: ${c.ink}; padding: 56px 60px; display: flex; flex-direction: column; justify-content: center; gap: 26px; }
-.hero { font-family: ${fam(b.fonts.display)}; font-weight: ${b.fonts.display.weight}; letter-spacing: ${b.fonts.display.tracking}; font-size: 92px; line-height: 1.02; }
-.k { position: relative; isolation: isolate; }
+.hero { font-family: ${fam(b.fonts.display)}; font-weight: ${b.fonts.display.weight}; letter-spacing: ${b.fonts.display.tracking}; font-variation-settings: ${b.fonts.display.variation || 'normal'}; font-size: 92px; line-height: 1.02; }
+.k { position: relative; isolation: isolate; font-style: ${b.fonts.display.key_style || 'normal'}; }
 .k::before { content: ""; position: absolute; left: -0.06em; right: -0.06em; top: 0.18em; bottom: -0.02em; border-radius: 0.08em; background: ${c.highlight}; z-index: -1; }
 .body { font-size: 22px; line-height: 1.45; color: ${c.ink_secondary}; max-width: 760px; }
 .row { display: flex; gap: 14px; align-items: center; }
 .btn { background: ${c.accent}; color: ${c.accent_ink}; padding: 14px 26px; border-radius: ${Math.min(b.radius, 999)}px; font-weight: 600; font-size: 18px; }
 .surf { background: ${c.surface}; border-radius: ${b.radius}px; padding: 14px 20px; font-size: 16px; color: ${c.ink}; box-shadow: 0 10px 30px -18px rgba(0,0,0,0.35); }
 .ok { color: ${c.success}; font-weight: 600; } .bad { color: ${c.danger}; font-weight: 600; }
-.darkcard { background: ${c.dark}; color: ${c.dark_ink}; display: grid; place-items: center; }
+.darkcard { background: ${(b.gradients && b.gradients.dark_mesh) || c.dark}; color: ${c.dark_ink}; display: grid; place-items: center; }
 .darkcard .hero { font-size: 104px; color: ${c.dark_ink}; }
-.darkcard .hero .acc { color: ${c.accent_on_dark || c.accent}; }
+.darkcard .hero .acc { color: ${c.accent_on_dark || c.accent}; font-style: ${b.fonts.display.key_style || 'normal'}; }
 .meta { position: absolute; right: 18px; bottom: 14px; font: 12px ui-monospace, monospace; opacity: 0.6; }
 </style></head>
 <body>

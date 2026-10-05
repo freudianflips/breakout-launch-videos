@@ -13,6 +13,6 @@ The skills, scripts, template and documents in this repository are adapted from 
 | [Chatterbox](https://github.com/resemble-ai/chatterbox), [ACE-Step](https://github.com/ace-step/ACE-Step) | optional local voice clone and music | MIT, Apache-2.0 |
 | [Higgsfield](https://higgsfield.ai) CLI | optional paid voice, music, sound kits and footage on your own account | provider terms |
 
-The Breakout logo and name in `brand/` belong to Breakout. Inter, the stand-in display and body font in `brand/fonts/`, is distributed under the SIL Open Font License ([OFL.txt](brand/fonts/OFL.txt)).
+The Breakout logo and name in `brand/` belong to Breakout. Fraunces (the open stand-in for the site's headline face) and Manrope (the site's body face) in `brand/fonts/` are distributed under the SIL Open Font License ([OFL.txt](brand/fonts/OFL.txt)). The site's headline face, New Kansas, is an Adobe Fonts typeface and is not included; it is used only when installed on the rendering machine.
 
 The Acme site in `examples/acme-site/` is a fictional brand used to test the extractor offline. Its font, Plus Jakarta Sans, is distributed under the SIL Open Font License ([OFL.txt](examples/acme-site/fonts/OFL.txt)). Product names and logos mentioned in the documents (Apple, Lovable and others) belong to their owners and are named only as style references.
