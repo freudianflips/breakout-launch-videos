@@ -1,0 +1,74 @@
+{
+  "name": "Breakout",
+  "url": "https://getbreakout.ai/",
+  "domain": "getbreakout.ai",
+  "tagline": "Inbound SDR, powered by AI.",
+  "description": "Breakout turns your website visitors into qualified meetings, without adding headcount.",
+  "mode": "light",
+  "logo": {
+    "file": "logo.svg",
+    "mark": "mark.svg",
+    "on_dark": "logo-on-dark.svg",
+    "mark_on_dark": "mark-on-dark.svg",
+    "source": "Breakout_logo 8.svg from the team Drive (white mark + wordmark), recoloured to #232323 for light grounds; the mark is its circle-b group. Original in brand/source/."
+  },
+  "colors": {
+    "ground": "#f6f6fb",
+    "surface": "#ffffff",
+    "ink": "#232323",
+    "ink_secondary": "#595959",
+    "accent": "#4e46dc",
+    "accent_ink": "#ffffff",
+    "dark": "#100e33",
+    "dark_ink": "#f6f6fb",
+    "highlight": "rgba(78, 70, 220, 0.18)",
+    "success": "#1f8a5b",
+    "danger": "#d2432f",
+    "accent_on_dark": "#9a95ff"
+  },
+  "fonts": {
+    "display": {
+      "family": "Inter",
+      "weight": 700,
+      "tracking": "-0.045em",
+      "files": ["fonts/inter-100-900.woff2"],
+      "faces": [{"file": "fonts/inter-100-900.woff2", "weight": "100 900", "style": "normal"}]
+    },
+    "body": {
+      "family": "Inter",
+      "weight": 400,
+      "files": ["fonts/inter-100-900.woff2"],
+      "faces": [{"file": "fonts/inter-100-900.woff2", "weight": "100 900", "style": "normal"}]
+    },
+    "mono": {"family": "ui-monospace", "files": []}
+  },
+  "radius": 16,
+  "copy": {
+    "source": "Breakout Brand Guide for Writers and the Referral Partner Enablement guide (team Drive). Re-run the extractor on getbreakout.ai to pull the live site's h1, h2s and features.",
+    "h1": "Inbound SDR, powered by AI.",
+    "subhead": "Breakout turns your website visitors into qualified meetings, without adding headcount.",
+    "h2": [
+      "Inbound is the future.",
+      "Attention is earned, not interrupted.",
+      "Every visit is a growth opportunity.",
+      "Websites should adapt to each buyer the moment they arrive.",
+      "Speed-to-lead and orchestration beat bloated headcount."
+    ],
+    "one_liners": [
+      "Breakout turns your website visitors into qualified meetings, without adding headcount.",
+      "Breakout is an AI SDR that turns your website traffic into handraisers.",
+      "A full-time, always-on SDR that never misses a website visitor."
+    ],
+    "ctas": ["See an AI SDR qualify and book in minutes, not months.", "Book a demo"],
+    "features": [
+      "Identifies the visitor: company, person, buying group and intent signals",
+      "Engages them in real time: answers questions, shares content, qualifies and books meetings",
+      "Converts drop-offs with personalized email and LinkedIn follow-ups"
+    ],
+    "voice": "Challenger brand. Direct, contrarian, confident, optimistic about AI. Short sentences, one idea per line, no fluff. Lead with a clear verdict."
+  },
+  "images": [],
+  "preview": "preview.png",
+  "extracted_at": null,
+  "reviewed": false
+}

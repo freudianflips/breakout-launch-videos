@@ -1,0 +1,13 @@
+{
+  "about": "Free hook: 2 lines of type on the dark ground, no footage, no voice. From the Brand Guide: your website is the last place buyers truly give you their attention, yet it serves them static pages and clunky forms.",
+  "duration": 5.0,
+  "video": null,
+  "ground": "dark",
+  "push": true,
+  "voice": null,
+  "text": [
+    {"words": [["Buyers", 0.35], ["give", 0.6], ["you", 0.76], ["their", 0.9], ["*attention.", 1.1]], "out": 2.45, "y": 520, "size": 118},
+    {"words": [["You", 2.75], ["give", 2.95], ["them", 3.12], ["a", 3.3], ["*form.", 3.45]], "out": 6.0, "y": 520, "size": 118}
+  ],
+  "sfx": [{"t": 0.35, "sound": "felt_thump", "gain_db": -18}, {"t": 2.75, "sound": "felt_thump", "gain_db": -18}]
+}

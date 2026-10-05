@@ -1,0 +1,12 @@
+{
+  "name": "breakout-launch-videos",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "brand": "node tools/brand-from-url.mjs"
+  },
+  "dependencies": {
+    "gsap": "^3.14.2",
+    "puppeteer": "^25.12.0"
+  }
+}
