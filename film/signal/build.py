@@ -101,6 +101,19 @@ card_dn = (f'<div class="card" id="c-dn">{head(MARK, dn["title"], dn["time"])}'
            f'<div class="rw small"><span class="dim caps">Stage</span><span class="sp1"></span><span class="pill no" id="st-from">{E(dn["from"])}</span>'
            f'<span class="arr">→</span><span class="pill vio" id="st-to">{E(dn["to"])}</span></div></div>')
 
+bk = FILM["booking"]
+slots = "".join(f'<span class="slot{" pick" if i == bk["pick"] else ""}">{E(x)}</span>' for i, x in enumerate(bk["slots"]))
+card_bk = (f'<div class="card" id="c-bk">{head(MARK, bk["title"], bk["time"])}'
+           f'<div class="day"><span class="chev">‹</span><b>{E(bk["day"])}</b><span class="chev">›</span></div>'
+           f'<div class="slots">{slots}</div><div class="bkbtn">{E(bk["button"])}<span>→</span></div></div>')
+bd = FILM["booked"]
+people_html = "".join(f'<span class="face f{i}">{E(x)}</span>' for i, x in enumerate(bd["people"]))
+CAL = '<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>'
+card_bd = (f'<div class="card" id="c-bd">{head(MARK, bd["title"], bd["time"])}'
+           f'<div class="rw big">{CAL}<div><div class="tx">{E(bd["row"])}</div><div class="sub">{E(bd["when"])}</div></div>'
+           f'<span class="faces">{people_html}</span></div></div>')
+booked = (f'<div id="flood"></div><div id="booked"><svg id="tick" viewBox="0 0 200 200"><circle cx="100" cy="100" r="86"/><path d="M58 104l28 28 58-62"/></svg>'
+          f'<div id="bigok">{E(bd["big"])}</div>{card_bd}<div id="bnote" class="mono">{E(bd["note"])}</div></div>')
 em = FILM["email"]
 body = "".join(f'<p>{typed(p)}</p>' for p in em["body"])
 email = (f'<div id="email"><div class="eh">{E(em["head"])}</div><div class="eto">To&nbsp;&nbsp;{E(em["to"])}</div>'
@@ -111,17 +124,16 @@ elabels = "".join(f'<span class="el">{E(x)}</span>' for x in em["labels"])
 labels = "".join(f'<div class="lbl"><i></i>{E(x)}</div>' for x in FILM["signal_labels"])
 lk = FILM["lockup"]
 line2 = E(lk["line2"]).replace("out.", '<span class="v">out.</span>')
-mtg = FILM["meeting"]
 
 T = {"bpm": FILM["bpm"], "bars": FILM["bars"], "counter": FILM["counter"]}
 tpl = open("template.html").read()
 rep = {
     "__FONTFACES__": "\n        ".join(faces),
     "__LOGO__": f'{A}/{os.path.basename(BRAND["logo"]["file"])}',
-    "__LABELS__": labels, "__CARDS__": card_run + card_acc + card_think + card_ap + card_dn,
+    "__LABELS__": labels, "__CARDS__": card_run + card_acc + card_think + card_ap + card_dn + card_bk, "__BOOKED__": booked, "__BOOKS__": E(FILM["words"]["books"]),
     "__EMAIL__": email, "__ELABELS__": elabels, "__DISCLAIMER__": E(FILM["disclaimer"]),
     "__READS__": E(FILM["words"]["reads"]), "__THINKS__": E(FILM["words"]["thinks"]), "__SENDS__": E(FILM["words"]["sends"]),
-    "__MEETING__": E(mtg), "__L1__": E(lk["line1"]), "__L2__": line2, "__TITLE__": E(lk["title"]), "__URL__": E(lk["url"]),
+    "__L1__": E(lk["line1"]), "__L2__": line2, "__TITLE__": E(lk["title"]), "__URL__": E(lk["url"]),
     "__COUNTER_LABEL__": E(FILM["counter"]["label"]), "__T__": json.dumps(T),
 }
 for k, v in rep.items():

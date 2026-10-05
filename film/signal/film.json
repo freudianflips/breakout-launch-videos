@@ -1,7 +1,7 @@
 {
   "about": "Breakout Plays, 'Signal in. Meeting out.', the Swiss-grid film from film/STORYLINE-signal.md. Times are in bars from 0; 0.25 bar = 1 beat. No narration.",
   "bpm": 128,
-  "bars": 12,
+  "bars": 13,
   "brand": "../../brand",
   "account": "Notion",
   "disclaimer": "Illustrative example",
@@ -21,12 +21,12 @@
       "title": "Agent run",
       "time": "9:20 AM",
       "chip": "Play",
-      "source": "Notion \u00b7 EMEA"
+      "source": "Notion · EMEA"
     },
     "account": {
       "title": "Breakout",
       "time": "9:20 AM",
-      "line": "Notion \u00b7 visited in March, never converted",
+      "line": "Notion · visited in March, never converted",
       "sub": "CFO, Head of RevOps, Marketing on file",
       "rows": [
         [
@@ -41,7 +41,7 @@
         ],
         [
           "tag",
-          "Pricing page viewed 3\u00d7",
+          "Pricing page viewed 3×",
           "Act"
         ]
       ]
@@ -58,7 +58,7 @@
       ]
     },
     "approve": {
-      "title": "You \u00b7 Marketer",
+      "title": "You · Marketer",
       "time": "9:30 AM",
       "item": "Send Email 1 to Dana, CFO",
       "tag": "Approved"
@@ -72,8 +72,8 @@
     }
   },
   "email": {
-    "head": "Email 1 \u00b7 Day 0",
-    "to": "Dana \u00b7 CFO, Notion",
+    "head": "Email 1 · Day 0",
+    "to": "Dana · CFO, Notion",
     "subject": "A cost breakdown for your new CFO",
     "body": [
       "Hi Dana,",
@@ -89,9 +89,9 @@
   "words": {
     "reads": "Reads.",
     "thinks": "Thinks.",
-    "sends": "Sends."
+    "sends": "Sends.",
+    "books": "Books."
   },
-  "meeting": "Meeting \u00b7 booked \u00b7 Thu 10:30",
   "lockup": {
     "line1": "Signal in.",
     "line2": "Meeting out.",
@@ -313,16 +313,70 @@
     },
     {
       "at": 9.0,
-      "sound": "sub_drop",
-      "gain_db": -9
+      "sound": "press",
+      "gain_db": -10
     },
     {
       "at": 9.0,
       "sound": "felt_thump",
-      "gain_db": -5
+      "gain_db": -8
+    },
+    {
+      "at": 9.25,
+      "sound": "orbit_tick",
+      "gain_db": -13
+    },
+    {
+      "at": 9.375,
+      "sound": "orbit_tick",
+      "gain_db": -13
     },
     {
       "at": 9.5,
+      "sound": "glass_tick",
+      "gain_db": -10,
+      "args": {
+        "degree": 4
+      }
+    },
+    {
+      "at": 9.75,
+      "sound": "press",
+      "gain_db": -8
+    },
+    {
+      "at": 10.0,
+      "sound": "sub_drop",
+      "gain_db": -7
+    },
+    {
+      "at": 10.0,
+      "sound": "logo_sting",
+      "gain_db": -8
+    },
+    {
+      "at": 10.25,
+      "sound": "lock",
+      "gain_db": -10
+    },
+    {
+      "at": 10.5,
+      "sound": "glass_tick",
+      "gain_db": -12,
+      "args": {
+        "degree": 2
+      }
+    },
+    {
+      "at": 10.625,
+      "sound": "glass_tick",
+      "gain_db": -12,
+      "args": {
+        "degree": 3
+      }
+    },
+    {
+      "at": 10.75,
       "sound": "glass_tick",
       "gain_db": -12,
       "args": {
@@ -330,9 +384,43 @@
       }
     },
     {
-      "at": 10.0,
-      "sound": "logo_sting",
-      "gain_db": -9
+      "at": 11.0,
+      "sound": "felt_thump",
+      "gain_db": -6
+    },
+    {
+      "at": 11.25,
+      "sound": "arrive",
+      "gain_db": -14,
+      "args": {
+        "degree": 0
+      }
     }
-  ]
+  ],
+  "booking": {
+    "title": "Breakout",
+    "time": "9:05 AM",
+    "day": "Thursday, Oct 15",
+    "slots": [
+      "10:00",
+      "11:00",
+      "2:00 PM",
+      "3:00"
+    ],
+    "pick": 2,
+    "button": "Book meeting"
+  },
+  "booked": {
+    "big": "Meeting booked.",
+    "title": "Breakout",
+    "time": "9:05 AM",
+    "row": "Meeting booked",
+    "when": "Thu, Oct 15 · 2:00 PM",
+    "people": [
+      "D",
+      "R",
+      "M"
+    ],
+    "note": "Dana · CFO, and 2 more from Notion"
+  }
 }

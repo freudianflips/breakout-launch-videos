@@ -61,10 +61,10 @@ def sub(f, d):
     return np.sin(2 * math.pi * f * t) * np.minimum(1, t / 0.01) * np.exp(-t / (d * 0.8)) * 0.5
 
 
-ROOTS = [41.2, 41.2, 49.0, 49.0, 55.0, 55.0, 41.2, 49.0, 55.0, 61.7, 41.2, 41.2]   # E1, G1, A1, B1
+ROOTS = [41.2, 41.2, 49.0, 49.0, 55.0, 55.0, 41.2, 49.0, 55.0, 61.7, 41.2, 41.2, 41.2]   # E1, G1, A1, B1
 for b in range(BARS):
     t0 = b * BAR
-    lock = b >= 10
+    lock = b >= 11
     if not lock:
         for k in range(4):
             if b == 0 and k > 0:
@@ -77,7 +77,7 @@ for b in range(BARS):
         for k in range(n):
             add(click() * (1.0 if k % 4 == 2 else 0.6), t0 + k * BAR / n)
         add(sub(ROOTS[b], BAR * 0.95), t0)
-    elif b == 10:
+    elif b == 11:
         add(kick(), t0)
         add(sub(ROOTS[0], BAR * 2), t0)
         t = ax(BAR * 2)
