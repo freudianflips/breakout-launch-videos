@@ -21,7 +21,7 @@ The look of Breakout's launch films, decided one round at a time. Change 1 varia
 2. **How much indigo.** 1 accent card per film (now), or indigo as the main ground with white type?
 3. **Weight.** The site's New Kansas is light; is the film's 340 right on a 1080p screen, or one step heavier for legibility?
 4. **Hook direction.** Type-only problem lines (now), a stylised "visitor leaves the site" moment, or a real website recording with the AI SDR opening a conversation?
-5. **Product shots.** Accounts, the account Browsing Summary, All Chats and Contacts are in. Missing: a live AI SDR conversation (the engage beat shows a list, not a chat) and a follow-up email. Contacts is mostly blurred; a demo workspace with sample data would read better.
+5. **Product shots.** Accounts, the account Browsing Summary, All Chats and Contacts are in. The website agent (welcome and an asked question) now carries the engage beat. Missing: the agent's answer and a follow-up email. Contacts is mostly blurred; a demo workspace with sample data would read better.
 6. **Narrator.** Gender, age, pace. The kit's default is brisk and clear, 2.2 to 2.7 words a second, never performed.
 7. **Music.** Clean electronic at about 120 BPM (now), or something warmer?
 

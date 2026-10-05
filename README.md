@@ -58,7 +58,7 @@ The film lands in `film/renders/attention.mp4`.
 | Hook `who-visited` | Light ground, 1 question: "Who visited your site *today?*" |
 | Name | The Breakout logo punches in on the drop: "is your *inbound SDR*, powered by AI." |
 | Identify | "Every *visitor.*" on deep indigo, then Accounts (relevance, location, source) and the account's Browsing Summary |
-| Engage | "In *real time.*" on indigo, then All Chats with a click on Live Chats and "Meeting booked" |
+| Engage | The website agent's welcome ("Go ahead. Ask me stuff."), "In *real time.*" on violet, then the asked question with a click on Book a Meeting and "Meeting booked" |
 | Convert | Contacts: email and LinkedIn, "Followed up" |
 | Blocks | Identify, Engage, Convert close into "One *AI SDR.*" |
 | Switch | "Inbound SDR, *always on.*" |

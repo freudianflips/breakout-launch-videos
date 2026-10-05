@@ -67,6 +67,19 @@
       }
     },
     {
+      "type": "product",
+      "line": "04",
+      "src": "assets/screens/agent-welcome.png",
+      "focus": [
+        0.2,
+        0.38,
+        0.74,
+        0.22
+      ],
+      "push_at": "engages",
+      "until": "in-0.06"
+    },
+    {
       "type": "hero",
       "line": "04",
       "ground": "accent",
@@ -77,18 +90,18 @@
     {
       "type": "product",
       "line": "04",
-      "src": "assets/screens/chats.png",
+      "src": "assets/screens/agent-question.png",
       "focus": [
-        0.0,
-        0.08,
-        0.62,
-        0.55
+        0.02,
+        0.07,
+        0.94,
+        0.24
       ],
-      "push_at": "answers",
+      "push_at": "questions",
       "cursor": {
-        "at": "engages",
-        "x": 0.057,
-        "y": 0.31
+        "at": "books",
+        "x": 0.177,
+        "y": 0.11
       },
       "chip": {
         "text": "Meeting booked",
