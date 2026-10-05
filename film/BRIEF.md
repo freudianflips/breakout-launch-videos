@@ -6,7 +6,7 @@ aspect: 1920x1080 (a 1080x1920 cut later, if wanted)
 language: en
 length: 28s
 angle: Watch it run, framed as a track being built
-status: draft for the owner's review, not approved
+status: approved by the owner on 2026-10-05
 ---
 
 ## Intent

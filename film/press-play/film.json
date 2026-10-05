@@ -1,0 +1,71 @@
+{
+  "about": "Breakout Plays, 'Press play.', from film/STORYBOARD.md. Times are in bars from 0 (bar 0 = the storyboard's bar 1); 0.25 bar = 1 beat, 1/16 bar = 1 step. One pattern drives both the grid and the scratch bed: every lit step you see is a hit you hear.",
+  "bpm": 128,
+  "bars": 15,
+  "brand": "../../brand",
+  "disclaimer": "Notion · Illustrative example",
+  "rows": [
+    { "label": "Pricing page viewed 3×", "sound": "kick", "steps": [0, 4, 8, 12], "start": 2, "tag": "Act", "tag_at": 4.0 },
+    { "label": "New CFO hired", "sound": "clap", "steps": [4, 12], "start": 3, "tag": "Act", "tag_at": 4.25 },
+    { "label": "Return visit", "sound": "hat", "steps": [2, 6, 10, 14], "start": 4, "tag": "Act", "tag_at": 4.75 },
+    { "label": "2 blog views", "sound": "shaker", "steps": [1, 3, 7, 9, 11, 15], "start": 4, "tag": "No action", "mute_at": 4.5 }
+  ],
+  "committee": { "label": "Buying committee", "steps": [0, 6, 10], "start": 10, "chips": ["Dana · CFO", "Head of RevOps", "VP Marketing"] },
+  "transport": { "zoom": 5, "stop": 6, "press": 7, "drop": 8, "send": 10.75, "booked": 11, "lockup": 12, "end": 14.5 },
+  "words": {
+    "listen": "Listen.",
+    "press": "Press play.",
+    "sent": "Sent.",
+    "play_line": "Play · Pricing page + New CFO → Email 1 · Dana, CFO"
+  },
+  "counter": { "to": 700, "suffix": "+", "label": "signals" },
+  "email": {
+    "head": "Email 1 · Day 0",
+    "to": "Dana · CFO, Notion",
+    "subject": "A cost breakdown for your new CFO",
+    "body": [
+      "Hi Dana,",
+      "[cfo]Congrats on bringing on a new CFO.[/cfo] I noticed your team has been [pricing]on our pricing page a few times this week.[/pricing]"
+    ],
+    "links": { "cfo": 1, "pricing": 0 },
+    "labels": ["Browsing history", "Firmographics", "AI enrichment"]
+  },
+  "booked": {
+    "big": "Meeting booked.",
+    "title": "Breakout",
+    "time": "9:05 AM",
+    "row": "Meeting booked",
+    "when": "Thu, Oct 15 · 2:00 PM",
+    "people": ["D", "R", "M"]
+  },
+  "lockup": { "title": "Plays", "url": "getbreakout.ai" },
+  "music": { "file": "score/bed.wav", "gain_db": -2, "fade_out": 1.0 },
+  "sfx": [
+    { "at": 1.0, "sound": "felt_thump", "gain_db": -6 },
+    { "at": 2.0, "sound": "typing", "gain_db": -17, "args": { "chars": 12, "cps": 26 } },
+    { "at": 3.0, "sound": "typing", "gain_db": -17, "args": { "chars": 8, "cps": 26 } },
+    { "at": 4.0, "sound": "typing", "gain_db": -18, "args": { "chars": 10, "cps": 30 } },
+    { "at": 4.0, "sound": "glass_tick", "gain_db": -11, "args": { "degree": 0 } },
+    { "at": 4.25, "sound": "glass_tick", "gain_db": -11, "args": { "degree": 2 } },
+    { "at": 4.5, "sound": "wood_knock", "gain_db": -6, "args": { "degree": 0 } },
+    { "at": 4.75, "sound": "glass_tick", "gain_db": -11, "args": { "degree": 4 } },
+    { "at": 5.0, "sound": "air", "gain_db": -12, "args": { "dur": 0.9 } },
+    { "at": 6.0, "sound": "felt_thump", "gain_db": -8 },
+    { "at": 6.0, "sound": "typing", "gain_db": -18, "args": { "chars": 30, "cps": 34 } },
+    { "at": 7.0, "sound": "felt_thump", "gain_db": -5 },
+    { "at": 7.0, "sound": "lock", "gain_db": -12 },
+    { "at": 7.75, "sound": "press", "gain_db": -4 },
+    { "at": 8.0, "sound": "sub_drop", "gain_db": -6 },
+    { "at": 8.0, "sound": "felt_thump", "gain_db": -5 },
+    { "at": 9.5, "sound": "orbit_tick", "gain_db": -14 },
+    { "at": 9.625, "sound": "orbit_tick", "gain_db": -14 },
+    { "at": 9.75, "sound": "orbit_tick", "gain_db": -14 },
+    { "at": 10.75, "sound": "air", "gain_db": -9, "args": { "dur": 0.5 } },
+    { "at": 10.75, "sound": "felt_thump", "gain_db": -7 },
+    { "at": 11.0, "sound": "sub_drop", "gain_db": -5 },
+    { "at": 11.0, "sound": "logo_sting", "gain_db": -8 },
+    { "at": 11.25, "sound": "lock", "gain_db": -11 },
+    { "at": 12.25, "sound": "arrive", "gain_db": -13, "args": { "degree": 0 } },
+    { "at": 14.5, "sound": "glass_tick", "gain_db": -14, "args": { "degree": 0 } }
+  ]
+}

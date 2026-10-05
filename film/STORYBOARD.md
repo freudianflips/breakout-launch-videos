@@ -1,6 +1,6 @@
 # Storyboard: Plays, "Press play."
 
-**Status:** draft for the owner's review. Nothing is rendered yet. After approval, the build goes in `film/press-play/`, and stills of every beat come before the full render.
+**Status:** approved by the owner on 2026-10-05 ("Create it. 16:9 first."). Defaults taken for the open questions: "Listen." to open, "Plays" + ▶ to close, the Notion example, 16:9 first. Built in `film/press-play/`.
 
 This film tells demand gen and RevOps leaders that **your signals are the notes: press play, and Breakout turns them into a booked meeting.**
 

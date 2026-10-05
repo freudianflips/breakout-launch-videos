@@ -1,0 +1,455 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <!-- Breakout Plays: "Press play." The Swiss grid as a step sequencer, built by build.py.
+           Edit the look here, the words and the pattern in film.json. Every frame is a pure function of t. -->
+      <style>
+        __FONTFACES__
+        [data-composition-id="press"] { --paper: #f2f1ee; --ink: #040405; --ink2: #5c5850; --mute: #8a8a92; --violet: #4c00ff;
+          --line: rgba(4, 4, 5, 0.1); --sans: "Manrope", system-ui, sans-serif; --mono: "Fragment Mono", ui-monospace, monospace; }
+        #root { position: absolute; inset: 0; overflow: hidden; background: var(--paper); font-family: var(--sans); color: var(--ink); }
+        #gridH, #gridV { position: absolute; inset: 0; }
+        #gridH { background-image: linear-gradient(var(--line) 1px, transparent 1px); background-size: 100% 120px; }
+        #gridV { background-image: linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 160px 100%; }
+        .mono { font-family: var(--mono); font-weight: 400; }
+        .idx { position: absolute; left: 160px; top: 100px; font-size: 22px; z-index: 5; }
+        .idx i { font-style: normal; color: var(--violet); }
+        #brandtag { position: absolute; right: 160px; top: 100px; font-size: 22px; text-align: right; z-index: 5; }
+        #tc { position: absolute; right: 160px; bottom: 74px; font-size: 18px; color: var(--mute); font-variant-numeric: tabular-nums; z-index: 5; }
+        #disc { position: absolute; left: 160px; bottom: 74px; font-size: 18px; color: var(--mute); opacity: 0; z-index: 5; }
+        .slam { position: absolute; font-weight: 800; letter-spacing: -0.06em; line-height: 0.86; white-space: nowrap; opacity: 0; transform-origin: 0 100%; }
+        .ch { opacity: 0; }
+
+        /* the sequencer */
+        #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+        #many { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+        #stepnums { position: absolute; left: 752px; top: 446px; display: flex; font-family: var(--mono); font-size: 14px; color: var(--mute); }
+        #stepnums b { width: 46px; margin-right: 14px; font-weight: 400; }
+        #stepnums b:nth-child(4n+1):not(:first-child) { margin-left: 16px; }
+        .row { position: absolute; left: 0; top: 0; width: 1920px; height: 120px; }
+        .mbtn { position: absolute; left: 160px; top: 42px; width: 36px; height: 36px; border-radius: 6px; box-shadow: inset 0 0 0 1.5px rgba(4, 4, 5, 0.3);
+          font-family: var(--mono); font-size: 18px; line-height: 36px; text-align: center; color: var(--ink2); opacity: 0; }
+        .mbtn.on { background: var(--ink); color: var(--paper); box-shadow: none; }
+        .rl { position: absolute; left: 216px; top: 42px; font-family: var(--mono); font-size: 26px; line-height: 36px; white-space: nowrap; }
+        .tag { position: absolute; left: 600px; top: 44px; padding: 3px 12px; border-radius: 7px; font-family: var(--mono); font-size: 18px; line-height: 26px;
+          background: var(--violet); color: #fff; opacity: 0; white-space: nowrap; }
+        .tag.no { background: #d9d7d2; color: var(--ink2); }
+        .steps { position: absolute; left: 752px; top: 20px; display: flex; }
+        .c { width: 46px; height: 80px; margin-right: 14px; border-radius: 8px; box-shadow: inset 0 0 0 1.5px rgba(4, 4, 5, 0.14); transform-origin: 50% 100%; }
+        .c.q:not(:first-child) { margin-left: 16px; }
+        #ph { position: absolute; left: 0; top: 470px; width: 3px; height: 490px; background: var(--violet); }
+        #ph::before { content: ""; position: absolute; left: -7px; top: -12px; border: 8.5px solid transparent; border-top: 12px solid var(--violet); }
+        #playline { position: absolute; left: 160px; top: 330px; font-size: 30px; white-space: nowrap; }
+        #counter { position: absolute; left: 160px; top: 600px; padding: 26px 40px 30px; background: var(--paper); box-shadow: 0 0 0 1px var(--line), 0 40px 80px -30px rgba(4, 4, 5, 0.3); opacity: 0; z-index: 4; }
+        #counter b { display: block; font-size: 220px; font-weight: 800; letter-spacing: -0.06em; line-height: 0.86; font-variant-numeric: tabular-nums; }
+        #counter span { display: block; margin-top: 12px; font-family: var(--mono); font-size: 30px; color: var(--ink2); }
+
+        /* ▶ */
+        #pbtn { position: absolute; left: 225px; top: 410px; width: 260px; height: 260px; border-radius: 44px; background: var(--violet); opacity: 0; z-index: 6; }
+        #pbtn svg { position: absolute; left: 50%; top: 50%; width: 110px; height: 110px; margin: -55px 0 0 -48px; fill: #fff; }
+        #cur { position: absolute; left: 0; top: 0; width: 54px; height: 54px; opacity: 0; z-index: 20; }
+
+        /* the drop: the play's rows on the left, the email on the right */
+        .mrow { position: absolute; left: 160px; opacity: 0; }
+        .ml { display: block; font-family: var(--mono); font-size: 24px; white-space: nowrap; }
+        .ms { display: flex; margin-top: 16px; }
+        .d { width: 22px; height: 22px; margin-right: 8px; border-radius: 5px; box-shadow: inset 0 0 0 1.5px rgba(4, 4, 5, 0.16); }
+        .d.q:not(:first-child) { margin-left: 12px; }
+        #email { position: absolute; left: 960px; top: 190px; width: 800px; padding: 40px 44px 30px; background: #fff; border-radius: 20px; opacity: 0; z-index: 3;
+          box-shadow: 0 50px 100px -50px rgba(10, 10, 20, 0.35), 0 0 0 1px #e3e1dc; }
+        #email .eh { font-family: var(--mono); font-size: 18px; color: var(--mute); }
+        #email .lab { font-family: var(--mono); font-size: 18px; color: var(--mute); margin-right: 16px; }
+        #email .eto { margin-top: 16px; font-size: 22px; color: var(--ink2); display: flex; align-items: center; height: 44px; position: relative; }
+        #to1 { position: absolute; left: 44px; }
+        #chips { position: absolute; left: 44px; display: flex; gap: 10px; }
+        .chip { padding: 6px 14px; border-radius: 999px; background: rgba(76, 0, 255, 0.1); color: var(--violet); font-size: 20px; font-weight: 600; opacity: 0; white-space: nowrap; }
+        #email .esub { margin-top: 14px; padding-bottom: 22px; border-bottom: 1px solid #ecebe7; display: flex; align-items: baseline; }
+        #email .stx { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; }
+        #email .ebody { margin-top: 24px; font-size: 30px; line-height: 1.5; font-weight: 500; color: #26262b; }
+        #email .ebody p { margin-bottom: 16px; }
+        .w { display: inline-block; opacity: 0; }
+        .ph { border-radius: 6px; }
+        .ph.on { background: rgba(76, 0, 255, 0.1); color: var(--violet); box-shadow: 0 0 0 4px rgba(76, 0, 255, 0.1); }
+        #elabels { position: absolute; left: 960px; top: 950px; display: flex; gap: 36px; font-family: var(--mono); font-size: 24px; z-index: 3; }
+        #elabels .el { opacity: 0; }
+        #wires { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; z-index: 4; }
+        #wires path { fill: none; stroke: var(--violet); stroke-width: 3; }
+        #wires circle { fill: var(--violet); }
+
+        /* sent, booked */
+        #pdot { position: absolute; left: 0; top: 0; width: 100px; height: 100px; overflow: visible; opacity: 0; z-index: 52; }
+        #flood { position: absolute; inset: 0; background: var(--violet); clip-path: circle(0px at 50% 50%); z-index: 50; }
+        #booked { position: absolute; inset: 0; z-index: 51; color: #fff; }
+        #bigok { position: absolute; left: 150px; top: 250px; font-size: 168px; font-weight: 800; letter-spacing: -0.06em; line-height: 0.95; white-space: nowrap; opacity: 0; }
+        .card { position: absolute; left: 160px; top: 520px; width: 900px; border-radius: 20px; background: #2a2440; color: #f1f1f3; opacity: 0; overflow: hidden;
+          box-shadow: 0 50px 100px -40px rgba(10, 0, 40, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1) inset; }
+        .card .hd { display: flex; align-items: center; gap: 14px; padding: 24px 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.07); font-size: 26px; }
+        .card .hd b { font-weight: 600; }
+        .card .tm { margin-left: auto; color: #a8a8ad; font-size: 20px; }
+        .av { width: 36px; height: 36px; border-radius: 50%; background: var(--violet); display: inline-flex; flex: none; }
+        .av img { width: 36px; height: 36px; }
+        .card .rw { display: flex; align-items: center; gap: 22px; padding: 30px; }
+        .card .rw svg { width: 40px; height: 40px; fill: none; stroke: #cfcfd4; stroke-width: 1.7; flex: none; stroke-linecap: round; stroke-linejoin: round; }
+        .card .tx { font-size: 40px; font-weight: 700; }
+        .card .sub { font-size: 26px; color: #cfc8ff; margin-top: 6px; }
+        .faces { margin-left: auto; display: flex; }
+        .face { width: 64px; height: 64px; border-radius: 50%; margin-left: -14px; display: inline-flex; align-items: center; justify-content: center;
+          font-size: 26px; font-weight: 700; color: #fff; box-shadow: 0 0 0 4px #2a2440; opacity: 0; }
+        .face.f0 { background: #ff7a59; } .face.f1 { background: #2fb37a; } .face.f2 { background: #4c8dff; }
+
+        /* lockup */
+        #lockup { position: absolute; inset: 0; z-index: 53; }
+        #llogo { position: absolute; left: 50%; top: 330px; height: 92px; transform: translateX(-50%); opacity: 0; }
+        #lplay { position: absolute; left: 0; right: 0; top: 500px; display: flex; justify-content: center; align-items: center; gap: 30px; opacity: 0; }
+        #lplay b { font-size: 120px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; }
+        #lchip { width: 104px; height: 104px; border-radius: 24px; background: var(--violet); position: relative; flex: none; }
+        #lchip svg { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -19px; fill: #fff; }
+        #lurl { position: absolute; left: 0; right: 0; top: 690px; text-align: center; font-family: var(--mono); font-size: 28px; color: var(--ink2); opacity: 0; }
+        #lstrip { position: absolute; left: 50%; top: 790px; transform: translateX(-50%); display: flex; opacity: 0; }
+        #lstrip .c { width: 16px; height: 26px; margin-right: 8px; border-radius: 4px; }
+        #lstrip .c.q:not(:first-child) { margin-left: 8px; }
+        .idx, #brandtag, #tc, #disc { background: var(--paper); padding: 4px 8px; margin: -4px -8px; }
+        #err { position: absolute; left: 40px; top: 40px; right: 40px; font: 20px monospace; color: red; z-index: 99; white-space: pre-wrap; display: none; }
+      </style>
+      <div id="root" data-composition-id="press" data-width="1920" data-height="1080">
+        <div id="gridH"></div><div id="gridV"></div>
+        <div class="idx mono" id="idx"><span id="idxn">01</span> / <i id="idxw">Signal</i></div>
+        <div id="brandtag" class="mono">Breakout · Plays</div>
+        <div id="disc" class="mono">__DISCLAIMER__</div>
+        <div id="tc" class="mono"></div>
+
+        <canvas id="many" width="1920" height="1080"></canvas>
+        <div id="cam">
+          <div id="stepnums">__STEPNUMS__</div>
+          <div id="rows">__ROWS__</div>
+          <div id="ph"></div>
+        </div>
+        <div class="slam" id="w-listen" style="left:150px;top:150px;font-size:280px">__LISTEN__</div>
+        <div id="playline" class="mono">__PLAYLINE__</div>
+        <div id="counter"><b id="cnum">0</b><span>__COUNTER_LABEL__</span></div>
+
+        <div id="pbtn"><svg viewBox="0 0 10 10"><path d="M1 0.6 9.4 5 1 9.4z"/></svg></div>
+        <div class="slam" id="w-press" style="left:545px;top:446px;font-size:190px">__PRESS__</div>
+
+        <div id="mini">__MINI__</div>
+        <svg id="wires"></svg>
+        __EMAIL__
+        <div id="elabels">__ELABELS__</div>
+        <div class="slam" id="w-sent" style="left:150px;top:420px;font-size:260px">__SENT__</div>
+
+        <div id="flood"></div>
+        <div id="booked">__BOOKED__</div>
+        <svg id="pdot" viewBox="-50 -50 100 100"><circle id="pc" r="46"/><path id="ptri" d="M-13 -20 22 0 -13 20z" fill="#fff"/><path id="ptick" d="M-20 2 -6 16 22 -14" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+        <div id="lockup">
+          <img id="llogo" src="__LOGO__" alt="">
+          <div id="lplay"><b>__TITLE__</b><span id="lchip"><svg viewBox="0 0 10 10"><path d="M1 0.6 9.4 5 1 9.4z"/></svg></span></div>
+          <div id="lurl">__URL__</div>
+          <div id="lstrip">__LCELLS__</div>
+        </div>
+        <svg id="cur" viewBox="0 0 24 24"><path d="M4 2.5v17.2l4.6-4.4 3.1 6.9 3-1.3-3.1-6.8h6.4z" fill="#040405" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <div id="err"></div>
+      </div>
+      <script>
+        (function () {
+          var S = '[data-composition-id="press"] ';
+          function one(s) { return document.querySelector(S + s); }
+          function all(s, el) { return Array.prototype.slice.call((el || document).querySelectorAll((el ? "" : S) + s)); }
+          function cl(u) { return Math.max(0, Math.min(1, u)); }
+          function out4(u) { u = cl(u); return 1 - Math.pow(1 - u, 4); }
+          function in3(u) { u = cl(u); return u * u * u; }
+          function io(u) { u = cl(u); return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+          function lerp(a, b, u) { return a + (b - a) * u; }
+          var T = __T__;
+          var BAR = 240 / T.bpm, S16 = BAR / 16, END = T.bars * BAR, TR = T.transport;
+          function B(x) { return x * BAR; }
+          function inb(t, a) { return (t - B(a)) / BAR; }          // bars since bar a
+          var ROWY = [480, 600, 720, 840];
+          function stepX(k) { return 752 + k * 60 + Math.floor(k / 4) * 16; }
+
+          // the last time step k was hit by the playhead, at or before t
+          function lastHit(k, t) { var n = Math.floor((t / S16 - k) / 16); return (n * 16 + k) * S16; }
+          function fire(k, t, a, b, muteAt) {
+            var th = lastHit(k, t);
+            if (th < B(a) - 1e-6 || th >= B(b) - 1e-6 || (muteAt != null && th >= B(muteAt) - 1e-6)) return 0;
+            return Math.exp(-(t - th) / 0.11);
+          }
+          function firstHitAfter(steps, t) {     // the first hit of a row's steps at or after t
+            var best = 1e9;
+            steps.forEach(function (k) { var th = lastHit(k, t); if (th < t - 1e-6) th += BAR; if (th < best) best = th; });
+            return best;
+          }
+
+          var root = one("#root");
+          var rows = all(".row"), rowCells = rows.map(function (r) { return all(".c", r); });
+          var rowChars = rows.map(function (r) { return all(".ch", r); });
+          var minis = all(".mrow"), miniDots = minis.map(function (m) { return all(".d", m); });
+          var words = all("#email .w"), phs = all("#email .ph");
+          var chips = all(".chip"), elabs = all(".el"), faces = all(".face"), lcells = all("#lstrip .c");
+          var plChars = all("#playline .ch");
+          var cv = one("#many"), g = cv.getContext("2d");
+          var drv = { t: 0 };
+          function hash(a, b, c) { var h = Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453; return h - Math.floor(h); }
+
+          function slam(el, t, a, b, dy) {        // a word that slams in on bar a and leaves on bar b
+            var u = inb(t, a), v = b == null ? -1 : inb(t, b);
+            var on = u >= 0 && (b == null || v < 0.08);
+            el.style.opacity = on ? (cl(u / 0.03) * (b == null ? 1 : 1 - cl(v / 0.08))).toFixed(3) : 0;
+            var sc = 1.12 - 0.12 * out4(u / 0.1);
+            el.style.transform = "translateY(" + ((b != null && v > 0 ? -60 * out4(v / 0.08) : 0) + (dy || 0)).toFixed(1) + "px) scale(" + sc.toFixed(4) + ")";
+          }
+
+          function drawMany(t, s, tx, ty, alpha) {
+            g.setTransform(1, 0, 0, 1, 0, 0);
+            g.clearRect(0, 0, 1920, 1080);
+            if (alpha <= 0.001) return;
+            g.globalAlpha = alpha;
+            g.setTransform(s, 0, 0, s, tx, ty);
+            var BW = 1700, x0 = (0 - tx) / s, x1 = (1920 - tx) / s, y0 = (0 - ty) / s, y1 = (1080 - ty) / s;
+            var cur = Math.floor(t / S16) % 16;
+            var j0 = Math.floor((x0 - 160) / BW) - 1, j1 = Math.ceil((x1 - 160) / BW) + 1;
+            var i0 = Math.floor((y0 - 480) / 120) - 1, i1 = Math.ceil((y1 - 480) / 120) + 1;
+            for (var j = j0; j <= j1; j++) {
+              var bx = j * BW;
+              for (var i = i0; i <= i1; i++) {
+                if (j === 0 && i >= 0 && i <= 3) continue;
+                var y = 480 + i * 120;
+                g.fillStyle = "rgba(4,4,5,0.22)";
+                g.fillRect(bx + 216, y + 52, 90 + hash(i, j, 9) * 240, 16);
+                for (var k = 0; k < 16; k++) {
+                  var lit = hash(i, j, k) < 0.19, x = bx + stepX(k);
+                  if (lit) { var f = k === cur ? 1 : 0; g.fillStyle = "rgba(76,0,255," + (0.45 + 0.55 * f) + ")"; }
+                  else g.fillStyle = k === cur ? "rgba(76,0,255,0.12)" : "rgba(4,4,5,0.07)";
+                  g.fillRect(x, y + 20, 46, 80);
+                }
+              }
+              g.fillStyle = "#4c00ff";
+              var px = bx + stepX(cur) + ((t / S16) % 1) * 60;
+              g.fillRect(px, y0, 3 / s, y1 - y0);
+            }
+            g.globalAlpha = 1;
+          }
+
+          function render() {
+            var t = drv.t, i, k;
+            var bar = t / BAR;
+
+            // ---- chrome
+            var idx = bar < TR.stop ? ["01", "Signal"] : bar < TR.drop ? ["02", "Play"] : bar < 10 ? ["03", "Email"] : ["04", "Send"];
+            one("#idxn").textContent = idx[0]; one("#idxw").textContent = idx[1];
+            one("#idx").style.opacity = bar < TR.lockup ? 1 : 0;
+            one("#brandtag").style.opacity = bar < TR.lockup ? 1 : 0;
+            one("#disc").style.opacity = (cl(inb(t, 2) / 0.1) * (1 - cl(inb(t, TR.booked) / 0.05))).toFixed(3);
+            var bn = Math.floor(bar) + 1, bt = Math.floor((bar % 1) * 4) + 1;
+            one("#tc").textContent = T.bpm + " BPM · " + (bn < 10 ? "0" : "") + bn + "." + bt;
+            one("#tc").style.opacity = bar < TR.lockup ? 1 : 0;
+
+            // ---- the camera: a pull back to 700+ in bar 5, a slow push in bar 6
+            var s = 1;
+            var zu = inb(t, TR.zoom);
+            if (zu >= 0 && zu < 1) {
+              s = zu < 0.85 ? lerp(1, 0.1, io(zu / 0.55)) * (1 - 0.15 * cl((zu - 0.55) / 0.3)) : lerp(0.085, 1, io((zu - 0.85) / 0.15));
+            } else if (bar >= TR.stop && bar < TR.press) s = 1 + 0.04 * io(inb(t, TR.stop));
+            var cx = 960, cy = 720, tx = cx * (1 - s), ty = cy * (1 - s);
+            one("#cam").style.transform = "translate(" + tx.toFixed(2) + "px," + ty.toFixed(2) + "px) scale(" + s.toFixed(5) + ")";
+            drawMany(t, s, tx, ty, zu >= 0 && zu < 1 ? cl((1 - s) / 0.25) : 0);
+            var camOp = bar < TR.press ? 1 : bar < TR.drop ? 1 - 0.9 * cl(inb(t, TR.press) / 0.1) : 0;
+            one("#cam").style.opacity = camOp.toFixed(3);
+
+            // ---- the rows
+            var running = bar < TR.stop;
+            rows.forEach(function (row, r) {
+              var R = T.rows[r], st = R.start, ghost = R.mute_at != null;
+              var y = ROWY[r];
+              if (bar >= TR.stop) y += 60 * io(inb(t, TR.stop) / 0.2);
+              var rop = 1;
+              if (ghost) rop = bar < st ? 1 : bar >= TR.stop ? 1 - cl(inb(t, TR.stop) / 0.1) : 0.6;
+              row.style.transform = "translateY(" + y.toFixed(1) + "px)";
+              row.style.opacity = rop.toFixed(3);
+              var chs = rowChars[r], n = chs.length;
+              chs.forEach(function (c, j) { c.style.opacity = t >= B(st) + j * (0.2 * BAR / n) ? 1 : 0; });
+              one("[data-r='" + r + "'] .mbtn").style.opacity = bar >= st ? 1 : 0;
+              var muted = ghost && bar >= R.mute_at;
+              one("[data-r='" + r + "'] .mbtn").className = "mbtn" + (muted ? " on" : "");
+              var tg = one("[data-r='" + r + "'] .tag"), ta = ghost ? R.mute_at : R.tag_at, tu = inb(t, ta);
+              tg.style.opacity = tu >= 0 ? cl(tu / 0.03) : 0;
+              tg.style.transform = "scale(" + (tu >= 0 ? 1.25 - 0.25 * out4(tu / 0.08) : 1).toFixed(3) + ")";
+              var cur = Math.floor(t / S16) % 16;
+              rowCells[r].forEach(function (c, kk) {
+                var lit = R.steps.indexOf(kk) >= 0 && t >= B(st) + kk * S16 - 1e-6;
+                var f = lit ? fire(kk, t, st, TR.stop, ghost ? R.mute_at : null) : 0;
+                var under = running && kk === cur;
+                if (lit) c.style.background = muted ? "#d3d1cc" : ghost ? "rgba(76,0,255,0.38)" : "#4c00ff";
+                else c.style.background = under ? "rgba(76,0,255,0.07)" : "transparent";
+                c.style.transform = "scaleY(" + (1 + 0.16 * f).toFixed(3) + ")";
+                c.style.boxShadow = lit && f > 0.02 ? "0 0 0 " + (6 * f).toFixed(1) + "px rgba(76,0,255," + (0.22 * f).toFixed(3) + ")" : (lit ? "none" : "inset 0 0 0 1.5px rgba(4,4,5,0.14)");
+              });
+            });
+            var phPos = (t / S16) % 16, pk = Math.floor(phPos);
+            one("#ph").style.transform = "translateX(" + (stepX(pk) + (phPos - pk) * 60 - 8).toFixed(1) + "px)";
+            one("#ph").style.opacity = running ? 1 : 1 - cl(inb(t, TR.stop) / 0.05);
+
+            // ---- 01: Listen.
+            slam(one("#w-listen"), t, 1, 2);
+
+            // ---- 700+
+            var cu = inb(t, TR.zoom);
+            var cn = one("#counter");
+            cn.style.opacity = cu >= 0.15 && cu < 0.95 ? (cl((cu - 0.15) / 0.05) * (1 - cl((cu - 0.85) / 0.08))).toFixed(3) : 0;
+            cn.style.transform = "translateY(" + ((1 - out4((cu - 0.15) / 0.12)) * 30).toFixed(1) + "px)";
+            var cv2 = Math.round(T.counter.to * out4((cu - 0.15) / 0.45));
+            one("#cnum").textContent = cv2 + (cu >= 0.6 ? T.counter.suffix : "");
+
+            // ---- 02: the play line types in bar 6
+            var pu = inb(t, TR.stop);
+            plChars.forEach(function (c, j) { c.style.opacity = pu >= 0.05 + j * (0.5 / plChars.length) && bar < TR.drop ? 1 : 0; });
+            one("#playline").style.opacity = bar < TR.press ? 1 : 1 - 0.9 * cl(inb(t, TR.press) / 0.1);
+
+            // ---- Press play.
+            var pb = one("#pbtn"), bu = inb(t, TR.press), du = inb(t, TR.drop);
+            var bx = 225, by = 410, bw = 260, bh = 260, br = 44, bsc = 1, bop = 0;
+            if (bu >= 0 && du < 0.35) {
+              bop = cl(bu / 0.03);
+              bsc = 1.2 - 0.2 * out4(bu / 0.1);
+              var press = inb(t, TR.press + 0.75);
+              if (press >= 0 && du < 0) bsc *= 1 - 0.08 * Math.exp(-press / 0.06) - 0.04;
+              if (du >= 0) {                                   // the button opens into the email
+                var em = one("#email"), mu = out4(du / 0.22);
+                bx = lerp(225, 960, mu); by = lerp(410, 190, mu); bw = lerp(260, 800, mu); bh = lerp(260, em.offsetHeight, mu); br = lerp(44, 20, mu);
+                bsc = 1; bop = 1 - cl((du - 0.2) / 0.12);
+              }
+            }
+            pb.style.left = bx.toFixed(1) + "px"; pb.style.top = by.toFixed(1) + "px"; pb.style.width = bw.toFixed(1) + "px"; pb.style.height = bh.toFixed(1) + "px";
+            pb.style.borderRadius = br.toFixed(1) + "px"; pb.style.opacity = bop.toFixed(3); pb.style.transform = "scale(" + bsc.toFixed(4) + ")";
+            one("#pbtn svg").style.opacity = du >= 0 ? 1 - cl(du / 0.06) : 1;
+            slam(one("#w-press"), t, TR.press, TR.drop);
+            var cur2 = one("#cur"), ku = inb(t, TR.press + 0.45);
+            if (ku >= 0 && du < 0.1) {
+              var m = io(ku / 0.22);
+              cur2.style.opacity = cl(ku / 0.05) * (1 - cl(du / 0.08));
+              cur2.style.transform = "translate(" + lerp(1320, 350, m).toFixed(1) + "px," + lerp(1000, 540, m).toFixed(1) + "px)" +
+                (inb(t, TR.press + 0.75) >= 0 ? " scale(0.88)" : "");
+            } else cur2.style.opacity = 0;
+
+            // ---- 03: the drop. The email writes itself on the beat; the play's rows keep playing on the left
+            var email = one("#email");
+            email.style.opacity = du >= 0.16 && bar < TR.booked ? cl((du - 0.16) / 0.08) : 0;
+            var sw = inb(t, TR.send);
+            email.style.transform = "translateX(" + (sw > 0 ? 1300 * in3(sw / 0.14) : 0).toFixed(1) + "px)";
+            var wstart = TR.drop + 0.25;
+            words.forEach(function (w, j) {
+              var wu = inb(t, wstart + j / 16);
+              w.style.opacity = wu >= 0 ? 1 : 0;
+              w.style.transform = "translateY(" + (wu >= 0 ? 8 * (1 - out4(wu / 0.04)) : 8).toFixed(1) + "px)";
+            });
+            var MY = [560, 420, 700, 280];      // committee on top, then New CFO, Pricing page, Return visit: no wire crosses another
+            var wiresHtml = "";
+            var rootR = root.getBoundingClientRect(), sc = rootR.width / 1920 || 1;
+            function local(el) { var q = el.getBoundingClientRect(); return { x: (q.left - rootR.left) / sc, y: (q.top - rootR.top) / sc, w: q.width / sc, h: q.height / sc }; }
+            function wire(r, el, tw) {
+              var wu2 = (t - tw) / (0.12 * BAR);
+              if (wu2 < 0) return;
+              var x0 = 160 + 508 + 18, y0 = MY[r] + 40 + 11, q = local(el), x1 = local(one("#email")).x - 8, y1 = q.y + q.h / 2;
+              var dx = (x1 - x0) * 0.5, d = "M" + x0 + " " + y0 + " C" + (x0 + dx) + " " + y0 + " " + (x1 - dx) + " " + y1 + " " + x1 + " " + y1;
+              var L = Math.hypot(x1 - x0, y1 - y0) * 1.25;
+              wiresHtml += '<path d="' + d + '" stroke-dasharray="' + L.toFixed(0) + '" stroke-dashoffset="' + (L * (1 - out4(wu2))).toFixed(1) + '"/>' +
+                '<circle cx="' + x0 + '" cy="' + y0 + '" r="6"/>' + (wu2 > 0.9 ? '<circle cx="' + x1 + '" cy="' + y1 + '" r="6"/>' : "");
+            }
+            phs.forEach(function (ph) {
+              var key = ph.getAttribute("data-ph"), r = T.links[key];
+              var ws = all(".w", ph), last = words.indexOf(ws[ws.length - 1]);
+              var done = B(wstart + (last + 1) / 16);
+              var R = T.rows[r], tw = firstHitAfter(R.steps, done);
+              ph.className = "ph" + (t >= tw && bar < TR.send ? " on" : "");
+              if (bar < TR.send) wire(r, ws[0], tw);
+            });
+            // the committee: a chip on each note of the chord, wired to the To field
+            var CM = T.committee;
+            chips.forEach(function (c, j) {
+              var cu3 = (t - B(CM.start) - CM.steps[j] * S16) / BAR;
+              c.style.opacity = cu3 >= 0 ? 1 : 0;
+              c.style.transform = "scale(" + (cu3 >= 0 ? 1.2 - 0.2 * out4(cu3 / 0.06) : 1).toFixed(3) + ")";
+            });
+            one("#to1").style.opacity = bar < CM.start ? 1 : 0;
+            if (bar < TR.send) wire(3, one("#chips"), B(CM.start));
+            one("#wires").innerHTML = wiresHtml;
+            one("#wires").style.opacity = bar < TR.send ? 1 : 0;
+            elabs.forEach(function (e, j) { var eu = inb(t, 9.5 + j * 0.125); e.style.opacity = eu >= 0 && bar < TR.send ? 1 : 0; });
+
+            minis.forEach(function (mr, j) {
+              var isCm = j === 3, ma = isCm ? CM.start : TR.drop + j * 0.05;
+              var mu2 = inb(t, ma);
+              mr.style.top = MY[j] + "px";
+              mr.style.opacity = mu2 >= 0 ? (cl(mu2 / 0.04) * (1 - cl(sw / 0.1))).toFixed(3) : 0;
+              mr.style.transform = "translateX(" + ((mu2 >= 0 ? -30 * (1 - out4(mu2 / 0.1)) : 0) - (sw > 0 ? 300 * in3(sw / 0.14) : 0)).toFixed(1) + "px)";
+              var steps = isCm ? CM.steps : T.rows[j].steps, a = isCm ? CM.start : TR.drop;
+              miniDots[j].forEach(function (d, kk) {
+                var lit = steps.indexOf(kk) >= 0 && (!isCm || t >= B(a) + kk * S16 - 1e-6);
+                var f = lit ? fire(kk, t, a, TR.send) : 0;
+                var under = bar >= TR.drop && bar < TR.send && kk === Math.floor(t / S16) % 16;
+                d.style.background = lit ? "#4c00ff" : under ? "rgba(76,0,255,0.12)" : "transparent";
+                d.style.boxShadow = lit ? (f > 0.02 ? "0 0 0 " + (5 * f).toFixed(1) + "px rgba(76,0,255," + (0.25 * f).toFixed(3) + ")" : "none") : "inset 0 0 0 1.5px rgba(4,4,5,0.16)";
+                d.style.transform = "scale(" + (1 + 0.3 * f).toFixed(3) + ")";
+              });
+            });
+
+            // ---- 04: Sent., then the ▶ is left alone
+            slam(one("#w-sent"), t, TR.send, TR.booked);
+            one("#w-sent").style.opacity = bar >= TR.booked ? 0 : one("#w-sent").style.opacity;
+
+            // ---- 05: violet floods out of the ▶; the ▶ redraws itself as a ✓
+            var fu = inb(t, TR.booked), lu = inb(t, TR.lockup);
+            var pd = one("#pdot"), pdu = inb(t, TR.send + 0.08);
+            var lchip = one("#lchip"), lq = local(lchip);
+            var pcx = 960, pcy = 540, psz = 140, fr = 0, fcx = 960, fcy = 540;
+            if (fu >= 0) { var mm = io(fu / 0.3); pcx = lerp(960, 1580, mm); pcy = lerp(540, 450, mm); psz = lerp(140, 400, mm); fr = 2300 * out4(fu / 0.2); }
+            if (lu >= 0) { var rr = io(lu / 0.25); fr = lerp(2300, 52, rr); fcx = lerp(960, lq.x + lq.w / 2, rr); fcy = lerp(540, lq.y + lq.h / 2, rr); }
+            one("#flood").style.clipPath = "circle(" + fr.toFixed(1) + "px at " + fcx.toFixed(1) + "px " + fcy.toFixed(1) + "px)";
+            one("#flood").style.opacity = lu >= 0.25 ? 0 : 1;
+            pd.style.opacity = pdu >= 0 && lu < 0.06 ? (cl(pdu / 0.03) * (1 - cl(lu / 0.06))).toFixed(3) : 0;
+            pd.style.transform = "translate(" + (pcx - 50).toFixed(1) + "px," + (pcy - 50).toFixed(1) + "px) scale(" + ((psz / 100) * (pdu >= 0 ? 1.3 - 0.3 * out4(pdu / 0.08) : 1)).toFixed(4) + ")";
+            var pc = one("#pc"), ring = cl(fu / 0.15);
+            pc.setAttribute("fill", fu >= 0.12 ? "none" : "#4c00ff");
+            pc.setAttribute("stroke", "#fff"); pc.setAttribute("stroke-width", (2.2 * ring).toFixed(2));
+            one("#ptri").style.opacity = (1 - cl(fu / 0.1)).toFixed(3);
+            var tk = one("#ptick"), tku = cl((fu - 0.12) / 0.2);
+            tk.setAttribute("stroke-dasharray", "70"); tk.setAttribute("stroke-dashoffset", (70 * (1 - out4(tku))).toFixed(1));
+            tk.setAttribute("stroke-width", (4.5 / Math.max(0.5, psz / 140) * 1.9).toFixed(2));
+            var bok = one("#bigok"), card = one("#c-bd"), out1 = 1 - cl(lu / 0.06);
+            var ou = inb(t, TR.booked + 0.08);
+            bok.style.opacity = ou >= 0 ? (cl(ou / 0.04) * out1).toFixed(3) : 0;
+            bok.style.transform = "translateY(" + (ou >= 0 ? 40 * (1 - out4(ou / 0.12)) : 40).toFixed(1) + "px)";
+            var cu4 = inb(t, TR.booked + 0.2);
+            card.style.opacity = cu4 >= 0 ? (cl(cu4 / 0.05) * out1).toFixed(3) : 0;
+            card.style.transform = "translateY(" + (cu4 >= 0 ? 50 * (1 - out4(cu4 / 0.14)) : 50).toFixed(1) + "px)";
+            faces.forEach(function (f2, j) {
+              var fu2 = inb(t, TR.booked + 0.35 + j * 0.06);
+              f2.style.opacity = fu2 >= 0 ? 1 : 0;
+              f2.style.transform = "scale(" + (fu2 >= 0 ? 1.3 - 0.3 * out4(fu2 / 0.06) : 1).toFixed(3) + ")";
+            });
+
+            // ---- lockup: the flood draws back into the ▶ beside Plays; 1 row keeps ticking, then stops
+            var lp = one("#lplay");
+            lp.style.opacity = lu >= 0.22 ? cl((lu - 0.22) / 0.04) : 0;
+            one("#llogo").style.opacity = lu >= 0.3 ? cl((lu - 0.3) / 0.06) : 0;
+            one("#llogo").style.transform = "translateX(-50%) translateY(" + (lu >= 0.3 ? 16 * (1 - out4((lu - 0.3) / 0.15)) : 16).toFixed(1) + "px)";
+            one("#lurl").style.opacity = lu >= 0.45 ? cl((lu - 0.45) / 0.06) : 0;
+            one("#lstrip").style.opacity = lu >= 0.55 ? cl((lu - 0.55) / 0.06) : 0;
+            var lrun = bar < TR.end, lstep = lrun ? Math.floor(t / S16) % 16 : 0;
+            lcells.forEach(function (c, kk) {
+              var on = lu >= 0.55 && kk === lstep;
+              c.style.background = on ? "#4c00ff" : "transparent";
+              c.style.boxShadow = on ? "none" : "inset 0 0 0 1.5px rgba(4,4,5,0.18)";
+            });
+          }
+          function safe() { try { render(); } catch (e) { var er = one("#err"); er.style.display = "block"; er.textContent = e.stack || String(e); } }
+          var tl = gsap.timeline({ paused: true });
+          tl.fromTo(drv, { t: 0.001 }, { t: END, duration: END - 0.001, ease: "none", onUpdate: safe, immediateRender: false }, 0.001);
+          safe();
+          window.__timelines["press"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
