@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build 'Rush', the fast-cut LinkedIn feed film: film.json -> index.html (1080x1350, HyperFrames).
 
-  python3 film/rush/build.py
+  python3 film/rush/build.py [wide|feed]      (default wide: 1920x1080; feed: 1080x1350)
 
 Every shot sits on the 140 BPM beat grid in film.json. Words are written into the markup here, so
 nothing falls back to a system font at render time. The look and the motion live in template.html.
@@ -12,6 +12,7 @@ import math
 import os
 import shutil
 import struct
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 os.chdir(HERE)
@@ -19,7 +20,9 @@ REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 F = json.load(open("film.json"))
 BEAT = 60 / F["bpm"]
 END = F["beats"] * BEAT
-W, H = F["width"], F["height"]
+FMT = sys.argv[1] if len(sys.argv) > 1 else "wide"
+W, H = F["formats"][FMT]
+LOCK = next(s["at"] for s in F["shots"] if any(i["type"] == "lockup" for i in s["items"]))
 E = html.escape
 
 # ------------------------------------------------------------------ assets
@@ -48,17 +51,20 @@ for i, s in enumerate(F["shots"]):
     inner = []
     if s.get("lines"):
         rays = "".join(
-            f'<line x1="{540 + 90 * math.cos(k * 0.2244):.1f}" y1="{675 + 90 * math.sin(k * 0.2244):.1f}" '
-            f'x2="{540 + 1400 * math.cos(k * 0.2244):.1f}" y2="{675 + 1400 * math.sin(k * 0.2244):.1f}" '
+            f'<line x1="{W / 2 + 90 * math.cos(k * 0.2244):.1f}" y1="{H / 2 + 90 * math.sin(k * 0.2244):.1f}" '
+            f'x2="{W / 2 + 1400 * math.cos(k * 0.2244):.1f}" y2="{H / 2 + 1400 * math.sin(k * 0.2244):.1f}" '
             f'stroke-width="{3 + (k * 7) % 9}" stroke-dasharray="{60 + (k * 37) % 140} {220 + (k * 53) % 300}"/>'
             for k in range(28))
         inner.append(f'<svg class="lines" viewBox="0 0 {W} {H}" stroke="{col(s["lines"])}">{rays}</svg>')
     for it in s["items"]:
+        it = {**it, **it.get(FMT, {})}
+        if it.get("hide"):
+            continue
         t, at = it["type"], it.get("at", 0)
         common = f'data-at="{at}" data-fx="{it.get("fx", "slam")}"'
         if t == "word":
             inner.append(f'<div class="it word{" rgb" if it.get("rgb") else ""}" {common} data-fit="{it.get("fit", 0.9)}" '
-                         f'style="top:{it["y"] * H:.0f}px;color:{col(it["color"])}"><span>{E(it["text"])}</span></div>')
+                         f'style="left:{it.get("x", 0.5) * W:.0f}px;top:{it["y"] * H:.0f}px;color:{col(it["color"])}"><span>{E(it["text"])}</span></div>')
         elif t == "screen":
             sw, sh = png_size(os.path.join(REPO, "film/assets/screens", it["src"]))
             shutil.copy(os.path.join(REPO, "film/assets/screens", it["src"]), A)
@@ -75,7 +81,7 @@ for i, s in enumerate(F["shots"]):
                          f'<img src="{A}/breakout-logo-white.svg" style="width:{it["w"]}px"></div>')
         elif t == "counter":
             inner.append(f'<div class="it word counter" {common} data-fit="{it["fit"]}" data-to="{it["to"]}" data-suffix="{E(it["suffix"])}" '
-                         f'style="top:{it["y"] * H:.0f}px;color:{col(it["color"])}"><span>{it["to"]}{E(it["suffix"])}</span></div>')
+                         f'style="left:{it.get("x", 0.5) * W:.0f}px;top:{it["y"] * H:.0f}px;color:{col(it["color"])}"><span>{it["to"]}{E(it["suffix"])}</span></div>')
         elif t == "chip":
             inner.append(f'<div class="it chip" {common} data-rot="{it["rot"]}" style="left:{it["x"] * W:.0f}px;top:{it["y"] * H:.0f}px;'
                          f'background:{col(it["color"])};color:{P["w"] if it["color"] in ("blue", "hot") else P["k"]}">{E(it["text"])}</div>')
@@ -93,7 +99,8 @@ for i, s in enumerate(F["shots"]):
 flick = (f'<div id="flick"><img src="{A}/breakout-logo-white.svg"></div>')
 tpl = open("template.html").read()
 for k, v in {"__SHOTS__": "\n      ".join(out), "__FLICK__": flick, "__W__": str(W), "__H__": str(H), "__END__": f"{END:.4f}",
-             "__T__": json.dumps({"beat": BEAT, "end": END, "flicks": F["flicks"], "palette": P})}.items():
+             "__T__": json.dumps({"beat": BEAT, "end": END, "flicks": F["flicks"], "palette": P, "lock": LOCK})}.items():
     tpl = tpl.replace(k, v)
-open("index.html", "w").write(tpl)
-print(f"Rush: {END:.2f} s, {F['beats']} beats at {F['bpm']} BPM, {len(F['shots'])} shots, {W}x{H}")
+open(f"index-{FMT}.html", "w").write(tpl)
+open("index.html", "w").write(tpl)  # hyperframes snapshot reads index.html: the last format built
+print(f"Rush ({FMT}): {END:.2f} s, {F['beats']} beats at {F['bpm']} BPM, {len(F['shots'])} shots, {W}x{H}")

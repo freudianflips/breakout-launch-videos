@@ -1,106 +1,120 @@
 {
-  "about": "Rush: a fast-cut, high-contrast social film for the LinkedIn feed. Every shot is on the beat grid (\"at\" and \"to\" in beats at 140 BPM). Words are Breakout's own lines; screens are real UI from film/assets/screens/ with customer data blurred.",
+  "about": "Rush: a fast-cut, high-contrast social film, in 16:9 (wide) and the LinkedIn feed's 1080x1350 (feed). Every shot is on the beat grid (\"at\" and \"to\" in beats at 140 BPM). An item's \"wide\" or \"feed\" block overrides its layout in that format; \"hide\" drops it there. Words are Breakout's own lines, except the hook's scene-setting question; screens are real UI from film/assets/screens/ with customer data blurred.",
   "bpm": 140,
-  "beats": 40,
-  "width": 1080,
-  "height": 1350,
+  "beats": 44,
   "palette": {"k": "#050505", "w": "#ffffff", "acid": "#d7ff00", "hot": "#ff2d6f", "blue": "#2b3cff"},
-  "flicks": [12, 20, 24],
+  "flicks": [16, 24, 28],
+  "formats": {"wide": [1920, 1080], "feed": [1080, 1350]},
   "shots": [
     {"at": 0, "to": 1, "ground": "k", "items": [
-      {"type": "screen", "src": "accounts.png", "crop": [276, 150, 1724, 800], "box": [-260, 260, 1600, 742], "fx": "push", "dim": 0.32, "gray": true},
-      {"type": "word", "text": "WHO", "color": "acid", "y": 0.5, "fit": 0.86, "rgb": true}
+      {"type": "chip", "text": "\u25cf LIVE", "x": 0.4, "y": 0.2, "rot": 0, "color": "hot", "wide": {"x": 0.455, "y": 0.16}},
+      {"type": "word", "text": "SOMEONE", "color": "w", "y": 0.5, "fit": 0.9, "wide": {"fit": 0.7}}
     ]},
-    {"at": 1, "to": 2, "ground": "acid", "items": [
-      {"type": "word", "text": "VISITED", "color": "k", "y": 0.5, "fit": 0.92}
+    {"at": 1, "to": 2, "ground": "k", "items": [
+      {"type": "screen", "src": "accounts.png", "crop": [276, 150, 1724, 800], "box": [-340, 300, 1760, 816], "fx": "push", "dim": 0.3, "gray": true, "wide": {"box": [-60, 120, 2040, 947]}},
+      {"type": "word", "text": "IS ON YOUR", "color": "acid", "y": 0.5, "fit": 0.92, "wide": {"fit": 0.8}}
     ]},
-    {"at": 2, "to": 3, "ground": "k", "items": [
-      {"type": "screen", "src": "accounts.png", "crop": [276, 150, 1724, 800], "box": [-340, 300, 1760, 816], "fx": "push", "dim": 0.32, "gray": true},
-      {"type": "word", "text": "YOUR SITE", "color": "w", "y": 0.5, "fit": 0.92}
+    {"at": 2, "to": 3, "ground": "hot", "items": [
+      {"type": "word", "text": "PRICING", "color": "w", "y": 0.38, "fit": 0.9, "rgb": true, "wide": {"hide": true}},
+      {"type": "word", "text": "PAGE.", "color": "k", "y": 0.64, "fit": 0.66, "at": 0.5, "wide": {"hide": true}},
+      {"type": "word", "text": "PRICING PAGE.", "color": "w", "y": 0.5, "fit": 0.9, "rgb": true, "feed": {"hide": true}}
     ]},
-    {"at": 3, "to": 4, "ground": "hot", "items": [
-      {"type": "word", "text": "TODAY?", "color": "w", "y": 0.5, "fit": 0.92, "rgb": true}
+    {"at": 3, "to": 4, "ground": "acid", "items": [
+      {"type": "word", "text": "RIGHT NOW.", "color": "k", "y": 0.5, "fit": 0.92, "wide": {"fit": 0.84}}
     ]},
-    {"at": 4, "to": 6, "ground": "k", "lines": "w", "shake": 22, "items": [
+    {"at": 4, "to": 6, "ground": "k", "shake": 24, "items": [
+      {"type": "screen", "src": "accounts.png", "crop": [276, 150, 1724, 800], "box": [-260, 260, 1600, 742], "fx": "push", "dim": 0.42, "gray": true, "wide": {"box": [-140, 80, 2200, 1021]}},
+      {"type": "word", "text": "WHO?", "color": "w", "y": 0.5, "fit": 0.8, "rgb": true, "wide": {"fit": 0.5}}
+    ]},
+    {"at": 6, "to": 7, "ground": "w", "items": [
+      {"type": "word", "text": "THEY WON'T", "color": "k", "y": 0.5, "fit": 0.92, "wide": {"fit": 0.84}}
+    ]},
+    {"at": 7, "to": 8, "ground": "hot", "items": [
+      {"type": "word", "text": "FILL A", "color": "w", "y": 0.38, "fit": 0.8, "wide": {"hide": true}},
+      {"type": "word", "text": "FORM.", "color": "k", "y": 0.64, "fit": 0.66, "at": 0.5, "rgb": true, "wide": {"hide": true}},
+      {"type": "word", "text": "FILL A", "color": "w", "x": 0.33, "y": 0.5, "fit": 0.5, "feed": {"hide": true}},
+      {"type": "word", "text": "FORM.", "color": "k", "x": 0.75, "y": 0.5, "fit": 0.38, "at": 0.5, "rgb": true, "feed": {"hide": true}}
+    ]},
+    {"at": 8, "to": 10, "ground": "k", "lines": "w", "shake": 22, "items": [
       {"type": "logo", "w": 940, "y": 0.5}
     ]},
-    {"at": 6, "to": 7, "ground": "acid", "items": [
-      {"type": "word", "text": "INBOUND", "color": "k", "y": 0.4, "fit": 0.9},
-      {"type": "word", "text": "SDR,", "color": "k", "y": 0.66, "fit": 0.5, "at": 0.5}
+    {"at": 10, "to": 11, "ground": "acid", "items": [
+      {"type": "word", "text": "INBOUND", "color": "k", "y": 0.4, "fit": 0.9, "wide": {"x": 0.5, "y": 0.36, "fit": 0.62}},
+      {"type": "word", "text": "SDR,", "color": "k", "y": 0.66, "fit": 0.5, "at": 0.5, "wide": {"x": 0.5, "y": 0.72, "fit": 0.3}}
     ]},
-    {"at": 7, "to": 8, "ground": "blue", "items": [
-      {"type": "word", "text": "POWERED", "color": "w", "y": 0.36, "fit": 0.9},
-      {"type": "word", "text": "BY AI.", "color": "acid", "y": 0.64, "fit": 0.72, "at": 0.5, "rgb": true}
+    {"at": 11, "to": 12, "ground": "blue", "items": [
+      {"type": "word", "text": "POWERED", "color": "w", "y": 0.36, "fit": 0.9, "wide": {"x": 0.5, "y": 0.36, "fit": 0.6}},
+      {"type": "word", "text": "BY AI.", "color": "acid", "y": 0.64, "fit": 0.72, "at": 0.5, "rgb": true, "wide": {"x": 0.5, "y": 0.72, "fit": 0.42}}
     ]},
-    {"at": 8, "to": 10, "ground": "w", "items": [
-      {"type": "word", "text": "EVERY", "color": "k", "y": 0.25, "fit": 0.8},
-      {"type": "word", "text": "VISITOR.", "color": "hot", "y": 0.46, "fit": 0.9, "at": 1},
-      {"type": "screen", "src": "accounts.png", "crop": [276, 150, 1010, 480], "box": [70, 760, 940, 447], "fx": "whip-r", "tilt": -3}
+    {"at": 12, "to": 14, "ground": "w", "items": [
+      {"type": "word", "text": "EVERY", "color": "k", "y": 0.25, "fit": 0.8, "wide": {"x": 0.26, "y": 0.32, "fit": 0.4}},
+      {"type": "word", "text": "VISITOR.", "color": "hot", "y": 0.46, "fit": 0.9, "at": 1, "wide": {"x": 0.26, "y": 0.66, "fit": 0.44}},
+      {"type": "screen", "src": "accounts.png", "crop": [276, 150, 1010, 480], "box": [70, 760, 940, 447], "fx": "whip-r", "tilt": -3, "wide": {"box": [970, 250, 880, 418]}}
     ]},
-    {"at": 10, "to": 10.5, "ground": "k", "items": [
-      {"type": "screen", "src": "accounts.png", "crop": [658, 150, 625, 470], "box": [40, 300, 1000, 752], "fx": "push"}
+    {"at": 14, "to": 14.5, "ground": "k", "items": [
+      {"type": "screen", "src": "accounts.png", "crop": [658, 150, 625, 470], "box": [40, 300, 1000, 752], "fx": "push", "wide": {"box": [440, 60, 1040, 782]}}
     ]},
-    {"at": 10.5, "to": 11, "ground": "k", "items": [
-      {"type": "screen", "src": "accounts.png", "crop": [1284, 150, 716, 470], "box": [40, 330, 1000, 656], "fx": "whip-l"}
+    {"at": 14.5, "to": 15, "ground": "k", "items": [
+      {"type": "screen", "src": "accounts.png", "crop": [1284, 150, 716, 470], "box": [40, 330, 1000, 656], "fx": "whip-l", "wide": {"box": [360, 150, 1200, 788]}}
     ]},
-    {"at": 11, "to": 12, "ground": "blue", "lines": "w", "items": [
-      {"type": "screen", "src": "accounts.png", "crop": [278, 200, 680, 54], "box": [30, 590, 1020, 81], "fx": "slam", "scale": 1.0}
+    {"at": 15, "to": 16, "ground": "blue", "lines": "w", "items": [
+      {"type": "screen", "src": "accounts.png", "crop": [278, 200, 680, 54], "box": [30, 590, 1020, 81], "fx": "slam", "scale": 1.0, "wide": {"box": [100, 480, 1720, 137]}}
     ]},
-    {"at": 12, "to": 14, "ground": "hot", "items": [
-      {"type": "counter", "to": 700, "suffix": "+", "color": "w", "y": 0.42, "fit": 0.8},
-      {"type": "word", "text": "SIGNALS", "color": "k", "y": 0.72, "fit": 0.86, "at": 1}
+    {"at": 16, "to": 18, "ground": "hot", "items": [
+      {"type": "counter", "to": 700, "suffix": "+", "color": "w", "y": 0.42, "fit": 0.8, "wide": {"x": 0.3, "y": 0.5, "fit": 0.4}},
+      {"type": "word", "text": "SIGNALS", "color": "k", "y": 0.72, "fit": 0.86, "at": 1, "wide": {"x": 0.72, "y": 0.5, "fit": 0.42}}
     ]},
-    {"at": 14, "to": 16, "ground": "k", "lines": "acid", "items": [
-      {"type": "chip", "text": "PRICING VISITS", "x": 0.08, "y": 0.18, "rot": -6, "color": "acid", "at": 0},
-      {"type": "chip", "text": "RETURN VISITS", "x": 0.36, "y": 0.33, "rot": 4, "color": "w", "at": 0.5},
-      {"type": "chip", "text": "HIRING", "x": 0.12, "y": 0.47, "rot": -3, "color": "hot", "at": 1},
-      {"type": "chip", "text": "FUNDING", "x": 0.5, "y": 0.58, "rot": 7, "color": "acid", "at": 1.25},
-      {"type": "chip", "text": "TECH-STACK CHANGES", "x": 0.06, "y": 0.7, "rot": 3, "color": "w", "at": 1.5},
-      {"type": "chip", "text": "CHAMPION JOB MOVES", "x": 0.18, "y": 0.84, "rot": -5, "color": "blue", "at": 1.75}
+    {"at": 18, "to": 20, "ground": "k", "lines": "acid", "items": [
+      {"type": "chip", "text": "PRICING VISITS", "x": 0.08, "y": 0.18, "rot": -6, "color": "acid", "at": 0, "wide": {"x": 0.15200000000000002, "y": 0.202}},
+      {"type": "chip", "text": "RETURN VISITS", "x": 0.36, "y": 0.33, "rot": 4, "color": "w", "at": 0.5, "wide": {"x": 0.404, "y": 0.337}},
+      {"type": "chip", "text": "HIRING", "x": 0.12, "y": 0.47, "rot": -3, "color": "hot", "at": 1, "wide": {"x": 0.188, "y": 0.46299999999999997}},
+      {"type": "chip", "text": "FUNDING", "x": 0.5, "y": 0.58, "rot": 7, "color": "acid", "at": 1.25, "wide": {"x": 0.53, "y": 0.562}},
+      {"type": "chip", "text": "TECH-STACK CHANGES", "x": 0.06, "y": 0.7, "rot": 3, "color": "w", "at": 1.5, "wide": {"x": 0.134, "y": 0.67}},
+      {"type": "chip", "text": "CHAMPION JOB MOVES", "x": 0.18, "y": 0.84, "rot": -5, "color": "blue", "at": 1.75, "wide": {"x": 0.242, "y": 0.796}}
     ]},
-    {"at": 16, "to": 18, "ground": "blue", "items": [
-      {"type": "screen", "src": "agent-question.png", "crop": [0, 0, 900, 1458], "box": [250, 230, 580, 940], "fx": "rise", "tilt": 3},
-      {"type": "word", "text": "IN REAL", "color": "acid", "y": 0.155, "fit": 0.84},
-      {"type": "word", "text": "TIME.", "color": "w", "y": 0.86, "fit": 0.6, "at": 1, "rgb": true}
+    {"at": 20, "to": 22, "ground": "blue", "items": [
+      {"type": "screen", "src": "agent-question.png", "crop": [0, 0, 900, 1458], "box": [250, 230, 580, 940], "fx": "rise", "tilt": 3, "wide": {"box": [1130, 80, 570, 923]}},
+      {"type": "word", "text": "IN REAL", "color": "acid", "y": 0.155, "fit": 0.84, "wide": {"x": 0.3, "y": 0.36, "fit": 0.44}},
+      {"type": "word", "text": "TIME.", "color": "w", "y": 0.86, "fit": 0.6, "at": 1, "rgb": true, "wide": {"x": 0.3, "y": 0.68, "fit": 0.3}}
     ]},
-    {"at": 18, "to": 20, "ground": "acid", "items": [
-      {"type": "screen", "src": "agent-question.png", "crop": [26, 122, 272, 80], "box": [80, 520, 920, 271], "fx": "slam", "radius": 40},
-      {"type": "ring", "x": 0.5, "y": 0.485, "at": 1}
-    ]},
-    {"at": 20, "to": 21, "ground": "k", "items": [
-      {"type": "screen", "src": "plays-new.png", "crop": [505, 40, 1060, 650], "box": [30, 340, 1020, 625], "fx": "whip-r", "tilt": 2}
-    ]},
-    {"at": 21, "to": 22, "ground": "k", "items": [
-      {"type": "screen", "src": "plays-new.png", "crop": [1046, 228, 498, 212], "box": [50, 470, 980, 417], "fx": "push", "radius": 36}
-    ]},
-    {"at": 22, "to": 23, "ground": "w", "items": [
-      {"type": "screen", "src": "plays-personalization.png", "crop": [318, 628, 720, 242], "box": [20, 490, 1040, 350], "fx": "whip-l", "tilt": -2}
-    ]},
-    {"at": 23, "to": 24, "ground": "hot", "items": [
-      {"type": "word", "text": "SIGNAL IN.", "color": "w", "y": 0.5, "fit": 0.92, "rgb": true}
+    {"at": 22, "to": 24, "ground": "acid", "items": [
+      {"type": "screen", "src": "agent-question.png", "crop": [26, 122, 272, 80], "box": [80, 520, 920, 271], "fx": "slam", "radius": 40, "wide": {"box": [380, 320, 1160, 341]}},
+      {"type": "ring", "x": 0.5, "y": 0.485, "at": 1, "wide": {"y": 0.47}}
     ]},
     {"at": 24, "to": 25, "ground": "k", "items": [
-      {"type": "word", "text": "MEETING", "color": "w", "y": 0.5, "fit": 0.92}
+      {"type": "screen", "src": "plays-new.png", "crop": [505, 40, 1060, 650], "box": [30, 340, 1020, 625], "fx": "whip-r", "tilt": 2, "wide": {"box": [320, 50, 1280, 785]}}
     ]},
-    {"at": 25, "to": 26, "ground": "blue", "lines": "acid", "shake": 16, "items": [
-      {"type": "word", "text": "OUT.", "color": "acid", "y": 0.5, "fit": 0.86, "rgb": true}
+    {"at": 25, "to": 26, "ground": "k", "items": [
+      {"type": "screen", "src": "plays-new.png", "crop": [1046, 228, 498, 212], "box": [50, 470, 980, 417], "fx": "push", "radius": 36, "wide": {"box": [340, 190, 1240, 528]}}
     ]},
-    {"at": 26, "to": 28, "ground": "k", "shake": 20, "items": [
+    {"at": 26, "to": 27, "ground": "w", "items": [
+      {"type": "screen", "src": "plays-personalization.png", "crop": [318, 628, 720, 242], "box": [20, 490, 1040, 350], "fx": "whip-l", "tilt": -2, "wide": {"box": [140, 250, 1640, 551]}}
+    ]},
+    {"at": 27, "to": 28, "ground": "hot", "items": [
+      {"type": "word", "text": "SIGNAL IN.", "color": "w", "y": 0.5, "fit": 0.92, "rgb": true, "wide": {"fit": 0.84}}
+    ]},
+    {"at": 28, "to": 29, "ground": "k", "items": [
+      {"type": "word", "text": "MEETING", "color": "w", "y": 0.5, "fit": 0.92, "wide": {"fit": 0.8}}
+    ]},
+    {"at": 29, "to": 30, "ground": "blue", "lines": "acid", "shake": 16, "items": [
+      {"type": "word", "text": "OUT.", "color": "acid", "y": 0.5, "fit": 0.86, "rgb": true, "wide": {"fit": 0.5}}
+    ]},
+    {"at": 30, "to": 32, "ground": "k", "shake": 20, "items": [
       {"type": "booked", "text": "MEETING BOOKED.", "flood": "acid", "color": "k"}
     ]},
-    {"at": 28, "to": 29, "ground": "w", "items": [
-      {"type": "word", "text": "PAGEVIEW", "color": "k", "y": 0.5, "fit": 0.92}
+    {"at": 32, "to": 33, "ground": "w", "items": [
+      {"type": "word", "text": "PAGEVIEW", "color": "k", "y": 0.5, "fit": 0.92, "wide": {"fit": 0.8}}
     ]},
-    {"at": 29, "to": 30, "ground": "acid", "items": [
-      {"type": "word", "text": "TO", "color": "k", "y": 0.5, "fit": 0.6}
+    {"at": 33, "to": 34, "ground": "acid", "items": [
+      {"type": "word", "text": "TO", "color": "k", "y": 0.5, "fit": 0.6, "wide": {"fit": 0.3}}
     ]},
-    {"at": 30, "to": 31, "ground": "k", "items": [
-      {"type": "word", "text": "PIPELINE.", "color": "acid", "y": 0.5, "fit": 0.92, "rgb": true}
+    {"at": 34, "to": 35, "ground": "k", "items": [
+      {"type": "word", "text": "PIPELINE.", "color": "acid", "y": 0.5, "fit": 0.92, "rgb": true, "wide": {"fit": 0.8}}
     ]},
-    {"at": 31, "to": 32, "ground": "hot", "lines": "w", "shake": 18, "items": [
+    {"at": 35, "to": 36, "ground": "hot", "lines": "w", "shake": 18, "items": [
       {"type": "logo", "w": 900, "y": 0.5}
     ]},
-    {"at": 32, "to": 40, "ground": "k", "items": [
+    {"at": 36, "to": 44, "ground": "k", "items": [
       {"type": "lockup", "line": "Inbound SDR, powered by AI.", "url": "getbreakout.ai"}
     ]}
   ]

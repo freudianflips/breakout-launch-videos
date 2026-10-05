@@ -66,6 +66,7 @@ film/swarm-test/review/
 # the Rush film regenerates these
 film/rush/assets/
 film/rush/index.html
+film/rush/index-*.html
 film/rush/renders/
 film/rush/snapshots/
 film/rush/mix/

@@ -33,12 +33,12 @@
       .booked .tick { position: absolute; left: 50%; top: 32%; width: 300px; height: 300px; margin: -150px 0 0 -150px;
         fill: none; stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
       .booked .bk { position: absolute; top: 64%; opacity: 0; }
-      .lockup { inset: 0; }
-      .lockup > * { position: absolute; left: 50%; opacity: 0; }
-      .lk-logo { top: 44%; width: 760px; margin-left: -380px; }
-      .lk-line { top: 56%; transform: translateX(-50%); font-family: "Manrope", sans-serif; font-weight: 700; font-size: 50px;
+      .lockup { inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 34px; }
+      .lockup > * { opacity: 0; }
+      .lk-logo { width: 760px; margin-bottom: 10px; }
+      .lk-line { font-family: "Manrope", sans-serif; font-weight: 700; font-size: 50px;
         color: #fff; letter-spacing: -0.02em; white-space: nowrap; }
-      .lk-url { top: 63%; transform: translateX(-50%); font-family: "Fragment Mono", monospace; font-size: 38px; white-space: nowrap; }
+      .lk-url { font-family: "Fragment Mono", monospace; font-size: 38px; white-space: nowrap; }
       .lines { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.55; }
       #flick { position: absolute; inset: 0; background: #050505; display: none; align-items: center; justify-content: center; }
       #flick img { width: 980px; }
@@ -145,7 +145,7 @@
                 if (u >= 0.35) word(bk, u - 0.35, dur); else bk.style.opacity = 0;
               } else if (el.classList.contains("lockup")) {
                 logoOn = true; el.style.opacity = 1;
-                [[".lk-logo", 0, -380, ""], [".lk-line", 0.3, 0, "translateX(-50%) "], [".lk-url", 0.55, 0, "translateX(-50%) "]].forEach(function (q) {
+                [[".lk-logo", 0, 0, ""], [".lk-line", 0.3, 0, ""], [".lk-url", 0.55, 0, ""]].forEach(function (q) {
                   var n2 = el.querySelector(q[0]), e8 = out4((u - q[1]) / 0.35);
                   n2.style.opacity = u >= q[1] ? e8.toFixed(3) : 0;
                   n2.style.filter = "blur(" + (12 * (1 - e8)).toFixed(1) + "px)";
@@ -157,8 +157,8 @@
           var fl = T.flicks.some(function (f) { return t >= f * BEAT && t < f * BEAT + 2 / FPS; });
           flick.style.display = fl ? "flex" : "none";
           hud.style.opacity = logoOn || fl ? 0 : 1;
-          bar.style.width = (W * clamp(t / (32 * BEAT))).toFixed(1) + "px";
-          bar.style.opacity = t < 32 * BEAT ? 1 : 0;
+          bar.style.width = (W * clamp(t / (T.lock * BEAT))).toFixed(1) + "px";
+          bar.style.opacity = t < T.lock * BEAT ? 1 : 0;
         }
 
         var drv = { t: 0 };

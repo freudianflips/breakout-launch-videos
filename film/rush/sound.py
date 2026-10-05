@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Free sound for 'Rush': a synthesised 140 BPM track and a snappy SFX stem, both on the shot grid
-in film.json, then the -14 LUFS master and the mux onto renders/rush-picture.mp4.
+in film.json, then the -14 LUFS master and the mux onto renders/rush-<format>-picture.mp4.
 
-  .venv/bin/python film/rush/sound.py
+  .venv/bin/python film/rush/sound.py [wide|feed]
 
 Everything is seeded, so the same film.json always gives the same audio. Scratch only: swap in a
 real track before anyone judges the music.
@@ -23,6 +23,11 @@ SR = 48000
 BEAT = 60 / F["bpm"]
 END = F["beats"] * BEAT
 N = int((END + 1.5) * SR)
+FMT = sys.argv[1] if len(sys.argv) > 1 else "wide"
+# the markers the music follows, read from the shots
+first = lambda ty: next(s["at"] for s in F["shots"] if any(i["type"] == ty for i in s["items"]))
+DROP, BOOKED, LOCK = first("logo"), first("booked"), first("lockup")
+COUNT = first("counter")
 rng = np.random.default_rng(140)
 
 
@@ -141,14 +146,14 @@ def put(buf, x, at, gain_db, pan=0.0):
 # ------------------------------------------------------------------ music on the beat grid
 music = np.zeros((N, 2))
 ROOTS = [0, 0, 3, 3, 5, 5, -2, -2]  # E minor-ish walk, 1 root per bar pair
-for b in range(32):
+for b in range(int(LOCK)):
     t = b * BEAT
-    bar = b // 4
-    if b < 4:  # the hook: tight hats and a clap on every word, a riser into the drop
+    bar = (b - DROP) // 4
+    if b < DROP:  # the hook: tight hats and a clap on every word, a riser into the drop
         put(music, clap(), t, -8)
         put(music, hat(), t + BEAT / 2, -10, 0.3)
         continue
-    if b in (26, 27):  # the booked moment breathes: kick only
+    if BOOKED <= b < BOOKED + 2:  # the booked moment breathes: kick only
         put(music, kick(), t, -2)
         continue
     put(music, kick(), t, -2)
@@ -161,12 +166,12 @@ for b in range(32):
     put(music, bass(note, BEAT * 0.45), t + BEAT / 2, -9)
     put(music, bass(note + 12, BEAT * 0.2), t + 3 * BEAT / 4, -14)
 for k in range(16):  # snare roll into OUT. (beats 22 to 25)
-    put(music, clap(0.12), 22 * BEAT + k * BEAT / 4 if k < 8 else 24 * BEAT + (k - 8) * BEAT / 8, -14 + k * 0.5)
-put(music, riser(4 * BEAT), 0, -16)
-put(music, riser(2 * BEAT), 24 * BEAT, -14)
+    put(music, clap(0.12), (BOOKED - 4) * BEAT + k * BEAT / 4 if k < 8 else (BOOKED - 2) * BEAT + (k - 8) * BEAT / 8, -14 + k * 0.5)
+put(music, riser(DROP * BEAT), 0, -16)
+put(music, riser(2 * BEAT), (BOOKED - 2) * BEAT, -14)
 # the lockup: everything stops, 1 low hit and a long tail
-put(music, impact(2.5), 32 * BEAT, -6)
-music[int((32 * BEAT + 2.5) * SR):] *= 0
+put(music, impact(2.5), LOCK * BEAT, -6)
+music[int((LOCK * BEAT + 2.5) * SR):] *= 0
 
 # ------------------------------------------------------------------ SFX from the shots
 sfx = np.zeros((N, 2))
@@ -203,23 +208,23 @@ for s in F["shots"]:
     if s.get("ground") and s["at"] > 0:
         put(sfx, tick(5200, 0.02), a, -20)
 for k in range(13):  # the 700+ counter rattles
-    put(sfx, tick(3000 + 60 * k, 0.03), 12 * BEAT + k * BEAT * 1.6 / 13, -16)
+    put(sfx, tick(3000 + 60 * k, 0.03), COUNT * BEAT + k * BEAT * 1.6 / 13, -16)
 
 os.makedirs("mix", exist_ok=True)
 # stems leave at -12 dBFS peak so the mixdown always has to raise them, which runs its limiter
 pk = max(np.abs(music).max(), np.abs(sfx).max())
 sf.write("mix/music.wav", music * 10 ** (-12 / 20) / pk, SR)
 sf.write("mix/sfx.wav", sfx * 10 ** (-12 / 20) / pk, SR)
-video = "renders/rush-picture.mp4"
+video = f"renders/rush-{FMT}-picture.mp4"
 cfg = {"duration": round(END + 0.4, 3), "out": os.path.abspath("mix/master.wav"),
        "music": {"file": os.path.abspath("mix/music.wav"), "gain_db": -1, "start": 0.0, "offset": 0.0, "fade_out": 0.5},
        "sfx": {"file": os.path.abspath("mix/sfx.wav"), "gain_db": -2}, "target_lufs": -14.0, "ceiling_dbtp": -2.8}
 if os.path.exists(video):
-    cfg.update({"video": os.path.abspath(video), "video_out": os.path.abspath("renders/rush-full.mp4")})
+    cfg.update({"video": os.path.abspath(video), "video_out": os.path.abspath(f"renders/rush-{FMT}-full.mp4")})
 json.dump(cfg, open("mix/mix.json", "w"), indent=1)
 subprocess.run([sys.executable, os.path.join(REPO, "skills/launch-mix/scripts/mixdown.py"), "mix/mix.json"], check=True)
 if os.path.exists(video):
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", "renders/rush-full.mp4", "-c:v", "libx264", "-preset", "slow", "-crf", "18",
-                    "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", "renders/rush.mp4"], check=True)
-    os.remove("renders/rush-full.mp4")
-    print("master: film/rush/renders/rush.mp4")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"renders/rush-{FMT}-full.mp4", "-c:v", "libx264", "-preset", "slow", "-crf", "18",
+                    "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", f"renders/rush-{FMT}.mp4"], check=True)
+    os.remove(f"renders/rush-{FMT}-full.mp4")
+    print(f"master: film/rush/renders/rush-{FMT}.mp4")
