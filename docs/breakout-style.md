@@ -29,4 +29,4 @@ The look of Breakout's launch films, decided one round at a time. Change 1 varia
 
 | Date | Round | Film | Approved | Rejected |
 |---|---|---|---|---|
-| 2026-10-05 | 1 | attention | Logo and colours from the app ("break" `#1C1778`, "out" `#4E46DC`); real screens with customer data blurred | Round 0's grey placeholder screens and invented `#100e33` dark |
+| 2026-10-05 | 1 | attention | Awaiting the owner's verdict. Changed: logo and colours taken from the app ("break" `#1C1778`, "out" `#4E46DC`); real screens with customer data blurred, replacing round 0's placeholders | |
