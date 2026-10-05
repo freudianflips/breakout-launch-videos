@@ -80,3 +80,27 @@ Every option ends on the wordmark, **Plays**, and the chosen line.
 3. I make a **5-second look test** of each pick (not a full film) so you can judge motion and pace. Then a 15 s storyboard for the winner, then the redo.
 
 My recommendation: **M1 with A (Type slam) or D (Departures board).** Both are the most unexpected for B2B, deliver one message in 15 s, and need nothing we don't have. C is the most native to LinkedIn, but it needs a demo workspace recording.
+
+---
+
+## Owner's pick and the look tests
+
+The owner picked **M1, "Signal in. Meeting out."**, with **A (Type slam)**: "that kind of minimal modern motion graphics, a la Apple or Nike".
+
+11 single-frame look tests in that space are in [`look-tests/`](look-tests/contact.jpg) (`t01.jpg` to `t11.jpg`; source `look-tests/frames.html`, re-shoot with `node docs/look-tests/shoot.mjs`):
+
+| # | Style | Type |
+|---|---|---|
+| 01 | Keynote black: white line, the payoff in a violet-to-pink gradient | Inter 700 |
+| 02 | Nike slam: condensed caps bleeding off the frame on electric violet, 1 word a beat | Anton |
+| 03 | Swiss grid: off-white, hairline grid, mono index, asymmetric "in." / "out." | Manrope 800 + Fragment Mono |
+| 04 | Split screen: black and violet halves, the real Test button on the seam | Manrope 800 |
+| 05 | Outline stack: repeated outlined rows, 1 filled | Anton |
+| 06 | Product macro: the real "Visitor Count ≥ 3" at 3x, a small Apple caption | Inter 600 |
+| 07 | Word wall: grey repeats of "Signal", 1 line in ink and violet | Manrope 800 |
+| 08 | Glass orb: the homepage violet as 1 soft form, crisp type | Inter 600 |
+| 09 | System readout: the site's mono for the data, giant Manrope for the line | Fragment Mono + Manrope 800 |
+| 10 | Brand serif: Manrope, then the New Kansas italic payoff | Manrope + New Kansas (Fraunces stand-in) |
+| 11 | Smear cut: the frame caught between 2 words, motion blur as a graphic | Manrope 800 + Inter |
+
+Inter, Anton and Fragment Mono are open fonts (SIL OFL, `look-tests/fonts/`). Inter and Anton are not brand faces; they stand in for an Apple-like grotesk and a Nike-like condensed, and would be confirmed before use.
