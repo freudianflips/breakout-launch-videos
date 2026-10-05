@@ -1,0 +1,317 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <!-- Breakout Plays: "Signal in. Meeting out." The Swiss-grid film (look test 03), built by build.py.
+           Edit the look here, the words in film.json. Every frame is a pure function of t. -->
+      <style>
+        __FONTFACES__
+        [data-composition-id="signal"] { --paper: #f2f1ee; --ink: #040405; --ink2: #5c5850; --mute: #8a8a92; --violet: #4c00ff;
+          --card: #424141; --card2: #4b4a4a; --line: rgba(4, 4, 5, 0.1);
+          --sans: "Manrope", system-ui, sans-serif; --mono: "Fragment Mono", ui-monospace, monospace; }
+        #root { position: absolute; inset: 0; overflow: hidden; background: var(--paper); font-family: var(--sans); color: var(--ink); }
+        .abs { position: absolute; }
+        .hide { opacity: 0; }
+        #gridH, #gridV { position: absolute; inset: 0; }
+        #gridH { background-image: linear-gradient(var(--line) 1px, transparent 1px); background-size: 100% 120px; }
+        #gridV { background-image: linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 160px 100%; }
+        .mono { font-family: var(--mono); font-weight: 400; }
+        .idx { position: absolute; left: 160px; top: 100px; font-size: 22px; letter-spacing: 0.02em; color: var(--ink); }
+        .idx i { font-style: normal; color: var(--violet); }
+        #brandtag { position: absolute; right: 160px; top: 100px; font-size: 22px; color: var(--ink); text-align: right; }
+        #tc { position: absolute; right: 160px; bottom: 74px; font-size: 18px; color: var(--mute); font-variant-numeric: tabular-nums; }
+        #disc { position: absolute; left: 160px; bottom: 74px; font-size: 18px; color: var(--mute); opacity: 0; }
+        .slam { position: absolute; font-weight: 800; letter-spacing: -0.06em; line-height: 0.86; white-space: nowrap; transform-origin: 0 100%; opacity: 0; }
+        .v { color: var(--violet); }
+        .lbl { position: absolute; left: 1280px; font-family: var(--mono); font-size: 30px; color: var(--ink); opacity: 0; display: flex; align-items: center; gap: 18px; }
+        .lbl i { width: 14px; height: 14px; background: var(--violet); display: inline-block; }
+        #counter { position: absolute; left: 1280px; top: 760px; opacity: 0; }
+        #counter b { display: block; font-size: 150px; font-weight: 800; letter-spacing: -0.06em; line-height: 0.9; font-variant-numeric: tabular-nums; }
+        #counter span { font-family: var(--mono); font-size: 24px; color: var(--ink2); }
+        .word { position: absolute; left: 960px; top: 380px; font-size: 220px; font-weight: 800; letter-spacing: -0.06em; line-height: 0.9; opacity: 0; white-space: nowrap; }
+
+        /* the agent cards, from the owner's references */
+        .card { position: absolute; left: 160px; width: 680px; background: var(--card); color: #f1f1f3; border-radius: 20px; opacity: 0;
+          box-shadow: 0 40px 80px -40px rgba(10, 10, 20, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05) inset; overflow: hidden; }
+        .card .hd { display: flex; align-items: center; gap: 14px; padding: 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.07); font-size: 22px; }
+        .card .hd b { font-weight: 600; }
+        .card .tm { margin-left: auto; color: #a8a8ad; font-size: 18px; font-variant-numeric: tabular-nums; }
+        .av { width: 36px; height: 36px; border-radius: 50%; background: var(--violet); display: inline-flex; align-items: center; justify-content: center; flex: none; }
+        .av img { width: 36px; height: 36px; }
+        .av.you { background: #6b6b70; }
+        .av svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 1.8; }
+        .card .rw { display: flex; align-items: center; gap: 16px; padding: 16px 24px; font-size: 22px; }
+        .card .rw svg { width: 24px; height: 24px; fill: none; stroke: #cfcfd4; stroke-width: 1.7; flex: none; stroke-linecap: round; stroke-linejoin: round; }
+        .card .rw.big { padding: 20px 24px; }
+        .card .rw.big .tx { font-size: 24px; font-weight: 600; }
+        .card .rw .sub { font-size: 18px; color: #a8a8ad; margin-top: 4px; }
+        .card .rw.small { padding: 14px 24px 18px; gap: 10px; font-size: 18px; }
+        .card .sep { height: 1px; background: rgba(255, 255, 255, 0.07); }
+        .card .sig .tx { flex: 1; }
+        .pill { display: inline-block; padding: 5px 12px; border-radius: 8px; font-size: 17px; font-weight: 600; background: #5a5959; color: #cfcfcf; white-space: nowrap; }
+        .pill.act { background: rgba(124, 92, 255, 0.28); color: #c7b8ff; }
+        .pill.act.on { background: var(--violet); color: #fff; }
+        .pill.vio { background: rgba(124, 92, 255, 0.3); color: #c7b8ff; }
+        .pill.vio.on { background: var(--violet); color: #fff; }
+        .pill.ok { background: rgba(34, 197, 94, 0.18); color: #4ade80; opacity: 0; }
+        .src { font-weight: 600; }
+        .dim { color: #a8a8ad; font-size: 18px; }
+        .caps { text-transform: uppercase; letter-spacing: 0.12em; font-size: 15px; margin-right: 6px; }
+        .sp1 { flex: 1; }
+        .arr { color: #a8a8ad; }
+        .say { padding: 20px 24px 22px; font-size: 26px; line-height: 1.4; font-weight: 500; }
+        .cb { width: 28px; height: 28px; border-radius: 7px; border: 2px solid #7a7a80; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+        .cb svg { width: 20px !important; height: 20px !important; stroke: #fff !important; stroke-width: 3 !important; opacity: 0; }
+        .cb.on { background: #8b7cf6; border-color: #8b7cf6; }
+        .cb.on svg { opacity: 1; }
+        .ch { opacity: 0; }
+
+        /* the email: a white document beside the dark agent */
+        #email { position: absolute; left: 960px; top: 200px; width: 800px; padding: 40px 44px 46px; background: #fff; border-radius: 20px; opacity: 0;
+          box-shadow: 0 50px 100px -50px rgba(10, 10, 20, 0.35), 0 0 0 1px #e3e1dc; }
+        #email .eh { font-family: var(--mono); font-size: 18px; color: var(--mute); }
+        #email .eto { font-size: 20px; color: var(--ink2); margin-top: 14px; }
+        #email .esub { margin-top: 18px; padding-bottom: 22px; border-bottom: 1px solid #ecebe7; display: flex; gap: 16px; align-items: baseline; }
+        #email .lab { font-family: var(--mono); font-size: 18px; color: var(--mute); }
+        #email .stx { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
+        #email .ebody { margin-top: 24px; font-size: 27px; line-height: 1.5; font-weight: 500; color: #26262b; }
+        #email .ebody p { margin-bottom: 18px; }
+        #email .ph { border-radius: 6px; transition: none; }
+        #email .ph.on { background: rgba(76, 0, 255, 0.1); color: var(--violet); box-shadow: 0 0 0 3px rgba(76, 0, 255, 0.1); }
+        #caret { position: absolute; left: 0; top: 0; width: 3px; height: 32px; background: var(--violet); opacity: 0; }
+        #elabels { position: absolute; left: 960px; top: 930px; display: flex; gap: 36px; font-family: var(--mono); font-size: 24px; color: var(--ink); }
+        #elabels .el { opacity: 0; }
+        #wires { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; pointer-events: none; }
+        #wires path { fill: none; stroke: var(--violet); stroke-width: 3; }
+        #wires circle { fill: var(--violet); }
+
+        #mtg { position: absolute; left: 160px; top: 900px; font-family: var(--mono); font-size: 30px; opacity: 0; }
+        #mtg i { display: inline-block; width: 14px; height: 14px; background: var(--violet); margin-right: 16px; }
+        #llogo { position: absolute; left: 160px; top: 850px; height: 64px; opacity: 0; }
+        #lurl { position: absolute; right: 160px; top: 872px; font-family: var(--mono); font-size: 26px; opacity: 0; }
+        #ltitle { position: absolute; left: 580px; top: 846px; padding-left: 34px; border-left: 2px solid var(--ink); font-size: 60px; font-weight: 800; letter-spacing: -0.04em; opacity: 0; }
+        #flash { position: absolute; inset: 0; background: var(--ink); opacity: 0; }
+      </style>
+      <div id="root" data-composition-id="signal" data-width="1920" data-height="1080">
+        <div id="gridH"></div><div id="gridV"></div>
+        <div class="idx mono" id="idx"><span id="idxn">01</span> / <i id="idxw">Signal</i></div>
+        <div id="brandtag" class="mono">Breakout · Plays</div>
+
+        <!-- 01 / Signal -->
+        <div class="slam" id="w-signal" style="left:150px;top:290px;font-size:300px">Signal</div>
+        <div class="slam" id="w-in" style="left:150px;top:560px;font-size:300px">in.</div>
+        <div id="labels">__LABELS__</div>
+        <div id="counter"><b id="cnum">0</b><span>__COUNTER_LABEL__</span></div>
+
+        <!-- 02 to 04: the play runs -->
+        __CARDS__
+        <div class="word" id="w-reads">__READS__</div>
+        <div class="word" id="w-thinks">__THINKS__</div>
+        <div class="word" id="w-sends">__SENDS__</div>
+        __EMAIL__
+        <div id="elabels">__ELABELS__</div>
+        <svg id="wires" viewBox="0 0 1920 1080"><path id="wire-cfo" d=""/><path id="wire-pricing" d=""/><circle id="dot-cfo" r="6" opacity="0"/><circle id="dot-pricing" r="6" opacity="0"/></svg>
+
+        <!-- 05 / Meeting -->
+        <div class="slam" id="w-meeting" style="left:150px;top:300px;font-size:250px">Meeting</div>
+        <div class="slam v" id="w-out" style="left:950px;top:560px;font-size:300px">out.</div>
+        <div id="mtg"><i></i>__MEETING__</div>
+
+        <!-- the lockup -->
+        <div class="slam" id="l-1" style="left:150px;top:300px;font-size:190px">__L1__</div>
+        <div class="slam" id="l-2" style="left:150px;top:520px;font-size:190px">__L2__</div>
+        <img id="llogo" src="__LOGO__" alt="">
+        <div id="ltitle">__TITLE__</div>
+        <div id="lurl">__URL__</div>
+
+        <div id="disc" class="mono">__DISCLAIMER__</div>
+        <div id="tc" class="mono">00:00:00:00</div>
+        <div id="flash"></div>
+        <div id="err" style="display:none;position:absolute;left:20px;top:20px;right:20px;z-index:999;background:#000;color:#0f0;font:20px monospace;padding:10px"></div>
+      </div>
+      <script>
+        (function () {
+          var S = '[data-composition-id="signal"] ';
+          function one(s) { return document.querySelector(S + s); }
+          function all(s) { return Array.prototype.slice.call(document.querySelectorAll(S + s)); }
+          function cl(u) { return Math.max(0, Math.min(1, u)); }
+          function out4(u) { u = cl(u); return 1 - Math.pow(1 - u, 4); }
+          function io(u) { u = cl(u); return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+          var T = __T__;
+          var BAR = 240 / T.bpm, BEAT = BAR / 4, END = T.bars * BAR;
+          function B(x) { return x * BAR; }
+          function on(t, a, b) { return t >= B(a) && t < B(b); }
+
+          // a hard cut in, with a 4-frame settle (no float, no bounce)
+          function snap(el, t, a, b, dy) {
+            if (t < B(a) || t >= B(b)) { el.style.opacity = 0; return; }
+            var u = out4((t - B(a)) / 0.14);
+            el.style.opacity = 1;
+            el.style.transform = "translateY(" + ((1 - u) * (dy === undefined ? 16 : dy)).toFixed(1) + "px) scale(" + (1 + (1 - u) * 0.025).toFixed(4) + ")";
+          }
+          // a slam: big type lands from 108%, sharp
+          function slam(el, t, a, b) {
+            if (t < B(a) || t >= B(b)) { el.style.opacity = 0; return; }
+            var u = out4((t - B(a)) / 0.12);
+            el.style.opacity = 1;
+            el.style.transform = "scale(" + (1.08 - 0.08 * u).toFixed(4) + ")";
+          }
+          // typed text: characters appear one by one between t0 and t1
+          function typeOn(spans, t, t0, t1) {
+            var n = spans.length, k = t <= t0 ? 0 : t >= t1 ? n : Math.floor(n * (t - t0) / (t1 - t0));
+            for (var i = 0; i < n; i++) spans[i].style.opacity = i < k ? 1 : 0;
+            return k;
+          }
+
+          // the grid draws in on the first beat
+          var gH = one("#gridH"), gV = one("#gridV");
+          function grid(t) {
+            var u = io(t / 0.5);
+            gH.style.clipPath = "inset(0 " + ((1 - u) * 100).toFixed(2) + "% 0 0)";
+            gV.style.clipPath = "inset(0 0 " + ((1 - u) * 100).toFixed(2) + "% 0)";
+          }
+
+          // the index, top left
+          var IDX = [[0, "01", "Signal"], [2, "02", "Play"], [4, "03", "Email"], [6, "04", "Send"], [7, "05", "Meeting"], [8, "", "Plays"]];
+          var idxn = one("#idxn"), idxw = one("#idxw"), idx = one("#idx");
+          function index(t) {
+            var cur = IDX[0];
+            IDX.forEach(function (r) { if (t >= B(r[0])) cur = r; });
+            idxn.textContent = cur[1]; idxw.textContent = cur[2];
+            idx.firstChild.nodeValue = "";
+            idx.childNodes[1].nodeValue = cur[1] ? " / " : "";
+            var u = (t - B(cur[0])) / 0.12;
+            idx.style.opacity = u < 0 ? 0 : 1;
+          }
+
+          // the signal labels and the counter
+          var lbls = all(".lbl");
+          lbls.forEach(function (l, i) { l.style.top = (330 + i * 70) + "px"; });
+          var cnum = one("#cnum"), counter = one("#counter");
+
+          // cards
+          var cRun = one("#c-run"), cAcc = one("#c-acc"), cThink = one("#c-think"), cAp = one("#c-ap"), cDn = one("#c-dn");
+          var sigs = all("#c-acc .sig"), acts = all("#c-acc .pill.act");
+          var sayCh = all("#c-think .say .ch");
+          var cb = one("#c-ap .cb"), okTag = one("#c-ap .pill.ok"), stTo = one("#st-to"), runChip = one("#c-run .pill.vio");
+
+          // the email
+          var email = one("#email"), caret = one("#caret");
+          var subCh = all("#email .stx .ch"), bodyCh = all("#email .ebody .ch");
+          var phs = { cfo: one('#email .ph[data-ph="cfo"]'), pricing: one('#email .ph[data-ph="pricing"]') };
+          var elab = all("#elabels .el");
+          var wires = { cfo: one("#wire-cfo"), pricing: one("#wire-pricing") }, dots = { cfo: one("#dot-cfo"), pricing: one("#dot-pricing") };
+          // where each phrase's first character sits in the body (index into bodyCh)
+          var phStart = {}, phEnd = {};
+          Object.keys(phs).forEach(function (k) {
+            var cs = Array.prototype.slice.call(phs[k].querySelectorAll(".ch"));
+            phStart[k] = bodyCh.indexOf(cs[0]); phEnd[k] = bodyCh.indexOf(cs[cs.length - 1]);
+          });
+          var SIGROW = { cfo: 1, pricing: 2 };
+
+          // layout positions, measured once (the cards sit where they will be in bars 4 and 5)
+          function place(el, top) { el.style.top = top + "px"; }
+          place(cRun, 176); place(cAcc, 326); place(cThink, 716); place(cAp, 300); place(cDn, 520);
+          var geo = null;
+          function measure() {
+            var root = one("#root").getBoundingClientRect();
+            function rel(el) { var r = el.getBoundingClientRect(); return { x: r.left - root.left, y: r.top - root.top, w: r.width, h: r.height }; }
+            geo = {};
+            Object.keys(phs).forEach(function (k) {
+              var row = rel(sigs[SIGROW[k]]), ph = rel(phs[k].querySelector(".ch")), em = rel(email);
+              geo[k] = { x0: row.x + row.w - 6, y0: row.y + row.h / 2, x1: em.x + 2, y1: ph.y + ph.h / 2 };
+            });
+          }
+          function wire(k, t, at) {
+            var p = wires[k], d = dots[k], g = geo && geo[k];
+            if (!g || t < at) { p.setAttribute("d", ""); d.setAttribute("opacity", 0); return; }
+            var u = io((t - at) / 0.35);
+            var mx = (g.x0 + g.x1) / 2;
+            var path = "M" + g.x0 + "," + g.y0 + " C" + mx + "," + g.y0 + " " + mx + "," + g.y1 + " " + g.x1 + "," + g.y1;
+            p.setAttribute("d", path);
+            var L = p.getTotalLength();
+            p.style.strokeDasharray = L; p.style.strokeDashoffset = (L * (1 - u)).toFixed(1);
+            d.setAttribute("cx", g.x0); d.setAttribute("cy", g.y0); d.setAttribute("opacity", 1);
+          }
+
+          var flash = one("#flash"), tc = one("#tc"), disc = one("#disc");
+          function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+          var drv = { t: 0 };
+          function render() {
+            try { draw(drv.t); }
+            catch (e) { var d = one("#err"); d.textContent = "t=" + drv.t.toFixed(2) + " " + e.message + " | " + (e.stack || "").split("\n").slice(0, 3).join(" / "); d.style.display = "block"; }
+          }
+          function draw(t) {
+            if (on(t, 4, 6)) measure();   // measured live: fonts and layout are settled by then
+            grid(t); index(t);
+            var f = Math.floor(t * 30);
+            tc.textContent = "00:00:" + pad(Math.floor(f / 30)) + ":" + pad(f % 30);
+            // a 1-frame ink flash on the big downbeats
+            var fl = [0, 2, 7, 8].some(function (b) { return t >= B(b) && t < B(b) + 1 / 30; });
+            flash.style.opacity = fl && t > 0.02 ? 0.92 : 0;
+
+            // 01 / Signal
+            slam(one("#w-signal"), t, 0, 2); slam(one("#w-in"), t, 1, 2);
+            lbls.forEach(function (l, i) { snap(l, t, i * 0.25 + 0.02, 2, 10); });
+            if (on(t, 1, 2)) {
+              var u = io((t - B(1.1)) / (B(0.7)));
+              counter.style.opacity = t >= B(1.1) ? 1 : 0;
+              cnum.textContent = Math.round(T.counter.to * u) + (u >= 1 ? T.counter.suffix : "");
+            } else counter.style.opacity = 0;
+
+            // 02 / Play: the agent reads the account, then thinks
+            snap(cRun, t, 2, 6); snap(cAcc, t, 2.06, 6);
+            runChip.classList.toggle("on", t >= B(2.06));
+            acts.forEach(function (a, i) { a.classList.toggle("on", t >= B(2.5 + i * 0.25)); });
+            slam(one("#w-reads"), t, 2, 3); slam(one("#w-thinks"), t, 3, 4);
+            snap(cThink, t, 3, 4);
+            typeOn(sayCh, t, B(3) + 0.08, B(3.8));
+
+            // 03 / Email: it writes from 2 signals
+            snap(email, t, 4, 6, 24);
+            var ks = typeOn(subCh, t, B(4) + 0.08, B(4.25));
+            var kb = typeOn(bodyCh, t, B(4.3), B(5.85));
+            var showCaret = on(t, 4, 6) && (ks < subCh.length || kb < bodyCh.length) && Math.floor(t * 4) % 2 === 0;
+            var last = kb > 0 ? bodyCh[kb - 1] : ks > 0 ? subCh[ks - 1] : null;
+            if (showCaret && last) {
+              var e = email.getBoundingClientRect(), r = last.getBoundingClientRect();
+              caret.style.left = (r.right - e.left + 2) + "px"; caret.style.top = (r.top - e.top + 2) + "px"; caret.style.height = (r.height - 4) + "px";
+              caret.style.opacity = 1;
+            } else caret.style.opacity = 0;
+            Object.keys(phs).forEach(function (k) {
+              var done = on(t, 4, 6) && kb > phEnd[k];
+              phs[k].classList.toggle("on", done);
+              if (on(t, 4, 6) && kb > phStart[k]) {
+                var bodyT0 = B(4.3), per = (B(5.85) - bodyT0) / bodyCh.length;
+                wire(k, t, bodyT0 + phStart[k] * per);
+                sigs[SIGROW[k]].style.background = "rgba(76,0,255,0.16)";
+              } else { wire(k, -1, 0); sigs[SIGROW[k]].style.background = ""; }
+            });
+            elab.forEach(function (l, i) { snap(l, t, 5.5 + i * 0.125, 6, 8); });
+            disc.style.opacity = on(t, 2, 7) ? 1 : 0;
+
+            // 04 / Send: approved, sent, engaged
+            snap(cAp, t, 6, 7); snap(cDn, t, 6.5, 7);
+            cb.classList.toggle("on", t >= B(6.25));
+            okTag.style.opacity = t >= B(6.25) ? 1 : 0;
+            stTo.classList.toggle("on", t >= B(6.75));
+            slam(one("#w-sends"), t, 6, 7);
+
+            // 05 / Meeting
+            slam(one("#w-meeting"), t, 7, 8); slam(one("#w-out"), t, 7.25, 8);
+            snap(one("#mtg"), t, 7.5, 8, 8);
+
+            // the lockup
+            slam(one("#l-1"), t, 8, END / BAR + 1); slam(one("#l-2"), t, 8.25, END / BAR + 1);
+            snap(one("#llogo"), t, 8.5, END / BAR + 1, 8); snap(one("#ltitle"), t, 8.5, END / BAR + 1, 8); snap(one("#lurl"), t, 8.75, END / BAR + 1, 8);
+          }
+          var tl = gsap.timeline({ paused: true });
+          tl.fromTo(drv, { t: 0.001 }, { t: END, duration: END - 0.001, ease: "none", onUpdate: render, immediateRender: false }, 0.001);
+          render();
+          window.__timelines["signal"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

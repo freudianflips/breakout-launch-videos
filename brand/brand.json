@@ -73,7 +73,17 @@
     },
     "mono": {
       "family": "Fragment Mono",
-      "files": []
+      "files": [
+        "fonts/fragment-mono-400.woff2"
+      ],
+      "faces": [
+        {
+          "file": "fonts/fragment-mono-400.woff2",
+          "weight": "400",
+          "style": "normal"
+        }
+      ],
+      "note": "The homepage's mono (seen in its CSS). SIL Open Font License."
     }
   },
   "radius": 16,

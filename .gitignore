@@ -42,3 +42,14 @@ film/plays/mix/
 film/plays/sfx/
 film/plays/score/
 film/plays/review/
+
+# the Signal film regenerates these
+film/signal/assets/
+film/signal/compositions/
+film/signal/index.html
+film/signal/renders/
+film/signal/snapshots/
+film/signal/mix/
+film/signal/sfx/
+film/signal/score/
+film/signal/review/
