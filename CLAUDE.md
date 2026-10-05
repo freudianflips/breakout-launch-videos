@@ -10,7 +10,7 @@ Read README.md, then `skills/launch-film/SKILL.md`. This repo makes Breakout's p
 - Show frames before building. A contact sheet or snapshots of every new beat come before a full render, and a free render (scratch voice, scratch bed, synthesised sound) comes before any paid generation.
 - Paid generation (Higgsfield or any other provider) runs only on the team's own account, and only after you state the cost of the job and the reader says yes. Never write an API key into the repo.
 - Scratch voices are for timing only and are never published (`docs/rights.md`). Generated people are fictional; no famous people, lookalikes, real films or third-party brands.
-- Product screens in `film/assets/screens/` must be real Breakout UI with customer data blurred or replaced. The files there now are labelled placeholders.
+- Product screens in `film/assets/screens/` must be real Breakout UI with customer data blurred or replaced. Never commit an unblurred screen.
 - Edit `film/film.json`, `film/hooks/*/hook.json` and `film/templates/body.html`; never a generated file in `film/compositions/`. Every beat stays a pure function of time.
 - Record every look verdict (approved or rejected, in the reader's words) in `docs/breakout-style.md`.
 - Before committing, run `python3 scripts/check-template.py`. Check a changed helper with a real build (`python3 film/build.py attention`).
