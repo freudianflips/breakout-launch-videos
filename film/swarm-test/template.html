@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <!-- Motion test: the signal-swarm style (moodboard tile 11). Particles flock and snap into each word on the beat,
+           burst into the next, and settle into the wordmark. Every frame is a pure function of t. -->
+      <style>
+        @font-face { font-family: "Manrope"; src: url("assets/manrope.woff2") format("woff2"); font-weight: 200 800; }
+        @font-face { font-family: "Fragment Mono"; src: url("assets/fragment-mono.woff2") format("woff2"); font-weight: 400; }
+        #root { position: absolute; inset: 0; background: #020208; overflow: hidden; font-family: "Manrope", sans-serif; }
+        #glow { position: absolute; inset: 0; background: radial-gradient(55% 60% at 50% 52%, rgba(76, 0, 255, 0.55), transparent 70%); opacity: 0.3; }
+        #cv { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+        .lab { position: absolute; font-family: "Fragment Mono", monospace; font-size: 20px; color: rgba(255, 255, 255, 0.6); opacity: 0; white-space: nowrap; }
+        #plays { position: absolute; left: 0; right: 0; top: 720px; text-align: center; font-weight: 800; font-size: 64px; letter-spacing: -0.04em; color: #fff; opacity: 0; }
+        #url { position: absolute; left: 0; right: 0; top: 820px; text-align: center; font-family: "Fragment Mono", monospace; font-size: 24px; color: rgba(255, 255, 255, 0.6); opacity: 0; }
+        #probe { position: absolute; left: -9999px; top: 0; font: 800 40px "Manrope"; }
+      </style>
+      <div id="root" data-composition-id="swarm" data-width="1920" data-height="1080">
+        <div id="glow"></div>
+        <canvas id="cv" width="1920" height="1080"></canvas>
+        <div class="lab" style="left:220px;top:180px">pricing_page.view ×3</div>
+        <div class="lab" style="left:1350px;top:230px">new_hire · cfo</div>
+        <div class="lab" style="left:560px;top:860px">blog.view ×2</div>
+        <div class="lab" style="left:1180px;top:800px">funding.series_c</div>
+        <div class="lab" style="left:300px;top:560px">job_change · champion</div>
+        <div class="lab" style="left:1500px;top:520px">return.visit</div>
+        <div id="plays">Plays</div>
+        <div id="url">getbreakout.ai</div>
+        <span id="probe">Signal</span>
+        <img id="logo" src="assets/logo-on-dark.svg" alt="" style="display:none">
+      </div>
+      <script>
+        (function () {
+          var S = '[data-composition-id="swarm"] ';
+          function one(s) { return document.querySelector(S + s); }
+          function all(s) { return Array.prototype.slice.call(document.querySelectorAll(S + s)); }
+          function cl(u) { return Math.max(0, Math.min(1, u)); }
+          function out4(u) { u = cl(u); return 1 - Math.pow(1 - u, 4); }
+          function io(u) { u = cl(u); return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+          var T = __T__;
+          var BAR = 240 / T.bpm, BEAT = BAR / 4, END = T.bars * BAR;
+          function B(x) { return x * BAR; }
+          var W = 1920, H = 1080, N = 5200;
+          var seed = 2026;
+          function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+
+          // every particle: a home in the field, a burst direction, a delay, a colour slot
+          var P = [];
+          for (var i = 0; i < N; i++) {
+            var a = rnd() * Math.PI * 2;
+            P.push({ hx: rnd() * W, hy: rnd() * H, ph: rnd() * 6.283, dx: Math.cos(a), dy: Math.sin(a), amp: 0.4 + rnd() * 0.9, d: rnd(), c: rnd() });
+          }
+          // the shapes, sampled from real letterforms and the real wordmark
+          var STAGES = [
+            { at: 0.5, kind: "text", text: "Signal", size: 400, burst: 0.55 },
+            { at: 1.0, kind: "text", text: "in.", size: 460, burst: 1.0 },
+            { at: 1.5, kind: "text", text: "Meeting", size: 360, burst: 0.7, stream: true },
+            { at: 2.25, kind: "text", text: "out.", size: 460, burst: 1.1, pink: true },
+            { at: 3.0, kind: "logo", burst: 0.6 }
+          ];
+          var ready = false;
+          function sample(draw) {
+            var c = document.createElement("canvas"); c.width = W; c.height = H;
+            var g = c.getContext("2d"); draw(g);
+            var d = g.getImageData(0, 0, W, H).data, pts = [];
+            for (var y = 0; y < H; y += 5) for (var x = 0; x < W; x += 5) {
+              var k = (y * W + x) * 4;
+              if (d[k + 3] > 140) pts.push([x, y, d[k], d[k + 1], d[k + 2]]);
+            }
+            // shuffle, deterministically, so particles spread over the whole shape
+            var s2 = 99;
+            for (var j = pts.length - 1; j > 0; j--) { s2 = (s2 * 16807) % 2147483647; var r = s2 % (j + 1), tmp = pts[j]; pts[j] = pts[r]; pts[r] = tmp; }
+            return pts;
+          }
+          function prepare() {
+            var img = one("#logo");
+            if (!document.fonts.check('800 40px "Manrope"') || !img.complete || !img.naturalWidth) return false;
+            STAGES.forEach(function (st) {
+              st.pts = sample(function (g) {
+                if (st.kind === "text") {
+                  g.fillStyle = "#fff"; g.font = "800 " + st.size + "px Manrope"; g.textAlign = "center"; g.textBaseline = "middle";
+                  g.fillText(st.text, W / 2, H / 2 + 10);
+                } else {
+                  var w = 1100, h = w * img.naturalHeight / img.naturalWidth;
+                  g.drawImage(img, (W - w) / 2, H / 2 - h / 2 - 40, w, h);
+                }
+              });
+            });
+            return true;
+          }
+          function target(k, i, t) {
+            if (k < 0) {   // the field: drifting signals
+              var p = P[i];
+              return [p.hx + Math.sin(t * 0.7 + p.ph) * 38, p.hy + Math.cos(t * 0.5 + p.ph * 1.3) * 26];
+            }
+            var pts = STAGES[k].pts, q = pts[i % pts.length];
+            var sh = 1.4;   // a shimmer while holding
+            return [q[0] + Math.sin(t * 9 + i) * sh, q[1] + Math.cos(t * 7 + i * 1.7) * sh];
+          }
+          function posAt(i, t) {
+            var k = -1;
+            for (var s = 0; s < STAGES.length; s++) if (t >= B(STAGES[s].at) - 0.14) k = s;
+            var p = P[i];
+            if (k < 0) return target(-1, i, t);
+            var st = STAGES[k], t0 = B(st.at) - 0.14 + p.d * 0.2, dur = st.stream ? 0.55 : 0.42;
+            var u = (t - t0) / dur;
+            var from = target(k - 1, i, t0), to = target(k, i, t);
+            if (u <= 0) return target(k - 1, i, t);
+            var e = st.stream ? io(u) : out4(u);
+            var x = from[0] + (to[0] - from[0]) * e, y = from[1] + (to[1] - from[1]) * e;
+            var b = Math.sin(Math.PI * cl(u)) * st.burst * p.amp * 260;     // the burst between shapes
+            if (st.stream) { x += Math.sin(Math.PI * cl(u)) * (p.c - 0.5) * 420; y += b * p.dy * 0.4; }
+            else { x += p.dx * b; y += p.dy * b; }
+            return [x, y];
+          }
+          function stageOf(t) { var k = -1; for (var s = 0; s < STAGES.length; s++) if (t >= B(STAGES[s].at)) k = s; return k; }
+          function colour(i, t) {
+            var p = P[i], k = stageOf(t);
+            if (k >= 0 && STAGES[k].kind === "logo" && t > B(STAGES[k].at) + 0.25) {
+              var q = STAGES[k].pts[i % STAGES[k].pts.length];
+              return q[2] > 200 && q[3] > 200 ? 0 : 1;     // white "break", lilac "out"
+            }
+            if (k >= 0 && STAGES[k].pink) return p.c < 0.55 ? 2 : p.c < 0.85 ? 1 : 0;
+            return p.c < 0.12 ? 2 : p.c < 0.2 ? 0 : 1;
+          }
+          var COL = ["#ffffff", "#8b6dff", "#ff4fd8"];
+
+          var cv = one("#cv"), g = cv.getContext("2d"), glow = one("#glow"), labs = all(".lab");
+          var drv = { t: 0 };
+          function render() {
+            var t = drv.t;
+            if (!ready) ready = prepare();
+            g.clearRect(0, 0, W, H);
+            var beatU = (t % BEAT) / BEAT, kick = Math.exp(-beatU * 6);
+            glow.style.opacity = (0.22 + 0.35 * kick).toFixed(3);
+            labs.forEach(function (l, j) {
+              var a = cl((t - 0.1 - j * 0.07) / 0.25) * (1 - cl((t - B(0.5) + 0.1) / 0.15));
+              l.style.opacity = a.toFixed(3);
+              l.style.transform = "translateY(" + (Math.sin(t * 0.8 + j) * 8).toFixed(1) + "px)";
+            });
+            if (!ready) return;
+            var size = 3.6 * (1 + 0.35 * kick);
+            var buckets = [[], [], []];
+            for (var i = 0; i < N; i++) {
+              var a = posAt(i, t), b = posAt(i, t - 1 / 45);
+              buckets[colour(i, t)].push(b[0], b[1], a[0], a[1]);
+            }
+            g.lineCap = "round";
+            buckets.forEach(function (bk, c) {
+              g.strokeStyle = COL[c]; g.lineWidth = size;
+              g.beginPath();
+              for (var j = 0; j < bk.length; j += 4) { g.moveTo(bk[j], bk[j + 1]); g.lineTo(bk[j + 2] + 0.01, bk[j + 3]); }
+              g.stroke();
+            });
+            var lt = t - B(3.4);
+            one("#plays").style.opacity = cl(lt / 0.2); one("#plays").style.transform = "translateY(" + ((1 - out4(lt / 0.3)) * 16).toFixed(1) + "px)";
+            one("#url").style.opacity = cl((t - B(3.6)) / 0.2);
+          }
+          var tl = gsap.timeline({ paused: true });
+          tl.fromTo(drv, { t: 0.001 }, { t: END, duration: END - 0.001, ease: "none", onUpdate: render, immediateRender: false }, 0.001);
+          render();
+          window.__timelines["swarm"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "about": "Motion test: the signal-swarm style for 'Signal in. Meeting out.' (moodboard tile 11). 4 bars at 128 BPM. Times in bars from 0.",
+  "bpm": 128,
+  "bars": 4,
+  "brand": "../../brand",
+  "music": {"file": "score/bed.wav", "gain_db": -2, "fade_out": 1.2},
+  "sfx": [
+    {"at": 0.0, "sound": "air", "gain_db": -16, "args": {"dur": 1.0}},
+    {"at": 0.5, "sound": "sub_drop", "gain_db": -9},
+    {"at": 0.5, "sound": "grow", "gain_db": -16, "args": {"dur": 0.4}},
+    {"at": 1.0, "sound": "felt_thump", "gain_db": -7},
+    {"at": 1.0, "sound": "glass_tick", "gain_db": -12, "args": {"degree": 3}},
+    {"at": 1.5, "sound": "grow", "gain_db": -15, "args": {"dur": 0.35}},
+    {"at": 1.5, "sound": "press", "gain_db": -10},
+    {"at": 2.25, "sound": "sub_drop", "gain_db": -8},
+    {"at": 2.25, "sound": "glass_tick", "gain_db": -11, "args": {"degree": 4}},
+    {"at": 3.0, "sound": "logo_sting", "gain_db": -8}
+  ]
+}
