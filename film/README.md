@@ -6,7 +6,7 @@ The launch film template: a **hook** (the story before the cut) on a shared **bo
 |---|---|
 | `film.json` | The body: the narrator's lines and the beats they play under. Full reference: [body.md](../skills/launch-film/references/body.md). |
 | `hooks/<name>/hook.json` | One hook each. `attention` (dark, 2 lines) and `who-visited` (light, 1 question) are free, type-only hooks. Reference: [hooks.md](../skills/launch-film/references/hooks.md). |
-| `assets/screens/` | Breakout product screenshots or screen recordings (png, jpg, mp4, webm). `visitors.png`, `chat.png` and `followup.png` are labelled placeholders: replace them with real screens, then adjust each product beat's `focus` rect. |
+| `assets/screens/` | Breakout product screenshots or screen recordings (png, jpg, mp4, webm). `accounts.png`, `account.png`, `chats.png` and `contacts.png` are real app screens with visitor names, emails, LinkedIn handles and visitor companies blurred. Never commit an unblurred screen. After swapping a screen, adjust its beat's `focus` rect. |
 | `templates/body.html` | The look and motion. One HyperFrames composition; every beat is a pure function of time. |
 | `build.py`, `audio.py`, `render.sh` | Timing from the aligned voice, the sound and mix, and both plus the render per hook. |
 

@@ -28,7 +28,7 @@ The first version of every film is free and needs no accounts: a placeholder nar
    uv venv .venv && uv pip install -r requirements.txt
    ```
 
-2. Drop 3 or 4 real Breakout screenshots or short screen recordings into `film/assets/screens/`, using the names `visitors.png`, `chat.png` and `followup.png` (or change the `src` paths in `film/film.json`). The ones there now are labelled placeholders. Real screens carry the film.
+2. Real Breakout screens live in `film/assets/screens/`, with customer data blurred. Add more (a live conversation recording would be the strongest shot) and point the `src` paths in `film/film.json` at them.
 
 3. Open the folder in Claude Code and paste:
 
@@ -57,9 +57,9 @@ The film lands in `film/renders/attention.mp4`.
 | Hook `attention` | Dark ground, type only: "Buyers give you their *attention.* / You give them a *form.*" |
 | Hook `who-visited` | Light ground, 1 question: "Who visited your site *today?*" |
 | Name | The Breakout logo punches in on the drop: "is your *inbound SDR*, powered by AI." |
-| Identify | "Every *visitor.*" on dark, then the visitor screen pushes into company, person and intent |
-| Engage | "In *real time.*" on indigo, then the conversation: answers, then the meeting booked |
-| Convert | The follow-up screen: email and LinkedIn |
+| Identify | "Every *visitor.*" on deep indigo, then Accounts (relevance, location, source) and the account's Browsing Summary |
+| Engage | "In *real time.*" on indigo, then All Chats with a click on Live Chats and "Meeting booked" |
+| Convert | Contacts: email and LinkedIn, "Followed up" |
 | Blocks | Identify, Engage, Convert close into "One *AI SDR.*" |
 | Switch | "Inbound SDR, *always on.*" |
 | End | The logo lockup, "Inbound SDR, powered by AI.", getbreakout.ai, then quiet |
