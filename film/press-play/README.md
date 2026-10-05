@@ -7,6 +7,7 @@ The Breakout **Plays** launch film from [`../STORYBOARD.md`](../STORYBOARD.md): 
 | `film.json` | The words, the pattern (rows, steps, starts, the mute), the transport (zoom, stop, press, drop, send, booked, lockup) and the sound cues. One pattern drives the picture and the bed. |
 | `template.html` | The look and the motion. Every frame is a pure function of time; a hidden `#err` box shows any script error in a snapshot. |
 | `build.py` | film.json + brand.json -> `index.html` and `compositions/press.html` |
-| `bed.py` | The free scratch bed, played from the same pattern: every lit step is a hit. |
+| `orchestra.py` | The score: an orchestral arrangement written as MIDI from the same pattern (each signal row is a section of the orchestra and plays only what the grid lights), rendered free with fluidsynth and the FluidR3 General MIDI soundfont (`apt install fluidsynth fluid-soundfont-gm`, or `SF2=`), plus a hall. `film.json` `music.make` points here. |
+| `bed.py` | The first scratch bed (electronic), kept for comparison. |
 | `audio.py` | The SFX cue sheet (sound forge), the mix at -14 LUFS and the mux |
 | `render.sh` | Build, render and mix: `renders/press-play.mp4` |

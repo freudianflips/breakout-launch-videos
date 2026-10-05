@@ -23,7 +23,7 @@ json.dump({"duration": round(END + 1, 3), "key": "E", "cues": cues}, open("sfx/c
 subprocess.run([PY, os.path.join(REPO, "skills/launch-sound/scripts/sfx_forge.py"), "render", "sfx/cues.json", "sfx/sfx.wav"], check=True)
 bed = F["music"]["file"]
 if not os.path.exists(bed):
-    subprocess.run([PY, "bed.py", "--out", bed], check=True)
+    subprocess.run([PY, F["music"].get("make", "bed.py"), "--out", bed], check=True)
 os.makedirs("mix", exist_ok=True)
 video = "renders/press-picture.mp4"
 cfg = {"duration": round(END, 3), "out": os.path.abspath("mix/master.wav"),

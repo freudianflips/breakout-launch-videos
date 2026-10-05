@@ -39,7 +39,7 @@
     "people": ["D", "R", "M"]
   },
   "lockup": { "title": "Plays", "url": "getbreakout.ai" },
-  "music": { "file": "score/bed.wav", "gain_db": -2, "fade_out": 1.0 },
+  "music": { "file": "score/orchestra.wav", "make": "orchestra.py", "gain_db": -1, "fade_out": 0.8 },
   "sfx": [
     { "at": 1.0, "sound": "felt_thump", "gain_db": -6 },
     { "at": 2.0, "sound": "typing", "gain_db": -17, "args": { "chars": 12, "cps": 26 } },
