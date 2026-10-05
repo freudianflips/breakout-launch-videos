@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=__W__, height=__H__" />
+    <title>Breakout: Rush</title>
+    <script src="assets/gsap.min.js"></script>
+    <!-- Rush: the fast-cut feed film, built by build.py. Edit the look here, the shots in film.json.
+         Every frame is a pure function of t: no timers, no Math.random, no CSS animation. -->
+    <style>
+      @font-face { font-family: "Anton"; src: url("assets/anton-400.woff2") format("woff2"); font-weight: 400; }
+      @font-face { font-family: "Manrope"; src: url("assets/manrope-200-800.woff2") format("woff2"); font-weight: 200 800; }
+      @font-face { font-family: "Fragment Mono"; src: url("assets/fragment-mono-400.woff2") format("woff2"); font-weight: 400; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: __W__px; height: __H__px; overflow: hidden; background: #050505; }
+      #main { position: relative; width: __W__px; height: __H__px; overflow: hidden; background: #050505; }
+      #cam { position: absolute; inset: -40px; }
+      .shot { position: absolute; inset: 40px; overflow: hidden; display: none; }
+      .it { position: absolute; opacity: 0; will-change: transform, filter; }
+      .word { left: 50%; transform-origin: 50% 50%; }
+      .word span { display: inline-block; font-family: "Anton", Impact, sans-serif; font-size: 300px; line-height: 0.9;
+        letter-spacing: -0.01em; white-space: nowrap; text-transform: uppercase; }
+      .screen { overflow: hidden; background: #fff; box-shadow: 0 40px 120px rgba(0, 0, 0, 0.55); transform-origin: 50% 50%; }
+      .screen.bg { box-shadow: none; }
+      .screen img { position: absolute; max-width: none; }
+      .logo { left: 50%; transform-origin: 50% 50%; }
+      .logo img { display: block; }
+      .chip { font-family: "Fragment Mono", monospace; font-size: 46px; padding: 18px 30px 16px; border-radius: 10px;
+        white-space: nowrap; letter-spacing: 0.02em; transform-origin: 0 50%; }
+      .ring { width: 160px; height: 160px; margin: -80px 0 0 -80px; border-radius: 50%; border: 14px solid #050505; }
+      .booked { inset: 0; opacity: 1; }
+      .booked .flood { position: absolute; inset: 0; clip-path: circle(0px at 50% 50%); }
+      .booked .tick { position: absolute; left: 50%; top: 32%; width: 300px; height: 300px; margin: -150px 0 0 -150px;
+        fill: none; stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
+      .booked .bk { position: absolute; top: 64%; opacity: 0; }
+      .lockup { inset: 0; }
+      .lockup > * { position: absolute; left: 50%; opacity: 0; }
+      .lk-logo { top: 44%; width: 760px; margin-left: -380px; }
+      .lk-line { top: 56%; transform: translateX(-50%); font-family: "Manrope", sans-serif; font-weight: 700; font-size: 50px;
+        color: #fff; letter-spacing: -0.02em; white-space: nowrap; }
+      .lk-url { top: 63%; transform: translateX(-50%); font-family: "Fragment Mono", monospace; font-size: 38px; white-space: nowrap; }
+      .lines { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.55; }
+      #flick { position: absolute; inset: 0; background: #050505; display: none; align-items: center; justify-content: center; }
+      #flick img { width: 980px; }
+      #hud { position: absolute; left: 44px; top: 44px; width: 190px; mix-blend-mode: difference; }
+      #bar { position: absolute; left: 0; bottom: 0; height: 12px; width: 0; background: #fff; mix-blend-mode: difference; }
+    </style>
+  </head>
+  <body>
+    <div id="main" data-composition-id="main" data-start="0" data-duration="__END__" data-width="__W__" data-height="__H__">
+      <div id="cam">
+      __SHOTS__
+      </div>
+      __FLICK__
+      <img id="hud" src="assets/breakout-logo-white.svg" alt="">
+      <div id="bar"></div>
+    </div>
+    <script>
+      (function () {
+        var T = __T__, BEAT = T.beat, END = T.end, W = __W__, H = __H__, FPS = 30;
+        var shots = [].slice.call(document.querySelectorAll(".shot"));
+        var cam = document.getElementById("cam"), flick = document.getElementById("flick");
+        var hud = document.getElementById("hud"), bar = document.getElementById("bar");
+        var clamp = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+        var out4 = function (x) { x = clamp(x); return 1 - Math.pow(1 - x, 4); };
+        var out3 = function (x) { x = clamp(x); return 1 - Math.pow(1 - x, 3); };
+        var io = function (x) { x = clamp(x); return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; };
+        var hash = function (n) { var s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+
+        function fitScale(el) {
+          var sp = el.firstElementChild, w = sp.offsetWidth || 1, h = sp.offsetHeight || 1;
+          return Math.min(parseFloat(el.dataset.fit) * W / w, 0.46 * H / h);
+        }
+
+        function word(el, u, dur) {
+          var k = fitScale(el), e = out4(u / 0.12);
+          var s = k * (1 + 1.4 * (1 - e)) * (1 + 0.06 * clamp(u / dur));
+          el.style.opacity = 1;
+          el.style.filter = "blur(" + (18 * (1 - e)).toFixed(1) + "px)";
+          el.style.transform = "translate(-50%,-50%) scale(" + s.toFixed(4) + ")";
+          if (el.classList.contains("rgb")) {
+            var d = 4 + 30 * (1 - out3(u / 0.2)) + 6 * hash(Math.floor(u * FPS)) * (u < 0.3 ? 1 : 0);
+            el.style.textShadow = d.toFixed(1) + "px 0 rgba(255,23,68,.9), " + (-d).toFixed(1) + "px 0 rgba(0,229,255,.9)";
+          }
+        }
+
+        function screen(el, u, dur) {
+          var fx = el.dataset.fx, tilt = parseFloat(el.dataset.tilt || 0), x = 0, y = 0, s = 1, blur = 0;
+          if (fx === "push") { var e = out4(u / 0.12); s = (1 + 0.3 * (1 - e)) * (1.02 + 0.12 * clamp(u / dur)); blur = 10 * (1 - e); }
+          else if (fx === "whip-r" || fx === "whip-l") { var e2 = out4(u / 0.16); x = (fx === "whip-r" ? 1 : -1) * 1300 * (1 - e2); blur = 24 * (1 - e2); s = 1 + 0.06 * clamp(u / dur); }
+          else if (fx === "rise") { var e3 = out4(u / 0.2); y = 1200 * (1 - e3); s = 1 + 0.05 * clamp(u / dur); blur = 14 * (1 - e3); }
+          else { var e4 = out4(u / 0.12); s = (1 + 0.7 * (1 - e4)) * (1 + 0.08 * clamp(u / dur)); blur = 14 * (1 - e4); }
+          if (!el.classList.contains("bg")) el.style.opacity = 1;
+          el.style.transform = "perspective(1600px) translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px) rotateY(" + (tilt * 3) + "deg) rotate(" + tilt + "deg) scale(" + s.toFixed(4) + ")";
+          if (!el.classList.contains("bg")) el.style.filter = blur > 0.2 ? "blur(" + blur.toFixed(1) + "px)" : "none";
+        }
+
+        function render(t) {
+          var b = t / BEAT, frame = Math.round(t * FPS), logoOn = false;
+          shots.forEach(function (sh, i) {
+            var a = parseFloat(sh.dataset.a), z = parseFloat(sh.dataset.b), on = b >= a && (b < z || i === shots.length - 1);
+            sh.style.display = on ? "block" : "none";
+            if (!on) return;
+            var lt = t - a * BEAT, dur = (z - a) * BEAT;
+            var amp = parseFloat(sh.dataset.shake) * Math.exp(-lt / 0.14) + (Math.abs(b - Math.round(b / 4) * 4) < 0.35 ? 7 * Math.exp(-(t - Math.round(b / 4) * 4 * BEAT) / 0.08) : 0);
+            if (!(amp > 0.3)) amp = 0;
+            cam.style.transform = "translate(" + ((hash(frame) - 0.5) * 2 * amp).toFixed(1) + "px," + ((hash(frame + 99) - 0.5) * 2 * amp).toFixed(1) + "px)";
+            var ln = sh.querySelector(".lines");
+            if (ln) {
+              ln.style.transform = "rotate(" + (lt * 8).toFixed(2) + "deg) scale(" + (1 + 0.1 * lt) + ")";
+              [].forEach.call(ln.children, function (l, k) { l.style.strokeDashoffset = (-(lt * (2200 + k * 90))).toFixed(0); });
+            }
+            [].forEach.call(sh.querySelectorAll(".it"), function (el) {
+              var u = lt - parseFloat(el.dataset.at || 0) * BEAT;
+              if (u < 0) { el.style.opacity = 0; if (el.classList.contains("booked") || el.classList.contains("lockup")) el.style.opacity = 1; return; }
+              if (el.classList.contains("counter")) {
+                var to = parseInt(el.dataset.to, 10), sp = el.firstElementChild, n = Math.round(to * out3(u / (BEAT * 1.6)));
+                sp.textContent = to + el.dataset.suffix; var k = fitScale(el);
+                sp.textContent = n >= to ? to + el.dataset.suffix : String(n);
+                var e = out4(u / 0.12);
+                el.style.opacity = 1; el.style.filter = "blur(" + (14 * (1 - e)).toFixed(1) + "px)";
+                el.style.transform = "translate(-50%,-50%) scale(" + (k * (1 + 0.8 * (1 - e)) * (n >= to ? 1 + 0.08 * out4((u - BEAT * 1.6) / 0.15) : 1)).toFixed(4) + ")";
+              } else if (el.classList.contains("word")) word(el, u, dur);
+              else if (el.classList.contains("screen")) screen(el, u, dur);
+              else if (el.classList.contains("logo")) {
+                logoOn = true;
+                var e5 = out4(u / 0.14), s5 = (1 + 1.6 * (1 - e5)) * (1 + 0.07 * clamp(u / dur));
+                el.style.opacity = 1; el.style.filter = "blur(" + (22 * (1 - e5)).toFixed(1) + "px)";
+                el.style.transform = "translate(-50%,-50%) scale(" + s5.toFixed(4) + ")";
+              } else if (el.classList.contains("chip")) {
+                var e6 = out4(u / 0.1);
+                el.style.opacity = 1;
+                el.style.transform = "translateX(" + (u * 60).toFixed(1) + "px) rotate(" + el.dataset.rot + "deg) scale(" + (1 + 0.9 * (1 - e6)).toFixed(3) + ")";
+              } else if (el.classList.contains("ring")) {
+                var e7 = out3(u / 0.4);
+                el.style.opacity = (1 - e7).toFixed(3); el.style.transform = "scale(" + (0.3 + 3.2 * e7).toFixed(3) + ")";
+              } else if (el.classList.contains("booked")) {
+                el.style.opacity = 1;
+                el.querySelector(".flood").style.clipPath = "circle(" + (io(u / 0.3) * 1100).toFixed(0) + "px at 50% 45%)";
+                var tk = el.querySelector(".tick"), c = tk.querySelector("circle"), p = tk.querySelector("path");
+                c.style.strokeDasharray = 541; c.style.strokeDashoffset = (541 * (1 - io((u - 0.12) / 0.35))).toFixed(1);
+                p.style.strokeDasharray = 140; p.style.strokeDashoffset = (140 * (1 - io((u - 0.3) / 0.22))).toFixed(1);
+                tk.style.transform = "scale(" + (0.85 + 0.15 * out4((u - 0.3) / 0.2)).toFixed(3) + ")";
+                var bk = el.querySelector(".bk");
+                if (u >= 0.35) word(bk, u - 0.35, dur); else bk.style.opacity = 0;
+              } else if (el.classList.contains("lockup")) {
+                logoOn = true; el.style.opacity = 1;
+                [[".lk-logo", 0, -380, ""], [".lk-line", 0.3, 0, "translateX(-50%) "], [".lk-url", 0.55, 0, "translateX(-50%) "]].forEach(function (q) {
+                  var n2 = el.querySelector(q[0]), e8 = out4((u - q[1]) / 0.35);
+                  n2.style.opacity = u >= q[1] ? e8.toFixed(3) : 0;
+                  n2.style.filter = "blur(" + (12 * (1 - e8)).toFixed(1) + "px)";
+                  n2.style.transform = q[3] + "translateY(" + (40 * (1 - e8)).toFixed(1) + "px) scale(" + (1 + 0.025 * clamp(u / dur)).toFixed(4) + ")";
+                });
+              }
+            });
+          });
+          var fl = T.flicks.some(function (f) { return t >= f * BEAT && t < f * BEAT + 2 / FPS; });
+          flick.style.display = fl ? "flex" : "none";
+          hud.style.opacity = logoOn || fl ? 0 : 1;
+          bar.style.width = (W * clamp(t / (32 * BEAT))).toFixed(1) + "px";
+          bar.style.opacity = t < 32 * BEAT ? 1 : 0;
+        }
+
+        var drv = { t: 0 };
+        var tl = gsap.timeline({ paused: true });
+        tl.fromTo(drv, { t: 0 }, { t: END, duration: END, ease: "none", onUpdate: function () { render(drv.t); }, immediateRender: false }, 0);
+        render(0);
+        if (document.fonts) document.fonts.ready.then(function () { render(drv.t); });
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
