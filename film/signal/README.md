@@ -1,6 +1,6 @@
 # film/signal/
 
-**"Signal in. Meeting out."**: the Breakout Plays film in the Swiss-grid look (look test 03), from [`../STORYLINE-signal.md`](../STORYLINE-signal.md). 18.75 s, 10 bars at 128 BPM, no narrator.
+**"Signal in. Meeting out."**: the Breakout Plays film in the Swiss-grid look (look test 03), from [`../STORYLINE-signal.md`](../STORYLINE-signal.md). 22.5 s, 12 bars at 128 BPM, no narrator.
 
 | File | What it is |
 |---|---|

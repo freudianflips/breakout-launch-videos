@@ -4,7 +4,7 @@
   .venv/bin/python film/signal/bed.py [--out film/signal/score/bed.wav]
 
 Kick on the beat, a rim on 2 and 4, quiet 16th clicks and a sub on each bar's root; the email bars
-(4 and 5) double the clicks; the lockup drops to a held sub and a single soft chord. Replace it
+(6 and 7) double the clicks; the lockup drops to a held sub and a single soft chord. Replace it
 with a real track before anyone judges the music.
 """
 import argparse
@@ -61,10 +61,10 @@ def sub(f, d):
     return np.sin(2 * math.pi * f * t) * np.minimum(1, t / 0.01) * np.exp(-t / (d * 0.8)) * 0.5
 
 
-ROOTS = [41.2, 41.2, 49.0, 55.0, 41.2, 49.0, 55.0, 61.7, 41.2, 41.2]   # E1, G1, A1, B1
+ROOTS = [41.2, 41.2, 49.0, 49.0, 55.0, 55.0, 41.2, 49.0, 55.0, 61.7, 41.2, 41.2]   # E1, G1, A1, B1
 for b in range(BARS):
     t0 = b * BAR
-    lock = b >= 8
+    lock = b >= 10
     if not lock:
         for k in range(4):
             if b == 0 and k > 0:
@@ -73,11 +73,11 @@ for b in range(BARS):
         if b >= 1:
             for k in (1, 3):
                 add(rim(), t0 + k * BEAT)
-        n = 32 if b in (4, 5) else 16
+        n = 32 if b in (6, 7) else 16
         for k in range(n):
             add(click() * (1.0 if k % 4 == 2 else 0.6), t0 + k * BAR / n)
         add(sub(ROOTS[b], BAR * 0.95), t0)
-    elif b == 8:
+    elif b == 10:
         add(kick(), t0)
         add(sub(ROOTS[0], BAR * 2), t0)
         t = ax(BAR * 2)

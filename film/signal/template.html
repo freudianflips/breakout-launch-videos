@@ -28,7 +28,7 @@
         #counter { position: absolute; left: 1280px; top: 760px; opacity: 0; }
         #counter b { display: block; font-size: 150px; font-weight: 800; letter-spacing: -0.06em; line-height: 0.9; font-variant-numeric: tabular-nums; }
         #counter span { font-family: var(--mono); font-size: 24px; color: var(--ink2); }
-        .word { position: absolute; left: 960px; top: 380px; font-size: 220px; font-weight: 800; letter-spacing: -0.06em; line-height: 0.9; opacity: 0; white-space: nowrap; }
+        .word { position: absolute; left: 1240px; top: 430px; font-size: 170px; font-weight: 800; letter-spacing: -0.06em; line-height: 0.9; opacity: 0; white-space: nowrap; }
 
         /* the agent cards, from the owner's references */
         .card { position: absolute; left: 160px; width: 680px; background: var(--card); color: #f1f1f3; border-radius: 20px; opacity: 0;
@@ -90,6 +90,9 @@
         #llogo { position: absolute; left: 160px; top: 850px; height: 64px; opacity: 0; }
         #lurl { position: absolute; right: 160px; top: 872px; font-family: var(--mono); font-size: 26px; opacity: 0; }
         #ltitle { position: absolute; left: 580px; top: 846px; padding-left: 34px; border-left: 2px solid var(--ink); font-size: 60px; font-weight: 800; letter-spacing: -0.04em; opacity: 0; }
+        #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+        .card .rw.sig, .card .rw.big { transition: none; }
+        .card .row-hide { opacity: 0; }
         #flash { position: absolute; inset: 0; background: var(--ink); opacity: 0; }
       </style>
       <div id="root" data-composition-id="signal" data-width="1920" data-height="1080">
@@ -104,7 +107,7 @@
         <div id="counter"><b id="cnum">0</b><span>__COUNTER_LABEL__</span></div>
 
         <!-- 02 to 04: the play runs -->
-        __CARDS__
+        <div id="cam">__CARDS__</div>
         <div class="word" id="w-reads">__READS__</div>
         <div class="word" id="w-thinks">__THINKS__</div>
         <div class="word" id="w-sends">__SENDS__</div>
@@ -172,7 +175,7 @@
           }
 
           // the index, top left
-          var IDX = [[0, "01", "Signal"], [2, "02", "Play"], [4, "03", "Email"], [6, "04", "Send"], [7, "05", "Meeting"], [8, "", "Plays"]];
+          var IDX = [[0, "01", "Signal"], [2, "02", "Play"], [6, "03", "Email"], [8, "04", "Send"], [9, "05", "Meeting"], [10, "", "Plays"]];
           var idxn = one("#idxn"), idxw = one("#idxw"), idx = one("#idx");
           function index(t) {
             var cur = IDX[0];
@@ -234,6 +237,21 @@
             d.setAttribute("cx", g.x0); d.setAttribute("cy", g.y0); d.setAttribute("opacity", 1);
           }
 
+          var cam = one("#cam");
+          // [bar, focus rect in layout px, scale]: holds push in slowly, moves glide between cards
+          var CAMK = [[2.0, [160, 176, 680, 132], 1.5], [2.45, [160, 176, 680, 132], 1.58], [2.7, [160, 326, 680, 360], 1.38], [3.95, [160, 326, 680, 360], 1.46],
+                      [4.2, [160, 716, 680, 232], 1.55], [5.5, [160, 716, 680, 232], 1.63], [5.95, [0, 0, 1920, 1080], 1.0]];
+          function camAt(t) {
+            var b = t / BAR, k = CAMK;
+            function m(r, sc) { var cx = r[0] + r[2] / 2, cy = r[1] + r[3] / 2; return sc === 1 ? [0, 0, 1] : [650 - cx * sc, 560 - cy * sc, sc]; }
+            if (b < k[0][0] || b >= 6) return [0, 0, 1];
+            for (var i = 0; i < k.length - 1; i++) if (b < k[i + 1][0]) {
+              var u = io((b - k[i][0]) / (k[i + 1][0] - k[i][0])), a = m(k[i][1], k[i][2]), c = m(k[i + 1][1], k[i + 1][2]);
+              return [a[0] + (c[0] - a[0]) * u, a[1] + (c[1] - a[1]) * u, a[2] + (c[2] - a[2]) * u];
+            }
+            return [0, 0, 1];
+          }
+          var accLine = one("#c-acc .rw.big"), chips = all("#c-think .rw.small .pill");
           var flash = one("#flash"), tc = one("#tc"), disc = one("#disc");
           function pad(n) { return (n < 10 ? "0" : "") + n; }
 
@@ -243,12 +261,12 @@
             catch (e) { var d = one("#err"); d.textContent = "t=" + drv.t.toFixed(2) + " " + e.message + " | " + (e.stack || "").split("\n").slice(0, 3).join(" / "); d.style.display = "block"; }
           }
           function draw(t) {
-            if (on(t, 4, 6)) measure();   // measured live: fonts and layout are settled by then
+            if (on(t, 6, 8)) measure();   // measured live: fonts and layout are settled by then
             grid(t); index(t);
             var f = Math.floor(t * 30);
             tc.textContent = "00:00:" + pad(Math.floor(f / 30)) + ":" + pad(f % 30);
             // a 1-frame ink flash on the big downbeats
-            var fl = [0, 2, 7, 8].some(function (b) { return t >= B(b) && t < B(b) + 1 / 30; });
+            var fl = [0, 2, 9, 10].some(function (b) { return t >= B(b) && t < B(b) + 1 / 30; });
             flash.style.opacity = fl && t > 0.02 ? 0.92 : 0;
 
             // 01 / Signal
@@ -260,19 +278,25 @@
               cnum.textContent = Math.round(T.counter.to * u) + (u >= 1 ? T.counter.suffix : "");
             } else counter.style.opacity = 0;
 
-            // 02 / Play: the agent reads the account, then thinks
-            snap(cRun, t, 2, 6); snap(cAcc, t, 2.06, 6);
-            runChip.classList.toggle("on", t >= B(2.06));
-            acts.forEach(function (a, i) { a.classList.toggle("on", t >= B(2.5 + i * 0.25)); });
-            slam(one("#w-reads"), t, 2, 3); slam(one("#w-thinks"), t, 3, 4);
-            snap(cThink, t, 3, 4);
-            typeOn(sayCh, t, B(3) + 0.08, B(3.8));
+            // 02 / Play: the agent reads the account, card by card, then thinks
+            var c = camAt(t);
+            cam.style.transform = "translate(" + c[0].toFixed(2) + "px," + c[1].toFixed(2) + "px) scale(" + c[2].toFixed(4) + ")";
+            snap(cRun, t, 2, 8); snap(cAcc, t, 2.5, 8);
+            runChip.classList.toggle("on", t >= B(2.25));
+            accLine.style.opacity = t >= B(2.62) ? 1 : 0;
+            sigs.forEach(function (r, i) { var a = B(3 + i * 0.25); r.style.opacity = t >= a ? 1 : 0; r.style.transform = "translateY(" + ((1 - out4((t - a) / 0.16)) * 10).toFixed(1) + "px)"; });
+            acts.forEach(function (a, i) { a.classList.toggle("on", t >= B(3.5 + i * 0.25)); });
+            sigs.forEach(function (r, i) { if (!on(t, 6, 8)) r.style.background = (i > 0 && t >= B(3.5 + (i - 1) * 0.25) && t < B(4.2)) ? "rgba(76,0,255,0.16)" : ""; });
+            slam(one("#w-reads"), t, 2, 4); slam(one("#w-thinks"), t, 4.2, 6);
+            snap(cThink, t, 4, 6);
+            typeOn(sayCh, t, B(4.25), B(5.0));
+            chips.forEach(function (p, i) { snap(p, t, 5.0 + i * 0.125, 8, 6); });
 
             // 03 / Email: it writes from 2 signals
-            snap(email, t, 4, 6, 24);
-            var ks = typeOn(subCh, t, B(4) + 0.08, B(4.25));
-            var kb = typeOn(bodyCh, t, B(4.3), B(5.85));
-            var showCaret = on(t, 4, 6) && (ks < subCh.length || kb < bodyCh.length) && Math.floor(t * 4) % 2 === 0;
+            snap(email, t, 6, 8, 24);
+            var ks = typeOn(subCh, t, B(6) + 0.08, B(6.25));
+            var kb = typeOn(bodyCh, t, B(6.3), B(7.85));
+            var showCaret = on(t, 6, 8) && (ks < subCh.length || kb < bodyCh.length) && Math.floor(t * 4) % 2 === 0;
             var last = kb > 0 ? bodyCh[kb - 1] : ks > 0 ? subCh[ks - 1] : null;
             if (showCaret && last) {
               var e = email.getBoundingClientRect(), r = last.getBoundingClientRect();
@@ -280,31 +304,31 @@
               caret.style.opacity = 1;
             } else caret.style.opacity = 0;
             Object.keys(phs).forEach(function (k) {
-              var done = on(t, 4, 6) && kb > phEnd[k];
+              var done = on(t, 6, 8) && kb > phEnd[k];
               phs[k].classList.toggle("on", done);
-              if (on(t, 4, 6) && kb > phStart[k]) {
-                var bodyT0 = B(4.3), per = (B(5.85) - bodyT0) / bodyCh.length;
+              if (on(t, 6, 8) && kb > phStart[k]) {
+                var bodyT0 = B(6.3), per = (B(7.85) - bodyT0) / bodyCh.length;
                 wire(k, t, bodyT0 + phStart[k] * per);
                 sigs[SIGROW[k]].style.background = "rgba(76,0,255,0.16)";
-              } else { wire(k, -1, 0); sigs[SIGROW[k]].style.background = ""; }
+              } else { wire(k, -1, 0); if (on(t, 6, 8)) sigs[SIGROW[k]].style.background = ""; }
             });
-            elab.forEach(function (l, i) { snap(l, t, 5.5 + i * 0.125, 6, 8); });
-            disc.style.opacity = on(t, 2, 7) ? 1 : 0;
+            elab.forEach(function (l, i) { snap(l, t, 7.5 + i * 0.125, 8, 8); });
+            disc.style.opacity = on(t, 2, 9) ? 1 : 0;
 
             // 04 / Send: approved, sent, engaged
-            snap(cAp, t, 6, 7); snap(cDn, t, 6.5, 7);
-            cb.classList.toggle("on", t >= B(6.25));
-            okTag.style.opacity = t >= B(6.25) ? 1 : 0;
-            stTo.classList.toggle("on", t >= B(6.75));
-            slam(one("#w-sends"), t, 6, 7);
+            snap(cAp, t, 8, 9); snap(cDn, t, 8.5, 9);
+            cb.classList.toggle("on", t >= B(8.25));
+            okTag.style.opacity = t >= B(8.25) ? 1 : 0;
+            stTo.classList.toggle("on", t >= B(8.75));
+            slam(one("#w-sends"), t, 8, 9);
 
             // 05 / Meeting
-            slam(one("#w-meeting"), t, 7, 8); slam(one("#w-out"), t, 7.25, 8);
-            snap(one("#mtg"), t, 7.5, 8, 8);
+            slam(one("#w-meeting"), t, 9, 10); slam(one("#w-out"), t, 9.25, 10);
+            snap(one("#mtg"), t, 9.5, 10, 8);
 
             // the lockup
-            slam(one("#l-1"), t, 8, END / BAR + 1); slam(one("#l-2"), t, 8.25, END / BAR + 1);
-            snap(one("#llogo"), t, 8.5, END / BAR + 1, 8); snap(one("#ltitle"), t, 8.5, END / BAR + 1, 8); snap(one("#lurl"), t, 8.75, END / BAR + 1, 8);
+            slam(one("#l-1"), t, 10, END / BAR + 1); slam(one("#l-2"), t, 10.25, END / BAR + 1);
+            snap(one("#llogo"), t, 10.5, END / BAR + 1, 8); snap(one("#ltitle"), t, 10.5, END / BAR + 1, 8); snap(one("#lurl"), t, 10.75, END / BAR + 1, 8);
           }
           var tl = gsap.timeline({ paused: true });
           tl.fromTo(drv, { t: 0.001 }, { t: END, duration: END - 0.001, ease: "none", onUpdate: render, immediateRender: false }, 0.001);
