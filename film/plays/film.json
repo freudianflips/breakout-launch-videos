@@ -1,5 +1,5 @@
 {
-  "about": "Breakout Plays launch film, from film/STORYBOARD.md. Times are in bars from 0 (bar 0 = the storyboard's bar 1); 0.25 bar = 1 beat. No narration: every cue sits on the bar grid.",
+  "about": "Breakout Plays launch film, from film/plays/STORYBOARD.md. Times are in bars from 0 (bar 0 = the storyboard's bar 1); 0.25 bar = 1 beat. No narration: every cue sits on the bar grid.",
   "bpm": 110,
   "bars": 20,
   "key": "E",

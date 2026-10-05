@@ -1,6 +1,6 @@
 # film/plays/
 
-The Breakout **Plays** launch film, built from [`../STORYBOARD.md`](../STORYBOARD.md) and [`../BRIEF.md`](../BRIEF.md). It is its own HyperFrames project because it runs on the music's bar grid with no narrator, unlike the voice-led template in `film/`.
+The Breakout **Plays** launch film, built from [`STORYBOARD.md`](STORYBOARD.md) and [`BRIEF.md`](BRIEF.md). It is its own HyperFrames project because it runs on the music's bar grid with no narrator, unlike the voice-led template in `film/`.
 
 | File | What it is |
 |---|---|

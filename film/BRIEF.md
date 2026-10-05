@@ -1,53 +1,46 @@
 ---
 workflow: product-launch-video
-message: "Plug in any signal. Breakout researches the account, finds the whole buying committee, writes the email and books the meeting."
-destination: TBD (LinkedIn and X assumed; see open questions)
-aspect: 1920x1080 (a 1080x1350 cut for LinkedIn feed to confirm)
+message: "Your signals are the notes. Press play, and Breakout turns them into a booked meeting."
+destination: LinkedIn and X (assumed)
+aspect: 1920x1080 (a 1080x1920 cut later, if wanted)
 language: en
-length: 45s
-angle: Watch it run, framed by a concept hook
+length: 28s
+angle: Watch it run, framed as a track being built
 status: draft for the owner's review, not approved
 ---
 
 ## Intent
 
-Breakout launches **Plays**. A play starts from any signal (a website visit, for example). From there Breakout:
+Breakout launches **Plays**. You plug in any signal, such as a website visit. Breakout researches the account, uncovers the full buying committee, writes the personalised email, sends it through your sequencer and books the meeting.
 
-1. personalizes the email using browsing history, firmographics, AI enrichment and 700+ signals;
-2. uncovers the full buying committee;
-3. sends through the team's downstream sequencer;
-4. books the meeting.
+**The concept is "Press play."**, and the owner chose it. "Plays" is literally a play button. The film is a track being built on a step sequencer:
 
-You build a play from a template or by describing it in chat.
+- every signal is a row, and every lit step is a hit you hear;
+- the agent arranges the signals into a beat;
+- pressing ▶ is the drop, where the email writes itself on the beat and the meeting books.
 
-**Audience:** demand gen, marketing and RevOps leaders at B2B SaaS companies (the ICP in the Brand Guide for Writers and the partner guide).
+**Tone, in the owner's words:** "short, crisp, sweet", under 30 s, "music-video-animated fast motion", modern and minimal "a la Apple or Nike". It uses the approved look, test 03 (the Swiss grid).
 
-**Tone, in the owner's words:** conceptual, analog and vintage. A meta concept frames the film: a nuanced, uncommon, nerdy fact about how the world is changing. Then it jumps into Breakout. The product visuals are real, but the text and motion graphics feel like an indie music video, "like a Tame Impala music video". Background music and sound effects carry it; no narration.
+**Audience:** demand gen, marketing and RevOps leaders at B2B SaaS companies.
 
 ## Assets
 
-The real Plays UI, saved in `film/assets/screens/`, with no customer data:
+- The Swiss-grid system from `film/signal/`: off-white ground, hairlines, Fragment Mono indexes, Manrope 800 words and violet `#4c00ff`.
+- The approved example play from `film/STORYLINE-signal.md`. It covers Notion's signals, the email to Dana and the booked meeting, with "Illustrative example" on screen.
+- The success state from signal v3: the violet flood, the drawn check and "Meeting booked."
+- The two-tone wordmark (`brand/logo-on-dark.svg`, `brand/logo.svg`).
 
-| File | Shows |
-|---|---|
-| `plays-new.png` | Create New Play: 4 templates ("Reach out to High-Intent Page Visitors", "Multiple Visitors, One Account", "Convert anonymous traffic to audience", "Convert website visitors to hand-raisers") and "or describe your own" |
-| `plays-audience.png` | Multi-Visitor Account Outreach, Audience step: Website Visitors, Account Reveal, Identified going forward, Contacts per Company 3, plus the chat that builds the play from a prompt |
-| `plays-filters.png` | Filters step: Visitor Count, Greater than or equal, 3 |
-| `plays-personalization.png` | Personalization step: tokens `value_angle` and `team_research_line`, and the Email 1 canvas ("{company_name} a few folks have been looking") |
-| `plays-destination.png` | Destination step: Outbound Sequencer, Sequence, Token Mapping, and Test |
+No product screenshots are needed. The sequencer, the email and the booking are type and drawn UI.
 
-Also on hand: the website agent screens (`agent-*.png`), the two-tone wordmark, and the site's fonts, mesh and palette (`brand/brand.json`).
+## Customizations
 
-## Words we can use (verbatim sources)
-
-- **Homepage, Outbound Agent:** "Watch signals, not lists", "first-party signals (pricing visits, return visits) plus 700+ third-party ones (hiring, funding, tech-stack changes, champion job moves)", "Research every account first", "Write like your best rep", "Send at moment of intent", "Handle the reply".
-- **Homepage:** "every site visitor is identified, enriched, and researched before first outreach", "You guide it. AI does the work.", "Pageview to pipeline."
-- **The Plays UI itself:** "Multiple Visitors, One Account", "Catch accounts where three or more people visited this month", "Start from a template, or describe what you want below".
-- **The owner's brief:** "plug in any signal", "uncovers full buying committee", "books the meeting".
+- **Picture and sound locked 1:1.** One pattern in `film.json` drives both the grid and the scratch bed. Every step you see light is a hit you hear, and nothing plays that you can't see.
+- **The mute.** One signal row (a blog view) plays as a ghost note, and the agent mutes it. On screen it reads "No action". This shows judgement, not just volume.
+- **The ▶.** The play button is the hero object. It appears, gets pressed on the drop, turns into the ✓ for the booked meeting, and sits beside "Plays" in the lockup.
 
 ## Notes
 
-- **Claims:** only "700+ signals" (homepage) and what the UI shows. No customer names, no results, no numbers beyond those.
-- **The concept fact (recommended):** honeybee swarms choose a new home by committee, and commit when about 15 scouts gather at one site (Thomas Seeley's research). It maps onto the "3 or more people from one account" play. Sources are in `film/STORYBOARD.md`.
-- **Third-party names:** the destination screen names the team's sequencer, as the product shows it. Keep it legible only if the owner wants the integration named; otherwise frame past it. No competitor appears anywhere.
-- **Not shown yet:** a booked meeting. We have no screen of it; see open questions.
+- **Claims:** only "700+ signals" (homepage) and the capabilities from the owner's brief. No customers, results or other numbers.
+- **Notion:** Notion appears only in plain type with "Illustrative example", never its logo, as in the approved Signal film.
+- **Competitors:** no competitor or sequencer brand is named. "Sends" stays generic.
+- **Music:** the bed is a free scratch synthesised from the pattern. A licensed or produced track would come later and needs a yes on cost.
