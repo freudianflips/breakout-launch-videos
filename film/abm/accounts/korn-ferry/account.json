@@ -1,0 +1,98 @@
+{
+  "company": "Korn Ferry",
+  "domain": "kornferry.com",
+  "capture": {
+    "file": "site.webp",
+    "size": [
+      2000,
+      1008
+    ],
+    "widget": [
+      1557,
+      271,
+      1977,
+      898
+    ],
+    "buttons": [
+      [
+        1767,
+        600,
+        44
+      ],
+      [
+        1767,
+        654,
+        44
+      ],
+      [
+        1767,
+        718,
+        64
+      ],
+      [
+        1767,
+        792,
+        64
+      ]
+    ],
+    "nobox": [
+      1700,
+      858
+    ],
+    "note": "The owner's capture of kornferry.com, 2026-10-06, with the chat widget open: a greeting, 4 buttons, no text box.",
+    "button_w": 356
+  },
+  "widget_notes": [
+    "4 buttons.",
+    "No text box.",
+    "No way to just ask."
+  ],
+  "today_line": "kornferry.com today: 4 buttons, no text box.",
+  "question": "Can you help us find a new CHRO?",
+  "answer": "Yes. We help organizations lead through change and find\u2014and keep\u2014top talent. Want to talk to our executive search team?",
+  "module": {
+    "title": "Executive search",
+    "sub": "Talk to the team this week",
+    "cta": "Book a call"
+  },
+  "visitor": {
+    "company": "Northwind",
+    "company_sub": "Series C fintech · visited 3 pages",
+    "person": "Maya R.",
+    "role": "VP Talent Acquisition",
+    "initials": "MR"
+  },
+  "signals": [
+    [
+      "New CHRO hired",
+      "Exec move"
+    ],
+    [
+      "Hiring surge",
+      "Hiring"
+    ],
+    [
+      "Series C funding",
+      "Funding"
+    ]
+  ],
+  "email": {
+    "head": "Email 1 · Day 0",
+    "from": "Korn Ferry",
+    "to": "Maya R. · VP Talent Acquisition, Northwind",
+    "subject": "Building the team around your new CHRO",
+    "body": [
+      "Hi Maya,",
+      "[0]Congrats on bringing in a new CHRO.[/0] [1]With hiring picking up after your Series C,[/1] would a short call on your leadership bench be useful?"
+    ],
+    "send": "Send"
+  },
+  "booked": {
+    "when": "Thu, Oct 22 · 10:30 AM",
+    "people": [
+      "M",
+      "J",
+      "S"
+    ]
+  }
+}
