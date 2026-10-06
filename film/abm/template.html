@@ -2,199 +2,227 @@
 <html>
   <body>
     <template>
-      <!-- Breakout ABM series: "Do more than chat". The account's own site and widget, then Breakout on it, on the Swiss grid.
+      <!-- Breakout ABM series v2: cinematic. Bright violet worlds, hard cuts on the beat, New Kansas headlines, letterbox, grain.
            Built by build.py from series.json and accounts/<slug>/account.json. Every frame is a pure function of t. -->
       <style>
         __FONTFACES__
-        [data-composition-id="abm"] { --paper: #f2f1ee; --ink: #040405; --ink2: #5c5850; --mute: #8a8a92; --violet: #4c00ff;
-          --line: rgba(4, 4, 5, 0.1); --card: #424141; --sans: "Manrope", system-ui, sans-serif; --mono: "Fragment Mono", ui-monospace, monospace; }
-        #root { position: absolute; inset: 0; overflow: hidden; background: var(--paper); font-family: var(--sans); color: var(--ink); }
-        #gridH, #gridV { position: absolute; inset: 0; }
-        #gridH { background-image: linear-gradient(var(--line) 1px, transparent 1px); background-size: 100% 120px; }
-        #gridV { background-image: linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 160px 100%; }
+        [data-composition-id="abm"] { --ink: #140b3c; --ink2: #4a4560; --violet: #4c00ff; --lilac: #be79ff; --pink: #ff5ad1; --blush: #ffd6f5;
+          --sans: "Manrope", system-ui, sans-serif; --mono: "Fragment Mono", ui-monospace, monospace; }
+        #root { position: absolute; inset: 0; overflow: hidden; background: #0d0628; font-family: var(--sans); color: #fff; }
+        .nk { font-family: "NK", serif; font-weight: 400; font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 0; letter-spacing: -0.035em; line-height: 0.98; }
+        .nk em { font-style: italic; }
         .mono { font-family: var(--mono); font-weight: 400; }
-        #stage { position: absolute; inset: 0; transform-origin: 50% 50%; }
-        .chrome { position: absolute; font-size: 22px; z-index: 40; background: var(--paper); padding: 4px 8px; margin: -4px -8px; }
-        #idx { left: 160px; top: 52px; }
-        #idx i { font-style: normal; color: var(--violet); }
-        #brandtag { right: 160px; top: 52px; }
-        #disc { left: 160px; bottom: 40px; font-size: 18px; color: var(--mute); }
-        .slam { position: absolute; font-weight: 800; letter-spacing: -0.05em; line-height: 0.92; white-space: nowrap; opacity: 0; transform-origin: 0 100%; }
-        .fx { position: absolute; opacity: 0; }
-        .v { color: var(--violet); }
-        .g { color: #a9a7a1; }
+        #stage { position: absolute; inset: 0; }
+        #bg { position: absolute; inset: -80px; }
+        .blob { position: absolute; width: 1500px; height: 1500px; border-radius: 50%; }
+        .x { position: absolute; opacity: 0; will-change: transform, opacity, filter; }
+        .c { left: 0; right: 0; text-align: center; white-space: nowrap; }
 
-        /* 01-02: their site, in a browser frame */
-        #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; z-index: 5; }
+        /* the account's site */
+        #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
         #bf { position: absolute; left: 160px; top: 110px; width: 1600px; border-radius: 14px; overflow: hidden; background: #fff;
-          box-shadow: 0 60px 120px -60px rgba(4, 4, 5, 0.45), 0 0 0 1px rgba(4, 4, 5, 0.12); }
+          box-shadow: 0 80px 160px -60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.12); }
         #bar { height: 46px; background: #ebeae6; display: flex; align-items: center; gap: 9px; padding: 0 18px; }
         #bar i { width: 13px; height: 13px; border-radius: 50%; background: #cfcdc7; }
-        #bar .url { margin-left: 18px; flex: 1; max-width: 640px; height: 28px; border-radius: 8px; background: #fff; font-family: var(--mono); font-size: 16px; line-height: 28px; padding: 0 14px; color: var(--ink2); }
+        #bar .url { margin-left: 18px; flex: 1; max-width: 640px; height: 28px; border-radius: 8px; background: #fff; font-family: var(--mono); font-size: 16px; line-height: 28px; padding: 0 14px; color: #5c5850; }
         #site { display: block; width: 1600px; }
-        #hl { position: absolute; border-radius: 6px; box-shadow: 0 0 0 3px var(--violet); opacity: 0; }
-        .note { position: absolute; left: 160px; font-size: 92px; font-weight: 800; letter-spacing: -0.05em; white-space: nowrap; opacity: 0; z-index: 6; }
-        #scrim { position: absolute; inset: 0; z-index: 5; opacity: 0; background: linear-gradient(90deg, rgba(242,241,238,0.97) 0%, rgba(242,241,238,0.93) 46%, rgba(242,241,238,0) 54%); }
-        .turn { left: 150px; font-size: 128px; z-index: 6; }
+        #hl { position: absolute; border-radius: 6px; box-shadow: 0 0 0 3px var(--violet), 0 0 30px rgba(76, 0, 255, 0.6); opacity: 0; }
+        #scrim { position: absolute; inset: 0; opacity: 0; background: linear-gradient(90deg, rgba(13, 6, 40, 0.94) 0%, rgba(13, 6, 40, 0.88) 44%, rgba(13, 6, 40, 0) 56%); }
+        .note { position: absolute; left: 150px; font-size: 140px; white-space: nowrap; opacity: 0; text-shadow: 0 10px 40px rgba(0, 0, 0, 0.4); }
+        .note:last-child em, .note:last-child { color: var(--blush); }
         #cur { position: absolute; left: 0; top: 0; width: 46px; height: 46px; opacity: 0; z-index: 60; }
 
-        /* 03: ask anything, on Breakout's own widget (rebuilt from the real screens) */
-        #bw { position: absolute; left: 1140px; top: 80px; width: 620px; height: 920px; border-radius: 30px; background: #f5f6f8; opacity: 0;
-          box-shadow: 0 60px 120px -60px rgba(10, 10, 30, 0.45), 0 0 0 1px #e4e4ea; font-family: var(--sans); z-index: 6; }
-        .bwh { position: absolute; left: 34px; top: 34px; display: flex; align-items: center; gap: 18px; font-size: 34px; }
+        /* the hook */
+        .hookl { left: 150px; font-size: 136px; white-space: nowrap; }
+        .hookl em { color: var(--pink); }
+        #year { top: 330px; font-size: 330px; }
+        #year em { color: var(--blush); }
+        #agent { top: 380px; font-size: 230px; }
+        #agent em { color: var(--blush); }
+
+        /* ask anything: Breakout's own widget (rebuilt from the real screens) */
+        #asktitle { left: 150px; top: 290px; font-size: 156px; color: var(--ink); white-space: nowrap; }
+        #asktitle em, #act1 em, #act2 em { color: var(--violet); }
+        #asksub { left: 158px; top: 500px; font-size: 34px; font-weight: 600; color: var(--ink2); }
+        #bwrap { position: absolute; left: 1100px; top: 110px; width: 640px; height: 860px; perspective: 1800px; opacity: 0; }
+        #bw { position: absolute; inset: 0; border-radius: 30px; background: #f5f6f8; transform-origin: 30% 50%; color: #111;
+          box-shadow: 0 80px 140px -50px rgba(40, 0, 120, 0.55), 0 0 0 1px #e4e4ea; }
+        .bwh { position: absolute; left: 34px; top: 30px; display: flex; align-items: center; gap: 18px; font-size: 34px; }
         .bwh b { font-weight: 600; }
-        .bav { width: 66px; height: 66px; border-radius: 50%; }
+        .bav { width: 64px; height: 64px; border-radius: 50%; }
         .bav.s { width: 44px; height: 44px; flex: none; }
-        .bgreet { position: absolute; left: 34px; top: 120px; font-size: 26px; color: #6b6b75; }
-        .bbook { position: absolute; left: 34px; top: 170px; padding: 12px 24px; border-radius: 8px; background: #4d43dc; color: #fff; font-size: 24px; }
-        .bpanel { position: absolute; left: 18px; right: 18px; top: 250px; bottom: 54px; background: #fff; border-radius: 26px; box-shadow: 0 0 0 1px #e8e8ee; }
-        .ub { position: absolute; right: 26px; top: 34px; max-width: 440px; padding: 16px 22px; border-radius: 22px; background: #f1f2f5; font-size: 24px; opacity: 0; }
-        .ar { position: absolute; left: 24px; top: 130px; right: 26px; display: flex; gap: 16px; align-items: flex-start; opacity: 0; }
+        .bgreet { position: absolute; left: 34px; top: 112px; font-size: 26px; color: #6b6b75; }
+        .bbook { position: absolute; left: 34px; top: 160px; padding: 12px 24px; border-radius: 8px; background: #4d43dc; color: #fff; font-size: 24px; }
+        .bpanel { position: absolute; left: 18px; right: 18px; top: 236px; bottom: 50px; background: #fff; border-radius: 26px; box-shadow: 0 0 0 1px #e8e8ee; }
+        .ub { position: absolute; right: 24px; top: 30px; max-width: 460px; padding: 16px 22px; border-radius: 22px; background: #f1f2f5; font-size: 25px; opacity: 0; }
+        .ar { position: absolute; left: 24px; top: 124px; right: 26px; display: flex; gap: 16px; align-items: flex-start; opacity: 0; }
         .dots { display: flex; gap: 6px; padding-top: 18px; }
         .dots i { width: 10px; height: 10px; border-radius: 50%; background: #555; }
-        .ans { font-size: 25px; line-height: 1.45; color: #26262b; padding-top: 4px; }
+        .ans { font-size: 27px; line-height: 1.42; color: #222; padding-top: 4px; }
         .w { display: inline-block; opacity: 0; }
-        .mod { position: absolute; left: 84px; right: 26px; top: 330px; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px;
+        .mod { position: absolute; left: 84px; right: 24px; top: 330px; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px;
           border-radius: 16px; box-shadow: 0 0 0 1.5px #e3e2f5; background: #faf9ff; opacity: 0; }
         .mod b { display: block; font-size: 23px; } .mod span { font-size: 19px; color: #6b6b75; }
         .mod em { font-style: normal; padding: 10px 18px; border-radius: 10px; background: var(--violet); color: #fff; font-size: 20px; font-weight: 600; }
-        .bin { position: absolute; left: 22px; right: 22px; bottom: 22px; height: 86px; border-radius: 20px; box-shadow: 0 0 0 2px #4d43dc; display: flex; align-items: center; padding: 0 16px 0 26px; font-size: 24px; }
-        .ph0 { color: #9a9aa5; position: absolute; left: 26px; }
+        .bin { position: absolute; left: 20px; right: 20px; bottom: 20px; height: 84px; border-radius: 20px; box-shadow: 0 0 0 2px #4d43dc; display: flex; align-items: center; padding: 0 14px 0 24px; font-size: 24px; }
+        .ph0 { color: #9a9aa5; position: absolute; left: 24px; }
         .typed { position: relative; white-space: nowrap; }
         .bcaret { width: 2px; height: 30px; background: #222; margin-left: 2px; }
-        .bsend { margin-left: auto; width: 66px; height: 66px; border-radius: 14px; background: #4d43dc; display: flex; align-items: center; justify-content: center; }
+        .bsend { margin-left: auto; width: 64px; height: 64px; border-radius: 14px; background: #4d43dc; display: flex; align-items: center; justify-content: center; }
         .bsend svg { width: 30px; height: 30px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linejoin: round; }
-        .bpow { position: absolute; left: 0; right: 0; bottom: 16px; text-align: center; font-size: 18px; color: #8a8a95; }
-        .ch, .qc, .ic { opacity: 0; }
+        .bpow { position: absolute; left: 0; right: 0; bottom: 14px; text-align: center; font-size: 18px; color: #8a8a95; }
+        .ic { opacity: 0; }
 
-        /* comparison rows, quoted from the compare page */
-        .cmp { position: absolute; width: 760px; opacity: 1; }
-        .cf { font-size: 22px; color: var(--ink2); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; opacity: 0; }
-        .cr { display: flex; gap: 24px; padding: 22px 0; border-top: 1.5px solid rgba(4, 4, 5, 0.14); opacity: 0; }
-        .cr .who { flex: none; width: 150px; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; padding-top: 2px; }
-        .cr.b .who { color: var(--violet); }
-        .cr.q .who { color: #9b9993; }
-        .cr .txt { font-size: 32px; font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; }
-        .cr.q .txt { color: #8a8780; font-weight: 600; }
-        .csrc { font-size: 15px; color: var(--mute); margin-top: 6px; opacity: 0; }
+        /* who */
+        #wholine { top: 400px; font-size: 160px; }
+        #wholine em { color: var(--blush); }
+        #person { position: absolute; left: 360px; top: 250px; width: 1200px; height: 560px; border-radius: 36px; opacity: 0;
+          background: rgba(255, 255, 255, 0.12); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.35), 0 80px 160px -60px rgba(20, 0, 80, 0.7); backdrop-filter: blur(20px); }
+        .pav { position: absolute; left: 80px; top: 90px; width: 190px; height: 190px; border-radius: 50%; background: linear-gradient(140deg, #ff9a6b, #ff5ad1);
+          display: flex; align-items: center; justify-content: center; font-size: 66px; font-weight: 700; }
+        .pname { position: absolute; left: 330px; top: 80px; font-size: 150px; white-space: nowrap; }
+        .prole { position: absolute; left: 336px; top: 250px; font-size: 40px; font-weight: 600; }
+        .pco { position: absolute; left: 336px; top: 310px; font-size: 30px; color: rgba(255, 255, 255, 0.75); }
+        .provs { position: absolute; left: 80px; bottom: 70px; display: flex; gap: 16px; align-items: center; }
+        .prov { padding: 10px 18px; border-radius: 10px; background: rgba(255, 255, 255, 0.14); color: rgba(255, 255, 255, 0.75); font-family: var(--mono); font-size: 22px; }
+        .prov.on { background: #fff; color: var(--violet); }
+        .match { margin-left: 14px; font-size: 30px; font-weight: 700; color: #9cf5c0; opacity: 0; }
 
-        /* agent cards */
-        .card { position: absolute; background: var(--card); color: #f1f1f3; border-radius: 20px; opacity: 0; overflow: hidden;
-          box-shadow: 0 40px 80px -40px rgba(10, 10, 20, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05) inset; }
-        .card .hd { display: flex; align-items: center; gap: 14px; padding: 20px 26px; border-bottom: 1px solid rgba(255, 255, 255, 0.07); font-size: 23px; }
-        .card .hd b { font-weight: 600; }
-        .card .tm { margin-left: auto; color: #a8a8ad; font-size: 18px; }
-        .av { width: 36px; height: 36px; border-radius: 50%; background: var(--violet); display: inline-flex; flex: none; }
-        .av img { width: 36px; height: 36px; }
-        .card .rw { display: flex; align-items: center; gap: 20px; padding: 24px 26px; border-top: 1px solid rgba(255, 255, 255, 0.06); opacity: 0; }
-        .card .k { width: 130px; flex: none; font-size: 17px; color: #a8a8ad; text-transform: uppercase; letter-spacing: 0.08em; }
-        .card .tx { font-size: 30px; font-weight: 700; }
-        .card .sub { font-size: 20px; color: #b9b9be; margin-top: 4px; }
-        .ck { width: 34px; height: 34px; margin-left: auto; fill: none; stroke: #8ef0b0; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
-        .provs { display: flex; gap: 12px; }
-        .prov { padding: 8px 14px; border-radius: 9px; background: #555454; color: #bdbdc2; font-family: var(--mono); font-size: 18px; }
-        .prov.on { background: var(--violet); color: #fff; }
-        .pav { width: 56px; height: 56px; border-radius: 50%; background: #ff7a59; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 22px; flex: none; }
-        #c-who { left: 160px; top: 230px; width: 780px; }
-        #w-pe.on { background: rgba(76, 0, 255, 0.28); }
+        /* versus: Breakout on violet, Qualified on grey; a fragment of the compare page each */
+        .vs { position: absolute; inset: 0; opacity: 0; }
+        .half { position: absolute; top: 0; bottom: 0; width: 960px; overflow: hidden; }
+        .hb { left: 0; background: radial-gradient(80% 90% at 30% 40%, #8a3dff 0%, #4c00ff 55%, #2a0a8a 100%); }
+        .hq { left: 960px; background: radial-gradient(90% 90% at 60% 50%, #2c2b33 0%, #17161b 100%); }
+        .who { position: absolute; left: 150px; top: 290px; font-size: 26px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.8); }
+        .hq .who { left: 120px; color: #8d8a96; }
+        .vb, .vq { position: absolute; left: 146px; top: 350px; width: 760px; font-size: 150px; }
+        .vq { left: 116px; width: 760px; color: #b9b6c2; font-size: 112px; }
+        .vb em { color: var(--blush); }
+        .vlabel { position: absolute; left: 0; right: 0; top: 190px; text-align: center; font-size: 22px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); }
+        #vs3 .vb { font-size: 230px; top: 360px; } #vs3 .vq { font-size: 200px; top: 380px; white-space: nowrap; }
 
         /* why */
-        .sig { position: absolute; left: 160px; width: 820px; height: 76px; display: flex; align-items: center; gap: 22px; border-top: 1.5px solid rgba(4, 4, 5, 0.12); opacity: 0; }
-        .sl { font-size: 32px; width: 470px; }
-        .cat { font-size: 18px; padding: 5px 12px; border-radius: 7px; background: #e3e1dc; color: var(--ink2); }
-        .tag { margin-left: auto; padding: 5px 14px; border-radius: 7px; font-family: var(--mono); font-size: 18px; background: var(--violet); color: #fff; opacity: 0; }
-        #dots { position: absolute; left: 1100px; top: 500px; width: 660px; height: 360px; }
+        #count { top: 200px; font-size: 400px; }
+        #countlabel { top: 640px; font-size: 110px; }
+        #countlabel em { color: var(--blush); }
+        .schip { position: absolute; padding: 16px 28px; border-radius: 999px; background: #fff; color: var(--violet); font-size: 32px; font-weight: 700; opacity: 0; white-space: nowrap;
+          box-shadow: 0 30px 60px -20px rgba(40, 0, 120, 0.5); }
+        #vs2q { top: 400px; font-size: 190px; color: #c9c6d2; }
+        #vs2q em { color: var(--lilac); }
+        #vs2w { top: 300px; font-size: 26px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8d8a96; }
 
-        /* act: the email, from the account to the visitor */
-        #email { position: absolute; left: 960px; top: 150px; width: 800px; padding: 38px 44px 34px; background: #fff; border-radius: 20px; opacity: 0; z-index: 6;
-          box-shadow: 0 50px 100px -50px rgba(10, 10, 20, 0.35), 0 0 0 1px #e3e1dc; }
-        #email .eh { font-family: var(--mono); font-size: 18px; color: var(--mute); }
-        #email .lab { font-family: var(--mono); font-size: 18px; color: var(--mute); margin-right: 16px; }
-        #email .eto { margin-top: 16px; font-size: 22px; color: var(--ink2); }
+        /* act */
+        #act1 { left: 150px; top: 270px; font-size: 120px; color: var(--ink); white-space: nowrap; }
+        #act2 { left: 150px; top: 420px; font-size: 120px; color: var(--ink); white-space: nowrap; }
+        #ewrap { position: absolute; left: 980px; top: 150px; width: 800px; perspective: 1800px; opacity: 0; }
+        #email { position: relative; padding: 38px 44px 34px; background: #fff; border-radius: 22px; color: #111; transform-origin: 20% 50%;
+          box-shadow: 0 80px 140px -50px rgba(40, 0, 120, 0.5), 0 0 0 1px #e3e1ec; }
+        #email .eh { font-family: var(--mono); font-size: 18px; color: #8a8a92; }
+        #email .lab { font-family: var(--mono); font-size: 18px; color: #8a8a92; margin-right: 16px; }
+        #email .eto { margin-top: 16px; font-size: 22px; color: #5c5850; }
         #email .esub { margin-top: 14px; padding-bottom: 22px; border-bottom: 1px solid #ecebe7; display: flex; align-items: baseline; }
         #email .stx { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; }
-        #email .ebody { margin-top: 24px; font-size: 30px; line-height: 1.5; font-weight: 500; color: #26262b; }
+        #email .ebody { margin-top: 24px; font-size: 31px; line-height: 1.48; font-weight: 500; color: #26262b; }
         #email .ebody p { margin-bottom: 14px; }
         .ph { border-radius: 6px; }
         .ph.on { background: rgba(76, 0, 255, 0.1); color: var(--violet); box-shadow: 0 0 0 4px rgba(76, 0, 255, 0.1); }
-        .esend { display: inline-flex; align-items: center; gap: 12px; margin-top: 10px; padding: 14px 26px; border-radius: 12px; background: var(--ink); color: #fff; font-size: 24px; font-weight: 700; float: right; }
+        .esend { display: inline-flex; align-items: center; gap: 12px; margin-top: 10px; padding: 14px 26px; border-radius: 12px; background: #140b3c; color: #fff; font-size: 24px; font-weight: 700; float: right; }
         .esend svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 2; stroke-linejoin: round; }
         .esend.press { background: var(--violet); }
 
         /* booked */
-        #flood { position: absolute; inset: 0; background: var(--violet); clip-path: circle(0px at 50% 50%); z-index: 50; }
-        #booked { position: absolute; inset: 0; z-index: 51; color: #fff; }
-        #tick { position: absolute; left: 1380px; top: 230px; width: 400px; height: 400px; overflow: visible; opacity: 0; }
+        #flood { position: absolute; inset: 0; background: radial-gradient(70% 80% at 40% 40%, #8a3dff 0%, #4c00ff 55%, #2a0a8a 100%); clip-path: circle(0px at 50% 50%); }
+        #booked { position: absolute; inset: 0; }
+        #tick { position: absolute; left: 1360px; top: 220px; width: 400px; height: 400px; overflow: visible; opacity: 0; }
         #tick circle, #tick path { fill: none; stroke: #fff; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
-        #bigok { position: absolute; left: 150px; top: 250px; font-size: 168px; font-weight: 800; letter-spacing: -0.06em; line-height: 0.95; white-space: nowrap; opacity: 0; }
-        #c-bd { left: 160px; top: 520px; width: 1000px; background: #2a2440; box-shadow: 0 50px 100px -40px rgba(10, 0, 40, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1) inset; }
-        #c-bd .rw { opacity: 1; padding: 30px; gap: 22px; }
-        #c-bd .rw svg { width: 40px; height: 40px; fill: none; stroke: #cfcfd4; stroke-width: 1.7; flex: none; stroke-linecap: round; stroke-linejoin: round; }
-        #c-bd .tx { font-size: 40px; }
-        #c-bd .sub { font-size: 24px; color: #cfc8ff; }
+        #bigok { position: absolute; left: 150px; top: 230px; font-size: 190px; white-space: nowrap; opacity: 0; }
+        #bigok em { color: var(--blush); }
+        .card { position: absolute; left: 160px; top: 560px; width: 1000px; border-radius: 22px; background: #2a2440; color: #f1f1f3; opacity: 0; overflow: hidden;
+          box-shadow: 0 50px 100px -40px rgba(10, 0, 40, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1) inset; }
+        .card .hd { display: flex; align-items: center; gap: 14px; padding: 22px 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.07); font-size: 24px; }
+        .card .hd b { font-weight: 600; }
+        .card .tm { margin-left: auto; color: #a8a8ad; font-size: 18px; }
+        .av { width: 36px; height: 36px; border-radius: 50%; background: var(--violet); display: inline-flex; flex: none; }
+        .av img { width: 36px; height: 36px; }
+        .card .rw { display: flex; align-items: center; gap: 22px; padding: 30px; }
+        .card .rw svg { width: 40px; height: 40px; fill: none; stroke: #cfcfd4; stroke-width: 1.7; flex: none; stroke-linecap: round; stroke-linejoin: round; }
+        .card .tx { font-size: 40px; font-weight: 700; }
+        .card .sub { font-size: 24px; color: #cfc8ff; margin-top: 4px; }
         .faces { margin-left: auto; display: flex; }
         .face { width: 64px; height: 64px; border-radius: 50%; margin-left: -14px; display: inline-flex; align-items: center; justify-content: center;
           font-size: 26px; font-weight: 700; color: #fff; box-shadow: 0 0 0 4px #2a2440; opacity: 0; }
         .face.f0 { background: #ff7a59; } .face.f1 { background: #2fb37a; } .face.f2 { background: #4c8dff; }
 
-        /* switch, buyout, close */
-        .big { position: absolute; font-size: 190px; font-weight: 800; letter-spacing: -0.06em; line-height: 0.9; white-space: nowrap; opacity: 0; }
-        .bign { position: absolute; font-size: 26px; opacity: 0; }
-        #swline { position: absolute; left: 160px; top: 548px; width: 1600px; height: 1.5px; background: rgba(4, 4, 5, 0.18); transform-origin: 0 0; }
-        #llogo { position: absolute; left: 50%; top: 340px; height: 96px; transform: translateX(-50%); opacity: 0; }
-        #lcta { position: absolute; left: 50%; top: 510px; padding: 22px 46px; border-radius: 999px; background: var(--violet); color: #fff; font-size: 40px; font-weight: 700; transform: translateX(-50%); opacity: 0; white-space: nowrap; }
-        #lurl { position: absolute; left: 0; right: 0; top: 650px; text-align: center; font-size: 26px; color: var(--ink2); opacity: 0; }
-        #lmade { position: absolute; left: 0; right: 0; top: 712px; text-align: center; font-size: 20px; color: var(--mute); opacity: 0; }
-        #err { position: absolute; left: 40px; top: 40px; right: 40px; font: 20px monospace; color: red; z-index: 99; white-space: pre-wrap; display: none; }
+        /* buyout, close */
+        #bo1 { left: 150px; top: 290px; font-size: 140px; white-space: nowrap; }
+        #bo2 { left: 150px; top: 440px; font-size: 140px; white-space: nowrap; }
+        #bo2 em { color: var(--blush); }
+        #bon { left: 158px; top: 680px; font-size: 32px; font-weight: 600; color: rgba(255, 255, 255, 0.88); }
+        #llogo { position: absolute; left: 50%; top: 320px; height: 104px; margin-left: -260px; opacity: 0; }
+        #lcta { left: 0; right: 0; top: 500px; text-align: center; }
+        #lcta span { display: inline-block; padding: 24px 54px; border-radius: 999px; background: var(--violet); color: #fff; font-size: 44px; font-weight: 700; box-shadow: 0 30px 60px -20px rgba(76, 0, 255, 0.6); }
+        #lmade { top: 650px; font-size: 56px; color: var(--ink2); }
+        #lmade em { color: var(--violet); }
+        #lurl { top: 740px; font-size: 22px; color: #6c6880; }
+
+        /* the film: grain, vignette, flash, letterbox */
+        #grain { position: absolute; inset: 0; width: 1920px; height: 1080px; opacity: 0.13; mix-blend-mode: overlay; pointer-events: none; }
+        #vig { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.5) 100%); pointer-events: none; }
+        #flash { position: absolute; inset: 0; background: radial-gradient(80% 80% at 70% 30%, #fff 0%, #ffd6f5 40%, rgba(255, 90, 209, 0) 80%); opacity: 0; mix-blend-mode: screen; }
+        .lb { position: absolute; left: 0; right: 0; height: 84px; background: #000; z-index: 90; }
+        #lbT { top: 0; } #lbB { bottom: 0; }
+        #disc { position: absolute; left: 160px; bottom: 30px; font-size: 16px; color: rgba(255, 255, 255, 0.5); z-index: 91; }
+        #err { position: absolute; left: 40px; top: 100px; right: 40px; font: 20px monospace; color: red; z-index: 99; white-space: pre-wrap; display: none; }
       </style>
       <div id="root" data-composition-id="abm" data-width="1920" data-height="1080">
-        <div id="gridH"></div><div id="gridV"></div>
         <div id="stage">
-        <div class="chrome mono" id="idx"><span id="idxn">01</span> / <i id="idxw">Their site</i></div>
-        <div class="chrome mono" id="brandtag">Breakout · for __COMPANY__</div>
-        <div class="chrome mono" id="disc"></div>
+          <div id="bg"><div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div></div>
 
-        <div id="cam"><div id="bf"><div id="bar"><i></i><i></i><i></i><span class="url">__DOMAIN__</span></div><img id="site" src="__SITE__" alt=""></div><div id="hl"></div></div>
-        <div id="scrim"></div>
-        <div id="notes">__NOTES__</div>
-        <div id="turn">__TURN__</div>
+          <div id="cam"><div id="bf"><div id="bar"><i></i><i></i><i></i><span class="url">__DOMAIN__</span></div><img id="site" src="__SITE__" alt=""></div><div id="hl"></div></div>
+          <div id="scrim"></div>
+          <div id="notes">__NOTES__</div>
 
-        <div class="slam" id="asktitle" style="left:150px;top:220px;font-size:136px">__ASKTITLE__</div>
-        <div class="fx mono" id="today" style="left:160px;top:430px;font-size:30px;color:#5c5850">__TODAY__</div>
-        <div class="fx mono v" id="bline" style="left:160px;top:490px;font-size:30px">__BLINE__</div>
-        __BW__
+          <div id="hook">__HOOK__</div>
+          <div class="x c nk" id="year">__YEAR__</div>
+          <div class="x c nk" id="agent">__AGENT__</div>
 
-        __CARDWHO__
-        <div id="rowwho" style="position:absolute;left:1000px;top:250px">__ROWWHO__</div>
+          <div class="x nk" id="asktitle">__ASKTITLE__</div>
+          <div class="x" id="asksub">__ASKSUB__</div>
+          <div id="bwrap">__BW__</div>
 
-        <div class="slam" id="why1" style="left:150px;top:180px;font-size:96px">__WHY1__</div>
-        <div class="slam g" id="why2" style="left:150px;top:290px;font-size:96px">__WHY2__</div>
-        <div class="fx mono" id="sighead" style="left:160px;top:452px;font-size:22px;color:#5c5850">__SIGHEAD__</div>
-        <div id="sigs">__SIGS__</div>
-        <canvas id="dots" width="660" height="360"></canvas>
+          <div class="x c nk" id="wholine">__WHOLINE__</div>
+          __PERSON__
+          __VS1__
 
-        <div id="rowact" style="position:absolute;left:160px;top:230px">__ROWACT__</div>
-        __EMAIL__
+          <div class="x c nk" id="count">0</div>
+          <div class="x c nk" id="countlabel">__COUNTLABEL__</div>
+          <div id="chips">__CHIPS__</div>
+          <div class="x c" id="vs2w">Qualified · __VS2L__</div>
+          <div class="x c nk" id="vs2q">__VS2Q__</div>
 
-        <div class="fx mono" id="swf" style="left:160px;top:230px;font-size:22px;color:#5c5850;letter-spacing:0.08em">__SWF__</div>
-        <div class="big v" id="swb" style="left:150px;top:270px">__SWB__</div>
-        <div class="bign mono" id="swbn" style="left:160px;top:478px">__SWBN__</div>
-        <div id="swline"></div>
-        <div class="big g" id="swq" style="left:150px;top:590px">__SWQ__</div>
-        <div class="bign mono g" id="swqn" style="left:160px;top:798px">__SWQN__</div>
-        <div class="slam" id="bo1" style="left:150px;top:290px;font-size:132px">__BO1__</div>
-        <div class="slam v" id="bo2" style="left:150px;top:430px;font-size:132px">__BO2__</div>
-        <div class="fx mono" id="bon" style="left:160px;top:620px;font-size:30px">__BON__</div>
+          <div class="x nk" id="act1">__ACT1__</div>
+          <div class="x nk" id="act2">__ACT2__</div>
+          <div id="ewrap">__EMAIL__</div>
 
-        <img id="llogo" src="__LOGO__" alt="">
-        <div id="lcta">__CTA__</div>
-        <div id="lurl" class="mono">__URL__</div>
-        <div id="lmade" class="mono">__MADE__</div>
+          <div id="flood"></div>
+          <div id="booked">__BOOKED__</div>
+          __VS3__
 
-        <div id="flood"></div>
-        <div id="booked">__BOOKED__</div>
-        <svg id="cur" viewBox="0 0 24 24"><path d="M4 2.5v17.2l4.6-4.4 3.1 6.9 3-1.3-3.1-6.8h6.4z" fill="#040405" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          <div class="x nk" id="bo1">__BO1__</div>
+          <div class="x nk" id="bo2">__BO2__</div>
+          <div class="x" id="bon">__BON__</div>
+
+          <img id="llogo" src="__LOGO__" alt="">
+          <div class="x c" id="lcta"><span>__CTA__</span></div>
+          <div class="x c nk" id="lmade">__MADE__</div>
+          <div class="x c mono" id="lurl">__URL__</div>
+          <svg id="cur" viewBox="0 0 24 24"><path d="M4 2.5v17.2l4.6-4.4 3.1 6.9 3-1.3-3.1-6.8h6.4z" fill="#040405" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
         </div>
+        <div id="flash"></div>
+        <div id="vig"></div>
+        <canvas id="grain" width="640" height="360"></canvas>
+        <div class="lb" id="lbT"></div><div class="lb" id="lbB"></div>
+        <div class="mono" id="disc"></div>
         <div id="err"></div>
       </div>
       <script>
@@ -204,7 +232,6 @@
           function all(s) { return Array.prototype.slice.call(document.querySelectorAll(S + s)); }
           function cl(u) { return Math.max(0, Math.min(1, u)); }
           function out4(u) { u = cl(u); return 1 - Math.pow(1 - u, 4); }
-          function in3(u) { u = cl(u); return u * u * u; }
           function io(u) { u = cl(u); return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
           function lerp(a, b, u) { return a + (b - a) * u; }
           var T = __T__, AT = T.at, CAP = T.cap;
@@ -212,164 +239,177 @@
           function B(x) { return x * BAR; }
           function inb(t, a) { return (t - B(a)) / BAR; }
           var root = one("#root");
-
-          // an element that rises in at bar a and leaves at bar b
-          function show(el, t, a, b, dy) {
-            var u = inb(t, a), v = b == null ? -1 : inb(t, b);
-            var op = u < 0 ? 0 : cl(u / 0.04) * (v > 0 ? 1 - cl(v / 0.05) : 1);
-            el.style.opacity = op.toFixed(3);
-            el.style.transform = "translateY(" + ((u >= 0 ? (dy == null ? 24 : dy) * (1 - out4(u / 0.12)) : 0) - (v > 0 ? 30 * out4(v / 0.05) : 0)).toFixed(1) + "px)";
-          }
-          function slam(el, t, a, b) {
-            var u = inb(t, a), v = b == null ? -1 : inb(t, b);
-            el.style.opacity = u < 0 || (b != null && v >= 0.06) ? 0 : (cl(u / 0.03) * (v > 0 ? 1 - cl(v / 0.06) : 1)).toFixed(3);
-            el.style.transform = "translateY(" + (v > 0 ? -50 * out4(v / 0.06) : 0).toFixed(1) + "px) scale(" + (u >= 0 ? 1.1 - 0.1 * out4(u / 0.1) : 1.1).toFixed(4) + ")";
-          }
-          function typeIn(list, t, a, b) { var n = list.length; list.forEach(function (c, j) { c.style.opacity = t >= B(a) + j * (B(b) - B(a)) / n ? 1 : 0; }); }
           function local(el) { var r = root.getBoundingClientRect(), q = el.getBoundingClientRect(), s = r.width / 1920 || 1;
             return { x: (q.left - r.left) / s, y: (q.top - r.top) / s, w: q.width / s, h: q.height / s }; }
+
+          // worlds: a base and 3 drifting colour blobs
+          var W = {
+            D: ["#0d0628", ["rgba(76,0,255,0.85)", "rgba(42,22,128,0.9)", "rgba(255,79,216,0.35)"]],
+            V: ["#4c00ff", ["rgba(160,90,255,0.9)", "rgba(255,90,209,0.55)", "rgba(30,8,140,0.9)"]],
+            P: ["#7a2bff", ["rgba(255,90,209,0.9)", "rgba(255,170,110,0.55)", "rgba(76,0,255,0.9)"]],
+            L: ["#f6f1ff", ["rgba(205,180,255,0.9)", "rgba(255,205,240,0.85)", "rgba(190,225,255,0.8)"]],
+            G: ["#17161b", ["rgba(60,58,70,0.8)", "rgba(40,38,48,0.8)", "rgba(76,0,255,0.12)"]]
+          };
+          var SHOTS = [[AT.site, "D"], [AT.hook, "D"], [AT.year, "P"], [AT.agent, "V"], [AT.ask, "L"], [AT.who, "V"], [AT.vs1, "G"], [AT.why, "P"],
+                       [AT.vs2, "G"], [AT.act, "L"], [AT.booked, "V"], [AT.vs3, "G"], [AT.buyout, "P"], [AT.close, "L"]];
+          var CUTS = [AT.hook, AT.year, AT.agent, AT.ask, AT.who, AT.who + 0.5, AT.vs1, AT.why, AT.vs2, AT.act, AT.booked, AT.vs3, AT.buyout, AT.close];
+          var SLAMS = [AT.site + 1.5, AT.site + 2.0, AT.hook, AT.hook + 0.5, AT.year, AT.agent, AT.who, AT.vs1, AT.vs1 + 0.25, AT.why, AT.vs2, AT.booked, AT.vs3, AT.vs3 + 0.25, AT.buyout, AT.buyout + 0.375];
+          function shotAt(bar) { var s = SHOTS[0]; SHOTS.forEach(function (x) { if (bar >= x[0]) s = x; }); return s; }
+
+          // a line that cuts in on bar a with a rack focus, and cuts out on bar b
+          function cut(el, t, a, b, o) {
+            o = o || {};
+            var bar = t / BAR, u = inb(t, a);
+            if (bar < a || (b != null && bar >= b)) { el.style.opacity = 0; return; }
+            el.style.opacity = cl(u / 0.02).toFixed(3);
+            var sc = lerp(o.from || 1.07, 1, out4(u / 0.3)) * (1 + (o.drift == null ? 0.02 : o.drift) * cl(u / ((b || a + 2) - a)));
+            el.style.transform = (o.pre || "") + "translateY(" + ((o.dy || 0) * (1 - out4(u / 0.15))).toFixed(1) + "px) scale(" + sc.toFixed(4) + ")";
+            var bl = 12 * (1 - out4(u / 0.1));
+            el.style.filter = bl > 0.2 ? "blur(" + bl.toFixed(1) + "px)" : "none";
+          }
 
           // the capture inside the browser frame, and the camera on it
           var SC = 1600 / CAP.size[0], FX = 160, FY = 156;
           function fp(x, y) { return [FX + x * SC, FY + y * SC]; }
-          var wg = CAP.widget, W = fp((wg[0] + wg[2]) / 2, (wg[1] + wg[3]) / 2);
-          var C0 = [960, 536], TGT = [1330, 560], S1 = 1.7;
+          var wg = CAP.widget, WC = fp((wg[0] + wg[2]) / 2, (wg[1] + wg[3]) / 2);
+          var C0 = [960, 536], TGT = [1330, 540], S1 = 1.75;
           function camAt(bar) {
-            var s, tx, ty;
-            if (bar < AT.widget) { s = 1 + 0.03 * io(bar / AT.widget); tx = C0[0] * (1 - s); ty = C0[1] * (1 - s); }
-            else if (bar < AT.turn) {
-              var u = io((bar - AT.widget) / 0.6), s0 = 1.03, t0 = [C0[0] * (1 - s0), C0[1] * (1 - s0)];
-              var sh = S1 + 0.04 * cl((bar - AT.widget - 0.6) / (AT.turn - AT.widget - 0.6));
-              var t1 = [TGT[0] - sh * W[0], TGT[1] - sh * W[1]];
-              s = lerp(s0, sh, u); tx = lerp(t0[0], t1[0], u); ty = lerp(t0[1], t1[1], u);
-            } else {
-              var e = AT.turn - 1e-6, se = S1 + 0.04, te = [TGT[0] - se * W[0], TGT[1] - se * W[1]], f = io((bar - AT.turn) / 0.35);
-              var sf = 0.14, tf = [272 - sf * C0[0], 900 - sf * C0[1]];
-              s = lerp(se, sf, f); tx = lerp(te[0], tf[0], f); ty = lerp(te[1], tf[1], f);
-            }
-            return [s, tx, ty];
+            var p0 = AT.site + 0.9, p1 = AT.site + 1.4;
+            var sw = 1 + 0.04 * cl(bar / p0), tw = [C0[0] * (1 - sw), C0[1] * (1 - sw)];
+            if (bar < p0) return [sw, tw[0], tw[1]];
+            var sh = S1 + 0.06 * cl((bar - p1) / (AT.hook - p1)), th = [TGT[0] - sh * WC[0], TGT[1] - sh * WC[1]], u = io((bar - p0) / (p1 - p0));
+            return [lerp(1.04, sh, u), lerp(C0[0] * (1 - 1.04), th[0], u), lerp(C0[1] * (1 - 1.04), th[1], u)];
           }
           function scr(p, c) { return [c[0] * p[0] + c[1], c[0] * p[1] + c[2]]; }
 
-          var notes = all(".note"), turns = all(".turn");
-          var qcs = all(".qc"), ics = all(".ic"), aws = all(".ans .w"), ewords = all("#email .w"), ephs = all("#email .ph");
-          var sigs = all(".sig"), provs = all(".prov"), faces = all(".face");
-          var dcv = one("#dots"), dg = dcv.getContext("2d");
-          var SECT = [[0, "01", "Their site"], [AT.widget, "02", "Their chatbot"], [AT.ask, "03", "Ask anything"], [AT.who, "04", "Who"],
-                      [AT.why, "05", "Why"], [AT.act, "06", "Act"], [AT.switch, "07", "Switch"]];
+          var notes = all(".note"), hooks = all(".hookl"), ics = all(".ic"), aws = all(".ans .w"), ewords = all("#email .w"), ephs = all("#email .ph");
+          var chips = all(".schip"), provs = all(".prov"), faces = all(".face"), blobs = [one("#b1"), one("#b2"), one("#b3")];
+          var gcv = one("#grain"), gg = gcv.getContext("2d"), gimg = gg.createImageData(640, 360);
+          var CHIPPOS = [[170, 300], [1470, 250], [1370, 730]];
           var drv = { t: 0 };
 
           function render() {
             var t = drv.t, bar = t / BAR, i;
+            var sh = shotAt(bar), w = W[sh[1]];
 
-            // ---- chrome
-            var sec = SECT[0]; SECT.forEach(function (s) { if (bar >= s[0]) sec = s; });
-            one("#idxn").textContent = sec[1]; one("#idxw").textContent = sec[2];
-            one("#idx").style.opacity = bar < AT.close ? 1 : 0;
-            one("#brandtag").style.opacity = bar < AT.close ? 1 : 0;
-            var disc = bar < AT.turn ? "Captured from " + one("#bar .url").textContent : bar >= AT.ask && bar < AT.booked ? "Illustrative example" :
-                       bar >= AT.switch && bar < AT.close ? "Source: getbreakout.ai/compare/qualified-alternative" : "";
-            one("#disc").textContent = disc; one("#disc").style.opacity = disc ? 1 : 0;
-
-            // ---- a slow drift through every read hold, so a pause never freezes (their site has its own camera)
-            var marks = [AT.turn, AT.ask, AT.who, AT.why, AT.act, AT.booked, AT.switch, AT.buyout, AT.close, AT.end], st = 1;
-            for (i = 0; i < marks.length - 1; i++) if (bar >= marks[i] && bar < marks[i + 1]) st = 1 + 0.018 * io((bar - marks[i]) / (marks[i + 1] - marks[i]));
-            one("#stage").style.transform = "scale(" + st.toFixed(5) + ")";
-
-            // ---- 01-02: their site, the push into their widget, the fold into 1 cell of the grid
-            var c = camAt(bar);
-            var cam = one("#cam");
-            cam.style.transform = "translate(" + c[1].toFixed(2) + "px," + c[2].toFixed(2) + "px) scale(" + c[0].toFixed(5) + ")";
-            cam.style.opacity = bar < AT.turn + 0.85 ? 1 : 1 - cl((bar - AT.turn - 0.85) / 0.1);
-            notes.forEach(function (n, j) {
-              n.style.top = (330 + j * 120) + "px";
-              if (j === notes.length - 1) n.classList.add("v");
-              slam(n, t, AT.widget + 0.75 + j * 0.5, AT.turn);
+            // ---- the world
+            one("#bg").style.background = w[0];
+            blobs.forEach(function (b, j) {
+              var ph = j * 2.1 + sh[0];
+              b.style.background = "radial-gradient(circle, " + w[1][j] + " 0%, rgba(0,0,0,0) 68%)";
+              b.style.transform = "translate(" + (lerp(-300, 1100, (j * 0.37 + 0.2) % 1) + 180 * Math.sin(t * 0.35 + ph)).toFixed(1) + "px," +
+                (lerp(-500, 300, (j * 0.61 + 0.1) % 1) + 140 * Math.cos(t * 0.3 + ph)).toFixed(1) + "px)";
             });
-            // the cursor tries every button, then looks for somewhere to type
-            var bt = CAP.buttons, keys = [[AT.widget + 2.0, null]];
-            bt.forEach(function (b, j) { keys.push([AT.widget + 2.25 + j * 0.2, fp(b[0], b[1])]); });
-            keys.push([AT.widget + 3.15, fp(CAP.nobox[0], CAP.nobox[1])]);
+            var light = sh[1] === "L";
+            one("#vig").style.opacity = light ? 0.35 : 1;
+
+            // ---- shake on every slam, a flash on every cut
+            var sx = 0, sy = 0, fl = 0;
+            SLAMS.forEach(function (a) { var d = t - B(a); if (d >= 0 && d < 0.5) { var e = Math.exp(-d / 0.09); sx += 9 * e * Math.sin(d * 70); sy += 6 * e * Math.cos(d * 55); } });
+            CUTS.forEach(function (a) { var d = t - B(a); if (d >= 0 && d < 0.4) fl += Math.exp(-d / 0.07); });
+            one("#stage").style.transform = "translate(" + sx.toFixed(2) + "px," + sy.toFixed(2) + "px)";
+            one("#flash").style.opacity = Math.min(0.55, fl * 0.5).toFixed(3);
+
+            // ---- the film: grain (seeded per frame) and the label in the bottom bar
+            var fr = Math.floor(t * 24), seed = (fr * 9301 + 49297) % 233280, d = gimg.data;
+            for (i = 0; i < d.length; i += 4) { seed = (seed * 9301 + 49297) % 233280; var v = (seed / 233280) * 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; }
+            gg.putImageData(gimg, 0, 0);
+            var src = (bar >= AT.vs1 && bar < AT.why) || (bar >= AT.vs2 && bar < AT.act) || (bar >= AT.vs3 && bar < AT.close);
+            var disc = bar < AT.hook ? "Captured from " + one("#bar .url").textContent : src ? "Source: getbreakout.ai/compare/qualified-alternative" :
+                       bar >= AT.ask && bar < AT.booked ? "Illustrative example" : "";
+            one("#disc").textContent = disc;
+
+            // ---- their site, the push into their widget
+            var site = bar < AT.hook, c = camAt(bar), cam = one("#cam");
+            cam.style.opacity = site ? 1 : 0;
+            cam.style.transform = "translate(" + c[1].toFixed(2) + "px," + c[2].toFixed(2) + "px) scale(" + c[0].toFixed(5) + ")";
+            one("#scrim").style.opacity = site ? cl((bar - AT.site - 1.25) / 0.15).toFixed(3) : 0;
+            notes.forEach(function (n, j) { n.style.top = (330 + j * 160) + "px"; cut(n, t, AT.site + 1.5 + j * 0.5, AT.hook, { dy: 20 }); });
+            var bt = CAP.buttons, keys = [[AT.site + 1.4, null]];
+            bt.forEach(function (b, j) { keys.push([AT.site + 1.6 + j * 0.15, fp(b[0], b[1])]); });
+            keys.push([AT.site + 2.4, fp(CAP.nobox[0], CAP.nobox[1])]);
             keys[0][1] = [keys[1][1][0] + 160, keys[1][1][1] + 260];
-            one("#scrim").style.opacity = (cl((bar - AT.widget - 0.45) / 0.15) * (1 - cl((bar - AT.turn) / 0.08))).toFixed(3);
             var cur = one("#cur"), hl = one("#hl"), hover = -1;
-            if (bar >= keys[0][0] - 0.1 && bar < AT.turn) {
+            cur.style.opacity = 0;
+            if (bar >= keys[0][0] && site) {
               var p = keys[0][1];
               for (i = 1; i < keys.length; i++) {
-                if (bar >= keys[i][0]) { p = keys[i][1]; if (i <= bt.length) hover = i - 1; else hover = -1; }
-                else { var u = io((bar - keys[i - 1][0]) / (keys[i][0] - keys[i - 1][0])); if (u > 0 && u < 1) p = [lerp(keys[i - 1][1][0], keys[i][1][0], u), lerp(keys[i - 1][1][1], keys[i][1][1], u)]; break; }
+                if (bar >= keys[i][0]) { p = keys[i][1]; hover = i <= bt.length ? i - 1 : -1; }
+                else { var u = io((bar - keys[i - 1][0]) / (keys[i][0] - keys[i - 1][0])); p = [lerp(keys[i - 1][1][0], keys[i][1][0], u), lerp(keys[i - 1][1][1], keys[i][1][1], u)]; break; }
               }
-              var q = scr(p, c), shake = bar >= keys[keys.length - 1][0] ? Math.sin((bar - keys[keys.length - 1][0]) * 90) * 10 * Math.exp(-(bar - keys[keys.length - 1][0]) * 14) : 0;
-              cur.style.opacity = cl((bar - keys[0][0] + 0.1) / 0.05);
-              cur.style.transform = "translate(" + (q[0] - 8 + shake).toFixed(1) + "px," + (q[1] - 4).toFixed(1) + "px)";
-            } else cur.style.opacity = 0;
-            if (hover >= 0) {
+              var q = scr(p, c), k0 = keys[keys.length - 1][0], shk = bar >= k0 ? Math.sin((bar - k0) * 90) * 12 * Math.exp(-(bar - k0) * 12) : 0;
+              cur.style.opacity = 1;
+              cur.style.transform = "translate(" + (q[0] - 8 + shk).toFixed(1) + "px," + (q[1] - 4).toFixed(1) + "px)";
+            }
+            if (hover >= 0 && site) {
               var b = bt[hover], bw = (CAP.button_w || 356) * SC, bh = b[2] * SC, cp = fp(b[0], b[1]);
               hl.style.left = (cp[0] - bw / 2).toFixed(1) + "px"; hl.style.top = (cp[1] - bh / 2).toFixed(1) + "px";
               hl.style.width = bw.toFixed(1) + "px"; hl.style.height = bh.toFixed(1) + "px"; hl.style.opacity = 1;
             } else hl.style.opacity = 0;
 
-            // ---- the turn
-            turns.forEach(function (n, j) { n.style.top = (330 + j * 140) + "px"; slam(n, t, AT.turn + 0.3 + j * 0.3, AT.ask); });   // after the fold lands
+            // ---- the hook
+            hooks.forEach(function (n, j) { n.style.top = (350 + j * 160) + "px"; cut(n, t, AT.hook + j * 0.5, AT.year, { dy: 24 }); });
+            cut(one("#year"), t, AT.year, AT.agent, { from: 1.15, drift: 0.04 });
+            cut(one("#agent"), t, AT.agent, AT.ask, { from: 1.12, drift: 0.05 });
 
-            // ---- 03: ask anything
-            slam(one("#asktitle"), t, AT.ask, AT.who);
-            show(one("#today"), t, AT.ask + 0.4, AT.who);
-            show(one("#bline"), t, AT.ask + 0.75, AT.who);
-            var bwEl = one("#bw");
-            show(bwEl, t, AT.ask, AT.who, 60);
-            var qa = AT.ask + 0.5, qb = AT.ask + 1.2, sent = AT.ask + 1.35;
-            var typing = bar < sent;
+            // ---- ask anything
+            cut(one("#asktitle"), t, AT.ask, AT.who, { dy: 20 });
+            cut(one("#asksub"), t, AT.ask + 0.5, AT.who, { dy: 14, from: 1 });
+            var bwr = one("#bwrap"), au0 = inb(t, AT.ask);
+            bwr.style.opacity = bar >= AT.ask && bar < AT.who ? cl(au0 / 0.03) : 0;
+            bwr.style.transform = "translateY(" + (90 * (1 - out4(au0 / 0.25))).toFixed(1) + "px)";
+            one("#bw").style.transform = "rotateY(" + lerp(-20, -7, io(au0 / 3)).toFixed(2) + "deg) rotateX(" + lerp(6, 2, io(au0 / 3)).toFixed(2) + "deg)";
+            var qa = AT.ask + 0.25, qb = AT.ask + 0.75, sent = AT.ask + 0.85, typing = bar < sent;
             ics.forEach(function (ch, j) { ch.style.opacity = typing && t >= B(qa) + j * (B(qb) - B(qa)) / ics.length ? 1 : 0; });
             one(".ph0").style.opacity = bar < qa || !typing ? 1 : 0;
-            one(".bcaret").style.opacity = typing && bar >= qa && Math.floor(t * 4) % 2 === 0 ? 1 : (typing && bar >= qa ? 0.15 : 0);
-            one(".bsend").style.transform = "scale(" + (bar >= sent && bar < sent + 0.06 ? 0.9 : 1) + ")";
+            one(".bcaret").style.opacity = typing && bar >= qa ? (Math.floor(t * 4) % 2 === 0 ? 1 : 0.15) : 0;
             var ub = one(".ub"), su = inb(t, sent);
             ub.style.opacity = su >= 0 ? 1 : 0; ub.style.transform = "translateY(" + (su >= 0 ? 16 * (1 - out4(su / 0.08)) : 16).toFixed(1) + "px)";
-            qcs.forEach(function (ch) { ch.style.opacity = 1; });
-            var ar = one(".ar"), au = inb(t, sent + 0.05), aStart = sent + 0.4, WPB = 16;
-            ar.style.opacity = au >= 0 ? 1 : 0;
+            var aStart = AT.ask + 1.2;
+            one(".ar").style.opacity = bar >= sent + 0.05 ? 1 : 0;
             one(".dots").style.display = bar < aStart ? "flex" : "none";
-            all(".dots i").forEach(function (d, j) { d.style.opacity = (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 14 - j * 1.2))).toFixed(3); });
-            aws.forEach(function (w, j) { w.style.opacity = bar >= aStart + j / WPB ? 1 : 0; });
-            var mod = one(".mod"), ansTop = one(".ans").offsetTop + one(".ans").offsetHeight;
-            mod.style.top = (130 + one(".ans").offsetHeight + 30) + "px";
-            show(mod, t, aStart + aws.length / WPB + 0.1, AT.who, 18);
+            all(".dots i").forEach(function (dd, j) { dd.style.opacity = (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 14 - j * 1.2))).toFixed(3); });
+            aws.forEach(function (ww, j) { ww.style.opacity = bar >= aStart + j / 16 ? 1 : 0; });
+            var mod = one(".mod");
+            mod.style.top = (124 + one(".ans").offsetHeight + 34) + "px";
+            var mu = inb(t, aStart + aws.length / 16 + 0.08);
+            mod.style.opacity = mu >= 0 ? cl(mu / 0.04) : 0;
+            mod.style.transform = "translateY(" + (mu >= 0 ? 18 * (1 - out4(mu / 0.12)) : 18).toFixed(1) + "px)";
 
-            // ---- 04: who
-            var cw = one("#c-who");
-            show(cw, t, AT.who, AT.why, 30);
-            show(one("#w-co"), t, AT.who + 0.1, null, 10);
-            show(one("#w-wf"), t, AT.who + 0.45, null, 10);
-            show(one("#w-pe"), t, AT.who + 1.1, null, 10);
-            provs.forEach(function (pv, j) { pv.className = "prov" + (bar >= AT.who + 0.55 + j * 0.15 && (j === provs.length - 1 || bar < AT.who + 0.7 + j * 0.15) ? " on" : ""); });
-            all("#c-who .ck").forEach(function (k, j) { k.style.opacity = bar >= AT.who + (j ? 1.15 : 0.15) ? 1 : 0; });
-            one("#w-pe").className = "rw" + (bar >= AT.who + 1.1 ? " on" : "");
-            cmpRow(one("#rowwho"), t, AT.who + 1.5, AT.why);
+            // ---- who: not just the company, the person
+            cut(one("#wholine"), t, AT.who, AT.who + 0.5, { from: 1.1 });
+            var pe = one("#person"), pu = inb(t, AT.who + 0.5);
+            cut(pe, t, AT.who + 0.5, AT.vs1, { from: 1.06, dy: 30 });
+            provs.forEach(function (pv, j) { pv.className = "prov" + (bar >= AT.who + 0.6 + j * 0.1 ? " on" : ""); });
+            one(".match").style.opacity = bar >= AT.who + 0.9 ? 1 : 0;
+            versus(one("#vs1"), t, AT.vs1, AT.why);
 
-            // ---- 05: why
-            slam(one("#why1"), t, AT.why, AT.act);
-            slam(one("#why2"), t, AT.why + 0.5, AT.act);
-            show(one("#sighead"), t, AT.why + 0.9, AT.act);
-            sigs.forEach(function (sg, j) {
-              sg.style.top = (500 + j * 92) + "px";
-              show(sg, t, AT.why + 0.9 + j * 0.08, AT.act, 16);
-              var tg = sg.querySelector(".tag"), tu = inb(t, AT.why + 1.1 + j * 0.25);
-              tg.style.opacity = tu >= 0 ? 1 : 0;
-              tg.style.transform = "scale(" + (tu >= 0 ? 1.25 - 0.25 * out4(tu / 0.08) : 1).toFixed(3) + ")";
+            // ---- why: 700+ signals, then Qualified's one
+            var cn = one("#count"), cu = inb(t, AT.why);
+            cut(cn, t, AT.why, AT.vs2, { from: 1.12, drift: 0.04 });
+            cn.textContent = Math.round(T.count * out4(cu / 0.3)) + (cu >= 0.3 ? T.suffix : "");
+            cut(one("#countlabel"), t, AT.why + 0.125, AT.vs2, { dy: 20 });
+            chips.forEach(function (ch, j) {
+              var pos = CHIPPOS[j % 3], u2 = inb(t, AT.why + 0.25 + j * 0.125);
+              ch.style.left = pos[0] + "px"; ch.style.top = pos[1] + "px";
+              ch.style.opacity = u2 >= 0 && bar < AT.vs2 ? 1 : 0;
+              ch.style.transform = "scale(" + (u2 >= 0 ? 1.3 - 0.3 * out4(u2 / 0.1) : 1).toFixed(3) + ") translateY(" + (-10 * Math.sin(t * 2 + j)).toFixed(1) + "px)";
             });
-            drawDots(t, bar);
+            cut(one("#vs2w"), t, AT.vs2, AT.act, { from: 1 });
+            cut(one("#vs2q"), t, AT.vs2, AT.act, { from: 1.1 });
 
-            // ---- 06: act. The email the account sends, written on the beat
-            cmpRow(one("#rowact"), t, AT.act, AT.switch - 1);
-            var em = one("#email");
-            show(em, t, AT.act, AT.booked + 0.2, 40);
-            if (bar >= AT.booked) em.style.opacity = 0;
-            var ws = AT.act + 0.75, EPB = 12;
-            ewords.forEach(function (w, j) { var wu = inb(t, ws + j / EPB); w.style.opacity = wu >= 0 ? 1 : 0;
-              w.style.transform = "translateY(" + (wu >= 0 ? 8 * (1 - out4(wu / 0.04)) : 8).toFixed(1) + "px)"; });
+            // ---- act: it writes the email, and sends it
+            cut(one("#act1"), t, AT.act, AT.booked, { dy: 20 });
+            cut(one("#act2"), t, AT.send - 0.5, AT.booked, { dy: 20 });
+            var ew = one("#ewrap"), eu = inb(t, AT.act);
+            ew.style.opacity = bar >= AT.act && bar < AT.booked ? cl(eu / 0.03) : 0;
+            ew.style.transform = "translateY(" + (90 * (1 - out4(eu / 0.25))).toFixed(1) + "px)";
+            one("#email").style.transform = "rotateY(" + lerp(-16, -5, io(eu / 3.5)).toFixed(2) + "deg) rotateX(" + lerp(5, 1, io(eu / 3.5)).toFixed(2) + "deg)";
+            var ws = AT.act + 0.25;
+            ewords.forEach(function (ww, j) { var wu = inb(t, ws + j / 16); ww.style.opacity = wu >= 0 ? 1 : 0;
+              ww.style.transform = "translateY(" + (wu >= 0 ? 8 * (1 - out4(wu / 0.04)) : 8).toFixed(1) + "px)"; });
             ephs.forEach(function (ph) { var wl = ph.querySelectorAll(".w"), last = ewords.indexOf(wl[wl.length - 1]);
-              ph.className = "ph" + (bar >= ws + (last + 1) / EPB + 0.06 ? " on" : ""); });
+              ph.className = "ph" + (bar >= ws + (last + 1) / 16 + 0.06 ? " on" : ""); });
             var es = one("#esend");
             es.className = "esend" + (bar >= AT.send ? " press" : "");
             es.style.transform = "scale(" + (bar >= AT.send && bar < AT.send + 0.08 ? 0.93 : 1) + ")";
@@ -380,72 +420,47 @@
             }
 
             // ---- meeting booked: violet floods out of Send
-            var fu = inb(t, AT.booked), ru = inb(t, AT.switch);
+            var fu = inb(t, AT.booked), on = bar >= AT.booked && bar < AT.vs3;
             var o = { x: 1500, y: 860 };
-            if (bar < AT.booked + 0.5) { var sp2 = local(es); o = { x: sp2.x + sp2.w / 2, y: sp2.y + sp2.h / 2 }; }
-            var fr = fu < 0 ? 0 : ru < 0 ? 2400 * out4(fu / 0.22) : 2400 * (1 - io(ru / 0.2));
-            var fo = ru < 0 ? [o.x, o.y] : [960, 540];
-            one("#flood").style.clipPath = "circle(" + fr.toFixed(1) + "px at " + fo[0].toFixed(1) + "px " + fo[1].toFixed(1) + "px)";
-            var outB = 1 - cl(ru / 0.05);
-            var bk = inb(t, AT.booked + 0.08);
-            one("#bigok").style.opacity = bk >= 0 ? (cl(bk / 0.04) * outB).toFixed(3) : 0;
-            one("#bigok").style.transform = "translateY(" + (bk >= 0 ? 40 * (1 - out4(bk / 0.12)) : 40).toFixed(1) + "px)";
+            if (bar < AT.booked + 0.5) { var sp2 = local(es); if (sp2.w) o = { x: sp2.x + sp2.w / 2, y: sp2.y + sp2.h / 2 }; }
+            one("#flood").style.clipPath = "circle(" + (on ? 2400 * out4(fu / 0.22) : 0).toFixed(1) + "px at " + o.x.toFixed(1) + "px " + o.y.toFixed(1) + "px)";
+            cut(one("#bigok"), t, AT.booked + 0.08, AT.vs3, { dy: 40 });
             var tk = one("#tick"), tku = cl((fu - 0.1) / 0.25);
-            tk.style.opacity = fu >= 0.1 ? outB : 0;
+            tk.style.opacity = on && fu >= 0.1 ? 1 : 0;
             var tc = tk.querySelector("circle"), tp = tk.querySelector("path");
             tc.setAttribute("stroke-dasharray", "541"); tc.setAttribute("stroke-dashoffset", (541 * (1 - out4(tku))).toFixed(1));
             tp.setAttribute("stroke-dasharray", "160"); tp.setAttribute("stroke-dashoffset", (160 * (1 - out4((fu - 0.25) / 0.2))).toFixed(1));
-            var cb = one("#c-bd"), cu = inb(t, AT.booked + 0.2);
-            cb.style.opacity = cu >= 0 ? (cl(cu / 0.05) * outB).toFixed(3) : 0;
-            cb.style.transform = "translateY(" + (cu >= 0 ? 50 * (1 - out4(cu / 0.14)) : 50).toFixed(1) + "px)";
+            cut(one("#c-bd"), t, AT.booked + 0.2, AT.vs3, { dy: 50, from: 1 });
             faces.forEach(function (f, j) { var u2 = inb(t, AT.booked + 0.4 + j * 0.06); f.style.opacity = u2 >= 0 ? 1 : 0;
               f.style.transform = "scale(" + (u2 >= 0 ? 1.3 - 0.3 * out4(u2 / 0.06) : 1).toFixed(3) + ")"; });
+            versus(one("#vs3"), t, AT.vs3, AT.buyout);
 
-            // ---- 07: the switch, then the buyout
-            show(one("#swf"), t, AT.switch + 0.05, AT.buyout);
-            slam(one("#swb"), t, AT.switch + 0.1, AT.buyout);
-            show(one("#swbn"), t, AT.switch + 0.35, AT.buyout);
-            slam(one("#swq"), t, AT.switch + 0.75, AT.buyout);
-            show(one("#swqn"), t, AT.switch + 1.0, AT.buyout);
-            var lu = inb(t, AT.switch + 0.6), lv = inb(t, AT.buyout);
-            one("#swline").style.transform = "scaleX(" + (lu < 0 ? 0 : out4(lu / 0.15) * (lv > 0 ? 1 - cl(lv / 0.05) : 1)).toFixed(3) + ")";
-            slam(one("#bo1"), t, AT.buyout, AT.close);
-            slam(one("#bo2"), t, AT.buyout + 0.4, AT.close);
-            show(one("#bon"), t, AT.buyout + 0.9, AT.close);
+            // ---- buyout
+            cut(one("#bo1"), t, AT.buyout, AT.close, { dy: 20 });
+            cut(one("#bo2"), t, AT.buyout + 0.375, AT.close, { dy: 20 });
+            cut(one("#bon"), t, AT.buyout + 0.75, AT.close, { dy: 12, from: 1 });
 
             // ---- close
             var lg = one("#llogo"), gu = inb(t, AT.close + 0.05);
-            lg.style.opacity = gu >= 0 ? cl(gu / 0.06) : 0;
-            lg.style.transform = "translateX(-50%) translateY(" + (gu >= 0 ? 16 * (1 - out4(gu / 0.15)) : 16).toFixed(1) + "px)";
-            var ct = one("#lcta"), cu2 = inb(t, AT.close + 0.25);
-            ct.style.opacity = cu2 >= 0 ? cl(cu2 / 0.04) : 0;
-            ct.style.transform = "translateX(-50%) scale(" + (cu2 >= 0 ? 1.12 - 0.12 * out4(cu2 / 0.1) : 1).toFixed(4) + ")";
-            show(one("#lurl"), t, AT.close + 0.4, null, 12);
-            show(one("#lmade"), t, AT.close + 0.55, null, 12);
+            lg.style.opacity = gu >= 0 ? cl(gu / 0.04) : 0;
+            lg.style.transform = "translateY(" + (gu >= 0 ? 20 * (1 - out4(gu / 0.2)) : 20).toFixed(1) + "px) scale(" + (gu >= 0 ? lerp(1.06, 1, out4(gu / 0.3)) : 1).toFixed(4) + ")";
+            cut(one("#lcta"), t, AT.close + 0.25, null, { from: 1.12, drift: 0 });
+            cut(one("#lmade"), t, AT.close + 0.45, null, { dy: 14, drift: 0 });
+            cut(one("#lurl"), t, AT.close + 0.6, null, { dy: 10, from: 1, drift: 0 });
           }
 
-          function cmpRow(el, t, a, b) {
-            show(el.querySelector(".cf"), t, a, b, 10);
-            show(el.querySelector(".cr.b"), t, a + 0.25, b, 16);
-            show(el.querySelector(".cr.q"), t, a + 0.6, b, 16);
-            show(el.querySelector(".csrc"), t, a + 0.8, b, 6);
-          }
-          // 700 signals as dots; 3 of them light with the rows
-          var LIT = [137, 402, 611];
-          function drawDots(t, bar) {
-            dg.clearRect(0, 0, 660, 360);
-            var u = inb(t, AT.why + 0.6), v = inb(t, AT.act);
-            if (u < 0 || v > 0.05) return;
-            var a = v > 0 ? 1 - cl(v / 0.05) : 1;
-            for (var k = 0; k < 700; k++) {
-              var col = k % 28, row = Math.floor(k / 28);
-              if (col / 28 > u / 0.4) continue;
-              var li = LIT.indexOf(k), on = li >= 0 && bar >= AT.why + 1.1 + li * 0.25;
-              dg.globalAlpha = a;
-              dg.fillStyle = on ? "#4c00ff" : "rgba(4,4,5,0.16)";
-              dg.beginPath(); dg.arc(12 + col * 23.5, 8 + row * 14, on ? 7 : 3.5, 0, 6.2832); dg.fill();
-            }
-            dg.globalAlpha = 1;
+          // a split screen: Breakout wipes in on violet, Qualified a beat later on grey
+          function versus(el, t, a, b) {
+            var bar = t / BAR, on = bar >= a && bar < b;
+            el.style.opacity = on ? 1 : 0;
+            if (!on) return;
+            var u1 = inb(t, a), u2 = inb(t, a + 0.25);
+            el.querySelector(".hb").style.clipPath = "inset(0 " + (100 * (1 - out4(u1 / 0.12))).toFixed(2) + "% 0 0)";
+            el.querySelector(".hq").style.clipPath = "inset(0 0 0 " + (100 * (1 - out4(u2 / 0.12))).toFixed(2) + "%)";
+            cut(el.querySelector(".vb"), t, a + 0.04, b, { dy: 20 });
+            cut(el.querySelector(".vq"), t, a + 0.29, b, { dy: 20 });
+            el.querySelector(".hq").style.visibility = u2 >= 0 ? "visible" : "hidden";
+            cut(el.querySelector(".vlabel"), t, a, b, { from: 1 });
           }
           function safe() { try { render(); } catch (e) { var er = one("#err"); er.style.display = "block"; er.textContent = e.stack || String(e); } }
           var tl = gsap.timeline({ paused: true });

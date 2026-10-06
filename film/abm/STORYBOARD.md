@@ -1,26 +1,31 @@
-# Storyboard: ABM series, "Do more than chat"
+# Storyboard: ABM series, "Do more than chat" (v2, cinematic)
 
-**Status:** the storyline was approved by the owner on 2026-10-06, with the decision-tree point added. The template is in `film/abm/`, and the first account is Korn Ferry.
+**Status:** the storyline was approved by the owner on 2026-10-06. Restyled the same day at the owner's direction: "Be more aggressive than this in the opener... decision tree chatbots are costing you pipeline in 2026, you should be using an AI agent. Remove the section title... faster, brighter colors (purple still central) + fast cuts. Use New Kansas as the font. Make it look more cinematic. The parts where we show qualified vs breakout... are a little too texty."
 
-This film tells a marketing leader at a Qualified account that **the chat on their site waits behind buttons, while Breakout finds the person, knows why they're here, acts, goes live in under 3 hours, and buys out the rest of their contract.**
+This film tells a marketing leader at a Qualified account that **decision-tree chatbots are costing them pipeline: Breakout's AI agent answers anything, finds the person, knows why they're here, writes and sends the email, books the meeting, goes live in under 3 hours, and buys out their contract.**
 
 | | |
 |---|---|
-| Length | 30.5 bars at 128 BPM (1 bar = 1.875 s): 57.2 s. Slowed on 2026-10-06 (owner: "this is very fast. slow it down, esp the text-heavy sections that need a pause"): every text beat now has a read hold with a slow drift. |
-| Look | Look test 03, the Swiss grid. The account's capture floats on the grid in a browser frame. |
-| Music | Orchestral, in E minor. It opens as polite music-box hold music under their widget, turns on bar 5, drives through the wins, and lifts to E major for the meeting and the switch. |
-| Voice | None |
-| Per account | `accounts/<slug>/account.json` and `site.webp` |
+| Length | 23.5 bars at 128 BPM (1 bar = 1.875 s): 44.1 s |
+| Look | Cinematic: letterbox bars, film grain, vignette, a flash and a camera kick on every hard cut, rack-focus type. Bright worlds with violet at the centre: deep violet, electric violet, pink-violet, a bright lavender for the product shots, and grey for Qualified. No section titles. |
+| Type | New Kansas headlines (loaded first when installed; Fraunces SOFT is the stand-in), italic key words in blush, pink or violet. Manrope for UI and labels. |
+| Versus | A split screen: Breakout wipes in on violet, Qualified a beat later on grey. A 2 to 4 word fragment of the compare page each, never a paragraph. |
+| Music | Orchestral, trailer-style. Hold music under their widget, cut dead, then a hit on every card of the hook, a driving ostinato, E major for the meeting. |
+| Per account | `accounts/<slug>/account.json` and the capture |
 
-| Bars | Time | Beat | On screen | Sound |
-|---|---|---|---|---|
-| 0–2 | 0–3.8 s | **Their site** | The capture in a browser frame, `kornferry.com` in the address bar, with a slow push. `01 / Their site` · "Captured from kornferry.com" | Celesta and pizzicato, like hold music |
-| 2–5.5 | 3.8–10.3 s | **Their chatbot** | The camera pushes into the widget. A cursor hovers each button. Notes slam beside it: "4 buttons." "No text box." "No way to just ask." | The same, with a tick per button |
-| 5.5–7 | 10.3–13.1 s | **The turn** | The site folds into a small cell of the grid. "Your demand engine / should do more than chat." | Timpani, low brass, cymbal |
-| 7–11 | 13.1–20.6 s | **Ask anything** | Breakout's real widget rises: "Go ahead. Ask me stuff." The visitor types "Can you help us find a new CHRO?". The agent answers in the account's own words and offers a meeting module. Left: "Ask anything." · "kornferry.com today: 4 buttons, no text box." · "Breakout: open questions, answered from your site." | A pizzicato ostinato, key taps |
-| 11–14 | 20.6–26.3 s | **Who** | An agent card: Company Northwind ✓, the waterfall through 3 providers, then Person Maya R., VP Talent Acquisition ✓. The Person-level de-anonymization row (Breakout vs Qualified, quoted). | String stabs, glass ticks |
-| 14–17 | 26.3–31.9 s | **Why** | "Breakout tracks 700+ buying signals. / Qualified tracks one." 3 signal rows light Act: New CHRO hired · Hiring surge · Series C funding | A tremolo crescendo, horns |
-| 17–21.5 | 31.9–40.3 s | **Act** | The Outbound plays row (quoted). The email from Korn Ferry to Maya writes itself word by word on 16ths, and the 2 signal phrases highlight. Send is pressed. | Full orchestra, violin line |
-| 21.5–23 | 40.3–43.1 s | **Meeting booked.** | Violet floods out of Send: a ✓, "Meeting booked." and the booked card | E major: brass, choir, cymbal |
-| 23–28 | 43.1–52.5 s | **The switch** | "<3 hours" (violet) vs "8–12 weeks" (grey). Then "Still under contract? / We'll buy out the rest of it." · "Up to $30,000 covered · switch by November 30, 2026" | Timpani and brass on the beats |
-| 28–30.5 | 52.5–57.2 s | **Close** | The wordmark, "Book a demo", the compare URL, "Made for the Korn Ferry team" | A pad, celesta, silence |
+| Bars | Time | Shot | On screen |
+|---|---|---|---|
+| 0–3 | 0–5.6 s | **Their site** | The capture in a browser frame on deep violet, the push into their widget. "4 buttons." "No text box." The cursor tries every button. |
+| 3–4.5 | 5.6–8.4 s | **Hook** | "Decision-tree chatbots / are costing you *pipeline.*" |
+| 4.5–5 | 8.4–9.4 s | | "It's *2026.*" |
+| 5–6 | 9.4–11.3 s | | "Use an *AI agent.*" |
+| 6–9 | 11.3–16.9 s | **Ask anything** | Bright lavender. Breakout's widget in 3D: the open question, the answer in the account's words, the meeting module. |
+| 9–10.5 | 16.9–19.7 s | **Who** | "Not just *the company.*" Cut: Maya R., VP Talent Acquisition, Northwind, matched through 3 providers. |
+| 10.5–11.5 | 19.7–21.6 s | **Versus** | Breakout "Person-*level.*" / Qualified "No &mdash; account-level only" |
+| 11.5–12.75 | 21.6–23.9 s | **Why** | "700+ / buying *signals.*" with the 3 signals popping |
+| 12.75–13.5 | 23.9–25.3 s | | Grey: "Qualified tracks *one.*" |
+| 13.5–17 | 25.3–31.9 s | **Act** | "It writes *the email.*" The email writes itself on 16ths. "And *sends it.*" Send. |
+| 17–18.5 | 31.9–34.7 s | **Meeting booked.** | Violet floods out of Send, the check, the booked card |
+| 18.5–20 | 34.7–37.5 s | **Versus** | Breakout "<3 *hours*" / Qualified "8-12 weeks" |
+| 20–21.5 | 37.5–40.3 s | **Buyout** | "Still under contract? / We'll buy out *the rest of it.*" Up to $30,000 covered · switch by November 30, 2026 |
+| 21.5–23.5 | 40.3–44.1 s | **Close** | The wordmark, Book a demo, "Made for the *Korn Ferry* team" |

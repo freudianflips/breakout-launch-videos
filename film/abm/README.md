@@ -1,13 +1,13 @@
 # ABM series: "Do more than chat"
 
-One film per account that runs Qualified on its site: their homepage and chat widget as captured, then where Breakout outperforms Qualified (quoted from getbreakout.ai/compare/qualified-alternative), then the contract buyout. 57.2 s, 16:9, Swiss grid, orchestral score. Story in [`STORYBOARD.md`](STORYBOARD.md), claims and rules in [`BRIEF.md`](BRIEF.md).
+One film per account that runs Qualified on its site: their homepage and chat widget as captured, then where Breakout outperforms Qualified (quoted from getbreakout.ai/compare/qualified-alternative), then the contract buyout. 44.1 s, 16:9, cinematic (letterbox, grain, hard cuts, New Kansas), orchestral score. Story in [`STORYBOARD.md`](STORYBOARD.md), claims and rules in [`BRIEF.md`](BRIEF.md).
 
 ## Add an account
 
 1. `mkdir film/abm/accounts/<slug>` and save a homepage capture, about 2000 px wide, with the chat widget open, as `site.webp` (or .png/.jpg).
 2. Copy `accounts/korn-ferry/account.json` and change it:
    - `capture`: the widget box, each button `[x, y, height]` and an empty spot below the buttons (`nobox`), in capture pixels.
-   - `widget_notes` and `today_line`: what the capture shows. Check them against the capture; they are claims.
+   - `widget_notes`: what the capture shows (e.g. "4 buttons.", "No text box."). Check them against the capture; they are claims.
    - `question` and `answer`: the answer in the account's own words (from their site).
    - `visitor`, `signals`, `email` and `booked`: fictional and illustrative. Never use a real person.
 3. `film/abm/render.sh <slug>` -> `film/abm/out/<slug>/renders/breakout-for-<slug>.mp4`

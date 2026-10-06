@@ -1,10 +1,10 @@
 ---
 workflow: abm-video-series
-message: "Your demand engine should do more than chat."
+message: "Decision-tree chatbots are costing you pipeline. Use an AI agent."
 destination: 1:1 sends to accounts that run Qualified (email, LinkedIn)
 aspect: 1920x1080
 language: en
-length: 57.2s
+length: 44.1s
 angle: Their site today, then Breakout on it, then the switch
 status: approved by the owner on 2026-10-06 ("Rest looks good. Go and create it.")
 ---
@@ -28,11 +28,10 @@ The owner asked to "speak to the fact that the qualified chatbot is a pure decis
 
 | Beat | Breakout | Qualified |
 |---|---|---|
-| Turn | "Your demand engine should do more than chat" (section heading) | |
-| Who: Person-level de-anonymization | "Yes, waterfall through multiple data providers" | "No &mdash; account-level only" |
-| Why | "Breakout tracks 700+ buying signals. Qualified tracks one." | |
-| Act: Outbound plays | "Build the audience (CRM, website visitors, TAM list), filter, enrich, personalize and send 1:1 personalized emails" (shown without the parenthesis) | "Qualified prioritizes accounts, then hands off to your own sequencer to actually send" |
-| Go-live time | "<3 hours, self-serve" | "8-12 weeks, enterprise sales only" |
+| Hook | The owner's own line: "Decision-tree chatbots are costing you pipeline in 2026. You should be using an AI agent." (positioning, not a claim about Qualified) | |
+| Who: Person-level de-anonymization | "Person-level" (from the feature name) | "No &mdash; account-level only" |
+| Why | "700+ buying signals" | "Qualified tracks one." |
+| Go-live time | "<3 hours" | "8-12 weeks" |
 | Buyout | "Still under contract? We'll buy out the rest of it." · "Up to $30,000 covered" · switch "by November 30, 2026" | |
 
 ## Notes
