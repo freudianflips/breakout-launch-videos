@@ -4,7 +4,7 @@ message: "Your demand engine should do more than chat."
 destination: 1:1 sends to accounts that run Qualified (email, LinkedIn)
 aspect: 1920x1080
 language: en
-length: 36.6s
+length: 57.2s
 angle: Their site today, then Breakout on it, then the switch
 status: approved by the owner on 2026-10-06 ("Rest looks good. Go and create it.")
 ---

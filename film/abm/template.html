@@ -13,6 +13,7 @@
         #gridH { background-image: linear-gradient(var(--line) 1px, transparent 1px); background-size: 100% 120px; }
         #gridV { background-image: linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 160px 100%; }
         .mono { font-family: var(--mono); font-weight: 400; }
+        #stage { position: absolute; inset: 0; transform-origin: 50% 50%; }
         .chrome { position: absolute; font-size: 22px; z-index: 40; background: var(--paper); padding: 4px 8px; margin: -4px -8px; }
         #idx { left: 160px; top: 52px; }
         #idx i { font-style: normal; color: var(--violet); }
@@ -148,6 +149,7 @@
       </style>
       <div id="root" data-composition-id="abm" data-width="1920" data-height="1080">
         <div id="gridH"></div><div id="gridV"></div>
+        <div id="stage">
         <div class="chrome mono" id="idx"><span id="idxn">01</span> / <i id="idxw">Their site</i></div>
         <div class="chrome mono" id="brandtag">Breakout · for __COMPANY__</div>
         <div class="chrome mono" id="disc"></div>
@@ -192,6 +194,7 @@
         <div id="flood"></div>
         <div id="booked">__BOOKED__</div>
         <svg id="cur" viewBox="0 0 24 24"><path d="M4 2.5v17.2l4.6-4.4 3.1 6.9 3-1.3-3.1-6.8h6.4z" fill="#040405" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        </div>
         <div id="err"></div>
       </div>
       <script>
@@ -235,8 +238,8 @@
             var s, tx, ty;
             if (bar < AT.widget) { s = 1 + 0.03 * io(bar / AT.widget); tx = C0[0] * (1 - s); ty = C0[1] * (1 - s); }
             else if (bar < AT.turn) {
-              var u = io((bar - AT.widget) / 0.45), s0 = 1.03, t0 = [C0[0] * (1 - s0), C0[1] * (1 - s0)];
-              var sh = S1 + 0.04 * cl((bar - AT.widget - 0.45) / (AT.turn - AT.widget - 0.45));
+              var u = io((bar - AT.widget) / 0.6), s0 = 1.03, t0 = [C0[0] * (1 - s0), C0[1] * (1 - s0)];
+              var sh = S1 + 0.04 * cl((bar - AT.widget - 0.6) / (AT.turn - AT.widget - 0.6));
               var t1 = [TGT[0] - sh * W[0], TGT[1] - sh * W[1]];
               s = lerp(s0, sh, u); tx = lerp(t0[0], t1[0], u); ty = lerp(t0[1], t1[1], u);
             } else {
@@ -268,6 +271,11 @@
                        bar >= AT.switch && bar < AT.close ? "Source: getbreakout.ai/compare/qualified-alternative" : "";
             one("#disc").textContent = disc; one("#disc").style.opacity = disc ? 1 : 0;
 
+            // ---- a slow drift through every read hold, so a pause never freezes (their site has its own camera)
+            var marks = [AT.turn, AT.ask, AT.who, AT.why, AT.act, AT.booked, AT.switch, AT.buyout, AT.close, AT.end], st = 1;
+            for (i = 0; i < marks.length - 1; i++) if (bar >= marks[i] && bar < marks[i + 1]) st = 1 + 0.018 * io((bar - marks[i]) / (marks[i + 1] - marks[i]));
+            one("#stage").style.transform = "scale(" + st.toFixed(5) + ")";
+
             // ---- 01-02: their site, the push into their widget, the fold into 1 cell of the grid
             var c = camAt(bar);
             var cam = one("#cam");
@@ -276,14 +284,14 @@
             notes.forEach(function (n, j) {
               n.style.top = (330 + j * 120) + "px";
               if (j === notes.length - 1) n.classList.add("v");
-              slam(n, t, AT.widget + 0.5 + j * 0.25, AT.turn);
+              slam(n, t, AT.widget + 0.75 + j * 0.5, AT.turn);
             });
             // the cursor tries every button, then looks for somewhere to type
-            var bt = CAP.buttons, keys = [[AT.widget + 1.0, null]];
-            bt.forEach(function (b, j) { keys.push([AT.widget + 1.25 + j * 0.125, fp(b[0], b[1])]); });
-            keys.push([AT.widget + 1.85, fp(CAP.nobox[0], CAP.nobox[1])]);
+            var bt = CAP.buttons, keys = [[AT.widget + 2.0, null]];
+            bt.forEach(function (b, j) { keys.push([AT.widget + 2.25 + j * 0.2, fp(b[0], b[1])]); });
+            keys.push([AT.widget + 3.15, fp(CAP.nobox[0], CAP.nobox[1])]);
             keys[0][1] = [keys[1][1][0] + 160, keys[1][1][1] + 260];
-            one("#scrim").style.opacity = (cl((bar - AT.widget - 0.3) / 0.15) * (1 - cl((bar - AT.turn) / 0.08))).toFixed(3);
+            one("#scrim").style.opacity = (cl((bar - AT.widget - 0.45) / 0.15) * (1 - cl((bar - AT.turn) / 0.08))).toFixed(3);
             var cur = one("#cur"), hl = one("#hl"), hover = -1;
             if (bar >= keys[0][0] - 0.1 && bar < AT.turn) {
               var p = keys[0][1];
@@ -302,15 +310,15 @@
             } else hl.style.opacity = 0;
 
             // ---- the turn
-            turns.forEach(function (n, j) { n.style.top = (330 + j * 140) + "px"; slam(n, t, AT.turn + 0.3 + j * 0.25, AT.ask); });   // after the fold lands
+            turns.forEach(function (n, j) { n.style.top = (330 + j * 140) + "px"; slam(n, t, AT.turn + 0.3 + j * 0.3, AT.ask); });   // after the fold lands
 
             // ---- 03: ask anything
             slam(one("#asktitle"), t, AT.ask, AT.who);
-            show(one("#today"), t, AT.ask + 0.25, AT.who);
-            show(one("#bline"), t, AT.ask + 0.5, AT.who);
+            show(one("#today"), t, AT.ask + 0.4, AT.who);
+            show(one("#bline"), t, AT.ask + 0.75, AT.who);
             var bwEl = one("#bw");
             show(bwEl, t, AT.ask, AT.who, 60);
-            var qa = AT.ask + 0.15, qb = AT.ask + 0.7, sent = AT.ask + 0.8;
+            var qa = AT.ask + 0.5, qb = AT.ask + 1.2, sent = AT.ask + 1.35;
             var typing = bar < sent;
             ics.forEach(function (ch, j) { ch.style.opacity = typing && t >= B(qa) + j * (B(qb) - B(qa)) / ics.length ? 1 : 0; });
             one(".ph0").style.opacity = bar < qa || !typing ? 1 : 0;
@@ -319,34 +327,34 @@
             var ub = one(".ub"), su = inb(t, sent);
             ub.style.opacity = su >= 0 ? 1 : 0; ub.style.transform = "translateY(" + (su >= 0 ? 16 * (1 - out4(su / 0.08)) : 16).toFixed(1) + "px)";
             qcs.forEach(function (ch) { ch.style.opacity = 1; });
-            var ar = one(".ar"), au = inb(t, sent + 0.05), aStart = sent + 0.3;
+            var ar = one(".ar"), au = inb(t, sent + 0.05), aStart = sent + 0.4, WPB = 16;
             ar.style.opacity = au >= 0 ? 1 : 0;
             one(".dots").style.display = bar < aStart ? "flex" : "none";
             all(".dots i").forEach(function (d, j) { d.style.opacity = (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 14 - j * 1.2))).toFixed(3); });
-            aws.forEach(function (w, j) { w.style.opacity = bar >= aStart + j / 24 ? 1 : 0; });
+            aws.forEach(function (w, j) { w.style.opacity = bar >= aStart + j / WPB ? 1 : 0; });
             var mod = one(".mod"), ansTop = one(".ans").offsetTop + one(".ans").offsetHeight;
             mod.style.top = (130 + one(".ans").offsetHeight + 30) + "px";
-            show(mod, t, aStart + aws.length / 24 + 0.06, AT.who, 18);
+            show(mod, t, aStart + aws.length / WPB + 0.1, AT.who, 18);
 
             // ---- 04: who
             var cw = one("#c-who");
             show(cw, t, AT.who, AT.why, 30);
             show(one("#w-co"), t, AT.who + 0.1, null, 10);
-            show(one("#w-wf"), t, AT.who + 0.3, null, 10);
-            show(one("#w-pe"), t, AT.who + 0.75, null, 10);
-            provs.forEach(function (pv, j) { pv.className = "prov" + (bar >= AT.who + 0.35 + j * 0.1 && (j === provs.length - 1 || bar < AT.who + 0.45 + j * 0.1) ? " on" : ""); });
-            all("#c-who .ck").forEach(function (k, j) { k.style.opacity = bar >= AT.who + (j ? 0.8 : 0.15) ? 1 : 0; });
-            one("#w-pe").className = "rw" + (bar >= AT.who + 0.75 ? " on" : "");
-            cmpRow(one("#rowwho"), t, AT.who + 1.0, AT.why);
+            show(one("#w-wf"), t, AT.who + 0.45, null, 10);
+            show(one("#w-pe"), t, AT.who + 1.1, null, 10);
+            provs.forEach(function (pv, j) { pv.className = "prov" + (bar >= AT.who + 0.55 + j * 0.15 && (j === provs.length - 1 || bar < AT.who + 0.7 + j * 0.15) ? " on" : ""); });
+            all("#c-who .ck").forEach(function (k, j) { k.style.opacity = bar >= AT.who + (j ? 1.15 : 0.15) ? 1 : 0; });
+            one("#w-pe").className = "rw" + (bar >= AT.who + 1.1 ? " on" : "");
+            cmpRow(one("#rowwho"), t, AT.who + 1.5, AT.why);
 
             // ---- 05: why
             slam(one("#why1"), t, AT.why, AT.act);
-            slam(one("#why2"), t, AT.why + 0.25, AT.act);
-            show(one("#sighead"), t, AT.why + 0.4, AT.act);
+            slam(one("#why2"), t, AT.why + 0.5, AT.act);
+            show(one("#sighead"), t, AT.why + 0.9, AT.act);
             sigs.forEach(function (sg, j) {
               sg.style.top = (500 + j * 92) + "px";
-              show(sg, t, AT.why + 0.4 + j * 0.08, AT.act, 16);
-              var tg = sg.querySelector(".tag"), tu = inb(t, AT.why + 0.5 + j * 0.25);
+              show(sg, t, AT.why + 0.9 + j * 0.08, AT.act, 16);
+              var tg = sg.querySelector(".tag"), tu = inb(t, AT.why + 1.1 + j * 0.25);
               tg.style.opacity = tu >= 0 ? 1 : 0;
               tg.style.transform = "scale(" + (tu >= 0 ? 1.25 - 0.25 * out4(tu / 0.08) : 1).toFixed(3) + ")";
             });
@@ -357,11 +365,11 @@
             var em = one("#email");
             show(em, t, AT.act, AT.booked + 0.2, 40);
             if (bar >= AT.booked) em.style.opacity = 0;
-            var ws = AT.act + 0.25;
-            ewords.forEach(function (w, j) { var wu = inb(t, ws + j / 16); w.style.opacity = wu >= 0 ? 1 : 0;
+            var ws = AT.act + 0.75, EPB = 12;
+            ewords.forEach(function (w, j) { var wu = inb(t, ws + j / EPB); w.style.opacity = wu >= 0 ? 1 : 0;
               w.style.transform = "translateY(" + (wu >= 0 ? 8 * (1 - out4(wu / 0.04)) : 8).toFixed(1) + "px)"; });
             ephs.forEach(function (ph) { var wl = ph.querySelectorAll(".w"), last = ewords.indexOf(wl[wl.length - 1]);
-              ph.className = "ph" + (bar >= ws + (last + 1) / 16 + 0.06 ? " on" : ""); });
+              ph.className = "ph" + (bar >= ws + (last + 1) / EPB + 0.06 ? " on" : ""); });
             var es = one("#esend");
             es.className = "esend" + (bar >= AT.send ? " press" : "");
             es.style.transform = "scale(" + (bar >= AT.send && bar < AT.send + 0.08 ? 0.93 : 1) + ")";
@@ -396,14 +404,14 @@
             // ---- 07: the switch, then the buyout
             show(one("#swf"), t, AT.switch + 0.05, AT.buyout);
             slam(one("#swb"), t, AT.switch + 0.1, AT.buyout);
-            show(one("#swbn"), t, AT.switch + 0.2, AT.buyout);
-            slam(one("#swq"), t, AT.switch + 0.35, AT.buyout);
-            show(one("#swqn"), t, AT.switch + 0.45, AT.buyout);
-            var lu = inb(t, AT.switch + 0.25), lv = inb(t, AT.buyout);
+            show(one("#swbn"), t, AT.switch + 0.35, AT.buyout);
+            slam(one("#swq"), t, AT.switch + 0.75, AT.buyout);
+            show(one("#swqn"), t, AT.switch + 1.0, AT.buyout);
+            var lu = inb(t, AT.switch + 0.6), lv = inb(t, AT.buyout);
             one("#swline").style.transform = "scaleX(" + (lu < 0 ? 0 : out4(lu / 0.15) * (lv > 0 ? 1 - cl(lv / 0.05) : 1)).toFixed(3) + ")";
             slam(one("#bo1"), t, AT.buyout, AT.close);
-            slam(one("#bo2"), t, AT.buyout + 0.25, AT.close);
-            show(one("#bon"), t, AT.buyout + 0.5, AT.close);
+            slam(one("#bo2"), t, AT.buyout + 0.4, AT.close);
+            show(one("#bon"), t, AT.buyout + 0.9, AT.close);
 
             // ---- close
             var lg = one("#llogo"), gu = inb(t, AT.close + 0.05);
@@ -418,21 +426,21 @@
 
           function cmpRow(el, t, a, b) {
             show(el.querySelector(".cf"), t, a, b, 10);
-            show(el.querySelector(".cr.b"), t, a + 0.12, b, 16);
-            show(el.querySelector(".cr.q"), t, a + 0.3, b, 16);
-            show(el.querySelector(".csrc"), t, a + 0.45, b, 6);
+            show(el.querySelector(".cr.b"), t, a + 0.25, b, 16);
+            show(el.querySelector(".cr.q"), t, a + 0.6, b, 16);
+            show(el.querySelector(".csrc"), t, a + 0.8, b, 6);
           }
           // 700 signals as dots; 3 of them light with the rows
           var LIT = [137, 402, 611];
           function drawDots(t, bar) {
             dg.clearRect(0, 0, 660, 360);
-            var u = inb(t, AT.why + 0.2), v = inb(t, AT.act);
+            var u = inb(t, AT.why + 0.6), v = inb(t, AT.act);
             if (u < 0 || v > 0.05) return;
             var a = v > 0 ? 1 - cl(v / 0.05) : 1;
             for (var k = 0; k < 700; k++) {
               var col = k % 28, row = Math.floor(k / 28);
               if (col / 28 > u / 0.4) continue;
-              var li = LIT.indexOf(k), on = li >= 0 && bar >= AT.why + 0.5 + li * 0.25;
+              var li = LIT.indexOf(k), on = li >= 0 && bar >= AT.why + 1.1 + li * 0.25;
               dg.globalAlpha = a;
               dg.fillStyle = on ? "#4c00ff" : "rgba(4,4,5,0.16)";
               dg.beginPath(); dg.arc(12 + col * 23.5, 8 + row * 14, on ? 7 : 3.5, 0, 6.2832); dg.fill();

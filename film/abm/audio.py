@@ -24,7 +24,17 @@ if not os.path.exists(score):
     subprocess.run([PY, os.path.join(HERE, F["music"]["make"]), "--out", score], check=True)
 sfx_dir = os.path.join(HERE, "out", "sfx")
 os.makedirs(sfx_dir, exist_ok=True)
-cues = [{"t": round(c["at"] * BAR, 4), "sound": c["sound"], "gain_db": c.get("gain_db", -10), "args": c.get("args", {}), "pan": c.get("pan", 0)} for c in F["sfx"]]
+
+
+def at(x):
+    """A cue time in bars: a number, or 'section+bars' (e.g. 'ask+0.5') so cues follow series.json "at"."""
+    if isinstance(x, str):
+        name, _, off = x.partition("+")
+        return F["at"][name.strip()] + float(off or 0)
+    return x
+
+
+cues = [{"t": round(at(c["at"]) * BAR, 4), "sound": c["sound"], "gain_db": c.get("gain_db", -10), "args": c.get("args", {}), "pan": c.get("pan", 0)} for c in F["sfx"]]
 json.dump({"duration": round(END + 1, 3), "key": "E", "cues": cues}, open(os.path.join(sfx_dir, "cues.json"), "w"), indent=1)
 subprocess.run([PY, os.path.join(REPO, "skills/launch-sound/scripts/sfx_forge.py"), "render", os.path.join(sfx_dir, "cues.json"), os.path.join(sfx_dir, "sfx.wav")], check=True)
 

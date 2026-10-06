@@ -1,6 +1,6 @@
 # ABM series: "Do more than chat"
 
-One film per account that runs Qualified on its site: their homepage and chat widget as captured, then where Breakout outperforms Qualified (quoted from getbreakout.ai/compare/qualified-alternative), then the contract buyout. 36.6 s, 16:9, Swiss grid, orchestral score. Story in [`STORYBOARD.md`](STORYBOARD.md), claims and rules in [`BRIEF.md`](BRIEF.md).
+One film per account that runs Qualified on its site: their homepage and chat widget as captured, then where Breakout outperforms Qualified (quoted from getbreakout.ai/compare/qualified-alternative), then the contract buyout. 57.2 s, 16:9, Swiss grid, orchestral score. Story in [`STORYBOARD.md`](STORYBOARD.md), claims and rules in [`BRIEF.md`](BRIEF.md).
 
 ## Add an account
 

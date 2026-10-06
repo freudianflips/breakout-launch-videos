@@ -69,8 +69,13 @@ def steps(a, b, every):
 
 # chords: (from bar, root in octave 2, third, fifth)
 EM, C, G, D, AM, B, E, A = (40, 43, 47), (36, 40, 43), (43, 47, 50), (38, 42, 45), (45, 48, 52), (47, 51, 54), (40, 44, 47), (45, 49, 52)
-PROG = [(0, G), (1, D), (2, EM), (3, C), (4, EM), (5, EM), (6, C), (7, G), (7.5, AM), (8.5, B), (9.5, EM), (10.5, C),
-        (11.5, EM), (12, C), (12.5, G), (13, D), (14, E), (15, E), (15.5, A), (16, E), (16.5, B), (17, E)]
+_A = F["at"]
+PROG = [(0, G), (1, D), (2, EM), (3, C), (4, G), (5, D), (_A["turn"], EM),
+        (_A["ask"], EM), (_A["ask"] + 1, C), (_A["ask"] + 2, G), (_A["ask"] + 3, D),
+        (_A["who"], AM), (_A["who"] + 1.5, B), (_A["why"], EM), (_A["why"] + 1.5, C),
+        (_A["act"], EM), (_A["act"] + 1, C), (_A["act"] + 2, G), (_A["act"] + 3, D), (_A["act"] + 4, B),
+        (_A["booked"], E), (_A["switch"], E), (_A["switch"] + 1, A), (_A["switch"] + 2, B),
+        (_A["buyout"], E), (_A["buyout"] + 1, A), (_A["buyout"] + 2, B), (_A["close"], E)]
 
 
 def chord(bar):
@@ -97,10 +102,10 @@ for t in steps(0, turn - 0.25, 1 / 8):
     note("cel", [r + 36, th + 36, fi + 36][BOX[k]] + (12 if k == 4 else 0), t, 0.11, 70)
 for t in steps(0, turn - 0.25, 1 / 4):
     note("pizz", chord(t)[0] + 12, t, 0.1, 58)
-for b in range(int(turn)):
+for b in steps(0, turn - 0.25, 1):
     r, th, fi = chord(b)
     for p in (r + 24, th + 24, fi + 24):
-        note("str", p, b, 0.98 if b < turn - 1 else 0.73, 46)
+        note("str", p, b, min(0.98, turn - 0.25 - b - 0.01), 46)
 
 # ---- the turn
 note(DRUM, CRASH, turn, 1, 100)
@@ -128,18 +133,18 @@ for t in steps(who, why, 1 / 4):
         r, th, fi = chord(t)
         for p in (r + 12, th + 12, fi + 12, r + 24):
             note("str", p, t, 0.08, 86)
-for b in (ask, ask + 1, ask + 2):
+for b in steps(ask, why, 0.5):
     r, th, fi = chord(b)
     for p in (r + 24, fi + 24, th + 36):
-        note("str", p, b, 0.98 if b < who - 0.5 else 0.48, 50)
+        note("str", p, b, 0.49, 50)
 
 # ---- why: a tremolo crescendo, horns, a timpani roll into act
-for b in (why, why + 1):
+for b in steps(why, act, 0.5):
     r, th, fi = chord(b)
     for p in (r + 12, fi + 12, r + 24, th + 24, fi + 24):
-        note("trem", p, b, 1.0, 96)
+        note("trem", p, b, 0.5, 96)
     for p in (th + 12, fi + 12, r + 24):
-        note("horn", p, b, 1.0, 92)
+        note("horn", p, b, 0.5, 92)
 ramp("trem", why, act, 40, 127)
 ramp("horn", why, act, 50, 127)
 for t in steps(why, act - 0.5, 1 / 4):
@@ -172,7 +177,7 @@ for b in steps(act, cut, 0.5):
     for p in (r + 12, fi + 12, r + 24, th + 24):
         note("str", p, b, min(0.5, cut - b) - 0.01, 84)
 MEL = [(71, 0, 0.375), (72, 0.375, 0.125), (74, 0.5, 0.5), (76, 1.0, 0.375), (74, 1.375, 0.125), (79, 1.5, 0.5), (78, 2.0, 0.25)]
-for p, at, d in MEL:
+for p, at, d in MEL + [(p2 + 0, a2 + 2.5, d2) for p2, a2, d2 in MEL[:5]]:
     if act + at < cut:
         note("vln", p, act + at, min(d, cut - act - at) * 0.98, 104)
         note("vln", p + 12, act + at, min(d, cut - act - at) * 0.98, 76)
