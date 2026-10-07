@@ -1,0 +1,348 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <!-- Breakout ABM v3: "Same visitor. Two sites." One split screen in sync: the account's chat as captured (left) and the
+           same site with Breakout (right). Built by build.py from split.json and the account. Every frame is a pure function of t. -->
+      <style>
+        __FONTFACES__
+        [data-composition-id="split"] { --ink: #140b3c; --ink2: #4a4560; --violet: #4c00ff; --lilac: #be79ff; --pink: #ff5ad1; --blush: #ffd6f5;
+          --sans: "Manrope", system-ui, sans-serif; --mono: "Fragment Mono", ui-monospace, monospace; }
+        #root { position: absolute; inset: 0; overflow: hidden; background: #f6f1ff; font-family: var(--sans); color: var(--ink); }
+        .nk { font-family: "NK", serif; font-weight: 400; font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 0; letter-spacing: -0.035em; line-height: 1; }
+        .nk em { font-style: italic; }
+        .mono { font-family: var(--mono); }
+        #bg { position: absolute; inset: -80px; background: #f6f1ff; }
+        .blob { position: absolute; width: 1500px; height: 1500px; border-radius: 50%; }
+
+        /* the two panes */
+        .tag { position: absolute; top: 46px; font-size: 64px; white-space: nowrap; }
+        #tagL { left: 44px; color: #6c6880; }
+        #tagR { right: 44px; color: var(--ink); }
+        #tagR em { color: var(--violet); }
+        #q { position: absolute; left: 0; right: 0; top: 50px; text-align: center; opacity: 0; }
+        #q span { display: inline-flex; align-items: center; gap: 14px; padding: 14px 26px 14px 16px; border-radius: 999px; background: #fff; font-size: 26px; font-weight: 700; color: var(--ink);
+          box-shadow: 0 20px 50px -20px rgba(40, 0, 120, 0.35), 0 0 0 1.5px rgba(76, 0, 255, 0.18); }
+        #q i { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(140deg, #ff9a6b, #ff5ad1); color: #fff; font-style: normal; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; }
+        .pane { position: absolute; top: 140px; width: 900px; height: 900px; border-radius: 22px; overflow: hidden; background: #fff;
+          box-shadow: 0 60px 120px -60px rgba(40, 0, 120, 0.45), 0 0 0 1px rgba(20, 11, 60, 0.12); }
+        #pL { left: 40px; } #pR { left: 980px; }
+        .pbar { height: 36px; background: #ebeae6; display: flex; align-items: center; gap: 8px; padding: 0 16px; }
+        .pbar i { width: 11px; height: 11px; border-radius: 50%; background: #cfcdc7; }
+        .pbar span { margin-left: 14px; height: 22px; padding: 0 12px; border-radius: 6px; background: #fff; font-family: var(--mono); font-size: 14px; line-height: 22px; color: #5c5850; }
+        .pv { position: absolute; left: 0; top: 36px; width: 900px; height: 864px; overflow: hidden; background: #111; }
+        .pc { position: absolute; left: 0; top: 0; width: 2000px; height: 1008px; transform-origin: 0 0; }
+        .step { position: absolute; left: 0; top: 0; width: 2000px; height: 1008px; opacity: 0; }
+        .step.on { opacity: 1; }
+        .hl { position: absolute; border-radius: 6px; box-shadow: 0 0 0 4px var(--violet), 0 0 30px rgba(76, 0, 255, 0.5); opacity: 0; }
+        .cur { position: absolute; left: 0; top: 0; width: 48px; height: 48px; opacity: 0; z-index: 9; transform-origin: 0 0; }
+
+        /* left after the visitor leaves */
+        .gone { position: absolute; left: 0; right: 0; top: 330px; text-align: center; font-size: 96px; color: #e9e7ef; opacity: 0; }
+        .gone em { color: #b9b6c2; }
+        .acl { position: absolute; left: 90px; right: 90px; top: 250px; padding: 46px 50px; border-radius: 22px; background: #26252c; opacity: 0; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08); }
+        .acn { font-size: 84px; color: #e9e7ef; }
+        .acw { margin-top: 30px; font-size: 20px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8d8a96; }
+        .acq { margin-top: 10px; font-size: 56px; color: #b9b6c2; }
+        .glv { position: absolute; left: 0; right: 0; top: 300px; text-align: center; opacity: 0; }
+        .glw { font-size: 22px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8d8a96; }
+        .gln { margin-top: 26px; font-size: 170px; white-space: nowrap; color: #b9b6c2; }
+        #pR .glw { color: rgba(255, 255, 255, 0.8); } #pR .gln { color: #fff; } #pR .gln em { color: var(--blush); }
+
+        /* right: Breakout's widget over theirs, in capture pixels (rebuilt from the real screens) */
+        #bwrap { position: absolute; left: 1525px; top: 222px; width: 640px; height: 1100px; transform-origin: 0 0; transform: scale(0.7047); }
+        #bw { position: absolute; inset: 0; border-radius: 30px; background: #f5f6f8; color: #111; box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.5), 0 0 0 1px #e4e4ea; }
+        .bwh { position: absolute; left: 34px; top: 30px; display: flex; align-items: center; gap: 18px; font-size: 36px; }
+        .bwh b { font-weight: 600; }
+        .bav { width: 68px; height: 68px; border-radius: 50%; }
+        .bav.s { width: 48px; height: 48px; flex: none; }
+        .bgreet { position: absolute; left: 34px; top: 118px; font-size: 30px; color: #6b6b75; }
+        .bbook { position: absolute; left: 34px; top: 172px; padding: 14px 26px; border-radius: 8px; background: #4d43dc; color: #fff; font-size: 26px; }
+        .bpanel { position: absolute; left: 18px; right: 18px; top: 256px; bottom: 50px; background: #fff; border-radius: 26px; box-shadow: 0 0 0 1px #e8e8ee; }
+        .ub { position: absolute; right: 24px; top: 30px; max-width: 480px; padding: 18px 24px; border-radius: 22px; background: #f1f2f5; font-size: 29px; opacity: 0; }
+        .ar { position: absolute; left: 24px; top: 140px; right: 26px; display: flex; gap: 16px; align-items: flex-start; opacity: 0; }
+        .dots { display: flex; gap: 7px; padding-top: 20px; }
+        .dots i { width: 12px; height: 12px; border-radius: 50%; background: #555; }
+        .ans { font-size: 31px; line-height: 1.42; color: #222; padding-top: 4px; }
+        .w { display: inline-block; opacity: 0; }
+        .mod { position: absolute; left: 88px; right: 24px; top: 400px; display: flex; align-items: center; justify-content: space-between; padding: 22px 22px;
+          border-radius: 18px; box-shadow: 0 0 0 1.5px #e3e2f5; background: #faf9ff; opacity: 0; }
+        .mod b { display: block; font-size: 27px; } .mod span { font-size: 22px; color: #6b6b75; }
+        .mod em { font-style: normal; padding: 12px 20px; border-radius: 10px; background: var(--violet); color: #fff; font-size: 24px; font-weight: 600; }
+        .bin { position: absolute; left: 20px; right: 20px; bottom: 20px; height: 90px; border-radius: 20px; box-shadow: 0 0 0 2px #4d43dc; display: flex; align-items: center; padding: 0 14px 0 24px; font-size: 27px; }
+        .ph0 { color: #9a9aa5; position: absolute; left: 24px; }
+        .typed { position: relative; white-space: nowrap; }
+        .bcaret { width: 2px; height: 32px; background: #222; margin-left: 2px; }
+        .bsend { margin-left: auto; width: 68px; height: 68px; border-radius: 14px; background: #4d43dc; display: flex; align-items: center; justify-content: center; }
+        .bsend svg { width: 32px; height: 32px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linejoin: round; }
+        .bpow { position: absolute; left: 0; right: 0; bottom: 14px; text-align: center; font-size: 20px; color: #8a8a95; }
+        .ic { opacity: 0; }
+
+        /* right, behind the page */
+        #dim { position: absolute; inset: 0; background: radial-gradient(90% 90% at 50% 40%, rgba(76, 0, 255, 0.82), rgba(20, 8, 60, 0.92)); opacity: 0; }
+        #person { position: absolute; left: 60px; top: 150px; width: 780px; height: 520px; border-radius: 30px; background: #fff; opacity: 0;
+          box-shadow: 0 60px 120px -50px rgba(10, 0, 60, 0.7); }
+        .pav { position: absolute; left: 56px; top: 64px; width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(140deg, #ff9a6b, #ff5ad1);
+          display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: 700; color: #fff; }
+        .pname { position: absolute; left: 240px; top: 66px; font-size: 104px; white-space: nowrap; }
+        .prole { position: absolute; left: 244px; top: 186px; font-size: 32px; font-weight: 700; }
+        .pco { position: absolute; left: 244px; top: 236px; font-size: 24px; color: #6c6880; }
+        .chips { position: absolute; left: 56px; right: 40px; bottom: 60px; display: flex; flex-wrap: wrap; gap: 14px; }
+        .schip { padding: 14px 24px; border-radius: 999px; background: var(--violet); color: #fff; font-size: 26px; font-weight: 700; opacity: 0; white-space: nowrap; }
+        #email { position: absolute; left: 40px; top: 70px; width: 820px; padding: 36px 40px 32px; background: #fff; border-radius: 22px; color: #111; opacity: 0;
+          box-shadow: 0 60px 120px -50px rgba(10, 0, 60, 0.7); }
+        #email .eh { font-family: var(--mono); font-size: 17px; color: #8a8a92; }
+        #email .lab { font-family: var(--mono); font-size: 17px; color: #8a8a92; margin-right: 14px; }
+        #email .eto { margin-top: 14px; font-size: 21px; color: #5c5850; }
+        #email .esub { margin-top: 12px; padding-bottom: 20px; border-bottom: 1px solid #ecebe7; display: flex; align-items: baseline; }
+        #email .stx { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; }
+        #email .ebody { margin-top: 22px; font-size: 30px; line-height: 1.48; font-weight: 500; color: #26262b; }
+        #email .ebody p { margin-bottom: 14px; }
+        .ph { border-radius: 6px; }
+        .ph.on { background: rgba(76, 0, 255, 0.1); color: var(--violet); box-shadow: 0 0 0 4px rgba(76, 0, 255, 0.1); }
+        .esend { display: inline-flex; align-items: center; gap: 12px; margin-top: 8px; padding: 14px 26px; border-radius: 12px; background: #140b3c; color: #fff; font-size: 24px; font-weight: 700; float: right; }
+        .esend svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 2; stroke-linejoin: round; }
+        .esend.press { background: var(--violet); }
+        #flood { position: absolute; inset: 0; background: radial-gradient(80% 90% at 40% 30%, #8a3dff 0%, #4c00ff 55%, #2a0a8a 100%); clip-path: circle(0px at 50% 50%); }
+        #bk { position: absolute; inset: 0; color: #fff; }
+        #tick { position: absolute; left: 560px; top: 90px; width: 260px; height: 260px; overflow: visible; opacity: 0; }
+        #tick circle, #tick path { fill: none; stroke: #fff; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+        #bigok { position: absolute; left: 56px; top: 370px; font-size: 118px; white-space: nowrap; opacity: 0; }
+        #bigok em { color: var(--blush); }
+        .card { position: absolute; left: 56px; top: 560px; width: 790px; border-radius: 22px; background: #2a2440; color: #f1f1f3; opacity: 0; overflow: hidden;
+          box-shadow: 0 40px 90px -40px rgba(10, 0, 40, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1) inset; }
+        .card .hd { display: flex; align-items: center; gap: 14px; padding: 18px 26px; border-bottom: 1px solid rgba(255, 255, 255, 0.07); font-size: 22px; }
+        .card .hd b { font-weight: 600; }
+        .card .tm { margin-left: auto; color: #a8a8ad; font-size: 17px; }
+        .av { width: 34px; height: 34px; border-radius: 50%; background: var(--violet); display: inline-flex; flex: none; }
+        .av img { width: 34px; height: 34px; }
+        .card .rw { display: flex; align-items: center; gap: 20px; padding: 26px; }
+        .card .rw svg { width: 38px; height: 38px; fill: none; stroke: #cfcfd4; stroke-width: 1.7; flex: none; stroke-linecap: round; stroke-linejoin: round; }
+        .card .tx { font-size: 34px; font-weight: 700; }
+        .card .sub { font-size: 22px; color: #cfc8ff; margin-top: 4px; }
+        .faces { margin-left: auto; display: flex; }
+        .face { width: 58px; height: 58px; border-radius: 50%; margin-left: -12px; display: inline-flex; align-items: center; justify-content: center;
+          font-size: 24px; font-weight: 700; color: #fff; box-shadow: 0 0 0 4px #2a2440; opacity: 0; }
+        .face.f0 { background: #ff7a59; } .face.f1 { background: #2fb37a; } .face.f2 { background: #4c8dff; }
+
+        /* full frames: the buyout and the close */
+        .full { position: absolute; inset: 0; opacity: 0; }
+        #fB { background: radial-gradient(70% 80% at 30% 30%, #ff5ad1 0%, rgba(255, 90, 209, 0) 60%), radial-gradient(80% 90% at 80% 70%, #4c00ff 0%, #2a0a8a 100%); color: #fff; }
+        #fC { background: radial-gradient(60% 70% at 20% 20%, #e3d4ff 0%, rgba(227, 212, 255, 0) 60%), radial-gradient(60% 70% at 85% 80%, #ffd6f5 0%, rgba(255, 214, 245, 0) 60%), #f8f4ff; }
+        .bl { position: absolute; left: 150px; font-size: 140px; white-space: nowrap; }
+        #bo2 em { color: var(--blush); }
+        #bon { position: absolute; left: 158px; top: 700px; font-size: 32px; font-weight: 600; color: rgba(255, 255, 255, 0.9); }
+        #llogo { position: absolute; left: 50%; top: 330px; height: 104px; margin-left: -260px; }
+        #lcta { position: absolute; left: 0; right: 0; top: 510px; text-align: center; }
+        #lcta span { display: inline-block; padding: 24px 54px; border-radius: 999px; background: var(--violet); color: #fff; font-size: 44px; font-weight: 700; box-shadow: 0 30px 60px -20px rgba(76, 0, 255, 0.6); }
+        #lmade { position: absolute; left: 0; right: 0; top: 660px; text-align: center; font-size: 56px; color: var(--ink2); }
+        #lmade em { color: var(--violet); }
+        #lurl { position: absolute; left: 0; right: 0; top: 750px; text-align: center; font-size: 22px; color: #6c6880; }
+        #disc { position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; font-size: 14px; color: #6c6880; z-index: 80; }
+        #grain { position: absolute; inset: 0; width: 1920px; height: 1080px; opacity: 0.07; mix-blend-mode: overlay; pointer-events: none; z-index: 70; }
+        #err { position: absolute; left: 40px; top: 100px; right: 40px; font: 20px monospace; color: red; z-index: 99; white-space: pre-wrap; display: none; }
+      </style>
+      <div id="root" data-composition-id="split" data-width="1920" data-height="1080">
+        <div id="bg"><div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div></div>
+        <div class="tag nk" id="tagL">__TAGL__</div>
+        <div class="tag nk" id="tagR">__TAGR__</div>
+        <div id="q"><span><i>?</i>__QUESTION__</span></div>
+        __LEFT__
+        __RIGHT__
+        <div class="full" id="fB"><div class="bl nk" id="bo1" style="top:300px">__BO1__</div><div class="bl nk" id="bo2" style="top:460px">__BO2__</div><div id="bon">__BON__</div></div>
+        <div class="full" id="fC"><img id="llogo" src="__LOGO__" alt=""><div id="lcta"><span>__CTA__</span></div><div id="lmade" class="nk">__MADE__</div><div id="lurl" class="mono">__URL__</div></div>
+        <canvas id="grain" width="640" height="360"></canvas>
+        <div id="disc" class="mono"></div>
+        <div id="err"></div>
+      </div>
+      <script>
+        (function () {
+          var S = '[data-composition-id="split"] ';
+          function one(s) { return document.querySelector(S + s); }
+          function all(s) { return Array.prototype.slice.call(document.querySelectorAll(S + s)); }
+          function cl(u) { return Math.max(0, Math.min(1, u)); }
+          function out4(u) { u = cl(u); return 1 - Math.pow(1 - u, 4); }
+          function io(u) { u = cl(u); return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+          function lerp(a, b, u) { return a + (b - a) * u; }
+          var T = __T__, AT = T.at, ST = T.steps;
+          var BAR = 240 / T.bpm, END = T.bars * BAR;
+          function B(x) { return x * BAR; }
+          function inb(t, a) { return (t - B(a)) / BAR; }
+          function rel(el, frame) { var r = frame.getBoundingClientRect(), q = el.getBoundingClientRect(), s = r.width / frame.offsetWidth || 1;
+            return { x: (q.left - r.left) / s, y: (q.top - r.top) / s, w: q.width / s, h: q.height / s }; }
+          // an element that comes in on bar a (rise, scale, a short rack focus) and cuts out on bar b
+          function come(el, t, a, b, o) {
+            o = o || {};
+            var bar = t / BAR, u = inb(t, a);
+            if (bar < a || (b != null && bar >= b)) { el.style.opacity = 0; return; }
+            el.style.opacity = cl(u / 0.03).toFixed(3);
+            el.style.transform = (o.pre || "") + "translateY(" + ((o.dy == null ? 24 : o.dy) * (1 - out4(u / 0.15))).toFixed(1) + "px) scale(" + lerp(o.from || 1.05, 1, out4(u / 0.25)).toFixed(4) + ")";
+            var bl = (o.blur == null ? 10 : o.blur) * (1 - out4(u / 0.1));
+            el.style.filter = bl > 0.2 ? "blur(" + bl.toFixed(1) + "px)" : "none";
+          }
+
+          // the camera on each pane: the whole page, then into the chat
+          var FOC = [1752, 610], AIM = [623, 432], S1 = 1.12;
+          function camAt(bar) {
+            var s0 = 864 / T.size[1], t0 = [900 - T.size[0] * s0, 0], u = io((bar - AT.push) / 0.5);   // the page fills the pane, chat in view
+            var s1 = S1 + 0.025 * cl((bar - AT.push - 0.5) / (AT.leave - AT.push - 0.5)), t1 = [AIM[0] - s1 * FOC[0], AIM[1] - s1 * FOC[1]];
+            var dr = 1 + 0.015 * cl(bar / AT.push);
+            if (bar < AT.push) return [s0 * dr, t0[0] - 450 * (dr - 1), t0[1] - 432 * (dr - 1)];
+            return [lerp(s0 * 1.015, s1, u), lerp(t0[0] - 450 * 0.015, t1[0], u), lerp(t0[1] - 432 * 0.015, t1[1], u)];
+          }
+          function setCam(el, c) { el.style.transform = "translate(" + c[1].toFixed(2) + "px," + c[2].toFixed(2) + "px) scale(" + c[0].toFixed(5) + ")"; }
+
+          // the left visitor's path through their decision tree, in capture pixels
+          var TRY = AT.try, LK = [], CLICKS = [], SWAP = [];
+          LK.push([TRY - 0.15, [1350, 1100]]);
+          ST[0].buttons.forEach(function (b, j) { LK.push([TRY + 0.05 + j * 0.1, [b[0], b[1]], 0, j]); });
+          LK.push([TRY + 0.45, [ST[0].buttons[ST[0].click][0], ST[0].buttons[ST[0].click][1]], 0, ST[0].click]); CLICKS.push([TRY + 0.5, 0, ST[0].click]); SWAP.push(TRY + 0.58);
+          ST[1].buttons.forEach(function (b, j) { LK.push([TRY + 0.8 + j * 0.15, [b[0], b[1]], 1, j]); });
+          LK.push([TRY + 1.65, [ST[1].buttons[ST[1].click][0], ST[1].buttons[ST[1].click][1]], 1, ST[1].click]); CLICKS.push([TRY + 1.75, 1, ST[1].click]); SWAP.push(TRY + 1.83);
+          ST[2].buttons.forEach(function (b, j) { LK.push([TRY + 2.0 + j * 0.12, [b[0], b[1]], 2, j]); });
+          LK.push([TRY + 3.45, ST[2].nobox, 2, -1]);
+          LK.push([AT.leave - 0.05, [1050, 640], 2, -1]);
+          function stepAt(bar) { return bar < SWAP[0] ? 0 : bar < SWAP[1] ? 1 : 2; }
+
+          var stepsL = all("#cL .step"), hlL = one("#cL .hl"), curL = one("#cL .cur"), curR = one("#cR .cur");
+          var ics = all(".ic"), aws = all(".ans .w"), ewords = all("#email .w"), ephs = all("#email .ph");
+          var chips = all(".schip"), faces = all(".face"), blobs = [one("#b1"), one("#b2"), one("#b3")];
+          var gcv = one("#grain"), gg = gcv.getContext("2d"), gimg = gg.createImageData(640, 360);
+          var drv = { t: 0 };
+
+          function render() {
+            var t = drv.t, bar = t / BAR, i;
+
+            // ---- the world behind the panes
+            blobs.forEach(function (b, j) {
+              var col = ["rgba(205,180,255,0.9)", "rgba(255,205,240,0.85)", "rgba(190,225,255,0.8)"][j];
+              b.style.background = "radial-gradient(circle, " + col + " 0%, rgba(0,0,0,0) 68%)";
+              b.style.transform = "translate(" + (lerp(-300, 1100, (j * 0.37 + 0.2) % 1) + 180 * Math.sin(t * 0.35 + j * 2)).toFixed(1) + "px," +
+                (lerp(-500, 300, (j * 0.61 + 0.1) % 1) + 140 * Math.cos(t * 0.3 + j * 2)).toFixed(1) + "px)";
+            });
+            var fr = Math.floor(t * 24), seed = (fr * 9301 + 49297) % 233280, d = gimg.data;
+            for (i = 0; i < d.length; i += 4) { seed = (seed * 9301 + 49297) % 233280; var v = (seed / 233280) * 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; }
+            gg.putImageData(gimg, 0, 0);
+            var split = bar < AT.buyout;
+            one("#disc").textContent = !split ? "" : bar < AT.act ? "Left: captured from " + one(".pbar span").textContent + " · Right and the visitor: illustrative example" :
+              "Quotes: getbreakout.ai/compare/qualified-alternative · Right and the visitor: illustrative example";
+            come(one("#tagL"), t, AT.open, AT.buyout, { dy: 12, blur: 0, from: 1 });
+            come(one("#tagR"), t, AT.open + 0.06, AT.buyout, { dy: 12, blur: 0, from: 1 });
+            come(one("#q"), t, AT.open + 0.5, AT.act, { dy: 14, from: 1.1 });
+            ["#pL", "#pR"].forEach(function (id, j) {
+              var p = one(id), u = inb(t, AT.open + j * 0.06);
+              p.style.opacity = split ? cl(u / 0.04) : 0;
+              p.style.transform = "translateY(" + (40 * (1 - out4(u / 0.3))).toFixed(1) + "px)";
+            });
+
+            // ---- both cameras
+            var c = camAt(bar);
+            setCam(one("#cL"), c); setCam(one("#cR"), c);
+
+            // ---- left: their decision tree, as captured
+            var si = stepAt(bar);
+            stepsL.forEach(function (im, j) { im.className = "step" + (j === si ? " on" : ""); });
+            var p = null, hov = null;
+            if (bar >= LK[0][0] && bar < AT.leave) {
+              p = LK[0][1];
+              for (i = 1; i < LK.length; i++) {
+                if (bar >= LK[i][0]) { p = LK[i][1]; hov = LK[i]; }
+                else { var u = io((bar - LK[i - 1][0]) / (LK[i][0] - LK[i - 1][0])); p = [lerp(LK[i - 1][1][0], LK[i][1][0], u), lerp(LK[i - 1][1][1], LK[i][1][1], u)]; break; }
+              }
+            }
+            var noboxAt = TRY + 3.45, shk = bar >= noboxAt && bar < noboxAt + 0.3 ? Math.sin((bar - noboxAt) * 90) * 14 * Math.exp(-(bar - noboxAt) * 10) : 0;
+            if (p) { curL.style.opacity = 1; curL.style.transform = "translate(" + (p[0] - 6 + shk).toFixed(1) + "px," + (p[1] - 3).toFixed(1) + "px) scale(" + (1 / c[0]).toFixed(4) + ")"; }
+            else curL.style.opacity = 0;
+            if (hov && hov[2] === si && hov[3] >= 0 && bar < AT.leave) {
+              var st = ST[si], b = st.buttons[hov[3]], bw = st.button_w;
+              hlL.style.left = (b[0] - bw / 2) + "px"; hlL.style.top = (b[1] - b[2] / 2) + "px"; hlL.style.width = bw + "px"; hlL.style.height = b[2] + "px";
+              var press = CLICKS.some(function (k) { return k[1] === si && bar >= k[0] && bar < k[0] + 0.08; });
+              hlL.style.opacity = 1; hlL.style.background = press ? "rgba(76,0,255,0.25)" : "transparent";
+            } else hlL.style.opacity = 0;
+            // the visitor leaves: the tab dims to grey
+            var lu = inb(t, AT.leave);
+            one("#cL").style.filter = lu >= 0 ? "grayscale(1) brightness(" + lerp(1, 0.35, out4(lu / 0.2)).toFixed(3) + ") blur(" + lerp(0, 6, out4(lu / 0.2)).toFixed(1) + "px)" : "none";
+            one("#cL").style.opacity = bar >= AT.golive ? 0 : 1;
+            come(one("#pL .gone"), t, AT.leave + 0.1, AT.act, { from: 1.08 });
+            come(one("#pL .acl"), t, AT.act + 0.25, AT.golive, { dy: 30 });
+            come(one("#pL .glv"), t, AT.golive, null, { from: 1.08 });
+            one("#pL .pv").style.background = bar >= AT.golive ? "#1d1c22" : "#111";
+
+            // ---- right: the same visitor asks, and Breakout answers
+            var qa = TRY + 0.25, qb = TRY + 1.25, sent = TRY + 1.35, typing = bar < sent;
+            ics.forEach(function (ch, j) { ch.style.opacity = typing && t >= B(qa) + j * (B(qb) - B(qa)) / ics.length ? 1 : 0; });
+            one(".ph0").style.opacity = bar < qa || !typing ? 1 : 0;
+            one(".bcaret").style.opacity = typing && bar >= qa ? (Math.floor(t * 4) % 2 === 0 ? 1 : 0.15) : 0;
+            one(".bsend").style.transform = "scale(" + (bar >= sent && bar < sent + 0.06 ? 0.9 : 1) + ")";
+            var ub = one(".ub"), su = inb(t, sent);
+            ub.style.opacity = su >= 0 ? 1 : 0; ub.style.transform = "translateY(" + (su >= 0 ? 16 * (1 - out4(su / 0.08)) : 16).toFixed(1) + "px)";
+            var aStart = TRY + 1.85;
+            one(".ar").style.opacity = bar >= sent + 0.05 ? 1 : 0;
+            one(".dots").style.display = bar < aStart ? "flex" : "none";
+            all(".dots i").forEach(function (dd, j) { dd.style.opacity = (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 14 - j * 1.2))).toFixed(3); });
+            aws.forEach(function (ww, j) { ww.style.opacity = bar >= aStart + j / 16 ? 1 : 0; });
+            var mod = one(".mod");
+            mod.style.top = (140 + one(".ans").offsetHeight + 36) + "px";
+            var mu = inb(t, aStart + aws.length / 16 + 0.1);
+            mod.style.opacity = mu >= 0 ? cl(mu / 0.04) : 0;
+            mod.style.transform = "translateY(" + (mu >= 0 ? 18 * (1 - out4(mu / 0.12)) : 18).toFixed(1) + "px)";
+            var IN = [1750, 953], RK = [[TRY - 0.15, [1350, 1100]], [TRY + 0.1, IN], [sent, [IN[0] + 175, IN[1]]], [TRY + 3.3, [1600, 800]]];
+            var pr = null;
+            if (bar >= RK[0][0] && bar < AT.leave) {
+              pr = RK[RK.length - 1][1];
+              for (i = 1; i < RK.length; i++) if (bar < RK[i][0]) { var u3 = io((bar - RK[i - 1][0]) / (RK[i][0] - RK[i - 1][0])); pr = [lerp(RK[i - 1][1][0], RK[i][1][0], u3), lerp(RK[i - 1][1][1], RK[i][1][1], u3)]; break; }
+            }
+            if (pr) { curR.style.opacity = 1; curR.style.transform = "translate(" + (pr[0] - 6).toFixed(1) + "px," + (pr[1] - 3).toFixed(1) + "px) scale(" + (1 / c[0]).toFixed(4) + ")"; }
+            else curR.style.opacity = 0;
+
+            // ---- right, behind the page: the person, the signals, the email
+            var du = inb(t, AT.who);
+            one("#dim").style.opacity = du >= 0 && bar < AT.booked + 0.3 ? cl(du / 0.1) : 0;
+            come(one("#person"), t, AT.who + 0.5, AT.act, { dy: 40 });
+            chips.forEach(function (ch, j) { var u2 = inb(t, AT.who + 1.0 + j * 0.2); ch.style.opacity = u2 >= 0 ? 1 : 0;
+              ch.style.transform = "scale(" + (u2 >= 0 ? 1.3 - 0.3 * out4(u2 / 0.08) : 1).toFixed(3) + ")"; });
+            come(one("#email"), t, AT.act, AT.booked + 0.25, { dy: 50, blur: 0 });
+            var ws = AT.act + 0.5;
+            ewords.forEach(function (ww, j) { var wu = inb(t, ws + j / 16); ww.style.opacity = wu >= 0 ? 1 : 0; });
+            ephs.forEach(function (ph) { var wl = ph.querySelectorAll(".w"), last = ewords.indexOf(wl[wl.length - 1]);
+              ph.className = "ph" + (bar >= ws + (last + 1) / 16 + 0.06 ? " on" : ""); });
+            var es = one("#esend");
+            es.className = "esend" + (bar >= AT.send ? " press" : "");
+            es.style.transform = "scale(" + (bar >= AT.send && bar < AT.send + 0.08 ? 0.93 : 1) + ")";
+
+            // ---- meeting booked: violet floods the right pane from Send
+            var pv = one("#pR .pv"), fu = inb(t, AT.booked), o = { x: 700, y: 760 };
+            if (bar < AT.booked + 0.3 && bar >= AT.act) { var q2 = rel(es, pv); if (q2.w) o = { x: q2.x + q2.w / 2, y: q2.y + q2.h / 2 }; }
+            one("#flood").style.clipPath = "circle(" + (fu >= 0 ? 1400 * out4(fu / 0.22) : 0).toFixed(1) + "px at " + o.x.toFixed(1) + "px " + o.y.toFixed(1) + "px)";
+            var tk = one("#tick"), tku = cl((fu - 0.1) / 0.25), bko = bar < AT.golive;
+            tk.style.opacity = fu >= 0.1 && bko ? 1 : 0;
+            tk.querySelector("circle").setAttribute("stroke-dasharray", "541"); tk.querySelector("circle").setAttribute("stroke-dashoffset", (541 * (1 - out4(tku))).toFixed(1));
+            tk.querySelector("path").setAttribute("stroke-dasharray", "160"); tk.querySelector("path").setAttribute("stroke-dashoffset", (160 * (1 - out4((fu - 0.25) / 0.2))).toFixed(1));
+            come(one("#bigok"), t, AT.booked + 0.08, AT.golive, { dy: 30 });
+            come(one("#c-bd"), t, AT.booked + 0.25, AT.golive, { dy: 40, blur: 0, from: 1 });
+            faces.forEach(function (f, j) { var u2 = inb(t, AT.booked + 0.45 + j * 0.06); f.style.opacity = u2 >= 0 ? 1 : 0;
+              f.style.transform = "scale(" + (u2 >= 0 ? 1.3 - 0.3 * out4(u2 / 0.06) : 1).toFixed(3) + ")"; });
+            come(one("#pR .glv"), t, AT.golive + 0.25, null, { from: 1.1 });
+
+            // ---- the buyout, the close
+            var fb = one("#fB"), fc = one("#fC");
+            fb.style.opacity = bar >= AT.buyout && bar < AT.close ? 1 : 0;
+            come(one("#bo1"), t, AT.buyout, AT.close, { dy: 20 });
+            come(one("#bo2"), t, AT.buyout + 0.375, AT.close, { dy: 20 });
+            come(one("#bon"), t, AT.buyout + 0.75, AT.close, { dy: 12, from: 1 });
+            fc.style.opacity = bar >= AT.close ? 1 : 0;
+            come(one("#llogo"), t, AT.close + 0.05, null, { dy: 20, blur: 6 });
+            come(one("#lcta"), t, AT.close + 0.25, null, { dy: 0, from: 1.12, blur: 0 });
+            come(one("#lmade"), t, AT.close + 0.45, null, { dy: 14 });
+            come(one("#lurl"), t, AT.close + 0.6, null, { dy: 10, from: 1, blur: 0 });
+          }
+          function safe() { try { render(); } catch (e) { var er = one("#err"); er.style.display = "block"; er.textContent = e.stack || String(e); } }
+          var tl = gsap.timeline({ paused: true });
+          tl.fromTo(drv, { t: 0.001 }, { t: END, duration: END - 0.001, ease: "none", onUpdate: safe, immediateRender: false }, 0.001);
+          safe();
+          window.__timelines["split"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

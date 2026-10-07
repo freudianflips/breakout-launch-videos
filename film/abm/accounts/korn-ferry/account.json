@@ -92,5 +92,133 @@
       "J",
       "S"
     ]
+  },
+  "tree": {
+    "note": "The owner's captures of the kornferry.com chat, 2026-10-07: the welcome (site.webp), after 'I'd like to explore your solutions' (tree-1), after 'Products/HR Tech' (tree-2). Buttons are [x, y, height] in capture pixels.",
+    "steps": [
+      {
+        "file": "site.webp",
+        "widget": [
+          1557,
+          271,
+          1977,
+          898
+        ],
+        "button_w": 356,
+        "buttons": [
+          [
+            1767,
+            600,
+            44
+          ],
+          [
+            1767,
+            654,
+            44
+          ],
+          [
+            1767,
+            718,
+            64
+          ],
+          [
+            1767,
+            792,
+            64
+          ]
+        ],
+        "click": 0
+      },
+      {
+        "file": "tree-1.webp",
+        "widget": [
+          1527,
+          227,
+          1978,
+          990
+        ],
+        "button_w": 409,
+        "buttons": [
+          [
+            1752,
+            645,
+            50
+          ],
+          [
+            1752,
+            705,
+            50
+          ],
+          [
+            1752,
+            766,
+            50
+          ],
+          [
+            1752,
+            827,
+            50
+          ]
+        ],
+        "click": 2
+      },
+      {
+        "file": "tree-2.webp",
+        "widget": [
+          1527,
+          232,
+          1978,
+          995
+        ],
+        "button_w": 409,
+        "buttons": [
+          [
+            1752,
+            406,
+            50
+          ],
+          [
+            1752,
+            467,
+            50
+          ],
+          [
+            1752,
+            528,
+            50
+          ],
+          [
+            1752,
+            589,
+            50
+          ],
+          [
+            1752,
+            650,
+            50
+          ],
+          [
+            1752,
+            711,
+            50
+          ],
+          [
+            1752,
+            772,
+            50
+          ],
+          [
+            1752,
+            832,
+            50
+          ]
+        ],
+        "click": null,
+        "nobox": [
+          1752,
+          895
+        ]
+      }
+    ]
   }
 }
