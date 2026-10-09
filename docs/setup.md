@@ -9,6 +9,7 @@ Everything runs locally. The free path (your brand, a type-only hook, a scratch 
 | Node.js 20 or later, npm | the brand extractor and HyperFrames (the renderer) | yes |
 | ffmpeg | every audio and video step | yes |
 | Python 3.10 or later and [uv](https://docs.astral.sh/uv/) | the audio pipeline (voice prep, sound, mix, review) | yes |
+| fluidsynth and the FluidR3 General MIDI soundfont | the free orchestral scores (`orchestra.py`, `score.py`) | yes for the orchestral templates |
 | whisper.cpp (`whisper-cli`) and a model | checking and timing the spoken words | yes for real voice takes |
 | torch and torchaudio | forced alignment, the precise word timing | recommended, pulled on demand by `uv` |
 | Higgsfield CLI and account | narrator voice, music, sound kits, generated footage | optional |
@@ -19,7 +20,7 @@ Everything runs locally. The free path (your brand, a type-only hook, a scratch 
 ## macOS
 
 ```bash
-brew install node ffmpeg uv whisper-cpp
+brew install node ffmpeg uv whisper-cpp fluid-synth
 npm install                                   # installs the brand extractor's headless browser
 uv venv .venv && source .venv/bin/activate
 uv pip install -r requirements.txt
@@ -28,12 +29,12 @@ curl -L -o models/ggml-base.en.bin https://huggingface.co/ggerganov/whisper.cpp/
 curl -L -o models/ggml-small.en.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.en.bin   # better on product names
 ```
 
-The scratch voice uses macOS `say`, which is already installed. HyperFrames downloads its own headless Chrome on the first render (`npx -y hyperframes@0.8.77 ...`).
+On macOS, download the FluidR3 GM soundfont (`FluidR3_GM.sf2`, e.g. from the MuseScore or Debian `fluid-soundfont-gm` package) and point `SF2` at it. The scratch voice uses macOS `say`, which is already installed. HyperFrames downloads its own headless Chrome on the first render (`npx -y hyperframes@0.8.77 ...`).
 
 ## Linux
 
 ```bash
-sudo apt install ffmpeg espeak-ng build-essential cmake    # espeak-ng is the scratch voice
+sudo apt install ffmpeg espeak-ng build-essential cmake fluidsynth fluid-soundfont-gm    # espeak-ng: scratch voice; fluidsynth: orchestral scores
 curl -LsSf https://astral.sh/uv/install.sh | sh
 # Node 20+: from nodesource or nvm
 git clone https://github.com/ggml-org/whisper.cpp ~/whisper.cpp
@@ -52,6 +53,7 @@ Then the same `npm install`, venv and model steps as on macOS. Headless Chrome n
 | `ACE_STEP_ROOT` | `~/ACE-Step-1.5` | `ace_score.py` |
 | `BLENDER_GPU` | `METAL` (`CUDA`, `OPTIX` or `NONE` elsewhere) | `blender_glass_object.py` |
 | `PYTHON` | `python3` | `study_reference.sh` |
+| `SF2` | `/usr/share/sounds/sf2/FluidR3_GM.sf2` | the orchestral score scripts |
 
 ## Optional tools
 

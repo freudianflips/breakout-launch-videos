@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """A free scratch music bed on the film's bar grid: a quiet intro, a drop that lands on the cut, a groove, a held end.
 
-  python3 skills/launch-score/scripts/scratch_bed.py film/score/bed.wav [--bpm 120] [--key A] [--intro-bars 2] [--bars 28]
+  python3 skills/launch-score/scripts/scratch_bed.py videos/<name>/score/bed.wav [--bpm 120] [--key A] [--intro-bars 2] [--bars 28]
 
 Synthesised and seeded (numpy only), so it costs nothing and always renders the same. It exists to cut
 against: the drop sits at intro-bars bars and the script prints it, ready for film.json

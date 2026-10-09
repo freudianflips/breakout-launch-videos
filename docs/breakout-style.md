@@ -1,6 +1,8 @@
 # Breakout style log
 
-The look of Breakout's launch films, decided one round at a time. Change 1 variable per round, and write each verdict in the owner's words in the table at the bottom.
+The look of Breakout's launch films, decided one round at a time.
+
+The films named in the verdicts now live as templates: `attention` → [`voice-led`](../templates/voice-led/README.md), plays (first cut) → [`analog-psych`](../templates/analog-psych/README.md), signal → [`swiss-grid`](../templates/swiss-grid/README.md), swarm-test → [`particle-swarm`](../templates/particle-swarm/README.md), press-play → [`sequencer`](../templates/sequencer/README.md), abm → [`abm-cinematic`](../templates/abm-cinematic/README.md), abm-split → [`abm-split`](../templates/abm-split/README.md). The rules they add up to are in [`brand/GUIDELINES.md`](../brand/GUIDELINES.md). Change 1 variable per round, and write each verdict in the owner's words in the table at the bottom.
 
 ## Where it stands (round 2)
 

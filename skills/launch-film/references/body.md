@@ -1,10 +1,10 @@
 # The body
 
-The body is everything after the cut. It is the same in every film; only its start time moves with the hook's length (`D`, the hook's `duration`). It lives in `film/film.json` and is drawn by `film/templates/body.html`.
+The body is everything after the cut. It is the same in every film; only its start time moves with the hook's length (`D`, the hook's `duration`). It lives in `videos/<name>/film.json` and is drawn by `videos/<name>/templates/body.html`.
 
 ## How it is built
 
-| Part | File (in `film/`) | Notes |
+| Part | File (in the video folder) | Notes |
 |---|---|---|
 | Script and beats | `film.json` | The voice lines by id, the music, the sound, and the beats in order. |
 | Composition | `templates/body.html` | 1 HyperFrames composition. CSS holds every initial state; 1 GSAP `onUpdate` driver draws each beat as a pure function of time. |
@@ -49,8 +49,8 @@ Every beat but `end` names the voice `line` it plays under. Consecutive beats ma
 |---|---|---|
 | `name` | On the cut the logo and name punch in from 4x; the tagline writes in word by word under it, key words taking the highlight. | `line`, `tagline` |
 | `hero` | Full-frame hero words on a ground, each word snapping in on its spoken word (the first from 2.4x with a blur, the rest from 1.3x). | `line`, `text`, `ground` (`dark`, `accent`, `light`, or `clear`: no card, the words ride at the top of the frame over whatever beat is playing and take no slot of their own), `exit` (`dive`, `collapse`, `cut`), `until`, `size` (px, optional) |
-| `product` | Your product (png, jpg, mp4 or webm under `film/assets/`) in a window on the ground. The camera starts on the whole window and pushes into `focus` at `push_at`. Optional cursor click and a chip that pops on its word. | `line`, `src`, `focus` ([x, y, w, h] as fractions of the source), `push_at`, `cursor` (`at`, `x`, `y` as fractions), `chip` (`text`, `at`, optional `x`, `y`), `width` (share of the frame, default 0.8), `max_zoom` (default 3), `from` (seconds into a video source) |
-| `blocks` | 2 to 5 feature blocks, each landing on the spoken word that matches its label, then closing into 1 bar at `merge_at`, with `label` written in. | `line`, `items` (labels, or `{"label", "icon"}` with an svg or png under `film/`), `merge_at`, `label` |
+| `product` | Your product (png, jpg, mp4 or webm under the repo's shared `assets/` or the video's own folder) in a window on the ground. The camera starts on the whole window and pushes into `focus` at `push_at`. Optional cursor click and a chip that pops on its word. | `line`, `src`, `focus` ([x, y, w, h] as fractions of the source), `push_at`, `cursor` (`at`, `x`, `y` as fractions), `chip` (`text`, `at`, optional `x`, `y`), `width` (share of the frame, default 0.8), `max_zoom` (default 3), `from` (seconds into a video source) |
+| `blocks` | 2 to 5 feature blocks, each landing on the spoken word that matches its label, then closing into 1 bar at `merge_at`, with `label` written in. | `line`, `items` (labels, or `{"label", "icon"}` with an svg or png under `videos/<name>/`), `merge_at`, `label` |
 | `switch` | A card with the text and an on and off switch that flips on `flip_at`; the track fills with the accent and the key words take the highlight. | `line`, `text`, `flip_at` |
 | `end` | The logo lockup (logo, name, tagline, domain) on the ground, then a quiet hold. | `hold` (seconds, default 3.5), `plate` (an optional still behind the lockup), `tagline`, `url` (override the brand's) |
 
@@ -67,7 +67,7 @@ A typical 45 s body: `name`, 3 or 4 pairs of `hero` plus `product`, `blocks`, `s
 
 ## Commands
 
-From `film/`, with the repo's Python venv active (`source ../.venv/bin/activate`):
+From the video folder, with the repo's Python venv active (`source ../../.venv/bin/activate`):
 
 ```bash
 python3 build.py <hook>

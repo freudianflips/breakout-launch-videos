@@ -1,6 +1,6 @@
 # Hooks
 
-A hook is the story before the cut to your brand. It lives in `film/hooks/<name>/` and is described by `hook.json`. Nothing in the body changes for it.
+A hook is the story before the cut to your brand. It lives in `videos/<name>/hooks/<hook>/` and is described by `hook.json`. Nothing in the body changes for it.
 
 ## hook.json
 
@@ -19,7 +19,7 @@ A hook is the story before the cut to your brand. It lives in `film/hooks/<name>
 | Key | What |
 |---|---|
 | `duration` | Seconds until the cut. The music's drop and the spoken brand name land there. |
-| `video` | The hook's picture, 1920x1080, exactly `duration` long, path from `film/`. `null` makes a type-only hook. |
+| `video` | The hook's picture, 1920x1080, exactly `duration` long, path from the video folder. `null` makes a type-only hook. |
 | `ground` | For a type-only hook: `dark`, `accent` or `light` from the brand. |
 | `push` | `true` pushes in and blurs the last 0.16 s into the cut. |
 | `voice` | `{file, at, text}`: the hook's narrator line, or `null`. |
@@ -27,7 +27,7 @@ A hook is the story before the cut to your brand. It lives in `film/hooks/<name>
 | `sfx` | Sound cues in hook time (the `sfx_forge.py` cue format), including a music bed for long hooks. A `file` cue is relative to the hook's folder. |
 | `from` | Optional: seconds into `video` where the hook starts. |
 
-Then from `film/`: `./render.sh <name>`.
+Then from the video folder: `./render.sh <name>`.
 
 ## Rules that hold for every hook
 

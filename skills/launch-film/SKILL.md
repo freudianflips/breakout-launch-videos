@@ -1,13 +1,15 @@
 ---
 name: launch-film
-description: Make or change a product launch film in your own brand. A film is a hook (the story before the cut) on a shared body (the name punching in, hero words cut on the voice, your product at close range, the logo lockup in near silence), built in HyperFrames from brand/brand.json and film/film.json. Holds the core, the template workflow (build, render and mix 1 hook or all of them), the generation recipes, the checks and the lessons. Use for "launch video", "launch film", "product video", "promo", "reveal", "announcement video", "new hook", "change the body", "render all launch videos".
+description: Make or change a product launch film in your own brand. A film is a hook (the story before the cut) on a shared body (the name punching in, hero words cut on the voice, your product at close range, the logo lockup in near silence), built in HyperFrames from brand/brand.json and the video's film.json. Holds the core, the template workflow (build, render and mix 1 hook or all of them), the generation recipes, the checks and the lessons. Use for "launch video", "launch film", "product video", "promo", "reveal", "announcement video", "new hook", "change the body", "render all launch videos".
 ---
 
 # Launch film
 
 Every launch film here is **a hook plus the body**. The hook is the story before the cut (4 to 18 s, any idea). On the music's drop it cuts to your brand, and the body names the product, shows it at close range beat by beat, closes the features into one idea and ends on your logo in near silence. The body is 1 template shared by every hook, so a new hook is 1 folder and 1 JSON file, and a body change reaches every film.
 
-The working project is `film/`. `film/film.json` is the body (the script lines and the beats), `film/hooks/<name>/hook.json` is each hook, `brand/brand.json` is your brand.
+The working project is a video folder made from this template: `python3 scripts/new-video.py voice-led <name>` copies `templates/voice-led/` to `videos/<name>/`. `videos/<name>/film.json` is the body (the script lines and the beats), `videos/<name>/hooks/<hook>/hook.json` is each hook, `brand/brand.json` is your brand.
+
+This page describes the **voice-led** template. The repo has 6 more styles in `templates/` (Swiss grid, sequencer, particle swarm, analog, and 2 ABM templates), listed with posters and verdicts in [`templates/README.md`](../../templates/README.md). Pick the style first. Every template starts a video the same way (`scripts/new-video.py`) and follows the same order of work (story, approval, stills, free render). The other skills (story, score, sound, mix, review, motion) apply to all of them; the hook and body mechanics below are voice-led only.
 
 ## Start here
 
@@ -35,15 +37,15 @@ Everything else is a choice per film: the hook's story, look, length, its own so
 1. **Idea and copy.** Write the idea in the owner's words. Keep their lines verbatim.
 2. **Show the look first.** 3 to 5 keyframes or a storyboard page before any paid video job. Frames are judged fast; a full build on a wrong look wastes a day.
 3. **Picture.** Type-only (free: `"video": null` plus a `ground`), your own footage, or generated footage (`references/generation.md`). State the credit cost of every video job and wait for a yes. Check generated faces for likeness to anyone famous.
-4. **The hook folder.** `film/hooks/<name>/` with the picture, the voice line and `hook.json` (schema in `references/hooks.md`). A hook longer than about 4 s brings its own music bed, or it plays in silence before the drop.
-5. **Build, render, mix.** From `film/`: `./render.sh <name>` (build, HyperFrames render from `index-<name>.html`, audio). The master lands in `film/renders/`.
+4. **The hook folder.** `videos/<name>/hooks/<hook>/` with the picture, the voice line and `hook.json` (schema in `references/hooks.md`). A hook longer than about 4 s brings its own music bed, or it plays in silence before the drop.
+5. **Build, render, mix.** From the video folder: `./render.sh <hook>` (build, HyperFrames render from `index-<hook>.html`, audio). The master lands in `videos/<name>/renders/`.
 6. **Check** (below), then show it with the gap list and record the verdict in your notes.
 
 ## Change the body
 
 The body's beats, their fields and the code that draws them are in `references/body.md`. For any change:
 
-1. Change `film/film.json` (lines, beats, words, focus rects) or the template `film/templates/body.html`, never a generated `film/compositions/*.html`.
+1. Change `videos/<name>/film.json` (lines, beats, words, focus rects) or the template `videos/<name>/templates/body.html`, never a generated `videos/<name>/compositions/*.html`.
 2. A new or changed line: record it in the narrator's voice, re-run the voice prep so every word is re-aligned (`skills/launch-voice/scripts/prep_lines.py`), and the cues follow the words.
 3. Snapshot the changed seconds and look at them before rendering (`references/hyperframes-notes.md`).
 4. `./render.sh` rebuilds, renders and mixes every hook (a few minutes a film).
@@ -70,12 +72,12 @@ The body's beats, their fields and the code that draws them are in `references/b
 | What | Where |
 |---|---|
 | Your brand kit (colours, fonts, logo, copy, screenshots, preview) | `brand/` (`brand.json`, `preview.png`) |
-| The body: lines and beats | `film/film.json` |
-| Hooks | `film/hooks/<name>/hook.json` |
-| Template, build, audio, batch render | `film/templates/body.html`, `film/build.py`, `film/audio.py`, `film/render.sh` |
-| Voice takes and aligned words | `film/vo/body/` (`line-<id>.wav`, `lines.json`) |
-| Music take | `film/score/` |
-| Renders | `film/renders/` |
+| The body: lines and beats | `videos/<name>/film.json` |
+| Hooks | `videos/<name>/hooks/<hook>/hook.json` |
+| Template, build, audio, batch render | `videos/<name>/templates/body.html`, `videos/<name>/build.py`, `videos/<name>/audio.py`, `videos/<name>/render.sh` |
+| Voice takes and aligned words | `videos/<name>/vo/body/` (`line-<id>.wav`, `lines.json`) |
+| Music take | `videos/<name>/score/` |
+| Renders | `videos/<name>/renders/` |
 | Website to brand kit | `tools/brand-from-url.mjs`, skill `launch-brand` |
 | Tool manuals (story, voice, score, sound, mix, review, world, motion) | `skills/launch-*/` |
 | Setup, costs, rights | `docs/setup.md`, `docs/costs.md`, `docs/rights.md` |

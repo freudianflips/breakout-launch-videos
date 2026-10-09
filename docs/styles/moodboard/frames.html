@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Plays moodboard: other styles, with music-video motion</title>
+<!-- 12 single-frame looks for "Signal in. Meeting out.", leaning into fast, animated, music-video motion.
+     Each frame names how it would move. Re-shoot with node docs/moodboard/shoot.mjs. -->
+<style>
+  @font-face { font-family: "Manrope"; src: url("../../../brand/fonts/manrope-200-800.woff2") format("woff2"); font-weight: 200 800; }
+  @font-face { font-family: "Fraunces"; src: url("../../../brand/fonts/fraunces-100-900-italic.woff2") format("woff2"); font-weight: 100 900; font-style: italic; }
+  @font-face { font-family: "Inter"; src: url("../look-tests/fonts/inter-100-900.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Anton"; src: url("../look-tests/fonts/anton-400.woff2") format("woff2"); }
+  @font-face { font-family: "Fragment Mono"; src: url("../../../brand/fonts/fragment-mono-400.woff2") format("woff2"); }
+  :root { --v: #4c00ff; --pink: #ff4fd8; --ink: #040405; --paper: #f2f1ee; --card: #424141; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; }
+  .frame { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Manrope, sans-serif; }
+  .tag { position: absolute; left: 56px; bottom: 40px; right: 56px; font: 400 19px/1.35 "Fragment Mono", monospace; z-index: 50; }
+  .tag b { font-weight: 400; opacity: 1; }
+  .tag span { opacity: 0.7; }
+  .c { position: absolute; left: 0; right: 0; text-align: center; white-space: nowrap; }
+  .x { font-weight: 800; letter-spacing: -0.06em; line-height: 0.88; white-space: nowrap; }
+  /* a small agent card, reused */
+  .card { position: absolute; width: 560px; background: var(--card); color: #f1f1f3; border-radius: 18px; font-size: 20px; overflow: hidden;
+    box-shadow: 0 30px 70px -30px rgba(0,0,0,0.6); }
+  .card .hd { display: flex; gap: 12px; align-items: center; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-weight: 600; }
+  .card .hd i { width: 30px; height: 30px; border-radius: 50%; background: var(--v); display: inline-block; }
+  .card .hd em { margin-left: auto; font-style: normal; color: #a8a8ad; font-size: 16px; font-weight: 400; }
+  .card .rw { display: flex; gap: 14px; align-items: center; padding: 14px 20px; }
+  .card .rw u { text-decoration: none; margin-left: auto; padding: 4px 10px; border-radius: 7px; font-size: 15px; font-weight: 700; background: var(--v); color: #fff; }
+  .card .rw u.no { background: #5a5959; color: #cfcfcf; }
+</style>
+</head>
+<body>
+
+<!-- 01 · Strobe type: the word changes every 8th note, the ground flips black / violet / white -->
+<section class="frame" id="m01" style="background:#000">
+  <div style="position:absolute;left:0;top:0;width:640px;height:1080px;background:#000"></div>
+  <div style="position:absolute;left:640px;top:0;width:640px;height:1080px;background:var(--v)"></div>
+  <div style="position:absolute;left:1280px;top:0;width:640px;height:1080px;background:#fff"></div>
+  <div class="x" style="position:absolute;left:40px;top:330px;font-size:330px;color:#fff">SIG</div>
+  <div class="x" style="position:absolute;left:680px;top:330px;font-size:330px;color:#000">NAL</div>
+  <div class="x" style="position:absolute;left:1320px;top:330px;font-size:330px;color:var(--v)">IN.</div>
+  <div class="tag" style="color:#fff;mix-blend-mode:difference"><b>01 · Strobe type</b> <span>· 1 syllable per 8th note, the ground flips black / violet / white on every hit, 2-frame inverts on the snare (shown here as 3 frames side by side)</span></div>
+</section>
+
+<!-- 02 · Glitch / datamosh: RGB split, slice tears through the agent card -->
+<section class="frame" id="m02" style="background:#0a0a0c">
+  <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,0.03) 0 2px,transparent 2px 4px)"></div>
+  <div class="card" style="left:680px;top:300px;transform:translateX(-14px);filter:drop-shadow(-10px 0 0 rgba(255,0,90,0.7)) drop-shadow(10px 0 0 rgba(0,220,255,0.6))">
+    <div class="hd"><i></i>Breakout<em>9:20 AM</em></div><div class="rw">New CFO hired<u>Act</u></div><div class="rw">Pricing page viewed 3×<u>Act</u></div><div class="rw">2 blog views<u class="no">No action</u></div>
+  </div>
+  <div style="position:absolute;left:600px;top:392px;width:720px;height:34px;background:#0a0a0c;transform:translateX(60px);overflow:hidden"><div class="card" style="left:20px;top:-92px;position:relative"><div class="hd"><i></i>Breakout<em>9:20 AM</em></div><div class="rw">New CFO hired<u>Act</u></div></div></div>
+  <div style="position:absolute;left:600px;top:520px;width:720px;height:22px;background:var(--v);opacity:0.8;transform:translateX(-80px)"></div>
+  <div class="x c" style="top:120px;font-size:150px;color:#fff;text-shadow:-8px 0 rgba(255,0,90,0.8),8px 0 rgba(0,220,255,0.7)">SIGNAL IN.</div>
+  <div class="x c" style="top:760px;font-size:150px;color:#fff;text-shadow:-8px 0 rgba(255,0,90,0.8),8px 0 rgba(0,220,255,0.7)">MEETING <span style="color:var(--v)">OUT.</span></div>
+  <div class="tag" style="color:#fff"><b>02 · Glitch / datamosh</b> <span>· slices of the frame tear sideways on every kick, RGB split on the type, the real UI breaks and re-forms</span></div>
+</section>
+
+<!-- 03 · Liquid chrome: metallic type on black, reflections, morphing -->
+<section class="frame" id="m03" style="background:radial-gradient(70% 70% at 50% 40%,#1b1630,#000)">
+  <div class="x c" style="top:270px;font-size:260px;background:linear-gradient(180deg,#ffffff 0%,#d9d6ff 22%,#6b5cff 44%,#140a3a 52%,#9b8cff 64%,#ffffff 82%,#c9c3ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 20px 40px rgba(76,0,255,0.45))">Signal in.</div>
+  <div class="x c" style="top:560px;font-size:260px;background:linear-gradient(180deg,#ffffff 0%,#ffd6f6 22%,#ff4fd8 44%,#3a0a33 52%,#ff9ae9 64%,#ffffff 82%,#ffd9f5 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 20px 40px rgba(255,79,216,0.4))">Meeting out.</div>
+  <div class="tag" style="color:#fff"><b>03 · Liquid chrome</b> <span>· 3D chrome type that melts from one word into the next, reflections sweep on the beat (Blender or generated, ~4 s renders)</span></div>
+</section>
+
+<!-- 04 · Riso pop: 2-colour print, misregistered, halftone -->
+<section class="frame" id="m04" style="background:#f6efe2">
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(76,0,255,0.25) 1.4px,transparent 1.8px);background-size:10px 10px;mix-blend-mode:multiply"></div>
+  <div class="x" style="position:absolute;left:150px;top:180px;font-size:290px;color:#ff4fd8;mix-blend-mode:multiply;transform:translate(10px,8px)">Signal in.</div>
+  <div class="x" style="position:absolute;left:150px;top:180px;font-size:290px;color:#4c00ff;mix-blend-mode:multiply">Signal in.</div>
+  <div class="x" style="position:absolute;left:150px;top:500px;font-size:290px;color:#4c00ff;mix-blend-mode:multiply;transform:translate(-9px,6px)">Meeting out.</div>
+  <div class="x" style="position:absolute;left:150px;top:500px;font-size:290px;color:#ff4fd8;mix-blend-mode:multiply">Meeting out.</div>
+  <div class="tag" style="color:#2a1d40"><b>04 · Riso pop</b> <span>· 2-colour risograph print, misregistered layers, paper grain; animated at 12 fps so it boils like print on a flipbook</span></div>
+</section>
+
+<!-- 05 · Line boil: hand-drawn outlines that wobble at 12 fps -->
+<section class="frame" id="m05" style="background:#fff">
+  <svg width="0" height="0" style="position:absolute"><filter id="boil"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="9"/></filter></svg>
+  <div style="filter:url(#boil)">
+    <div class="x" style="position:absolute;left:150px;top:160px;font-size:250px;color:transparent;-webkit-text-stroke:5px #040405">Signal in.</div>
+    <div style="position:absolute;left:1100px;top:500px;width:620px;height:300px;border:5px solid #040405;border-radius:26px"></div>
+    <div style="position:absolute;left:1140px;top:540px;font:600 34px Manrope;color:#040405">Hi Dana,</div>
+    <div style="position:absolute;left:1140px;top:600px;width:540px;font:500 30px/1.4 Manrope;color:#040405">Congrats on bringing on a <span style="background:#d9ccff">new CFO.</span></div>
+    <div class="x" style="position:absolute;left:150px;top:560px;font-size:200px;color:var(--v)">out.</div>
+    <svg style="position:absolute;left:560px;top:430px" width="560" height="260"><path d="M10 10 C 200 10, 300 230, 540 220" fill="none" stroke="#4c00ff" stroke-width="6" stroke-linecap="round"/></svg>
+  </div>
+  <div class="tag" style="color:#040405"><b>05 · Line boil</b> <span>· everything drawn as wobbling hand-inked outlines (12 fps boil), arrows drawn on, the UI sketched then snapping to the real screen</span></div>
+</section>
+
+<!-- 06 · Y2K windows: dialog boxes multiply on the beat -->
+<section class="frame" id="m06" style="background:linear-gradient(180deg,#6b5cff,#4c00ff)">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.08) 1px,transparent 1px);background-size:40px 40px"></div>
+  <div id="wins"></div>
+  <div style="position:absolute;left:520px;top:300px;width:880px;background:#ece9e3;border:3px solid #000;box-shadow:12px 12px 0 #000;font-family:Inter">
+    <div style="background:#000;color:#fff;padding:12px 18px;font:600 24px Inter;display:flex;justify-content:space-between"><span>Breakout.exe</span><span>✕</span></div>
+    <div style="padding:40px;display:flex;gap:30px;align-items:center"><div style="width:90px;height:90px;border-radius:50%;background:#2fb37a;color:#fff;font:800 60px Inter;display:flex;align-items:center;justify-content:center">✓</div>
+    <div><div style="font:800 64px Manrope;letter-spacing:-0.04em">Meeting booked.</div><div style="font:500 26px Inter;margin-top:8px">Thu, Oct 15 · 2:00 PM · Dana, CFO</div></div></div>
+    <div style="padding:0 40px 34px;display:flex;justify-content:flex-end"><span style="border:3px solid #000;padding:10px 40px;font:700 24px Inter;box-shadow:4px 4px 0 #000">OK</span></div>
+  </div>
+  <script>
+    var w = document.getElementById('wins'), h = '';
+    for (var i = 0; i < 7; i++) h += '<div style="position:absolute;left:' + (140 + i * 70) + 'px;top:' + (110 + i * 50) + 'px;width:560px;background:#ece9e3;border:3px solid #000;box-shadow:8px 8px 0 #000"><div style="background:#000;color:#fff;padding:8px 14px;font:600 18px Inter">signal_' + (i + 1) + '.txt</div><div style="padding:22px;font:500 22px Inter">' + ['Website visit', 'Pricing page ×3', 'New CFO hired', 'Funding', 'Job change', 'Return visit', 'Hiring'][i] + '</div></div>';
+    w.innerHTML = h;
+  </script>
+  <div class="tag" style="color:#fff"><b>06 · Y2K windows</b> <span>· every signal pops as a retro dialog box on the beat until the screen is full, then one "Meeting booked." alert wins; playful, very social</span></div>
+</section>
+
+<!-- 07 · Speed tunnel: perspective grid, fly-through -->
+<section class="frame" id="m07" style="background:#05010f">
+  <div style="position:absolute;left:-480px;top:540px;width:2880px;height:1400px;transform:perspective(600px) rotateX(72deg);transform-origin:50% 0;background-image:linear-gradient(rgba(124,92,255,0.8) 2px,transparent 2px),linear-gradient(90deg,rgba(124,92,255,0.8) 2px,transparent 2px);background-size:120px 120px"></div>
+  <div style="position:absolute;left:-480px;top:-860px;width:2880px;height:1400px;transform:perspective(600px) rotateX(-72deg);transform-origin:50% 100%;background-image:linear-gradient(rgba(255,79,216,0.5) 2px,transparent 2px),linear-gradient(90deg,rgba(255,79,216,0.5) 2px,transparent 2px);background-size:120px 120px"></div>
+  <div style="position:absolute;left:0;right:0;top:480px;height:120px;background:radial-gradient(50% 100% at 50% 50%,rgba(255,255,255,0.9),transparent 70%);filter:blur(10px)"></div>
+  <div class="x c" style="top:420px;font-size:200px;color:#fff;text-shadow:0 0 40px rgba(124,92,255,0.9)">Meeting out.</div>
+  <div class="tag" style="color:#fff"><b>07 · Speed tunnel</b> <span>· the camera flies down a violet light tunnel; signals streak past as light trails and the line arrives at the vanishing point on the drop</span></div>
+</section>
+
+<!-- 08 · Marquee wall: huge rows scrolling in opposite directions -->
+<section class="frame" id="m08" style="background:var(--v)">
+  <div class="x" style="position:absolute;left:-200px;top:30px;font-size:230px;color:#fff">SIGNAL IN · SIGNAL IN · SIGNAL IN</div>
+  <div class="x" style="position:absolute;left:-600px;top:280px;font-size:230px;color:transparent;-webkit-text-stroke:3px #fff">MEETING OUT · MEETING OUT · MEETING</div>
+  <div class="x" style="position:absolute;left:-60px;top:530px;font-size:230px;color:#000">SIGNAL IN · SIGNAL IN · SIGNAL IN</div>
+  <div class="x" style="position:absolute;left:-500px;top:780px;font-size:230px;color:#fff">MEETING OUT · MEETING OUT · MEETING</div>
+  <div class="tag" style="color:#fff;bottom:20px"><b>08 · Marquee wall</b> <span>· 4 rows of type scrolling in opposite directions at different speeds, the speed doubles on the drop; very tour-poster</span></div>
+</section>
+
+<!-- 09 · Kaleidoscope: the real UI mirrored into a rotating mandala -->
+<section class="frame" id="m09" style="background:#000">
+  <div style="position:absolute;left:960px;top:540px;width:0;height:0">
+    <script>
+      document.write(Array.from({length: 8}, function (_, i) {
+        return '<div style="position:absolute;left:0;top:0;width:900px;height:220px;transform-origin:0 0;transform:rotate(' + (i * 45) + 'deg) ' + (i % 2 ? 'scaleY(-1)' : '') + ';background:url(../../../assets/screens/plays-personalization.png);background-size:2400px auto;background-position:-500px -560px;opacity:0.9;mix-blend-mode:screen;clip-path:polygon(0 0,100% 0,100% 100%)"></div>';
+      }).join(''));
+    </script>
+  </div>
+  <div style="position:absolute;left:760px;top:340px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,#000 55%,transparent 70%)"></div>
+  <div class="x c" style="top:470px;font-size:120px;color:#fff">out.</div>
+  <div class="tag" style="color:#fff"><b>09 · Kaleidoscope UI</b> <span>· the real email canvas mirrored 8 ways into a slowly turning mandala, snapping to a new segment on every beat; psychedelic but still product</span></div>
+</section>
+
+<!-- 10 · Stop-motion collage: paper cutouts, stickers, slaps -->
+<section class="frame" id="m10" style="background:#ff4fd8">
+  <div style="position:absolute;left:120px;top:110px;width:900px;height:540px;background:#f6efe2;transform:rotate(-3deg);box-shadow:14px 14px 0 #000"></div>
+  <div class="x" style="position:absolute;left:170px;top:160px;font-size:200px;color:#000;transform:rotate(-3deg)">Signal</div>
+  <div class="x" style="position:absolute;left:220px;top:360px;font-size:200px;color:var(--v);transform:rotate(-3deg)">in.</div>
+  <div class="card" style="left:1080px;top:180px;transform:rotate(4deg);box-shadow:14px 14px 0 #000"><div class="hd"><i></i>Breakout<em>9:20 AM</em></div><div class="rw">New CFO hired<u>Act</u></div><div class="rw">Pricing page viewed 3×<u>Act</u></div></div>
+  <div style="position:absolute;left:1180px;top:560px;width:300px;height:300px;border-radius:50%;background:#ffd400;transform:rotate(-12deg);display:flex;align-items:center;justify-content:center;text-align:center;font:800 54px/1 Manrope;letter-spacing:-0.04em;box-shadow:10px 10px 0 #000">Meeting<br>booked!</div>
+  <svg style="position:absolute;left:940px;top:520px" width="300" height="200"><path d="M10 20 C 120 0, 200 80, 250 170 M250 170 l -40 -10 M250 170 l 6 -40" fill="none" stroke="#000" stroke-width="10" stroke-linecap="round"/></svg>
+  <div class="tag" style="color:#000"><b>10 · Stop-motion collage</b> <span>· paper cutouts slap in at 12 fps with hard shadows, stickers and marker arrows; loud, warm, handmade</span></div>
+</section>
+
+<!-- 11 · Signal swarm: particles that assemble the word -->
+<section class="frame" id="m11" style="background:#020208">
+  <canvas id="sw" width="1920" height="1080" style="position:absolute;inset:0"></canvas>
+  <script>
+    Promise.all([document.fonts.load('800 420px Manrope'), document.fonts.load('400 18px "Fragment Mono"')]).then(function () {
+      var c = document.getElementById('sw'), g = c.getContext('2d'), o = document.createElement('canvas'); o.width = 1920; o.height = 1080;
+      var og = o.getContext('2d'); og.fillStyle = '#fff'; og.font = '800 420px Manrope'; og.textAlign = 'center'; og.fillText('out.', 960, 700);
+      var d = og.getImageData(0, 0, 1920, 1080).data, s = 77;
+      function r() { s = (s * 16807) % 2147483647; return s / 2147483647; }
+      for (var y = 0; y < 1080; y += 7) for (var x = 0; x < 1920; x += 7) {
+        if (d[(y * 1920 + x) * 4] > 128) { g.fillStyle = r() < 0.2 ? '#ff4fd8' : '#7c5cff'; g.fillRect(x + (r() - 0.5) * 4, y + (r() - 0.5) * 4, 5, 5); }
+        else if (r() < 0.02) { g.fillStyle = 'rgba(255,255,255,0.35)'; g.fillRect(x, y, 2, 2); }
+      }
+      g.font = '400 18px "Fragment Mono"'; g.fillStyle = 'rgba(255,255,255,0.55)';
+      ['pricing.view ×3', 'new_cfo', 'blog.view', 'funding.series_c', 'job_change', 'return.visit'].forEach(function (t, i) { g.fillText(t, 200 + i * 260, 200 + (i % 3) * 60); });
+      document.body.dataset.swarm = 'ready';
+    });
+  </script>
+  <div class="tag" style="color:#fff"><b>11 · Signal swarm</b> <span>· thousands of signal particles flock and snap into each word on the beat, then burst into the next; data-art, very fast</span></div>
+</section>
+
+<!-- 12 · Infinite zoom: the card inside the card inside the card -->
+<section class="frame" id="m12" style="background:var(--paper)">
+  <script>
+    document.write([0, 1, 2, 3, 4].map(function (i) {
+      var w = 1700 * Math.pow(0.55, i), h = 900 * Math.pow(0.55, i), l = 960 - w / 2, tp = 540 - h / 2;
+      return '<div style="position:absolute;left:' + l + 'px;top:' + tp + 'px;width:' + w + 'px;height:' + h + 'px;border-radius:' + (30 * Math.pow(0.6, i)) + 'px;background:' + ['#424141', '#ffffff', '#4c00ff', '#040405', '#ffffff'][i] + ';box-shadow:0 30px 80px -30px rgba(0,0,0,0.5)"></div>';
+    }).join(''));
+  </script>
+  <div class="x" style="position:absolute;left:150px;top:120px;font-size:120px;color:#fff">Signal in.</div>
+  <div class="x" style="position:absolute;left:520px;top:310px;font-size:56px;color:#040405">Reads. Thinks.</div>
+  <div class="x c" style="top:418px;font-size:38px;color:#fff">Writes.</div>
+  <div class="x c" style="top:520px;font-size:22px;color:#040405;letter-spacing:-0.02em">Meeting out.</div>
+  <div class="tag" style="color:#040405"><b>12 · Infinite zoom</b> <span>· one continuous push: every step lives inside the last (signal → card → email → meeting), the camera never cuts, it zooms through on every bar</span></div>
+</section>
+
+</body>
+</html>

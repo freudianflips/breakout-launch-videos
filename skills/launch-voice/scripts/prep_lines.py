@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Word times for every voice line in film.json, so the picture lands on the words.
 
-  python3 skills/launch-voice/scripts/prep_lines.py film/film.json [--align auto|force|whisper|estimate]
+  python3 skills/launch-voice/scripts/prep_lines.py videos/<name>/film.json [--align auto|force|whisper|estimate]
 
 Reads <voice_dir>/line-<id>.wav for every line in film.json and writes <voice_dir>/lines.json:
   {"02": {"text": "...", "dur": 2.61, "words": [["Breakout", 0.08, 0.52], ...], "aligned": "force"}, "_meta": {...}}

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Free placeholder voice for every line in film.json, so the film can be timed and reviewed before a real take.
 
-  python3 skills/launch-voice/scripts/scratch_voice.py film/film.json [--voice Samantha] [--rate 185] [--hook film/hooks/<name>]
+  python3 skills/launch-voice/scripts/scratch_voice.py videos/<name>/film.json [--voice Samantha] [--rate 185] [--hook videos/<name>/hooks/<hook>]
 
 Uses macOS `say`, else `espeak-ng` or `espeak` on Linux. Writes <voice_dir>/line-<id>.wav (48 kHz mono,
 silence trimmed) for every line, and with --hook the hook's voice.wav from hook.json voice.text.

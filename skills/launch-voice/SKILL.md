@@ -18,7 +18,7 @@ In a modern launch film the voice leads and the picture illustrates it word by w
 
 ## Casting
 
-1. `python3 skills/launch-voice/scripts/hf_voice.py cast "<the film's opening line>" film/vo/audition` speaks the line with every preset voice (about 34 credits for about 110 voices), checks each take with whisper, and measures pace and pitch movement. `ranking.md` lists exact takes first, nearest 2.5 words a second and about 2 semitones of movement (conversational, not announced). `--only Name,Name` recasts a few.
+1. `python3 skills/launch-voice/scripts/hf_voice.py cast "<the film's opening line>" videos/<name>/vo/audition` speaks the line with every preset voice (about 34 credits for about 110 voices), checks each take with whisper, and measures pace and pitch movement. `ranking.md` lists exact takes first, nearest 2.5 words a second and about 2 semitones of movement (conversational, not announced). `--only Name,Name` recasts a few.
 2. Take the top 6 or so across genders into the full script (`hf_voice.py lines`), then fit them (below). A voice that needs more than 12 % speed-up to fit is too slow for the script: drop it or cut words.
 3. Build a full film per surviving voice and let the owner pick. ElevenLabs takes varied least in pace and pitch in testing, so it is the default engine.
 
@@ -30,9 +30,9 @@ In a modern launch film the voice leads and the picture illustrates it word by w
 
 ## Procedure for the film template
 
-1. The script lives in `film/film.json` `lines`. Record 1 file per line into `film/vo/body/line-<id>.wav`: real takes with `hf_voice.py lines` (write the lines as `{"lines": [{"line": "02", "text": "..."}]}`), or scratch takes with `python3 skills/launch-voice/scripts/scratch_voice.py film/film.json` (add `--hook film/hooks/<name>` to voice a hook line too).
-2. Run `python3 skills/launch-voice/scripts/prep_lines.py film/film.json` (`--align force` to insist on forced alignment; with `uv` installed it fetches torch on the first run, about 2 GB). It writes `film/vo/body/lines.json` with each line's duration and word times: forced alignment when torch is available, else whisper.cpp, else an even estimate flagged `estimate`.
-3. `film/build.py` places the lines on the film timeline and every picture cue follows its word. A new take is 1 prep run plus a rebuild.
+1. The script lives in `videos/<name>/film.json` `lines`. Record 1 file per line into `videos/<name>/vo/body/line-<id>.wav`: real takes with `hf_voice.py lines` (write the lines as `{"lines": [{"line": "02", "text": "..."}]}`), or scratch takes with `python3 skills/launch-voice/scripts/scratch_voice.py videos/<name>/film.json` (add `--hook videos/<name>/hooks/<hook>` to voice a hook line too).
+2. Run `python3 skills/launch-voice/scripts/prep_lines.py videos/<name>/film.json` (`--align force` to insist on forced alignment; with `uv` installed it fetches torch on the first run, about 2 GB). It writes `videos/<name>/vo/body/lines.json` with each line's duration and word times: forced alignment when torch is available, else whisper.cpp, else an even estimate flagged `estimate`.
+3. `videos/<name>/build.py` places the lines on the film timeline and every picture cue follows its word. A new take is 1 prep run plus a rebuild.
 
 ## Procedure for a free-form film
 

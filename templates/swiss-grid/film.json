@@ -1,0 +1,426 @@
+{
+  "about": "Breakout Plays, 'Signal in. Meeting out.', the Swiss-grid film from templates/swiss-grid/STORYBOARD.md. Times are in bars from 0; 0.25 bar = 1 beat. No narration.",
+  "bpm": 128,
+  "bars": 13,
+  "brand": "../../brand",
+  "account": "Notion",
+  "disclaimer": "Illustrative example",
+  "signal_labels": [
+    "Website visit",
+    "Pricing page",
+    "New hire",
+    "Funding"
+  ],
+  "counter": {
+    "to": 700,
+    "suffix": "+",
+    "label": "signals"
+  },
+  "agent": {
+    "run": {
+      "title": "Agent run",
+      "time": "9:20 AM",
+      "chip": "Play",
+      "source": "Notion · EMEA"
+    },
+    "account": {
+      "title": "Breakout",
+      "time": "9:20 AM",
+      "line": "Notion · visited in March, never converted",
+      "sub": "CFO, Head of RevOps, Marketing on file",
+      "rows": [
+        [
+          "eye",
+          "2 blog views",
+          "No action"
+        ],
+        [
+          "person",
+          "New CFO hired",
+          "Act"
+        ],
+        [
+          "tag",
+          "Pricing page viewed 3×",
+          "Act"
+        ]
+      ]
+    },
+    "think": {
+      "title": "Breakout",
+      "time": "9:28 AM",
+      "text": "Notion's warming up: a new CFO and heavy pricing interest. I'd run this play.",
+      "committee": "Buying committee",
+      "people": [
+        "CFO",
+        "Head of RevOps",
+        "VP Marketing"
+      ]
+    },
+    "approve": {
+      "title": "You · Marketer",
+      "time": "9:30 AM",
+      "item": "Send Email 1 to Dana, CFO",
+      "tag": "Approved"
+    },
+    "done": {
+      "title": "Breakout",
+      "time": "9:31 AM",
+      "row": "Email 1 sent",
+      "from": "Cold",
+      "to": "Engaged"
+    }
+  },
+  "email": {
+    "head": "Email 1 · Day 0",
+    "to": "Dana · CFO, Notion",
+    "subject": "A cost breakdown for your new CFO",
+    "body": [
+      "Hi Dana,",
+      "[cfo]Congrats on bringing on a new CFO.[/cfo] I noticed your team has been [pricing]on our pricing page a few times this week.[/pricing] That usually means a budget conversation is starting.",
+      "Want me to send a one-page cost breakdown your CFO can review?"
+    ],
+    "labels": [
+      "Browsing history",
+      "Firmographics",
+      "AI enrichment"
+    ]
+  },
+  "words": {
+    "reads": "Reads.",
+    "thinks": "Thinks.",
+    "sends": "Sends.",
+    "books": "Books."
+  },
+  "lockup": {
+    "line1": "Signal in.",
+    "line2": "Meeting out.",
+    "title": "Plays",
+    "url": "getbreakout.ai"
+  },
+  "music": {
+    "file": "score/bed.wav",
+    "gain_db": -2,
+    "fade_out": 2.5
+  },
+  "sfx": [
+    {
+      "at": 0.0,
+      "sound": "sub_drop",
+      "gain_db": -10
+    },
+    {
+      "at": 0.0,
+      "sound": "felt_thump",
+      "gain_db": -6
+    },
+    {
+      "at": 0.25,
+      "sound": "key_tap",
+      "gain_db": -12
+    },
+    {
+      "at": 0.5,
+      "sound": "key_tap",
+      "gain_db": -12
+    },
+    {
+      "at": 0.75,
+      "sound": "key_tap",
+      "gain_db": -12
+    },
+    {
+      "at": 1.0,
+      "sound": "felt_thump",
+      "gain_db": -6
+    },
+    {
+      "at": 1.0,
+      "sound": "key_tap",
+      "gain_db": -12
+    },
+    {
+      "at": 1.25,
+      "sound": "typing",
+      "gain_db": -18,
+      "args": {
+        "chars": 10,
+        "cps": 18
+      }
+    },
+    {
+      "at": 2.0,
+      "sound": "press",
+      "gain_db": -10
+    },
+    {
+      "at": 2.0,
+      "sound": "felt_thump",
+      "gain_db": -8
+    },
+    {
+      "at": 2.25,
+      "sound": "arrive",
+      "gain_db": -14,
+      "args": {
+        "degree": 2
+      }
+    },
+    {
+      "at": 2.5,
+      "sound": "press",
+      "gain_db": -11
+    },
+    {
+      "at": 3.0,
+      "sound": "key_tap",
+      "gain_db": -12
+    },
+    {
+      "at": 3.25,
+      "sound": "key_tap",
+      "gain_db": -12
+    },
+    {
+      "at": 3.5,
+      "sound": "glass_tick",
+      "gain_db": -10,
+      "args": {
+        "degree": 3
+      }
+    },
+    {
+      "at": 3.75,
+      "sound": "glass_tick",
+      "gain_db": -10,
+      "args": {
+        "degree": 4
+      }
+    },
+    {
+      "at": 4.0,
+      "sound": "press",
+      "gain_db": -10
+    },
+    {
+      "at": 4.25,
+      "sound": "typing",
+      "gain_db": -16,
+      "args": {
+        "chars": 30,
+        "cps": 20
+      }
+    },
+    {
+      "at": 5.0,
+      "sound": "glass_tick",
+      "gain_db": -13,
+      "args": {
+        "degree": 2
+      }
+    },
+    {
+      "at": 5.125,
+      "sound": "glass_tick",
+      "gain_db": -13,
+      "args": {
+        "degree": 3
+      }
+    },
+    {
+      "at": 5.25,
+      "sound": "glass_tick",
+      "gain_db": -13,
+      "args": {
+        "degree": 4
+      }
+    },
+    {
+      "at": 5.95,
+      "sound": "air",
+      "gain_db": -20,
+      "args": {
+        "dur": 0.6
+      }
+    },
+    {
+      "at": 6.0,
+      "sound": "press",
+      "gain_db": -10
+    },
+    {
+      "at": 6.05,
+      "sound": "typing",
+      "gain_db": -15,
+      "args": {
+        "chars": 60,
+        "cps": 22
+      }
+    },
+    {
+      "at": 6.5,
+      "sound": "glass_tick",
+      "gain_db": -11,
+      "args": {
+        "degree": 2
+      }
+    },
+    {
+      "at": 7.0,
+      "sound": "glass_tick",
+      "gain_db": -11,
+      "args": {
+        "degree": 4
+      }
+    },
+    {
+      "at": 7.5,
+      "sound": "key_tap",
+      "gain_db": -12
+    },
+    {
+      "at": 7.625,
+      "sound": "key_tap",
+      "gain_db": -12
+    },
+    {
+      "at": 7.75,
+      "sound": "key_tap",
+      "gain_db": -12
+    },
+    {
+      "at": 8.0,
+      "sound": "press",
+      "gain_db": -10
+    },
+    {
+      "at": 8.25,
+      "sound": "lock",
+      "gain_db": -9
+    },
+    {
+      "at": 8.5,
+      "sound": "orbit_tick",
+      "gain_db": -12
+    },
+    {
+      "at": 8.75,
+      "sound": "arrive",
+      "gain_db": -12,
+      "args": {
+        "degree": 4
+      }
+    },
+    {
+      "at": 9.0,
+      "sound": "press",
+      "gain_db": -10
+    },
+    {
+      "at": 9.0,
+      "sound": "felt_thump",
+      "gain_db": -8
+    },
+    {
+      "at": 9.25,
+      "sound": "orbit_tick",
+      "gain_db": -13
+    },
+    {
+      "at": 9.375,
+      "sound": "orbit_tick",
+      "gain_db": -13
+    },
+    {
+      "at": 9.5,
+      "sound": "glass_tick",
+      "gain_db": -10,
+      "args": {
+        "degree": 4
+      }
+    },
+    {
+      "at": 9.75,
+      "sound": "press",
+      "gain_db": -8
+    },
+    {
+      "at": 10.0,
+      "sound": "sub_drop",
+      "gain_db": -7
+    },
+    {
+      "at": 10.0,
+      "sound": "logo_sting",
+      "gain_db": -8
+    },
+    {
+      "at": 10.25,
+      "sound": "lock",
+      "gain_db": -10
+    },
+    {
+      "at": 10.5,
+      "sound": "glass_tick",
+      "gain_db": -12,
+      "args": {
+        "degree": 2
+      }
+    },
+    {
+      "at": 10.625,
+      "sound": "glass_tick",
+      "gain_db": -12,
+      "args": {
+        "degree": 3
+      }
+    },
+    {
+      "at": 10.75,
+      "sound": "glass_tick",
+      "gain_db": -12,
+      "args": {
+        "degree": 4
+      }
+    },
+    {
+      "at": 11.0,
+      "sound": "felt_thump",
+      "gain_db": -6
+    },
+    {
+      "at": 11.25,
+      "sound": "arrive",
+      "gain_db": -14,
+      "args": {
+        "degree": 0
+      }
+    }
+  ],
+  "booking": {
+    "title": "Breakout",
+    "time": "9:05 AM",
+    "day": "Thursday, Oct 15",
+    "slots": [
+      "10:00",
+      "11:00",
+      "2:00 PM",
+      "3:00"
+    ],
+    "pick": 2,
+    "button": "Book meeting"
+  },
+  "booked": {
+    "big": "Meeting booked.",
+    "title": "Breakout",
+    "time": "9:05 AM",
+    "row": "Meeting booked",
+    "when": "Thu, Oct 15 · 2:00 PM",
+    "people": [
+      "D",
+      "R",
+      "M"
+    ],
+    "note": "Dana · CFO, and 2 more from Notion"
+  }
+}

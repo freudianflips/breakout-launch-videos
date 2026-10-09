@@ -56,7 +56,7 @@ What was approved and what was rejected across several rounds of launch films bu
 
 - Show frames before building a whole film. A wrong look costs a day; a contact sheet costs minutes.
 - Review voice and music inside a full film, never as loose audio clips. Change 1 variable per round.
-- Every body change goes to every film (`film/render.sh`).
+- Every body change goes to every film (`videos/<name>/render.sh`).
 - State the cost of every paid video job and wait for a yes.
 
 ## Your verdicts

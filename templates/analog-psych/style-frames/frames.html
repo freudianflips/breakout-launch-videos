@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Breakout launch film: style frames</title>
+<!-- Style frames for the analog, psychedelic direction. Each .frame is 1920x1080; shoot.mjs screenshots them one by one.
+     Not part of the film template: this is the look test that comes before building it. -->
+<style>
+  @font-face { font-family: "Fraunces"; src: url("../../../brand/fonts/fraunces-100-900.woff2") format("woff2"); font-weight: 100 900; font-style: normal; }
+  @font-face { font-family: "Fraunces"; src: url("../../../brand/fonts/fraunces-100-900-italic.woff2") format("woff2"); font-weight: 100 900; font-style: italic; }
+  @font-face { font-family: "Manrope"; src: url("../../../brand/fonts/manrope-200-800.woff2") format("woff2"); font-weight: 200 800; }
+  :root {
+    --violet: #4c00ff; --indigo: #261678; --plum: #280961; --magenta: #ff4fd8; --amber: #ff9a3c; --cream: #f1e6cf; --paper-ink: #2a1d14;
+    --serif: "New Kansas", "new-kansas-thin", "Fraunces", Georgia, serif; --sans: "Manrope", system-ui, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; }
+  .frame { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: var(--serif);
+    font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 1; }
+  .serif { font-family: var(--serif); font-weight: 340; letter-spacing: -0.035em; line-height: 0.98; }
+  .it { font-style: italic; }
+  .sans { font-family: var(--sans); font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; }
+
+  /* the analog layer, on every frame: grain, vignette, a light leak, the rounded film gate */
+  .grain { position: absolute; inset: -20px; pointer-events: none; mix-blend-mode: overlay; opacity: 0.55; filter: url(#grain); background: #808080; }
+  .vig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 95% at 50% 50%, transparent 55%, rgba(20, 6, 30, 0.55) 100%); }
+  .leak { position: absolute; pointer-events: none; mix-blend-mode: screen; filter: blur(40px); border-radius: 50%; }
+  .gate { position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 14px #0b0710, inset 0 0 60px 30px rgba(0, 0, 0, 0.5); border-radius: 46px; }
+  .rgb { text-shadow: -4px 0 rgba(255, 40, 120, 0.55), 4px 0 rgba(0, 210, 255, 0.45); }
+  .halo { filter: drop-shadow(0 0 18px rgba(255, 120, 80, 0.45)); }
+
+  /* hook: 1916 paper, sepia duotone, halftone */
+  .paper { background: radial-gradient(90% 80% at 40% 40%, #f6ecd8, var(--cream) 60%, #d9c7a3 100%); color: var(--paper-ink); }
+  .halftone { position: absolute; inset: 0; background-image: radial-gradient(rgba(42, 29, 20, 0.22) 1.3px, transparent 1.6px); background-size: 9px 9px; mix-blend-mode: multiply; opacity: 0.55; }
+  .slug { position: absolute; left: 150px; top: 150px; font-size: 22px; color: #6b4e33; }
+  .rule { position: absolute; left: 150px; right: 150px; top: 196px; height: 2px; background: #6b4e33; opacity: 0.5; }
+
+  /* the psychedelic ground: violet mesh pulled toward magenta and amber, warped */
+  .psy { background: #12062e; }
+  .liquid { position: absolute; inset: -120px; filter: url(#warp) blur(6px) saturate(1.25);
+    background:
+      radial-gradient(38% 46% at 62% 42%, var(--violet) 0%, rgba(76, 0, 255, 0.6) 35%, transparent 70%),
+      radial-gradient(30% 38% at 22% 70%, var(--magenta) 0%, rgba(255, 79, 216, 0.4) 40%, transparent 72%),
+      radial-gradient(26% 30% at 84% 82%, var(--amber) 0%, rgba(255, 154, 60, 0.35) 40%, transparent 70%),
+      radial-gradient(40% 50% at 10% 10%, var(--indigo) 0%, transparent 70%),
+      radial-gradient(40% 50% at 90% 0%, var(--plum) 0%, transparent 70%), #12062e; }
+  .bands { position: absolute; inset: -200px; opacity: 0.22; mix-blend-mode: soft-light; filter: url(#warp);
+    background: repeating-radial-gradient(circle at 60% 45%, #fff 0 14px, transparent 14px 46px); }
+  .echo { position: absolute; left: 0; right: 0; text-align: center; white-space: nowrap; }
+
+  .cap { position: absolute; left: 0; right: 0; text-align: center; }
+  .meta { position: absolute; left: 70px; bottom: 54px; font-family: var(--sans); font-size: 18px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
+  .meta.dark { color: rgba(42, 29, 20, 0.55); }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7"/><feColorMatrix type="saturate" values="0"/></filter>
+  <filter id="warp"><feTurbulence type="fractalNoise" baseFrequency="0.0035 0.006" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="160"/></filter>
+  <filter id="wobble"><feTurbulence type="fractalNoise" baseFrequency="0.004 0.02" numOctaves="1" seed="11"/><feDisplacementMap in="SourceGraphic" scale="26"/></filter>
+  <filter id="sepia"><feColorMatrix type="matrix" values="0.42 0.6 0.16 0 0.04  0.34 0.55 0.13 0 0.02  0.26 0.42 0.1 0 0  0 0 0 1 0"/></filter>
+</svg>
+
+<!-- 1 · hook, the fact -->
+<section class="frame paper" id="f1">
+  <div class="halftone"></div>
+  <div class="slug sans">Memphis, Tennessee · 1916</div><div class="rule"></div>
+  <div class="cap serif" style="top:330px;font-size:150px">Until 1916, a clerk</div>
+  <div class="cap serif" style="top:500px;font-size:150px">fetched <span class="it">everything.</span></div>
+  <div class="cap sans" style="top:760px;font-size:22px;color:#6b4e33">You asked. They knew your name. They brought it to the counter.</div>
+  <div class="leak" style="width:900px;height:700px;right:-260px;top:-240px;background:rgba(255,140,60,0.55)"></div>
+  <div class="grain"></div><div class="vig"></div><div class="gate"></div>
+  <div class="meta dark">Style frame 1 · hook · the fact</div>
+</section>
+
+<!-- 2 · hook, the turn -->
+<section class="frame paper" id="f2">
+  <div class="halftone"></div>
+  <div class="slug sans">September 6, 1916</div><div class="rule"></div>
+  <div class="cap serif" style="top:300px;font-size:120px">Then a store in Memphis said</div>
+  <div class="cap serif it halo" style="top:450px;font-size:260px;filter:url(#wobble)">help yourself.</div>
+  <div class="cap sans" style="top:800px;font-size:22px;color:#6b4e33">Open shelves. Baskets. Nobody asking.</div>
+  <div class="leak" style="width:1100px;height:800px;left:-380px;bottom:-420px;background:rgba(255,80,160,0.45)"></div>
+  <div class="grain"></div><div class="vig"></div><div class="gate"></div>
+  <div class="meta dark">Style frame 2 · hook · the turn</div>
+</section>
+
+<!-- 3 · the world now: the web as the biggest self-service store -->
+<section class="frame paper" id="f3" style="filter:saturate(0.9)">
+  <div class="halftone"></div>
+  <div class="cap serif" style="top:130px;font-size:96px">A century later, the web is the biggest</div>
+  <div class="cap serif it" style="top:240px;font-size:96px">self-service store ever built.</div>
+  <div style="position:absolute;left:560px;top:420px;width:800px;padding:46px 56px;border-radius:22px;background:#fbf5e8;box-shadow:0 40px 90px -40px rgba(60,30,10,0.6),0 0 0 2px #cdb68e;font-family:var(--sans);color:#4a3a2a">
+    <div style="font-size:22px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.6;margin-bottom:26px">Contact sales</div>
+    <div style="border-bottom:2px solid #cdb68e;padding:14px 0;font-size:28px;opacity:0.5">Name</div>
+    <div style="border-bottom:2px solid #cdb68e;padding:14px 0;font-size:28px;opacity:0.5">Work email</div>
+    <div style="border-bottom:2px solid #cdb68e;padding:14px 0;font-size:28px;opacity:0.5">Company size</div>
+    <div style="margin-top:30px;display:inline-block;padding:16px 34px;border-radius:999px;background:#4a3a2a;color:#fbf5e8;font-size:24px">Submit</div>
+  </div>
+  <div class="cap serif" style="top:930px;font-size:54px;color:#6b4e33">Nobody greets you. You fill in a <span class="it">form.</span></div>
+  <div class="grain"></div><div class="vig"></div><div class="gate"></div>
+  <div class="meta dark">Style frame 3 · the world now</div>
+</section>
+
+<!-- 4 · the cut: the clerk is back -->
+<section class="frame psy" id="f4">
+  <div class="liquid"></div><div class="bands"></div>
+  <div class="echo serif it" style="top:250px;font-size:250px;color:rgba(255,154,60,0.35);transform:translate(-26px,26px) scale(1.04)">The clerk</div>
+  <div class="echo serif it" style="top:250px;font-size:250px;color:rgba(255,79,216,0.5);transform:translate(-13px,13px) scale(1.02)">The clerk</div>
+  <div class="echo serif it rgb" style="top:250px;font-size:250px;color:#fff6ea">The clerk</div>
+  <div class="echo serif" style="top:520px;font-size:250px;color:#fff6ea">is back.</div>
+  <img src="../../../brand/logo-on-dark.svg" style="position:absolute;left:50%;bottom:120px;height:64px;transform:translateX(-50%);opacity:0.92" alt="">
+  <div class="grain" style="opacity:0.45"></div><div class="vig"></div><div class="gate"></div>
+  <div class="meta">Style frame 4 · the cut into Breakout</div>
+</section>
+
+<!-- 5 · product, the analog treatment -->
+<section class="frame psy" id="f5">
+  <div class="liquid" style="filter:url(#warp) blur(10px) saturate(1.1) hue-rotate(-18deg)"></div><div class="bands" style="opacity:0.14"></div>
+  <img src="../../../assets/screens/agent-question.png" style="position:absolute;left:860px;top:150px;height:780px;border-radius:30px;opacity:0.35;transform:translate(-40px,30px) rotate(-3deg);filter:hue-rotate(60deg) saturate(2)" alt="">
+  <img src="../../../assets/screens/agent-question.png" style="position:absolute;left:860px;top:150px;height:780px;border-radius:30px;opacity:0.5;transform:translate(-20px,15px) rotate(-1.5deg);filter:hue-rotate(-40deg) saturate(2)" alt="">
+  <img src="../../../assets/screens/agent-question.png" style="position:absolute;left:860px;top:150px;height:780px;border-radius:30px;box-shadow:0 60px 120px -40px rgba(20,0,40,0.8);filter:sepia(0.18) contrast(1.05)" alt="">
+  <div style="position:absolute;left:120px;top:300px;width:660px" class="serif"><div style="font-size:84px;color:#fff6ea" class="rgb">Greets every visitor</div><div class="it" style="font-size:84px;color:#ffd1a3">like it already knows them.</div></div>
+  <div style="position:absolute;right:110px;top:440px;width:260px;font-family:var(--sans);font-size:20px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,246,234,0.7);line-height:1.8">Identifies<br>Answers<br>Books the meeting</div>
+  <div class="grain" style="opacity:0.45"></div><div class="vig"></div><div class="gate"></div>
+  <div class="meta">Style frame 5 · the product, analog</div>
+</section>
+
+<!-- 6 · the end -->
+<section class="frame psy" id="f6">
+  <div class="liquid" style="filter:url(#warp) blur(14px) saturate(1.2) brightness(0.9)"></div>
+  <div class="echo serif" style="top:330px;font-size:180px;color:rgba(255,79,216,0.4);transform:translate(0,18px) scale(1.03)">Pageview to <span class="it">pipeline.</span></div>
+  <div class="echo serif rgb halo" style="top:330px;font-size:180px;color:#fff6ea">Pageview to <span class="it">pipeline.</span></div>
+  <img src="../../../brand/logo-on-dark.svg" style="position:absolute;left:50%;top:640px;height:96px;transform:translateX(-50%)" alt="">
+  <div class="cap sans" style="top:820px;font-size:20px;color:rgba(255,246,234,0.6)">getbreakout.ai</div>
+  <div class="grain" style="opacity:0.45"></div><div class="vig"></div><div class="gate"></div>
+  <div class="meta">Style frame 6 · the end</div>
+</section>
+
+<!-- 7 · alternative concept: the operator -->
+<section class="frame paper" id="f7">
+  <div class="halftone"></div>
+  <div class="slug sans">Kansas City · 1889</div><div class="rule"></div>
+  <div class="cap serif" style="top:290px;font-size:112px">The story goes: the operator kept</div>
+  <div class="cap serif" style="top:420px;font-size:112px">routing an undertaker's calls</div>
+  <div class="cap serif it halo" style="top:560px;font-size:170px;filter:url(#wobble)">to his rival.</div>
+  <div class="cap sans" style="top:830px;font-size:22px;color:#6b4e33">So Almon Strowger invented the automatic exchange. Patent 447,918, 1891.</div>
+  <div class="grain"></div><div class="vig"></div><div class="gate"></div>
+  <div class="meta dark">Style frame 7 · alternative hook · the operator</div>
+</section>
+
+<!-- 8 · alternative concept: hits -->
+<section class="frame" id="f8" style="background:#0b0f0b">
+  <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg, rgba(0,0,0,0.35) 0 2px, transparent 2px 5px)"></div>
+  <div class="cap" style="top:250px;font-family:ui-monospace,monospace;font-size:34px;letter-spacing:0.1em;color:#7dff9a;text-shadow:0 0 12px #3dff7a">1 PAGE + 9 IMAGES = 10 HITS</div>
+  <div class="cap serif" style="top:360px;font-size:150px;color:#e9ffe9;text-shadow:0 0 30px rgba(125,255,154,0.45)">We counted <span class="it">files.</span></div>
+  <div class="cap serif" style="top:540px;font-size:150px;color:#e9ffe9;text-shadow:0 0 30px rgba(125,255,154,0.45)">Then <span class="it">pageviews.</span></div>
+  <div class="cap sans" style="top:800px;font-size:22px;color:rgba(200,255,210,0.65)">Analysts said HITS stood for "How Idiots Track Success."</div>
+  <div class="grain" style="opacity:0.35"></div><div class="vig"></div><div class="gate"></div>
+  <div class="meta">Style frame 8 · alternative hook · hits</div>
+</section>
+</body>
+</html>

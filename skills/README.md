@@ -15,7 +15,7 @@
 | 8 | [launch-mix](launch-mix/SKILL.md) | Buses, ducking, logo drop-out, -14 LUFS master, laid onto the picture. |
 | 9 | [launch-review](launch-review/SKILL.md) | Measure the render, the eye checklist, the gap list and the scorecard; study a reference film. |
 
-In the `film/` template, steps 5 to 8 run inside `film/build.py` and `film/audio.py`; you open those skills when you want to change how a beat looks or sounds.
+In the voice-led template (`templates/voice-led/`), steps 5 to 8 run inside `videos/<name>/build.py` and `videos/<name>/audio.py`; you open those skills when you want to change how a beat looks or sounds.
 
 ## Scripts
 

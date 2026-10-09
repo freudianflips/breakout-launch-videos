@@ -13,7 +13,7 @@ Read `brand/brand.json` first: its `copy` block holds the website's own words (h
 
 ## 1. Brief
 
-Write `film/BRIEF.md` (HyperFrames brief format, so its tooling reads it):
+Write `videos/<name>/BRIEF.md` (HyperFrames brief format, so its tooling reads it):
 
 ```markdown
 ---
@@ -43,7 +43,7 @@ Ground the message in the website's copy and the product's real capability. Say 
 
 ## 2. Study a reference (when one is sent)
 
-`bash skills/launch-review/scripts/study_reference.sh <url> film/out/reference 120`, then read the grids, the transcript and the report. Write down: spine, pace (words per second), structure with times, 3 to 5 signature moves, sound design, and what you will do differently. Keep the notes; never commit the reference video.
+`bash skills/launch-review/scripts/study_reference.sh <url> videos/<name>/out/reference 120`, then read the grids, the transcript and the report. Write down: spine, pace (words per second), structure with times, 3 to 5 signature moves, sound design, and what you will do differently. Keep the notes; never commit the reference video.
 
 ## 3. Spine
 
@@ -58,7 +58,7 @@ Differentiate inside the spine, not by avoiding it: the spine is grammar, the wo
 
 ## 4. Script
 
-- `film/SCRIPT.md` in HyperFrames format: `## Line N: <beat> (Frame N)`, then `**Time:**`, `**Delivery:**`, and the spoken text as a 4-space indented block (only that block is spoken). The same lines go into `film/film.json` `lines`.
+- `videos/<name>/SCRIPT.md` in HyperFrames format: `## Line N: <beat> (Frame N)`, then `**Time:**`, `**Delivery:**`, and the spoken text as a 4-space indented block (only that block is spoken). The same lines go into `videos/<name>/film.json` `lines`.
 - Length: 2.2 to 2.7 words a second. 30 s holds about 70 words, 45 s about 105, 60 s about 140. Cut words before you speed the voice up.
 - Hook in outcome language inside the first 3 s, often a question. The message lands by the second beat.
 - Every line names something the viewer will see. No line describes an abstraction the picture cannot show.
@@ -78,11 +78,11 @@ Shape it on the Apple pattern, measured across premium launch films:
 - The last visual change lands by about 80 %. The positioning line and the logo then hold for 16 to 28 % of the runtime, well under the body's level or in near silence.
 - A 16-bar film (about 32 s): intro bars 1 to 2, build 3 to 9, drop 10 to 13, outro 14 to 16.
 
-In the `film/` template the drop is the cut from the hook to the body, and the beats map onto `film.json` beat types (`name`, `hero`, `product`, `blocks`, `switch`, `end`; see `skills/launch-film/references/body.md`).
+In the voice-led template (`templates/voice-led/`) the drop is the cut from the hook to the body, and the beats map onto `film.json` beat types (`name`, `hero`, `product`, `blocks`, `switch`, `end`; see `skills/launch-film/references/body.md`).
 
 ## 6. Storyboard
 
-`film/STORYBOARD.md` in HyperFrames format (decision sections above the first frame, `## Frame N: <title>` headings). Per frame, besides the HyperFrames fields (`scene`, `voiceover`, `duration`, `transition_in`, `type`, `blueprint`), always add:
+`videos/<name>/STORYBOARD.md` in HyperFrames format (decision sections above the first frame, `## Frame N: <title>` headings). Per frame, besides the HyperFrames fields (`scene`, `voiceover`, `duration`, `transition_in`, `type`, `blueprint`), always add:
 
 ```markdown
 - bars: 2

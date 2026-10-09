@@ -1,0 +1,149 @@
+{
+  "brand": "../../brand",
+  "voice_dir": "vo/body",
+  "gap": 0.3,
+  "lockup": "logo",
+  "lines": {
+    "02": "Breakout is your inbound SDR, powered by AI.",
+    "03": "It identifies every visitor: the company, the person, the intent.",
+    "04": "It engages them in real time, answers questions and books the meeting.",
+    "05": "And when they leave, it follows up over email and LinkedIn.",
+    "06": "Identify, engage, convert. One AI SDR.",
+    "07": "A full-time, always-on SDR."
+  },
+  "music": {
+    "file": "score/bed.wav",
+    "bpm": 120,
+    "drop": 6.0,
+    "gain_db": -3
+  },
+  "sound": {
+    "kit": null,
+    "key": "A"
+  },
+  "beats": [
+    {
+      "type": "name",
+      "line": "02",
+      "tagline": "is your *inbound *SDR, powered by AI."
+    },
+    {
+      "type": "hero",
+      "line": "03",
+      "ground": "dark",
+      "text": "Every *visitor.",
+      "exit": "dive",
+      "until": "visitor+0.35"
+    },
+    {
+      "type": "product",
+      "line": "03",
+      "src": "../../assets/screens/accounts.png",
+      "focus": [
+        0.41,
+        0.15,
+        0.38,
+        0.5
+      ],
+      "push_at": "company",
+      "until": "person-0.1"
+    },
+    {
+      "type": "product",
+      "line": "03",
+      "src": "../../assets/screens/account.png",
+      "focus": [
+        0.32,
+        0.58,
+        0.49,
+        0.22
+      ],
+      "push_at": "intent",
+      "chip": {
+        "text": "Identified",
+        "at": "intent",
+        "x": 0.72,
+        "y": 0.56
+      }
+    },
+    {
+      "type": "product",
+      "line": "04",
+      "src": "../../assets/screens/agent-welcome.png",
+      "focus": [
+        0.2,
+        0.38,
+        0.74,
+        0.22
+      ],
+      "push_at": "engages",
+      "until": "in-0.06"
+    },
+    {
+      "type": "hero",
+      "line": "04",
+      "ground": "accent",
+      "text": "In *real *time.",
+      "exit": "collapse",
+      "until": "time+0.3"
+    },
+    {
+      "type": "product",
+      "line": "04",
+      "src": "../../assets/screens/agent-question.png",
+      "focus": [
+        0.02,
+        0.07,
+        0.94,
+        0.24
+      ],
+      "push_at": "questions",
+      "cursor": {
+        "at": "books",
+        "x": 0.177,
+        "y": 0.11
+      },
+      "chip": {
+        "text": "Meeting booked",
+        "at": "meeting"
+      }
+    },
+    {
+      "type": "product",
+      "line": "05",
+      "src": "../../assets/screens/contacts.png",
+      "focus": [
+        0.32,
+        0.1,
+        0.68,
+        0.45
+      ],
+      "push_at": "follows",
+      "chip": {
+        "text": "Followed up",
+        "at": "linkedin"
+      }
+    },
+    {
+      "type": "blocks",
+      "line": "06",
+      "items": [
+        "Identify",
+        "Engage",
+        "Convert"
+      ],
+      "merge_at": "one",
+      "label": "One *AI *SDR."
+    },
+    {
+      "type": "switch",
+      "line": "07",
+      "text": "Inbound SDR, *always *on.",
+      "flip_at": "always"
+    },
+    {
+      "type": "end",
+      "hold": 3.5
+    }
+  ]
+}

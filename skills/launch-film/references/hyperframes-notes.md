@@ -1,6 +1,6 @@
 # HyperFrames notes
 
-The HyperFrames contract the `film/` template relies on, written for HyperFrames 0.8.77 (Apache-2.0, by HeyGen). For the full docs, install the official skills: `npx skills add heygen-com/hyperframes` (entry skill `hyperframes`, the composition contract in `hyperframes-core`, motion in `hyperframes-animation`, the CLI in `hyperframes-cli`).
+The HyperFrames contract the templates relies on, written for HyperFrames 0.8.77 (Apache-2.0, by HeyGen). For the full docs, install the official skills: `npx skills add heygen-com/hyperframes` (entry skill `hyperframes`, the composition contract in `hyperframes-core`, motion in `hyperframes-animation`, the CLI in `hyperframes-cli`).
 
 ## What a composition is
 
@@ -41,8 +41,8 @@ npx -y hyperframes@0.8.77 preview                                         # Stud
 - `snapshot` has no `-c` flag and reads `index.html` (the last hook built). Build the hook you want to inspect first.
 - `lint` reports "multiple root compositions" because of the per-hook `index-<hook>.html` files. Expected.
 - The first render downloads a headless Chrome into the HyperFrames cache. A 45 s film renders in a few minutes on a recent laptop.
-- Render the picture silent. Sound is built by `film/audio.py` and muxed onto the render, because the renderer has no master bus.
+- Render the picture silent. Sound is built by `videos/<name>/audio.py` and muxed onto the render, because the renderer has no master bus.
 
 ## Pin the version
 
-The template is tested on 0.8.77. A newer HyperFrames may change flags or behaviour; upgrade on purpose, render 1 hook, compare the contact sheet, then update the version in `film/render.sh` and these notes.
+The template is tested on 0.8.77. A newer HyperFrames may change flags or behaviour; upgrade on purpose, render 1 hook, compare the contact sheet, then update the version in `videos/<name>/render.sh` and these notes.

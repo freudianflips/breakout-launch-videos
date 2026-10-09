@@ -12,14 +12,14 @@ The standard for motion: supreme motion with room to breathe, clean type, fast, 
 ## 1. Measure
 
 ```bash
-python3 skills/launch-review/scripts/review.py film/renders/<hook>.mp4 film/review/<hook>-v1 --bpm 120 --words <words.json>
+python3 skills/launch-review/scripts/review.py videos/<name>/renders/<hook>.mp4 videos/<name>/review/<hook>-v1 --bpm 120 --words <words.json>
 ```
 
 Writes `report.md` (pass or warn per target), `filmstrip.jpg` (2 fps) and `contact.jpg` (12 frames). The same script studies a reference: `skills/launch-review/scripts/study_reference.sh <url> <out-dir> <bpm>` downloads it, grids it, transcribes it and runs the report. Keep the notes; never commit third-party video.
 
 ## 2. Look
 
-Read `filmstrip.jpg` top to bottom as time. Then check the pair of frames around every cut and transition (`npx -y hyperframes@0.8.77 snapshot --at <cut-0.1>,<cut+0.2> --describe false` in `film/` after building that hook).
+Read `filmstrip.jpg` top to bottom as time. Then check the pair of frames around every cut and transition (`npx -y hyperframes@0.8.77 snapshot --at <cut-0.1>,<cut+0.2> --describe false` in `videos/<name>/` after building that hook).
 
 | Area | Pass when |
 |---|---|

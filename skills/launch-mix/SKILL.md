@@ -9,7 +9,7 @@ description: Tool manual under launch-film (mixdown.py for buses, ducking, loudn
 
 A mix is a set of relationships, not a stack of effects. The voice owns intelligibility, the effects own the moments, the music owns momentum and gives way to both. HyperFrames renders the picture; it has no master bus, so the finished mix is made here, outside the composition, and laid onto the render.
 
-In the film template, `film/audio.py` writes the mix file and runs this script for you. Use this page to understand and change the moves.
+In the film template, `videos/<name>/audio.py` writes the mix file and runs this script for you. Use this page to understand and change the moves.
 
 ## Inputs
 
