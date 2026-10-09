@@ -53,6 +53,7 @@ Never show a competitor's name or logo, with one exception: the ABM templates ma
 | Swiss grid: off-white, hairlines, mono indexes, huge type slams | `swiss-grid` | Approved ("i like 03"; "This is great.") |
 | Concept film on the grid, picture and music from one pattern | `sequencer` | Approved ("I love this.") |
 | Particle swarm, music-video motion | `particle-swarm` | Liked ("ok this is cool") |
+| Kinetic: minimal, colourful colour-field floods, a product moment per beat | `kinetic` | Requested by the owner ("minimal, fast, colorful, quick motion"); awaiting a verdict |
 | Cinematic: bright violet worlds, letterbox, grain, hard cuts | `abm-cinematic` | Requested by the owner; awaiting a verdict |
 | Split screen, low on text, the user experience side by side | `abm-split` | Requested by the owner; awaiting a verdict |
 | Voice-led Apple-style launch | `voice-led` | The kit's base; not yet judged |

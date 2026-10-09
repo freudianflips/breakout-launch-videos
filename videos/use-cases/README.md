@@ -7,7 +7,7 @@ A minimal, colourful, fast film: one idea per beat, a new colour field flooding 
 | | |
 |---|---|
 | Use it for | Overviews of many features or use cases in one film, product tours, social cuts. About 2.3 s per beat. |
-| Verdict | Round 15, awaiting a verdict (the owner asked for "minimal, fast, colorful, quick motion"). |
+| Verdict | Round 15, awaiting a verdict. This video: `videos/use-cases/`. |
 | New video | `python3 scripts/new-video.py kinetic <name>`, then edit the copy in `videos/<name>/` |
 
 ## The example film

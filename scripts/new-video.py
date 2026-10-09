@@ -51,7 +51,7 @@ if os.path.exists(dst):
 def ignore(folder, entries):
     out = set()
     for e in entries:
-        if e in GENERATED or e.endswith(".log") or e == "poster.jpg":
+        if e in GENERATED or e.endswith(".log"):
             out.add(e)
         elif re.fullmatch(r"index(-.*)?\.html|timing.*\.json", e):
             out.add(e)

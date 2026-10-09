@@ -10,7 +10,7 @@ One brand kit, a set of proven styles, and a pipeline that turns Breakout's own 
 |---|---|
 | [`brand/`](brand/README.md) | The brand kit (`brand.json`: logo, colours, gradients, fonts, copy) and the **[video guidelines](brand/GUIDELINES.md)**: how a Breakout video looks, sounds and speaks, and every look the owner approved or rejected |
 | [`assets/`](assets/) | Shared visuals: real product screens (`screens/`, customer data blurred) and reference images (`refs/`) |
-| [`templates/`](templates/README.md) | 7 styles, each a complete template with a worked example film and a poster |
+| [`templates/`](templates/README.md) | 8 styles, each a complete template with a worked example film and a poster |
 | [`videos/`](videos/README.md) | Where new videos are made, one folder each, copied from a template |
 | [`accounts/`](accounts/README.md) | Target accounts for the ABM templates (captures of their site and chat) |
 | [`skills/`](skills/README.md) | 10 agent manuals: story, voice, score, sound, mix, review, motion, 3D, brand |
@@ -23,7 +23,7 @@ One brand kit, a set of proven styles, and a pipeline that turns Breakout's own 
 |---|---|---|
 | **Swiss grid** ![](templates/swiss-grid/poster.jpg) | **Sequencer** ![](templates/sequencer/poster.jpg) | **Particle swarm** ![](templates/particle-swarm/poster.jpg) |
 | **ABM, cinematic** ![](templates/abm-cinematic/poster.jpg) | **ABM, split screen** ![](templates/abm-split/poster.jpg) | **Voice-led** ![](templates/voice-led/poster.jpg) |
-| **Analog / psychedelic** ![](templates/analog-psych/poster.jpg) | | |
+| **Kinetic** ![](templates/kinetic/poster.jpg) | **Analog / psychedelic** ![](templates/analog-psych/poster.jpg) | |
 
 What each is for, and its verdict: [`templates/README.md`](templates/README.md).
 
