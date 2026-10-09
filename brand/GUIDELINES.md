@@ -62,6 +62,7 @@ Never show a competitor's name or logo, with one exception: the ABM templates ma
 | Cinematic: bright violet worlds, letterbox, grain, hard cuts | `abm-cinematic` | Requested by the owner; awaiting a verdict |
 | Split screen, low on text, the user experience side by side | `abm-split` | Requested by the owner; awaiting a verdict |
 | Cartoon story: simple, colourful characters, the agent as a friendly violet character | `cartoon` | Rejected ("This animation style is bad. The story is also too b2b"). Kept for reference only |
+| Dot matrix: a dark halftone grid; the visitor and Breakout as blooms of dots that ripple, follow and blend; wordless | [`docs/styles/abstract/`](../docs/styles/abstract/README.md) (06) | Chosen for the full-suite film ("Use the dot matrix style"); story awaiting approval |
 | Voice-led Apple-style launch | `voice-led` | The kit's base; not yet judged |
 | Analog, vintage, psychedelic | `analog-psych` | Rejected for product launches ("more modern, more unexpected"); kept as a style to draw on |
 
