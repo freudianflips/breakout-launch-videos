@@ -4,7 +4,7 @@ message: "Pageview to pipeline."
 destination: getbreakout.ai, LinkedIn
 aspect: 1920x1080
 language: en
-length: 40s
+length: 40s (v2: 40.3 s)
 angle: One visitor and Breakout, told as two blooms of light on a dot grid, from an anonymous visit to a booked meeting
 style: dot matrix (docs/styles/abstract, tile 06; owner, 2026-10-09: "Use the dot matrix style")
 status: approved with notes by the owner on 2026-10-09 ("Use very cool snappy motion. A jazzy atmospheric soundtrack. Add an Easter egg joke. Keep the captions small and precise")
@@ -30,15 +30,15 @@ The full product in the owner's order (deanonymize; engage on site with the rep 
 
 ## Motion
 
-Snappy: nothing glides. Every move is a quick snap (about 0.2 s, hard ease out) landing on a beat of the 96 BPM swing, then a hold. Dots pop rather than fade.
+Snappy: nothing glides. Every move is a quick snap (about 0.2 s, hard ease out) landing on a beat of the 128 BPM swing, then a hold. Dots pop rather than fade.
 
 ## Sound
 
-Jazzy and atmospheric, free first (General MIDI soundfont): a Rhodes and a warm pad, brushed drums, a walking upright bass, vibraphone for Breakout's ripples and a muted trumpet for the visitor's replies. The band cuts dead when the visitor leaves; the bass alone carries the wait; the full band returns when she comes back.
+Upbeat throughout (owner: "this jazz track is too downbeat. Make the whole thing upbeat"), free first (General MIDI soundfont): a bright little big band in F major with piano, walking bass, a jazz kit, vibraphone, trumpet, alto sax and trombone. When the visitor leaves, the band plays stop-time stabs and a fill, never silence. The long game is a fast blues.
 
-## Easter egg
+## The long game, and the easter egg
 
-While Breakout waits, it turns into the old phone game Snake: a line of dots that slithers across the grid on the beat, eating each signal (one 8-bit blip each) and growing, with a tiny dot-matrix "SCORE" counting up in the corner. When the visitor comes back, the snake is caught mid-game and snaps back into a bloom. The joke: Breakout plays the long game, literally. The game is shown only as the generic idea, with no brand, logo or name on screen.
+The slow period shows Breakout working (owner: "doesn't show how Breakout chases a buyer even during the slow period. That it listens in for signals"). The visitor stays on screen, small and dim in a far corner. Breakout turns into the old phone game Snake: a sonar ping every bar shows it listening; each signal that blips near her account is eaten (a tiny dot-matrix "SCORE" counts up in the corner), then the snake slithers over and taps her, and she warms up a little each time. When she comes back, the snake is caught mid-game and snaps back into a bloom. The game is shown only as the generic idea, with no brand, logo or name on screen.
 
 ## Captions
 

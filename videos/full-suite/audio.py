@@ -36,14 +36,14 @@ cues += [cue(t, "air", -16, -0.6, dur=0.5) for t in (A["follow"], A["follow"] + 
 step = F["game"]["step"] * BAR
 n = 0
 while A["game"] + n * step < A["back"]:                                                                  # the snake's steps
-    cues.append(cue(A["game"] + n * step, "key_tap", -27, 0.15))
-    n += 1
+    cues.append(cue(A["game"] + n * step, "key_tap", -28, 0.15))
+    n += 2
 cues += [cue(A["back"] + k * BEAT, "glass_tick", -18, -0.5 + 0.2 * k, degree=k + 3) for k in (0, 1, 2)]
 cues += [cue(A["back"] + BEAT, "felt_thump", -12)]
 cues += [cue(A["booked"] + 0.18, "sub_drop", -8), cue(A["booked"] + 0.18, "logo_sting", -12), cue(A["booked"] + 0.5 * BAR, "typing", -20, dur=0.25)]
 cues += [cue(A["close"] + BEAT, "lock", -14), cue(A["close"] + 3 * BEAT, "arrive", -18, degree=0)]
 os.makedirs("sfx", exist_ok=True)
-json.dump({"duration": round(END + 1, 3), "key": "D", "cues": cues}, open("sfx/cues.json", "w"), indent=1)
+json.dump({"duration": round(END + 1, 3), "key": "F", "cues": cues}, open("sfx/cues.json", "w"), indent=1)
 subprocess.run([PY, os.path.join(REPO, "skills/launch-sound/scripts/sfx_forge.py"), "render", "sfx/cues.json", "sfx/sfx.wav"], check=True)
 music = F["music"]["file"]
 if not os.path.exists(music):

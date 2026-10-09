@@ -1,20 +1,104 @@
 {
-  "about": "Dot matrix: a wordless story told by dots on a dark halftone grid. The visitor and Breakout are blooms of dots that hop on the beat, trade ripples and merge; captions are small and verbatim. Example: the full Breakout suite, from an anonymous visit to a booked meeting, with a Snake easter egg in the long wait. Times in bars at 96 BPM (1 bar = 2.5 s).",
-  "bpm": 96,
-  "bars": 16,
+  "about": "Dot matrix: a wordless story told by dots on a dark halftone grid. The visitor and Breakout are blooms of dots that hop on the beat, trade ripples and merge; captions are small and verbatim. Example: the full Breakout suite, from an anonymous visit to a booked meeting, where Breakout listens for signals through the long wait and chases the buyer with each one, as a game of Snake (the easter egg). Times in bars at 128 BPM (1 bar = 1.875 s).",
+  "bpm": 128,
+  "bars": 21.5,
   "brand": "../../brand",
   "source": "getbreakout.ai/use-cases (headlines, saved 2026-10-09) and the homepage",
-  "at": {"dark": 0, "seen": 1, "engage": 2, "rep": 4, "gone": 5, "follow": 6, "game": 7, "back": 11, "booked": 12, "close": 13.5, "end": 16},
+  "at": {
+    "dark": 0,
+    "seen": 1,
+    "engage": 2.5,
+    "rep": 5,
+    "gone": 6.5,
+    "follow": 7.5,
+    "game": 9,
+    "back": 15,
+    "booked": 16.5,
+    "close": 18.5,
+    "end": 21.5
+  },
   "captions": [
-    {"at": 1, "until": 2, "text": "See who’s behind every visit."},
-    {"at": 2, "until": 4, "text": "Give every visitor a helpful first conversation."},
-    {"at": 4, "until": 5, "text": "Join the conversations that matter."},
-    {"at": 6, "until": 7, "text": "Stay useful until buyers are ready."},
-    {"at": 11, "until": 12, "text": "Know when a key account comes back."}
+    {
+      "at": 1,
+      "until": 2.5,
+      "text": "See who\u2019s behind every visit."
+    },
+    {
+      "at": 2.5,
+      "until": 5,
+      "text": "Give every visitor a helpful first conversation."
+    },
+    {
+      "at": 5,
+      "until": 6.5,
+      "text": "Join the conversations that matter."
+    },
+    {
+      "at": 7.5,
+      "until": 9,
+      "text": "Stay useful until buyers are ready."
+    },
+    {
+      "at": 9.5,
+      "until": 14.5,
+      "text": "Reach accounts when interest is fresh."
+    },
+    {
+      "at": 15,
+      "until": 16.5,
+      "text": "Know when a key account comes back."
+    }
   ],
-  "colors": {"ground": "#050308", "dot": "#2a2540", "visitor": "#ff5ad1", "anon": "#8d88a3", "breakout": "#9a5cff", "rep": "#68e6ff", "signal": "#ffffff", "snake": "#be79ff"},
-  "game": {"label": "SCORE", "signals": [[54, 16], [60, 26], [50, 30], [42, 22]], "step": 0.125},
-  "booked": {"lines": ["Meeting", "*booked.*"]},
-  "lockup": {"line": "Pageview to *pipeline.*"},
-  "music": {"file": "score/score.wav", "make": "score.py", "gain_db": -1, "fade_out": 1.2}
+  "colors": {
+    "ground": "#050308",
+    "dot": "#2a2540",
+    "visitor": "#ff5ad1",
+    "anon": "#8d88a3",
+    "breakout": "#9a5cff",
+    "rep": "#68e6ff",
+    "signal": "#ffffff",
+    "snake": "#be79ff"
+  },
+  "game": {
+    "label": "SCORE",
+    "visitor": [
+      20,
+      12
+    ],
+    "signals": [
+      [
+        36,
+        6
+      ],
+      [
+        8,
+        24
+      ],
+      [
+        34,
+        22
+      ],
+      [
+        12,
+        2
+      ]
+    ],
+    "step": 0.0625,
+    "dim": 0.6
+  },
+  "booked": {
+    "lines": [
+      "Meeting",
+      "*booked.*"
+    ]
+  },
+  "lockup": {
+    "line": "Pageview to *pipeline.*"
+  },
+  "music": {
+    "file": "score/score.wav",
+    "make": "score.py",
+    "gain_db": -1,
+    "fade_out": 1.2
+  }
 }

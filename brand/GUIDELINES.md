@@ -36,6 +36,7 @@ Never show a competitor's name or logo, with one exception: the ABM templates ma
 
 - Every film needs a story: a character, something at stake, and a turn. A list of features, however fast and colourful, reads as a presentation.
 - Tell it abstractly, not literally: no B2B set dressing (desks, Slack alerts, inboxes, org charts as scenery). Abstract forms and compelling motion carry the meaning; words are minimal ("too b2b", "more abstracted away", "more minimal less texty").
+- Never let Breakout go idle on screen. Quiet periods in a story show it working: listening for signals and reaching the buyer with each one ("doesn't show how Breakout chases a buyer even during the slow period").
 
 ## Motion
 
@@ -62,7 +63,7 @@ Never show a competitor's name or logo, with one exception: the ABM templates ma
 | Cinematic: bright violet worlds, letterbox, grain, hard cuts | `abm-cinematic` | Requested by the owner; awaiting a verdict |
 | Split screen, low on text, the user experience side by side | `abm-split` | Requested by the owner; awaiting a verdict |
 | Cartoon story: simple, colourful characters, the agent as a friendly violet character | `cartoon` | Rejected ("This animation style is bad. The story is also too b2b"). Kept for reference only |
-| Dot matrix: a dark halftone grid; the visitor and Breakout as blooms of dots that ripple, follow and blend; wordless | [`dot-matrix`](../templates/dot-matrix/README.md) | Chosen from the abstract reel ("Use the dot matrix style"); first film awaiting a verdict. Motion snaps on the beat ("very cool snappy motion"); jazz score; captions small and precise |
+| Dot matrix: a dark halftone grid; the visitor and Breakout as blooms of dots that ripple, follow and blend; wordless | [`dot-matrix`](../templates/dot-matrix/README.md) | Chosen from the abstract reel ("Use the dot matrix style"); v2 awaiting a verdict. Motion snaps on the beat ("very cool snappy motion"); upbeat swing, never downbeat ("too downbeat. Make the whole thing upbeat"); captions small and precise |
 | Voice-led Apple-style launch | `voice-led` | The kit's base; not yet judged |
 | Analog, vintage, psychedelic | `analog-psych` | Rejected for product launches ("more modern, more unexpected"); kept as a style to draw on |
 

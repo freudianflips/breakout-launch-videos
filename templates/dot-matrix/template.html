@@ -79,38 +79,56 @@
 
           // ---- the cast
           var VIS = [960 - 240, 560], HOME = [1160, 540], MEET = [960, 540];
+          var K = 2;                                                    // the game's coarse grid: 2x2 dots per cell
+          function kxy(c) { return [12 + (c[0] * K + 0.5) * P, 12 + (c[1] * K + 0.5) * P]; }
+          var VC = [Math.floor(T.game.visitor[0] / K), Math.floor(T.game.visitor[1] / K)], VFAR = kxy(VC);
           var vKeys = [[0, -180, 560], [BEAT, 300, 580], [2 * BEAT, 540, 520], [3 * BEAT, VIS[0], VIS[1]],
-                       [A.gone, 440, 600], [A.gone + BEAT, -240, 640],
-                       [A.back, 240, 560], [A.back + BEAT, 520, 540], [A.back + 2 * BEAT, 740, 540], [A.booked, MEET[0] - 40, MEET[1]]];
+                       [A.gone, 520, 400], [A.gone + BEAT, VFAR[0], VFAR[1]],
+                       [A.back, 400, 330], [A.back + BEAT, 600, 480], [A.back + 2 * BEAT, 740, 540], [A.booked, MEET[0] - 40, MEET[1]]];
           var SCAN = A.seen, SCAN_D = 0.45, FLIP = SCAN + SCAN_D * (VIS[0] + 60) / (W + 120);
           var B_RIP = [1, 3, 5, 7].map(function (b) { return A.engage + b * BEAT; });
           var V_RIP = [2, 4, 6, 7.5].map(function (b) { return A.engage + b * BEAT; });
           var R_POS = [1800, 150];
           var rKeys = [[A.rep + 0.25, R_POS[0], R_POS[1]], [A.rep + BEAT, 1420, 330], [A.rep + 2 * BEAT, 950, 320]];
           var TRIAD = A.rep + 3 * BEAT;
-          var COMETS = [A.follow, A.follow + 1.5 * BEAT];
+          var COMETS = [A.follow, A.follow + 1.5 * BEAT], COMET_D = 0.7;
 
-          // ---- the easter egg: Breakout plays Snake through the long wait, eating each signal
-          // it moves on a coarse grid of 2x2 dots (cells K), like the old phone game
-          var STEP = T.game.step * BAR, K = 2, SIG = T.game.signals.map(function (s) { return [Math.floor(s[0] / K), Math.floor(s[1] / K)]; });
+          // ---- the long game, and the easter egg: Breakout listens for signals and chases her, as a game of Snake.
+          // Each signal blips near her account; the snake eats it, then slithers over and taps her; she warms up each time.
+          var STEP = T.game.step * BAR, SIG = T.game.signals.map(function (s) { return [Math.floor(s[0] / K), Math.floor(s[1] / K)]; });
           var cellX = Math.floor((HOME[0] - 12) / P / K), cellY = Math.floor((HOME[1] - 12) / P / K);
           var path = [[cellX - 3, cellY], [cellX - 2, cellY], [cellX - 1, cellY], [cellX, cellY]], PRE = path.length - 1;
-          var eats = [];
-          SIG.forEach(function (s, k) {
-            var h = path[path.length - 1], x = h[0], y = h[1];
-            function walkX() { while (x !== s[0]) { x += s[0] > x ? 1 : -1; path.push([x, y]); } }
-            function walkY() { while (y !== s[1]) { y += s[1] > y ? 1 : -1; path.push([x, y]); } }
-            walkX(); walkY();
-            eats.push(path.length - 1 - PRE);
+          var eats = [], taps = [];
+          function leg(h, s, xFirst) { var x = h[0], y = h[1], out = [];
+            function wx() { while (x !== s[0]) { x += s[0] > x ? 1 : -1; out.push([x, y]); } }
+            function wy() { while (y !== s[1]) { y += s[1] > y ? 1 : -1; out.push([x, y]); } }
+            if (xFirst) { wx(); wy(); } else { wy(); wx(); } return out; }
+          function walkTo(s) {                                           // an L-shaped leg that goes round her, not through her
+            var h = path[path.length - 1], a = leg(h, s, true), b = leg(h, s, false);
+            var hits = function (l) { return l.some(function (c) { return Math.abs(c[0] - VC[0]) <= 1 && Math.abs(c[1] - VC[1]) <= 1; }); };
+            Array.prototype.push.apply(path, hits(a) && !hits(b) ? b : a); }
+          SIG.forEach(function (s) {
+            walkTo(s); eats.push(path.length - 1 - PRE);
+            var dx = s[0] - VC[0], dy = s[1] - VC[1];                   // then right up next to her, from the side it is on
+            walkTo(Math.abs(dx) >= Math.abs(dy) ? [VC[0] + 2 * Math.sign(dx), VC[1]] : [VC[0], VC[1] + 2 * Math.sign(dy)]);
+            taps.push(path.length - 1 - PRE);
           });
           var lastStep = Math.floor((A.back - A.game) / STEP);
-          (function () { var h = path[path.length - 1], x = h[0], y = h[1];                             // then it heads off, looking for more
-            while (path.length - 1 - PRE < lastStep + 2) { y -= 1; path.push([x, y]); } })();
+          (function () {                                                 // then it circles her until she comes back
+            var ring8 = [], x, y;
+            for (x = -3; x <= 3; x++) ring8.push([x, -3]); for (y = -2; y <= 3; y++) ring8.push([3, y]);
+            for (x = 2; x >= -3; x--) ring8.push([x, 3]); for (y = 2; y >= -2; y--) ring8.push([-3, y]);
+            var h = path[path.length - 1], k = 0, best = 1e9;
+            ring8.forEach(function (c, i) { var d = Math.abs(VC[0] + c[0] - h[0]) + Math.abs(VC[1] + c[1] - h[1]); if (d < best) { best = d; k = i; } });
+            while (path.length - 1 - PRE < lastStep + 2) { k = (k + 1) % ring8.length; path.push([VC[0] + ring8[k][0], VC[1] + ring8[k][1]]); }
+          })();
           function snakeStep(t) { return Math.max(0, Math.min(lastStep, Math.floor((t - A.game) / STEP))); }
-          function eaten(n) { var e = 0; eats.forEach(function (s) { if (n >= s) e++; }); return e; }
-          function kxy(c) { return [12 + (c[0] * K + 0.5) * P, 12 + (c[1] * K + 0.5) * P]; }
+          function count(list, n) { var e = 0; list.forEach(function (s) { if (n >= s) e++; }); return e; }
+          function eaten(n) { return count(eats, n); }
           function block(c, v, col) { for (var dy = 0; dy < K; dy++) for (var dx = 0; dx < K; dx++) { var x = c[0] * K + dx, y = c[1] * K + dy;
             if (x >= 0 && x < COLS && y >= 0 && y < ROWS) put(y * COLS + x, v, col); } }
+          var TAP_T = taps.map(function (s) { return A.game + s * STEP; });
+          var PINGS = []; for (var pg = A.game; pg < A.back - 0.1; pg += BAR) PINGS.push(pg);   // it listens: a sonar ping every bar
           var HEAD_END_XY = kxy(path[PRE + lastStep]);
           var bKeys = [[A.engage, HOME[0], HOME[1]], [A.back + BEAT, HEAD_END_XY[0], HEAD_END_XY[1]], [A.back + 2 * BEAT, 1180, 540], [A.booked, MEET[0] + 40, MEET[1]]];
 
@@ -158,14 +176,20 @@
 
           function frame(t) {
             I.fill(0);
-            var dim = t < A.gone + 2 * BEAT ? 1 : t < A.back ? lerp(1, 0.4, snap((t - A.gone - 2 * BEAT) / 0.3)) : lerp(0.4, 1, snap((t - A.back) / 0.3));
+            var dim = t < A.gone + 2 * BEAT ? 1 : t < A.back ? lerp(1, T.game.dim, snap((t - A.gone - 2 * BEAT) / 0.3)) : lerp(T.game.dim, 1, snap((t - A.back) / 0.3));
 
             // the visitor: grey until the scan finds it, then pink
             var vp = hop(vKeys, t), vk = 0;
             V_RIP.forEach(function (r) { vk += bump(t, r, 0.28); });
             vp = [vp[0] + 28 * vk, vp[1]];
-            var vcol = t < FLIP ? C.anon : C.visitor, vR = 100 * (1 + 0.4 * bump(t, FLIP, 0.3));
-            if (t < A.booked + SNAP) bloom(vp, vR, 1, vcol);
+            var vcol = t < FLIP ? C.anon : C.visitor, vR = 100 * (1 + 0.4 * bump(t, FLIP, 0.3)), vA = 1;
+            if (t >= A.gone && t < A.back) {                              // off the site: small and dim, warming with every touch
+              var warm = count(TAP_T, t) + (t >= COMETS[0] + COMET_D ? 0.5 : 0) + (t >= COMETS[1] + COMET_D ? 0.5 : 0);
+              var away = snap((t - A.gone) / 0.3);
+              vR = lerp(100, 62 + 9 * warm, away); vA = lerp(1, 0.5 + 0.1 * warm, away);
+              TAP_T.concat(COMETS.map(function (c) { return c + COMET_D; })).forEach(function (tt) { vR *= 1 + 0.35 * bump(t, tt, 0.3); });
+            }
+            if (t < A.booked + SNAP) bloom(vp, vR, vA, vcol);
 
             // the scan line
             if (t >= SCAN && t < SCAN + SCAN_D + 0.1) {
@@ -200,26 +224,30 @@
             ripple(t, TRIAD, hop(rKeys, TRIAD), C.rep, 300);
             if (t >= TRIAD) { ripple(t, TRIAD, hop(vKeys, TRIAD), C.visitor, 300); ripple(t, TRIAD, hop(bKeys, TRIAD), C.breakout, 300); }
 
-            // the follow-up: two comets after her, one straight, one zigzag
+            // the follow-up: two comets out to her, one straight, one zigzag; she flickers as each lands
             COMETS.forEach(function (t0, k) {
-              for (var j = 0; j < 22; j++) { var u = (t - t0 - j * 0.014) / 0.8; if (u < 0 || u > 1) continue;
-                var e = snap(u * 1.1), x = lerp(HOME[0] - 100, -120, e), y = k === 0 ? lerp(HOME[1], 600, e) : HOME[1] + 120 * Math.sin(e * Math.PI * 4);
-                bloom([x, y], 38, 1 - j / 22, k === 0 ? C.snake : C.breakout); }
+              var dx = VFAR[0] - HOME[0], dy = VFAR[1] - HOME[1], ln = Math.hypot(dx, dy), nx = -dy / ln, ny = dx / ln;
+              for (var j = 0; j < 22; j++) { var u = (t - t0 - j * 0.014) / COMET_D; if (u < 0 || u > 1) continue;
+                var e = snap(u * 1.1), off = k === 0 ? 0 : 90 * Math.sin(e * Math.PI * 4) * (1 - e);
+                bloom([HOME[0] + dx * e + nx * off, HOME[1] + dy * e + ny * off], 38, 1 - j / 22, k === 0 ? C.snake : C.breakout); }
               ripple(t, t0, HOME, C.breakout, 260);
+              ripple(t, t0 + COMET_D, VFAR, C.visitor, 200);
             });
 
-            // the easter egg
+            // the long game: listen, hear a signal, eat it, chase her, tap her
             var playing = t >= A.game && t < A.back + BEAT, n = snakeStep(t), got = 0;
             if (playing) {
               got = eaten(n);
-              var len = 4 + 3 * got, born = cl((t - A.game) / 0.15);
+              var len = 4 + 2 * got, born = cl((t - A.game) / 0.15), head = kxy(path[PRE + n]);
+              PINGS.forEach(function (p0) { var u = (t - p0) / 1.1; if (u > 0 && u < 1) ring(kxy(path[PRE + snakeStep(p0)]), 40 + 900 * snap(u), 22, 0.35 * (1 - u), C.snake); });
               for (var j = 0; j < len; j++) { var cell = path[PRE + n - j]; if (cell) block(cell, born * (j === 0 ? 1 : 0.95 - 0.3 * j / len), j === 0 ? WHITE : C.snake); }
               if (got < eats.length) {                                   // the next signal blinks where it lands
-                var s = SIG[got], appear = A.game + (got ? eats[got - 1] + 1 : 1) * STEP;
-                if (t >= appear) { block(s, (Math.floor((t - appear) / (STEP / 2)) % 2) ? 0.5 : 1, C.signal);
-                  ripple(t, appear, kxy(s), C.signal, 140); }
+                var s = SIG[got], appear = A.game + (got ? taps[got - 1] + 1 : 1) * STEP;
+                if (t >= appear) { block(s, (Math.floor((t - appear) / (STEP * 2)) % 2) ? 0.5 : 1, C.signal);
+                  ripple(t, appear, kxy(s), C.signal, 160); }
               }
               eats.forEach(function (e, k) { ripple(t, A.game + e * STEP, kxy(SIG[k]), C.snake, 220); });
+              TAP_T.forEach(function (tt) { ripple(t, tt, VFAR, C.visitor, 260); });
             }
 
             // booked: the two snap together, a shockwave lights the grid, the dots spell it out
