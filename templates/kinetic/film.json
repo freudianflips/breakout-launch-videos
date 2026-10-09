@@ -1,0 +1,28 @@
+{
+  "about": "Kinetic: a minimal, colourful, fast film. One beat per idea, 1 bar each at 128 BPM; a new colour field floods in from the last beat's focal point; a code-drawn mini UI per beat; a few words per beat. Example: the Breakout use cases as one buyer's journey. Times in bars from 0; words are page names or the site's own copy.",
+  "bpm": 128,
+  "brand": "../../brand",
+  "intro": { "word": "Pageview", "bars": 1.5 },
+  "beats": [
+    { "label": "Paid traffic conversion", "visual": "paid", "ground": "#ffd6f5", "ink": "#140b3c" },
+    { "label": "Website de-anonymization", "visual": "deanon", "ground": "#4c00ff", "ink": "#ffffff" },
+    { "label": "AI agent for website", "visual": "agent", "ground": "#68e6ff", "ink": "#140b3c" },
+    { "label": "Live chat auto-pounce", "visual": "pounce", "ground": "#ff5ad1", "ink": "#ffffff" },
+    { "label": "Website personalization", "visual": "personal", "ground": "#f6f1ff", "ink": "#140b3c" },
+    { "label": "Lead qualification & routing", "visual": "routing", "ground": "#140b3c", "ink": "#ffffff" },
+    { "label": "Account research", "visual": "research", "ground": "#9cf5c0", "ink": "#140b3c" },
+    { "label": "Buying committee mapping", "visual": "committee", "ground": "#be79ff", "ink": "#140b3c" },
+    { "label": "Key account alerts", "visual": "alerts", "ground": "#4c00ff", "ink": "#ffffff" },
+    { "label": "Signal-based outbound", "visual": "outbound", "ground": "#68e6ff", "ink": "#140b3c" },
+    { "label": "Agentic nurture", "visual": "nurture", "ground": "#ff5ad1", "ink": "#ffffff" },
+    { "label": "ABM at scale", "visual": "abm", "ground": "#140b3c", "ink": "#ffffff" }
+  ],
+  "beat_bars": 1,
+  "booked": { "big": "Meeting *booked.*", "bars": 1.5 },
+  "personas": { "words": ["Demand gen", "SDR teams", "RevOps", "Enterprise"], "grounds": ["#4c00ff", "#ff5ad1", "#68e6ff", "#140b3c"], "inks": ["#ffffff", "#ffffff", "#140b3c", "#ffffff"], "each": 0.5 },
+  "lockup": { "line": "Pageview to *pipeline.*", "url": "getbreakout.ai/use-cases", "bars": 2.5 },
+  "visitor": { "initials": "MR", "name": "Maya R.", "role": "VP Marketing · Northwind" },
+  "committee": ["CMO", "VP Marketing", "Head of RevOps", "CFO"],
+  "disclaimer": "Illustrative example",
+  "music": { "file": "score/score.wav", "make": "score.py", "gain_db": -1, "fade_out": 0.8 }
+}
