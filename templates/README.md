@@ -1,6 +1,6 @@
 # Templates
 
-Each folder is one video style (9 so far), complete with a worked example film: its data file (the words, beats and timing), its look (`template.html`), and the scripts that build, score, mix and render it. Never edit a template to make one video. Copy it first:
+Each folder is one video style (10 so far), complete with a worked example film: its data file (the words, beats and timing), its look (`template.html`), and the scripts that build, score, mix and render it. Never edit a template to make one video. Copy it first:
 
 ```bash
 python3 scripts/new-video.py                         # list the templates
@@ -11,6 +11,7 @@ Then follow the order in `CLAUDE.md`: brief and storyboard approved first, then 
 
 | Template | Looks like | Use it for | Verdict |
 |---|---|---|---|
+| [`dot-matrix`](dot-matrix/README.md) | ![](dot-matrix/poster.jpg) | Abstract, wordless brand and product stories: blooms of dots on a grid, snappy motion, a jazz score, small captions | Awaiting a verdict |
 | [`swiss-grid`](swiss-grid/README.md) | ![](swiss-grid/poster.jpg) | A crisp, wordless product story under 30 s; UI as cards; a big success state | Approved |
 | [`sequencer`](sequencer/README.md) | ![](sequencer/poster.jpg) | A one-idea concept film where the music is built from the picture | Approved |
 | [`cartoon`](cartoon/README.md) | ![](cartoon/poster.jpg) | Reference only: cartoon characters were rejected ("This animation style is bad") | Rejected |
