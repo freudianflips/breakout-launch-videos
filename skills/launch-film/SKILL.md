@@ -9,7 +9,7 @@ Every launch film here is **a hook plus the body**. The hook is the story before
 
 The working project is a video folder made from this template: `python3 scripts/new-video.py voice-led <name>` copies `templates/voice-led/` to `videos/<name>/`. `videos/<name>/film.json` is the body (the script lines and the beats), `videos/<name>/hooks/<hook>/hook.json` is each hook, `brand/brand.json` is your brand.
 
-This page describes the **voice-led** template. The repo has 7 more styles in `templates/` (Swiss grid, sequencer, kinetic, particle swarm, analog, and 2 ABM templates), listed with posters and verdicts in [`templates/README.md`](../../templates/README.md). Pick the style first. Every template starts a video the same way (`scripts/new-video.py`) and follows the same order of work (story, approval, stills, free render). The other skills (story, score, sound, mix, review, motion) apply to all of them; the hook and body mechanics below are voice-led only.
+This page describes the **voice-led** template. The repo has 8 more styles in `templates/` (Swiss grid, sequencer, kinetic, cartoon, particle swarm, analog, and 2 ABM templates), listed with posters and verdicts in [`templates/README.md`](../../templates/README.md). Pick the style first. Every template starts a video the same way (`scripts/new-video.py`) and follows the same order of work (story, approval, stills, free render). The other skills (story, score, sound, mix, review, motion) apply to all of them; the hook and body mechanics below are voice-led only.
 
 ## Start here
 

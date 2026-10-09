@@ -60,6 +60,7 @@ Never show a competitor's name or logo, with one exception: the ABM templates ma
 | Kinetic: minimal, colourful colour-field floods, a product moment per beat | `kinetic` | The look was asked for ("minimal, fast, colorful, quick motion"), but a beat-per-feature list was rejected: "This doesn't have a story... looks like a presenration". Use it inside a story, not as a list |
 | Cinematic: bright violet worlds, letterbox, grain, hard cuts | `abm-cinematic` | Requested by the owner; awaiting a verdict |
 | Split screen, low on text, the user experience side by side | `abm-split` | Requested by the owner; awaiting a verdict |
+| Cartoon story: simple, colourful characters, the agent as a friendly violet character | `cartoon` | Asked for by the owner ("simple cartoony entertaining animated colourful"); awaiting a verdict |
 | Voice-led Apple-style launch | `voice-led` | The kit's base; not yet judged |
 | Analog, vintage, psychedelic | `analog-psych` | Rejected for product launches ("more modern, more unexpected"); kept as a style to draw on |
 

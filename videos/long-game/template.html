@@ -1,0 +1,440 @@
+<!doctype html>
+<html>
+  <body>
+    <template>
+      <!-- Cartoon: a short story with simple, colourful characters drawn in code. "The Long Game": Maya visits, is seen,
+           gets answers, leaves; Breakout keeps going for weeks until she books. Built by build.py. Every frame is a pure function of t. -->
+      <style>
+        __FONTFACES__
+        [data-composition-id="cartoon"] { --violet: #4c00ff; --pink: #ff5ad1; --deep: #140b3c; --blush: #ffd6f5; --ink: #140b3c;
+          --sans: "Manrope", system-ui, sans-serif; --mono: "Fragment Mono", ui-monospace, monospace; }
+        #root { position: absolute; inset: 0; overflow: hidden; background: #f6f1ff; font-family: var(--sans); color: var(--ink); }
+        .nk { font-family: "NK", serif; font-weight: 400; font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 0; letter-spacing: -0.035em; line-height: 1; }
+        .nk em { font-style: italic; }
+        .scene { position: absolute; inset: 0; display: none; overflow: hidden; }
+        .scene > * { position: absolute; }
+        .person, .agent { overflow: visible; width: 100%; height: 100%; display: block; }
+        .blob { border-radius: 50%; opacity: 0.55; }
+        .card { background: #fff; border-radius: 24px; box-shadow: 0 30px 70px -30px rgba(20, 8, 60, 0.45); }
+        .sk { display: block; height: 14px; border-radius: 7px; background: #e6e3f0; margin: 11px 0; }
+        .tag { background: #fff; border-radius: 999px; padding: 10px 22px; font-weight: 800; font-size: 26px; box-shadow: 0 16px 40px -18px rgba(20, 8, 60, 0.5); white-space: nowrap; }
+        .tag small { display: block; font-size: 18px; font-weight: 600; color: #6c6880; }
+        .floor { left: 0; right: 0; top: 930px; height: 150px; }
+
+        /* the site */
+        #ad { left: 520px; top: 300px; width: 300px; padding: 20px; }
+        #ad .tg { font-family: var(--mono); font-size: 15px; padding: 3px 9px; border-radius: 6px; background: #f0eef6; }
+        .grad { border-radius: 12px; background: linear-gradient(120deg, #4c00ff, #ff5ad1); }
+        #adh { margin-top: 12px; height: 100px; }
+        #adc { margin-top: 14px; width: 130px; height: 38px; border-radius: 10px; background: #4c00ff; }
+        #browser { left: 860px; top: 110px; width: 940px; height: 720px; overflow: hidden; transform-origin: 0 0; }
+        .bbar { height: 40px; background: #f0eef6; display: flex; gap: 8px; align-items: center; padding: 0 16px; }
+        .bbar i { width: 12px; height: 12px; border-radius: 50%; background: #d3d0de; }
+        .bbar .x { margin-left: auto; font-size: 22px; color: #8a8698; font-style: normal; width: auto; height: auto; background: none; }
+        #bhero { margin: 24px; height: 220px; padding: 40px; }
+        #bhero .sk { background: rgba(255, 255, 255, 0.8); height: 22px; }
+        .bcols { display: flex; gap: 20px; margin: 0 24px; }
+        .bcols div { flex: 1; height: 150px; border-radius: 16px; background: #f4f2fa; padding: 18px; }
+        #widget { left: 1290px; top: 230px; width: 470px; height: 560px; padding: 22px; display: flex; flex-direction: column; gap: 14px; transform-origin: 90% 100%; }
+        .whd { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 24px; padding-bottom: 12px; border-bottom: 1.5px solid #eeecf4; }
+        .mini { width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #a46bff, #4c00ff); flex: none; position: relative; }
+        .mini::after { content: ""; position: absolute; left: 11px; top: 14px; width: 6px; height: 8px; border-radius: 3px; background: #fff; box-shadow: 12px 0 0 #fff; }
+        .bub { padding: 14px 18px; border-radius: 18px; font-size: 24px; line-height: 1.35; max-width: 380px; }
+        .me { align-self: flex-end; background: #ff5ad1; color: #fff; border-bottom-right-radius: 6px; }
+        .bot { align-self: flex-start; background: #efe9ff; border-bottom-left-radius: 6px; }
+        .rep { align-self: flex-start; background: #e3f9ff; border-bottom-left-radius: 6px; }
+        .joined { align-self: center; font-size: 18px; font-weight: 700; color: #4c00ff; background: #efe9ff; padding: 6px 14px; border-radius: 999px; }
+        .qc, .w { opacity: 0; }
+        .w { display: inline-block; }
+        #scan { left: 330px; top: 360px; width: 420px; height: 620px; background: linear-gradient(180deg, rgba(76, 0, 255, 0.35), rgba(255, 90, 209, 0.15)); clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%); transform-origin: 50% 0; }
+        #nametag { left: 120px; top: 390px; }
+
+        /* Sam's desk */
+        #desk { left: 300px; top: 760px; width: 1320px; height: 60px; border-radius: 20px; background: #fff; }
+        #laptop { left: 360px; top: 600px; width: 300px; height: 170px; border-radius: 14px 14px 4px 4px; background: #2a2440; }
+        #phone { left: 1180px; top: 690px; width: 70px; height: 120px; border-radius: 14px; background: #140b3c; box-shadow: inset 0 0 0 6px #140b3c, inset 0 0 0 30px #ff5ad1; }
+        #alert { left: 1060px; top: 250px; width: 600px; padding: 26px 30px; }
+        #alert b { display: block; font-size: 34px; font-weight: 800; }
+        .chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+        .chips span { padding: 8px 16px; border-radius: 999px; background: #efe9ff; color: #4c00ff; font-weight: 700; font-size: 22px; }
+        .slack { display: inline-flex; gap: 8px; align-items: center; font-family: var(--mono); font-size: 16px; color: #6c6880; margin-bottom: 10px; }
+
+        /* research */
+        #acct { left: 480px; top: 270px; width: 500px; padding: 28px; }
+        .ahd { display: flex; align-items: center; gap: 16px; font-size: 34px; font-weight: 800; margin-bottom: 14px; }
+        .logo { width: 58px; height: 58px; border-radius: 14px; background: linear-gradient(140deg, #4c00ff, #68e6ff); }
+        .arow { display: flex; gap: 18px; align-items: center; height: 64px; border-top: 1.5px solid #eeecf4; }
+        .arow .k { width: 110px; height: 14px; border-radius: 7px; background: #e6e3f0; }
+        .arow .v { height: 18px; border-radius: 9px; background: #4c00ff; }
+        .role { position: absolute; padding: 8px 18px; border-radius: 999px; background: #fff; font-size: 24px; white-space: nowrap; transform: translateX(-50%); }
+        #lines { left: 0; top: 0; width: 1920px; height: 1080px; }
+        #lines path { stroke: #be79ff; stroke-width: 4; fill: none; stroke-dasharray: 400; }
+
+        /* follow-up */
+        #bigphone { left: 1060px; top: 120px; width: 470px; height: 840px; border-radius: 60px; background: #140b3c; padding: 22px; }
+        #screen { position: absolute; inset: 22px; border-radius: 42px; background: linear-gradient(180deg, #f6f1ff, #ffd6f5); overflow: hidden; }
+        .note { position: absolute; left: 20px; right: 20px; padding: 20px; display: flex; gap: 16px; align-items: center; }
+        .note .ic { width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex: none; }
+        .note .ic svg { width: 38px; height: 38px; fill: none; stroke: #fff; stroke-width: 2; stroke-linejoin: round; }
+        .note b { display: block; font-size: 22px; }
+        .note span { font-size: 19px; color: #6c6880; }
+        .fly { width: 110px; height: 110px; border-radius: 26px; background: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 24px 50px -20px rgba(0, 0, 0, 0.45); }
+        .fly svg { width: 64px; height: 64px; fill: none; stroke: #4c00ff; stroke-width: 1.8; stroke-linejoin: round; }
+
+        /* time-lapse */
+        #cal { left: 150px; top: 150px; width: 300px; height: 320px; overflow: hidden; perspective: 900px; }
+        #cal .top { height: 70px; background: #ff5ad1; border-radius: 24px 24px 0 0; }
+        #cal .day { position: absolute; left: 0; right: 0; top: 120px; text-align: center; font-family: "NK", serif; font-weight: 400; font-size: 92px; letter-spacing: -0.03em; backface-visibility: hidden; transform-origin: 50% 0; }
+        #bldg { left: 1420px; top: 330px; width: 320px; height: 600px; border-radius: 26px 26px 0 0; background: #4c00ff; padding: 40px 34px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; align-content: start; }
+        #bldg i { height: 70px; border-radius: 10px; background: #be79ff; }
+        #flag { left: 1500px; top: 250px; padding: 10px 22px; border-radius: 12px; background: #fff; font-weight: 800; font-size: 28px; }
+        .signal { position: absolute; left: 1580px; top: 180px; padding: 16px 28px; border-radius: 999px; background: #140b3c; color: #fff; font-weight: 800; font-size: 32px; white-space: nowrap; transform: translateX(-50%); }
+        .prop { position: absolute; }
+
+        /* back, yes */
+        #mini { left: 620px; top: 330px; width: 460px; height: 330px; overflow: hidden; }
+        #mini .lab { position: absolute; left: 24px; top: 70px; padding: 6px 14px; border-radius: 8px; background: #ff5ad1; color: #fff; font-weight: 800; font-size: 24px; }
+        #alert2 { left: 1080px; top: 230px; width: 620px; padding: 26px 30px; }
+        #alert2 b { display: block; font-size: 36px; font-weight: 800; }
+        #alert2 span { font-size: 24px; color: #6c6880; }
+        #reply { left: 760px; top: 170px; width: 640px; padding: 28px 32px; }
+        #reply b { display: block; font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+        #picker { left: 760px; top: 520px; width: 640px; padding: 26px 32px; }
+        #picker .d { font-weight: 800; font-size: 26px; margin-bottom: 18px; }
+        #picker .slots { display: flex; gap: 14px; }
+        .slot { flex: 1; text-align: center; padding: 18px 0; border-radius: 14px; background: #f0eef6; font-size: 26px; font-weight: 700; }
+        .slot.on { background: #4c00ff; color: #fff; }
+        .cur { width: 50px; height: 50px; }
+        #flood { position: absolute; inset: 0; background: radial-gradient(80% 90% at 40% 35%, #8a3dff 0%, #4c00ff 55%, #2a0a8a 100%); clip-path: circle(0 at 50% 50%); }
+        #tick { left: 830px; top: 170px; width: 260px; height: 260px; overflow: visible; }
+        #tick circle, #tick path { fill: none; stroke: #fff; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+        #bigok { left: 0; right: 0; top: 500px; text-align: center; font-size: 170px; color: #fff; }
+        #bigok em { color: var(--blush); }
+        .conf { width: 18px; height: 26px; border-radius: 4px; }
+        #llogo { left: 50%; top: 300px; height: 100px; margin-left: -250px; }
+        #lline { left: 0; right: 0; top: 460px; text-align: center; font-size: 150px; color: #fff; }
+        #lline em { color: var(--blush); }
+        #lurl { left: 0; right: 0; top: 670px; text-align: center; font-family: var(--mono); font-size: 28px; color: rgba(255, 255, 255, 0.8); }
+
+        /* captions */
+        #caps { position: absolute; left: 0; right: 0; bottom: 56px; text-align: center; z-index: 40; }
+        .cap { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); padding: 12px 28px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); color: #140b3c;
+          font-size: 30px; font-weight: 700; white-space: nowrap; opacity: 0; box-shadow: 0 16px 40px -20px rgba(20, 8, 60, 0.5); }
+        #disc { position: absolute; left: 40px; bottom: 24px; font-family: var(--mono); font-size: 14px; opacity: 0.55; z-index: 40; }
+        #err { position: absolute; left: 40px; top: 40px; right: 40px; font: 20px monospace; color: red; z-index: 99; white-space: pre-wrap; display: none; }
+      </style>
+      <div id="root" data-composition-id="cartoon" data-width="1920" data-height="1080">
+
+        <!-- 1 to 5: the site -->
+        <div class="scene" id="sSite" style="background:#f6f1ff">
+          <div class="blob" style="left:-200px;top:-260px;width:900px;height:900px;background:radial-gradient(circle,#ffd6f5,rgba(255,214,245,0) 70%)"></div>
+          <div class="blob" style="left:1100px;top:500px;width:1100px;height:1100px;background:radial-gradient(circle,#d9c8ff,rgba(217,200,255,0) 70%)"></div>
+          <div class="floor" style="background:#ece4ff"></div>
+          <div class="card" id="browser"><div class="bbar"><i></i><i></i><i></i><i class="x">×</i></div>
+            <div class="grad" id="bhero"><i class="sk" style="width:55%"></i><i class="sk" style="width:35%"></i></div>
+            <div class="bcols"><div><i class="sk" style="width:70%"></i><i class="sk" style="width:50%"></i></div><div><i class="sk" style="width:60%"></i><i class="sk" style="width:80%"></i></div><div><i class="sk" style="width:75%"></i><i class="sk" style="width:45%"></i></div></div></div>
+          <div class="card" id="ad"><span class="tg">Ad</span><div class="grad" id="adh"></div><div id="adc"></div></div>
+          <div id="scan"></div>
+          <div id="mGrey" style="left:180px;top:450px;width:300px;height:480px">__MAYA_GREY__</div>
+          <div id="mCol" style="left:180px;top:450px;width:300px;height:480px">__MAYA__</div>
+          <div class="tag" id="nametag">__MNAME__<small>__MROLE__</small></div>
+          <div class="tag" id="vistag" style="left:205px;top:380px">Visitor</div>
+          <div id="ag1w" style="left:0;top:0;width:180px;height:198px">__AGENT1__</div>
+          <div class="card" id="widget"><div class="whd"><span class="mini"></span>__AGENTNAME__</div>
+            <div class="bub me" id="bq">__Q__</div><div class="bub bot" id="ba">__A__</div>
+            <div class="joined" id="bj">__RNAME__ joined</div><div class="bub rep" id="br">__HELLO__</div><div class="bub me" id="bl">__LEAVE__</div></div>
+          <svg class="cur" id="cur1" viewBox="0 0 24 24"><path d="M4 2.5v17.2l4.6-4.4 3.1 6.9 3-1.3-3.1-6.8h6.4z" fill="#140b3c" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        </div>
+
+        <!-- 4: the rep is in the loop -->
+        <div class="scene" id="sSam" style="background:#68e6ff">
+          <div class="blob" style="left:900px;top:-300px;width:1200px;height:1200px;background:radial-gradient(circle,#c9f6ff,rgba(201,246,255,0) 70%)"></div>
+          <div id="samw" style="left:640px;top:330px;width:300px;height:480px">__SAM__</div>
+          <div id="desk"></div><div id="laptop"></div><div id="phone"></div>
+          <div class="card" id="alert"><div class="slack">● #inbound-alerts</div><b>__ALERT__</b><div class="chips">__ACHIPS__</div></div>
+        </div>
+
+        <!-- 6: homework -->
+        <div class="scene" id="sResearch" style="background:#140b3c">
+          <div class="blob" style="left:-300px;top:200px;width:1100px;height:1100px;background:radial-gradient(circle,rgba(76,0,255,0.7),rgba(76,0,255,0) 70%)"></div>
+          <svg id="lines" viewBox="0 0 1920 1080"><path d="M1400 470 L1180 660"/><path d="M1400 470 L1400 700"/><path d="M1400 470 L1620 660"/></svg>
+          <div id="ag2w" style="left:150px;top:330px;width:240px;height:264px">__AGENT2__</div>
+          <div class="card" id="acct"><div class="ahd"><span class="logo"></span>__COMPANY__</div>
+            <div class="arow"><i class="k"></i><i class="v"></i></div><div class="arow"><i class="k"></i><i class="v"></i></div><div class="arow"><i class="k"></i><i class="v"></i></div><div class="arow"><i class="k"></i><i class="v"></i></div></div>
+          <div id="cm0" style="left:1330px;top:300px;width:140px;height:224px">__MAYAHEAD__</div>
+          <div id="cm1" style="left:1115px;top:560px;width:130px;height:208px">__CMO__</div>
+          <div id="cm2" style="left:1335px;top:600px;width:130px;height:208px">__CFO__</div>
+          <div id="cm3" style="left:1555px;top:560px;width:130px;height:208px">__REVOPS__</div>
+          <div id="roles">__COMMITTEE__</div>
+        </div>
+
+        <!-- 7: follow-up after she leaves -->
+        <div class="scene" id="sFollow" style="background:#ffd6f5">
+          <div class="blob" style="left:-300px;top:-300px;width:1100px;height:1100px;background:radial-gradient(circle,#ffffff,rgba(255,255,255,0) 70%)"></div>
+          <div id="m2w" style="left:260px;top:430px;width:320px;height:512px">__MAYA2__</div>
+          <div id="ag3w" style="left:700px;top:180px;width:170px;height:187px">__AGENT3__</div>
+          <div id="bigphone"><div id="screen">
+            <div class="card note" id="nEmail" style="top:120px"><span class="ic" style="background:#4c00ff">__ENV__</span><div><b>__EFROM__</b><span>__ESUBJ__</span></div></div>
+            <div class="card note" id="nLi" style="top:270px"><span class="ic" style="background:#2c6bd9"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></span><div><b>__LINKEDIN__</b><span>Northwind · __MNAME__</span></div></div>
+          </div></div>
+          <div class="fly" id="fly1">__ENV__</div><div class="fly" id="fly2"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></div>
+        </div>
+
+        <!-- 8: the long horizon -->
+        <div class="scene" id="sLapse">
+          <div class="card" id="cal"><div class="top"></div>__DAYS__</div>
+          <div id="bldg"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div id="flag">__COMPANY__</div>
+          <div id="sigs">__SIGNALS__</div>
+          <div id="ag4w" style="left:520px;top:150px;width:170px;height:187px">__AGENT4__</div>
+          <div id="m3w" style="left:760px;top:420px;width:320px;height:512px">__MAYA3__</div>
+          <svg class="prop" id="pMug" viewBox="0 0 60 60" style="width:80px;height:80px"><rect x="8" y="14" width="34" height="38" rx="8" fill="#fff"/><path d="M42 22h6a8 8 0 0 1 0 16h-6" stroke="#fff" stroke-width="6" fill="none"/><path d="M18 4c0 6 6 6 6 12M28 4c0 6 6 6 6 12" stroke="#fff" stroke-width="3" fill="none" opacity="0.7"/></svg>
+          <svg class="prop" id="pPhone" viewBox="0 0 40 70" style="width:50px;height:88px"><rect x="2" y="2" width="36" height="66" rx="8" fill="#140b3c"/><rect x="6" y="8" width="28" height="50" rx="4" fill="#68e6ff"/></svg>
+          <svg class="prop" id="pLap" viewBox="0 0 120 80" style="width:220px;height:146px"><rect x="14" y="4" width="92" height="60" rx="6" fill="#2a2440"/><rect x="20" y="10" width="80" height="48" rx="3" fill="#be79ff"/><rect x="2" y="64" width="116" height="10" rx="4" fill="#d3d0de"/></svg>
+          <div class="fly" id="fly3">__ENV__</div>
+        </div>
+
+        <!-- 9: they're back -->
+        <div class="scene" id="sBack" style="background:#f6f1ff">
+          <div class="floor" style="background:#ece4ff"></div>
+          <div id="cfow" style="left:280px;top:430px;width:300px;height:480px">__CFO2__</div>
+          <div class="card" id="mini"><div class="bbar"><i></i><i></i><i></i></div><div class="grad" style="margin:20px;height:110px"></div><span class="lab">Pricing</span>
+            <div style="padding:0 24px"><i class="sk" style="width:80%"></i><i class="sk" style="width:60%"></i></div></div>
+          <div id="sam2w" style="left:1380px;top:430px;width:300px;height:480px">__SAM2__</div>
+          <div class="card" id="alert2"><div class="slack">● #key-accounts</div><b>__BTITLE__</b><span>__BSUB__</span></div>
+        </div>
+
+        <!-- 10: yes -->
+        <div class="scene" id="sYes" style="background:#f6f1ff">
+          <div class="floor" style="background:#ece4ff"></div>
+          <div id="m4w" style="left:260px;top:430px;width:320px;height:512px">__MAYA4__</div>
+          <div class="card" id="reply"><b>Re: __ESUBJ__</b><i class="sk" style="width:85%"></i><i class="sk" style="width:60%"></i></div>
+          <div class="card" id="picker"><div class="d">Pick a time</div><div class="slots">__SLOTS__</div></div>
+          <svg class="cur" id="cur2" viewBox="0 0 24 24"><path d="M4 2.5v17.2l4.6-4.4 3.1 6.9 3-1.3-3.1-6.8h6.4z" fill="#140b3c" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          <div id="flood"></div>
+          <svg id="tick" viewBox="0 0 200 200"><circle cx="100" cy="100" r="86"/><path d="M58 104l28 28 58-62"/></svg>
+          <div class="nk" id="bigok">__BOOKED__</div>
+        </div>
+
+        <!-- 11: close -->
+        <div class="scene" id="sClose" style="background:radial-gradient(80% 90% at 40% 35%, #8a3dff 0%, #4c00ff 55%, #2a0a8a 100%)">
+          <div id="sam3w" style="left:560px;top:380px;width:320px;height:512px">__SAM3__</div>
+          <div id="ag5w" style="left:1000px;top:420px;width:260px;height:286px">__AGENT5__</div>
+          <div id="conf"></div>
+          <img id="llogo" src="assets/logo-on-dark.svg" alt="">
+          <div class="nk" id="lline">__LOCK__</div>
+          <div id="lurl">__URL__</div>
+        </div>
+
+        <div id="caps">__CAPTIONS__</div>
+        <div id="disc">__DISC__</div>
+        <div id="err"></div>
+      </div>
+      <script>
+        (function () {
+          var S = '[data-composition-id="cartoon"] ';
+          function one(s, el) { return (el || document).querySelector(el ? s : S + s); }
+          function all(s, el) { return Array.prototype.slice.call((el || document).querySelectorAll(el ? s : S + s)); }
+          function cl(u) { return Math.max(0, Math.min(1, u)); }
+          function out4(u) { u = cl(u); return 1 - Math.pow(1 - u, 4); }
+          function outBack(u) { u = cl(u); var c = 1.9; return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); }
+          function io(u) { u = cl(u); return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+          function lerp(a, b, u) { return a + (b - a) * u; }
+          var T = __T__, AT = T.at, BAR = 240 / T.bpm, END = T.bars * BAR;
+          function pop(el, u, from) { el.style.opacity = u > 0 ? 1 : 0; el.style.transform = "scale(" + lerp(from == null ? 0.5 : from, 1, outBack(u)).toFixed(4) + ")"; }
+          function rise(el, u, dy) { el.style.opacity = cl(u * 4).toFixed(3); el.style.transform = "translateY(" + ((dy || 30) * (1 - out4(u))).toFixed(1) + "px)"; }
+          function at(el, x, y, extra) { el.style.left = x.toFixed(1) + "px"; el.style.top = y.toFixed(1) + "px"; if (extra != null) el.style.transform = extra; }
+          function scene(id, a, b, bar) { var on = bar >= a && bar < b; one(id).style.display = on ? "block" : "none"; return on; }
+
+          var MOUTH = { smile: ["M86 138 Q100 152 114 138", "none"], talk: ["M88 136 Q100 158 112 136 Q100 142 88 136Z", "#1d1530"],
+                        flat: ["M89 143 L111 143", "none"], wow: ["M94 140 Q100 154 106 140 Q100 134 94 140Z", "#1d1530"], grin: ["M82 134 Q100 160 118 134 Q100 142 82 134Z", "#1d1530"] };
+          // a cartoon person's life: bob, blink, mouth, arms; o = {talk, mouth, armL, armR, tilt, seed}
+          function live(svg, t, o) {
+            o = o || {};
+            var seed = o.seed || 0;
+            one(".bob", svg).style.transform = "translateY(" + (Math.sin(t * 2.4 + seed) * 4).toFixed(2) + "px)";
+            var ph = (t + seed * 0.37) % 3.1, blink = ph < 0.12 ? 0.1 : 1;
+            all(".eye", svg).forEach(function (e) { e.style.transformBox = "fill-box"; e.style.transformOrigin = "50% 50%"; e.style.transform = "scaleY(" + blink * (o.eyes || 1) + ")"; });
+            var m = one(".mouth", svg);
+            if (m) { var k = o.talk ? (Math.floor(t * 9 + seed) % 2 ? "talk" : "smile") : (o.mouth || "smile"); m.setAttribute("d", MOUTH[k][0]); m.setAttribute("fill", MOUTH[k][1]); }
+            var aL = one(".armL", svg), aR = one(".armR", svg);
+            if (aL) aL.style.transform = "rotate(" + (o.armL || 0) + "deg)";
+            if (aR) aR.style.transform = "rotate(" + (o.armR || 0) + "deg)";
+            one(".head", svg).style.transform = "rotate(" + (o.tilt || 0) + "deg)";
+          }
+          function agent(svg, t, o) {
+            o = o || {};
+            one(".bob", svg).style.transform = "translateY(" + (Math.sin(t * 3.1) * 8).toFixed(2) + "px) rotate(" + (o.tilt || Math.sin(t * 1.7) * 4).toFixed(2) + "deg)";
+            all(".pupil", svg).forEach(function (p) { p.style.transform = "translate(" + (o.lx || 0) + "px," + (o.ly || 0) + "px)"; });
+            var ph = (t + 1.3) % 2.7;
+            all(".eye", svg).forEach(function (e) { e.style.transformBox = "fill-box"; e.style.transformOrigin = "50% 50%"; e.style.transform = "scaleY(" + (ph < 0.1 ? 0.1 : 1) + ")"; });
+            one(".glow", svg).style.transform = "scale(" + (1 + 0.08 * Math.sin(t * 5)).toFixed(3) + ")";
+            one(".glow", svg).style.transformBox = "fill-box"; one(".glow", svg).style.transformOrigin = "50% 50%";
+          }
+          function fly(el, t, a, d, p0, p1, arc) { // an envelope flying along an arc between bars a and a + d
+            var u = (t / BAR - a) / d;
+            el.style.opacity = u > 0 && u < 1.05 ? 1 : 0;
+            var e = io(u), x = lerp(p0[0], p1[0], e), y = lerp(p0[1], p1[1], e) - (arc || 160) * Math.sin(Math.PI * cl(u));
+            at(el, x, y, "rotate(" + (-14 * Math.sin(Math.PI * cl(u))).toFixed(1) + "deg) scale(" + (u > 0.9 ? lerp(1, 0.4, (u - 0.9) / 0.15) : 1).toFixed(3) + ")");
+          }
+
+          var CONF = [];
+          (function () { var s = 7; for (var i = 0; i < 70; i++) { s = (s * 16807) % 2147483647; var r1 = s / 2147483647; s = (s * 16807) % 2147483647; var r2 = s / 2147483647; s = (s * 16807) % 2147483647;
+            CONF.push([r1, r2, s / 2147483647, ["#ff5ad1", "#ffd6f5", "#68e6ff", "#9cf5c0", "#ffffff", "#be79ff"][i % 6]]); } })();
+          one("#conf").innerHTML = CONF.map(function (c, i) { return '<i class="conf" style="position:absolute;background:' + c[3] + '"></i>'; }).join("");
+          var confs = all("#conf i");
+
+          var drv = { t: 0 };
+          function render() {
+            var t = drv.t, bar = t / BAR;
+
+            // ---- 1 to 5: the site
+            if (scene("#sSite", 0, AT.research, bar) && !(bar >= AT.rep && bar < AT.repjoin)) {
+              var mc = one("#mCol"), mg = one("#mGrey"), ms = one("#maya");
+              var lv = cl((bar - AT.leave - 0.45) / 0.55);                                 // she walks off
+              var walk = -700 * io(lv);
+              [mc, mg].forEach(function (el) { el.style.transform = "translateX(" + walk.toFixed(1) + "px)"; });
+              var tap = bar > 0.8 && bar < 1.3, typing = bar >= AT.chat + 0.2 && bar < AT.chat + 0.8;
+              live(ms, t, { armR: tap ? -55 : (typing ? -40 : 0), armL: lv > 0 ? 20 * Math.sin(t * 12) : 0, talk: typing || (bar >= AT.leave && bar < AT.leave + 0.3),
+                            mouth: bar >= AT.leave ? "flat" : (bar >= AT.chat + 1.1 ? "grin" : "smile"), tilt: bar > AT.seen + 0.9 && bar < AT.chat ? -6 : 0, seed: 1 });
+              live(one("#mayaGrey"), t, { armR: tap ? -55 : 0, seed: 1 });
+              var rv = cl((bar - AT.seen - 0.35) / 0.6);                                  // colour floods in, head to toe
+              mc.style.clipPath = "inset(0 0 " + (100 - rv * 100).toFixed(1) + "% 0)";
+              mg.style.opacity = rv >= 1 ? 0 : 1;
+              var vt = one("#vistag"); vt.style.opacity = bar > 0.2 && bar < AT.seen + 0.4 ? 1 : 0; vt.style.transform = "translateX(" + walk + "px)";
+              var nt = one("#nametag"); pop(nt, (bar - AT.seen - 0.9) / 0.15, 0.6); if (lv > 0) nt.style.opacity = 1 - lv;
+              // the ad, the tap, the page that keeps its promise
+              var ad = one("#ad"); pop(ad, (bar - 0.15) / 0.15, 0.7); if (bar > 1.5) ad.style.opacity = 0;
+              var bu = out4((bar - 1.15) / 0.4), br = one("#browser");
+              var cu = cl((bar - AT.leave - 0.3) / 0.25);                                  // the tab closes
+              br.style.opacity = bar > 1.15 && cu < 1 ? 1 : 0;
+              br.style.transform = "translate(" + lerp(-340, 0, bu).toFixed(1) + "px," + lerp(190, 0, bu).toFixed(1) + "px) scale(" + (lerp(0.3, 1, bu) * (1 - 0.92 * in3(cu))).toFixed(4) + ")";
+              // Breakout arrives and sees her
+              var aw = one("#ag1w"), au = io((bar - AT.seen) / 0.4);
+              at(aw, lerp(1950, 520, au), lerp(120, 240, au) - Math.sin(Math.PI * cl((bar - AT.seen) / 0.4)) * 80);
+              aw.style.opacity = bar >= AT.seen && bar < AT.chat + 0.2 ? 1 : 0;
+              agent(one("#ag1"), t, { lx: -6, ly: 6 });
+              var sc = one("#scan"), su = (bar - AT.seen - 0.35) / 0.6;
+              sc.style.opacity = su > 0 && su < 1.1 ? 0.9 : 0; sc.style.transform = "rotate(" + (8 * Math.sin(su * 9)).toFixed(2) + "deg)";
+              // the chat
+              var wg = one("#widget"); pop(wg, (bar - AT.chat) / 0.15, 0.4); if (cu > 0) wg.style.opacity = 1 - cu;
+              var qcs = all(".qc", wg), qa = AT.chat + 0.2, qb = AT.chat + 0.8;
+              qcs.forEach(function (c, j) { c.style.opacity = bar >= qa + j * (qb - qa) / qcs.length ? 1 : 0; });
+              one("#bq").style.opacity = bar >= qa ? 1 : 0;
+              var ws = all("#ba .w"); one("#ba").style.opacity = bar >= AT.chat + 0.95 ? 1 : 0;
+              ws.forEach(function (w, j) { w.style.opacity = bar >= AT.chat + 0.95 + j / 10 ? 1 : 0; });
+              rise(one("#bj"), (bar - AT.repjoin - 0.05) / 0.12, 14); rise(one("#br"), (bar - AT.repjoin - 0.25) / 0.15, 14); rise(one("#bl"), (bar - AT.leave) / 0.15, 14);
+              [one("#bj"), one("#br")].forEach(function (e) { e.style.display = bar >= AT.repjoin ? "" : "none"; });
+              one("#bl").style.display = bar >= AT.leave ? "" : "none";
+              var c1 = one("#cur1"), ku = io((bar - 0.55) / 0.35);
+              c1.style.opacity = bar > 0.5 && bar < 1.2 ? 1 : 0; at(c1, lerp(760, 600, ku), lerp(700, 440, ku), bar > 0.95 && bar < 1.05 ? "scale(0.85)" : "none");
+            } else one("#sSite").style.display = bar < AT.research && !(bar >= AT.rep && bar < AT.repjoin) ? "block" : "none";
+
+            // ---- 4: Sam gets the alert
+            if (scene("#sSam", AT.rep, AT.repjoin, bar)) {
+              var su2 = bar - AT.rep;
+              var ph = one("#phone"); ph.style.transform = su2 < 0.6 ? "rotate(" + (8 * Math.sin(t * 60)).toFixed(1) + "deg)" : "none";
+              pop(one("#alert"), (su2 - 0.25) / 0.15, 0.4);
+              live(one("#sam"), t, { mouth: su2 > 0.35 ? "wow" : "smile", eyes: su2 > 0.35 ? 1.3 : 1, armR: su2 > 0.7 ? -60 : 0, tilt: su2 > 0.3 ? 5 : 0, seed: 2 });
+            }
+
+            // ---- 6: homework
+            if (scene("#sResearch", AT.research, AT.follow, bar)) {
+              var ru = bar - AT.research;
+              agent(one("#ag2"), t, { lx: 8, ly: 0 }); rise(one("#ag2w"), ru / 0.2, 40);
+              pop(one("#acct"), (ru - 0.1) / 0.15, 0.7);
+              all("#acct .v").forEach(function (v, j) { v.style.width = (out4((ru - 0.3 - j * 0.15) / 0.2) * [250, 190, 290, 160][j]) + "px"; });
+              pop(one("#cm0"), (ru - 0.6) / 0.15);
+              live(one("#mayaHead"), t, { seed: 3 });
+              ["#cm1", "#cm2", "#cm3"].forEach(function (id, j) { pop(one(id), (ru - 1.0 - j * 0.25) / 0.15); live(one(["#cmo", "#cfo", "#revops"][j]), t, { seed: 4 + j }); });
+              all("#lines path").forEach(function (p, j) { p.style.strokeDashoffset = (400 * (1 - out4((ru - 0.95 - j * 0.25) / 0.2))).toFixed(1); });
+              all(".role").forEach(function (r, j) { var x = [1180, 1400, 1620][j], y = [780, 820, 780][j]; r.style.left = x + "px"; r.style.top = y + "px";
+                r.style.opacity = ru > 1.1 + j * 0.25 ? 1 : 0; });
+            }
+
+            // ---- 7: the follow-up
+            if (scene("#sFollow", AT.follow, AT.lapse, bar)) {
+              var fu = bar - AT.follow;
+              agent(one("#ag3"), t, { lx: 8, ly: 4 });
+              live(one("#maya2"), t, { armR: -30, tilt: fu > 0.5 ? 8 : 0, mouth: fu > 0.6 ? "grin" : "smile", seed: 5 });
+              fly(one("#fly1"), t, AT.follow + 0.2, 0.35, [760, 250], [1200, 260], 140);
+              fly(one("#fly2"), t, AT.follow + 1.1, 0.35, [760, 250], [1200, 410], 140);
+              var ne = one("#nEmail"), nl = one("#nLi");
+              rise(ne, (fu - 0.55) / 0.15, -40); rise(nl, (fu - 1.45) / 0.15, -40);
+            }
+
+            // ---- 8: the long horizon: days pass, signals fire, Breakout keeps showing up
+            if (scene("#sLapse", AT.lapse, AT.back, bar)) {
+              var seg = (AT.back - AT.lapse) / 3, lu = bar - AT.lapse, k = Math.min(2, Math.floor(lu / seg)), sl = lu - k * seg;
+              one("#sLapse").style.background = ["#68e6ff", "#9cf5c0", "#be79ff"][k];
+              all("#cal .day").forEach(function (d, j) { var f = j === k ? lerp(-90, 0, out4(sl / 0.25)) : (j < k ? 90 : -90);
+                d.style.transform = "rotateX(" + f.toFixed(1) + "deg)"; d.style.opacity = j === k ? 1 : 0; });
+              all(".signal").forEach(function (s, j) { var su3 = j === k ? (sl - 0.3) / 0.15 : -1;
+                s.style.opacity = su3 > 0 ? 1 : 0; s.style.transform = "translateX(-50%) scale(" + lerp(0.3, 1, outBack(su3)).toFixed(3) + ")"; });
+              all("#bldg i").forEach(function (w, j) { w.style.background = ((j * 7 + k * 3) % 5 === 0) && sl > 0.3 && sl < 0.8 ? "#ffd6f5" : "#be79ff"; });
+              agent(one("#ag4"), t, { lx: 6, ly: 6 });
+              fly(one("#fly3"), t, AT.lapse + k * seg + 0.7, 0.4, [600, 250], [960, 480], 150);
+              var arrived = sl > 1.1;
+              live(one("#maya3"), t, { armR: k === 1 ? -150 : -40, mouth: arrived ? "grin" : (k === 1 ? "talk" : "smile"), talk: k === 1 && !arrived, tilt: arrived ? -6 : 0, seed: 6 + k });
+              var props = [one("#pMug"), one("#pPhone"), one("#pLap")];
+              props.forEach(function (p, j) { p.style.display = j === k ? "block" : "none"; });
+              at(props[0], 1000, 680); at(props[1], 1010, 470); at(props[2], 860, 700);
+              var m3 = one("#m3w"); m3.style.transform = "translateY(" + (sl < 0.15 ? 30 * (1 - out4(sl / 0.15)) : 0).toFixed(1) + "px)";
+            }
+
+            // ---- 9: they're back
+            if (scene("#sBack", AT.back, AT.yes, bar)) {
+              var bk = bar - AT.back;
+              live(one("#cfo2"), t, { armR: -45, tilt: 6, seed: 9 });
+              pop(one("#mini"), bk / 0.15, 0.8);
+              live(one("#sam2"), t, { mouth: bk > 0.9 ? "grin" : "wow", eyes: bk > 0.7 ? 1.3 : 1, armR: bk > 1.2 ? -140 : 0, seed: 10 });
+              pop(one("#alert2"), (bk - 0.6) / 0.15, 0.4);
+            }
+
+            // ---- 10: yes, then the meeting is booked
+            if (scene("#sYes", AT.yes, AT.close, bar)) {
+              var yu = bar - AT.yes;
+              live(one("#maya4"), t, { armR: -40, mouth: "grin", talk: yu < 0.5, seed: 11 });
+              rise(one("#reply"), yu / 0.15, 30); pop(one("#picker"), (yu - 0.35) / 0.15, 0.7);
+              all(".slot").forEach(function (s, j) { s.className = "slot" + (j === 2 && yu > 1.0 ? " on" : ""); });
+              var c2 = one("#cur2"), kk = io((yu - 0.6) / 0.35), slot = all(".slot")[2];
+              c2.style.opacity = yu > 0.55 && yu < 1.25 ? 1 : 0; at(c2, lerp(1500, 1250, kk), lerp(960, 670, kk), yu > 0.98 && yu < 1.06 ? "scale(0.85)" : "none");
+              var fu2 = bar - AT.booked;
+              one("#flood").style.clipPath = "circle(" + (fu2 > 0 ? 2300 * out4(fu2 / 0.25) : 0).toFixed(1) + "px at 1270px 690px)";
+              var tk = one("#tick"); tk.style.opacity = fu2 > 0.1 ? 1 : 0;
+              tk.querySelector("circle").setAttribute("stroke-dasharray", "541"); tk.querySelector("circle").setAttribute("stroke-dashoffset", (541 * (1 - out4((fu2 - 0.1) / 0.3))).toFixed(1));
+              tk.querySelector("path").setAttribute("stroke-dasharray", "160"); tk.querySelector("path").setAttribute("stroke-dashoffset", (160 * (1 - out4((fu2 - 0.3) / 0.25))).toFixed(1));
+              rise(one("#bigok"), (fu2 - 0.2) / 0.25, 50);
+            }
+
+            // ---- 11: the celebration and the close
+            if (scene("#sClose", AT.close, T.bars + 1, bar)) {
+              var cu2 = bar - AT.close, out = cl((cu2 - 0.75) / 0.25);
+              var s3 = one("#sam3w"); s3.style.transform = "translateY(" + (700 * in3(out)).toFixed(1) + "px)";
+              var a5 = one("#ag5w"); a5.style.transform = "translateY(" + (700 * in3(out) - 60 * Math.abs(Math.sin(t * 5))).toFixed(1) + "px)";
+              agent(one("#ag5"), t, { lx: -8, ly: -4, tilt: 10 * Math.sin(t * 5) });
+              live(one("#sam3"), t, { armR: -160 + 15 * Math.sin(t * 10), armL: 160 - 15 * Math.sin(t * 10), mouth: "grin", seed: 12 });
+              confs.forEach(function (c, i) { var p = CONF[i], u = cu2 - p[2] * 0.3; if (u < 0) { c.style.opacity = 0; return; }
+                var x = 300 + p[0] * 1320 + Math.sin(u * 6 + i) * 30, y = -60 + u * (500 + p[1] * 500);
+                c.style.opacity = y < 1150 ? 1 : 0; c.style.left = x + "px"; c.style.top = y + "px"; c.style.transform = "rotate(" + (u * 400 * (p[1] - 0.5)).toFixed(0) + "deg)"; });
+              rise(one("#llogo"), (cu2 - 0.85) / 0.2, 20); rise(one("#lline"), (cu2 - 1.0) / 0.25, 40); rise(one("#lurl"), (cu2 - 1.3) / 0.2, 14);
+            }
+
+            // ---- captions and the label
+            all(".cap").forEach(function (c, j) { var w = T.caps[j], u = (bar - w[0]) / 0.12, v = (bar - w[1] + 0.15) / 0.1;
+              c.style.opacity = (cl(u) * (1 - cl(v))).toFixed(3); c.style.transform = "translateX(-50%) translateY(" + (20 * (1 - out4(u))).toFixed(1) + "px)"; });
+            var dk = (bar >= AT.research && bar < AT.follow) || bar >= AT.booked;
+            one("#disc").style.color = dk ? "#fff" : "#140b3c";
+            one("#disc").style.opacity = bar >= AT.close ? 0 : 0.55;
+          }
+          function in3(u) { u = cl(u); return u * u * u; }
+          function safe() { try { render(); } catch (e) { var er = one("#err"); er.style.display = "block"; er.textContent = e.stack || String(e); } }
+          var tl = gsap.timeline({ paused: true });
+          tl.fromTo(drv, { t: 0.001 }, { t: END, duration: END - 0.001, ease: "none", onUpdate: safe, immediateRender: false }, 0.001);
+          safe();
+          window.__timelines["cartoon"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

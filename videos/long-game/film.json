@@ -1,0 +1,32 @@
+{
+  "about": "Cartoon: a short story with simple, colourful cartoon characters drawn in code. Example: 'The Long Game', one buyer from an anonymous visit to a booked meeting weeks later, carried by Breakout's agent. Times in bars at 120 BPM (1 bar = 2 s). Captions are verbatim page headlines from getbreakout.ai/use-cases (saved 2026-10-09); people and companies are fictional.",
+  "bpm": 120,
+  "bars": 28,
+  "brand": "../../brand",
+  "at": { "ad": 0, "seen": 2.5, "chat": 4.5, "rep": 7, "repjoin": 8.25, "leave": 9.5, "research": 10.5, "follow": 13, "lapse": 15.5, "back": 20.5, "yes": 23, "booked": 24.25, "close": 25.5, "end": 28 },
+  "captions": [
+    { "at": 0.3, "until": 2.5, "text": "Keep the promise your ad made." },
+    { "at": 2.8, "until": 4.5, "text": "See who’s behind every visit." },
+    { "at": 4.8, "until": 7, "text": "Give every visitor a helpful first conversation." },
+    { "at": 7.3, "until": 9.5, "text": "Join the conversations that matter." },
+    { "at": 10.8, "until": 13, "text": "Know the account before you reach out." },
+    { "at": 13.3, "until": 15.5, "text": "Stay useful until buyers are ready." },
+    { "at": 15.8, "until": 20.5, "text": "Reach accounts when interest is fresh." },
+    { "at": 20.8, "until": 23, "text": "Know when a key account comes back." }
+  ],
+  "agent": "Breakout",
+  "maya": { "name": "Maya R.", "role": "VP Marketing, Northwind", "company": "Northwind" },
+  "rep": { "name": "Sam", "role": "SDR" },
+  "chat": { "question": "Do you work with HubSpot?", "answer": "Yes. Salesforce, HubSpot and Marketo.", "rep_hello": "Hi Maya, I'm Sam. Happy to walk you through it.", "leave": "Not right now." },
+  "alert": { "title": "Maya R. is on your site", "chips": ["Northwind", "Pricing page", "ICP fit"] },
+  "committee": ["CMO", "CFO", "Head of RevOps"],
+  "email": { "subject": "A plan for Northwind's next quarter", "from": "Sam · Breakout" },
+  "linkedin": "LinkedIn message from Sam",
+  "lapse": { "days": ["Day 3", "Day 12", "Day 28"], "signals": ["New CFO hired", "Funding", "Hiring surge"] },
+  "back": { "title": "Northwind is back", "sub": "CFO on the pricing page" },
+  "slots": ["10:00", "11:30", "2:00 PM"],
+  "booked": "Meeting *booked.*",
+  "lockup": { "line": "Pageview to *pipeline.*", "url": "getbreakout.ai" },
+  "disclaimer": "Illustrative example",
+  "music": { "file": "score/score.wav", "make": "score.py", "gain_db": -1, "fade_out": 0.8 }
+}
