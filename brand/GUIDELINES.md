@@ -32,6 +32,10 @@ How a Breakout video looks, sounds and speaks. This page sums up the brand kit (
 
 Never show a competitor's name or logo, with one exception: the ABM templates may name Qualified, only in lines quoted verbatim from getbreakout.ai/compare/qualified-alternative, never with its logo. A target's chat widget appears only as captured on the target's own site, and anything said about it describes that capture. Show the source on screen while a quote is up.
 
+## Story
+
+- Every film needs a story: a character, something at stake, and a turn. A list of features, however fast and colourful, reads as a presentation.
+
 ## Motion
 
 - Something moves from frame 1; no static title cards.
@@ -53,7 +57,7 @@ Never show a competitor's name or logo, with one exception: the ABM templates ma
 | Swiss grid: off-white, hairlines, mono indexes, huge type slams | `swiss-grid` | Approved ("i like 03"; "This is great.") |
 | Concept film on the grid, picture and music from one pattern | `sequencer` | Approved ("I love this.") |
 | Particle swarm, music-video motion | `particle-swarm` | Liked ("ok this is cool") |
-| Kinetic: minimal, colourful colour-field floods, a product moment per beat | `kinetic` | Requested by the owner ("minimal, fast, colorful, quick motion"); awaiting a verdict |
+| Kinetic: minimal, colourful colour-field floods, a product moment per beat | `kinetic` | The look was asked for ("minimal, fast, colorful, quick motion"), but a beat-per-feature list was rejected: "This doesn't have a story... looks like a presenration". Use it inside a story, not as a list |
 | Cinematic: bright violet worlds, letterbox, grain, hard cuts | `abm-cinematic` | Requested by the owner; awaiting a verdict |
 | Split screen, low on text, the user experience side by side | `abm-split` | Requested by the owner; awaiting a verdict |
 | Voice-led Apple-style launch | `voice-led` | The kit's base; not yet judged |

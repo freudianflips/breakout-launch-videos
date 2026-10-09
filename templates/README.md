@@ -13,7 +13,7 @@ Then follow the order in `CLAUDE.md`: brief and storyboard approved first, then 
 |---|---|---|---|
 | [`swiss-grid`](swiss-grid/README.md) | ![](swiss-grid/poster.jpg) | A crisp, wordless product story under 30 s; UI as cards; a big success state | Approved |
 | [`sequencer`](sequencer/README.md) | ![](sequencer/poster.jpg) | A one-idea concept film where the music is built from the picture | Approved |
-| [`kinetic`](kinetic/README.md) | ![](kinetic/poster.jpg) | Many features or use cases in one fast, colourful film; product tours; social cuts | Awaiting a verdict |
+| [`kinetic`](kinetic/README.md) | ![](kinetic/poster.jpg) | A fast, colourful look and its 12 product moments; put it inside a story, not a list | List format rejected ("doesn't have a story") |
 | [`particle-swarm`](particle-swarm/README.md) | ![](particle-swarm/poster.jpg) | Teasers, openers, logo reveals, 6 to 10 s social cuts | Liked |
 | [`abm-cinematic`](abm-cinematic/README.md) | ![](abm-cinematic/poster.jpg) | Per-account ABM: their site and chat, a hard-cut hook, wins, an offer | Awaiting a verdict |
 | [`abm-split`](abm-split/README.md) | ![](abm-split/poster.jpg) | Per-account ABM: the same visitor on their site today and with Breakout | Awaiting a verdict |
