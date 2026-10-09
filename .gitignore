@@ -40,3 +40,5 @@ __pycache__/
 
 # local private-term list for scripts/check-template.py
 scripts/private-terms.txt
+/docs/styles/*/renders/
+/docs/styles/*/snapshots/
