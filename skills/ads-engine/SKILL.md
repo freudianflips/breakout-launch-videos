@@ -13,7 +13,7 @@ The repo's rules hold here as they do for videos (`CLAUDE.md`): words from Break
 
 The owner gives the idea. Run `new <campaign> --code ABC --idea "..."` (the code is the ad id prefix, 2 to 8 capitals, never reused). Fill `BRIEF.md` with them:
 
-- **Who buys, and can one person buy alone?** If yes, every ad talks to that one person, like consumer marketing. Do not guess: ask.
+- **Who buys, and can one person buy alone?** For Breakout, yes on the trial door (Signals, a 30-day free trial with no card) and no on the demo door (Growth). Trial ads talk to that one person, like consumer marketing; set `copy.cta` and `url` from `campaign.json` `funnels`.
 - **The one feeling** in a sentence.
 - **3 to 6 concepts that are genuinely different ideas**, not phrasings of one idea. The test: would each still make sense with the others' headlines removed? Each concept cites the line of `brand/brand.json` `copy` it comes from.
 - What `ads/LEARNINGS.md` already says that applies. Start from the winners there before inventing.
@@ -53,6 +53,7 @@ Run `lint <campaign>` until it shows 0 errors, and treat every warning as a ques
 
 State the plan and the spend: personas, ads per campaign, daily budget, test share, and how long until each ad reaches `min_impressions`. Wait for a yes.
 
+- **By hand (now)**: `kit <campaign>` writes `launch/kit.html`, every campaign setting and ad field in build order with Copy buttons and the files to upload. Open it, or publish it as a private page so the owner can keep it next to Campaign Manager. Ad names must start with the ad id.
 - `export <campaign>` writes `launch/ads.csv` (manual upload: ad name with tags, intro, headline, CTA, URL with `utm_content=<id>`, file) and `launch/plan.json`.
 - `launch <campaign>` is a dry run that logs every API request. `launch <campaign> --live` (token in the environment, never in the repo) creates the campaign group and campaigns as DRAFT and the ads as PAUSED. A person activates them in Campaign Manager. Video and Thought Leader ads are set up by hand.
 - At most 5 active ads per campaign, 1 per concept; rotate the next set in as ads are judged.

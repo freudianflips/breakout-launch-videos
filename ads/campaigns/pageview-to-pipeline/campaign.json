@@ -9,8 +9,13 @@
   "cta": "REQUEST_DEMO",
   "abm": false,
   "budget": {
-    "daily_usd": null,
-    "test_share": 0.2
+    "daily_usd": 100,
+    "test_share": 0.2,
+    "campaigns": {
+      "demand-gen": 50,
+      "founder": 50
+    },
+    "note": "Owner, 2026-10-14: start at $100/day. Round 1 has no proven winner, so all of it tests: 2 persona campaigns at $50 (proposed, awaiting approval). The 15 to 25% test share applies once winners exist."
   },
   "personas": [
     "demand-gen",
@@ -49,6 +54,13 @@
       "name": "You touch grass",
       "idea": "A joke about the stack RevOps already lives in, then the product.",
       "source": "copy.site_h2[3]"
+    },
+    {
+      "code": "know-who",
+      "name": "Know every buyer on your site",
+      "status": "proposed",
+      "idea": "The self-serve door: one person can start a free trial today and see who is on their site. Consumer-style, written for that one person.",
+      "source": "ads/claims.json: \"Identify ready-to-buy visitors before they fill a form\", \"Know every buyer on your site.\", \"30-day free trial · No credit card required · Live in 5 minutes\""
     }
   ],
   "ads": [
@@ -366,5 +378,17 @@
         "note": "Follows the video workflow in CLAUDE.md: storyboard approved before frames"
       }
     }
-  ]
+  ],
+  "funnels": {
+    "demo": {
+      "cta": "REQUEST_DEMO",
+      "url": "https://getbreakout.ai/",
+      "for": "Growth: the AI SDR, starts at $2k/mo, via a demo"
+    },
+    "trial": {
+      "cta": "SIGN_UP",
+      "url": "https://getbreakout.ai/product/identify",
+      "for": "Signals: identify visitors, starts at $500/mo, 30-day free trial, no credit card (getbreakout.ai/pricing, /product/identify)"
+    }
+  }
 }

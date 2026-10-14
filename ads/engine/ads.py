@@ -5,7 +5,8 @@
   python3 ads/engine/ads.py lint <campaign>                          brand, claims, LinkedIn limits, tags, diversity
   python3 ads/engine/ads.py render <campaign> [--ids P2P-001 ...]    creatives + a feed preview contact sheet
   python3 ads/engine/ads.py export <campaign> [--all]                launch/ads.csv and launch/plan.json (approved ads)
-  python3 ads/engine/ads.py launch <campaign> [--live]               create DRAFT campaigns and PAUSED ads on LinkedIn
+  python3 ads/engine/ads.py kit <campaign> [--all]                   launch/kit.html: build the round in Campaign Manager by hand
+  python3 ads/engine/ads.py launch <campaign> [--live]               create DRAFT campaigns and PAUSED ads on LinkedIn (needs the API)
   python3 ads/engine/ads.py audience resolve <facet> <query> [--live]   look up targeting URNs (titles, industries, skills)
   python3 ads/engine/ads.py ingest linkedin <export.csv>             Campaign Manager ad performance export
   python3 ads/engine/ads.py ingest crm <export.csv>                  server-side outcomes by utm_content (meetings, SQLs, pipeline)
@@ -43,7 +44,7 @@ CRM = DATA / "crm.csv"
 ID_RE = re.compile(r"\b([A-Z][A-Z0-9]{1,7}-\d{3})\b")
 PERF_COLS = ["ad_id", "date", "impressions", "clicks", "spend", "video_views", "video_starts", "video_q25",
              "video_q50", "video_completions", "platform_conversions", "leads"]
-CRM_COLS = ["ad_id", "date", "meetings", "sqls", "pipeline"]
+CRM_COLS = ["ad_id", "date", "meetings", "trials", "sqls", "pipeline"]
 LIMITS = {"intro_fold": 150, "intro_soft": 600, "intro_max": 3000, "headline_soft": 70, "headline_max": 200,
           "description_soft": 100, "description_max": 300}
 
@@ -437,37 +438,47 @@ h1 {{ font-size: 22px; margin: 0 0 4px; }} .lede {{ color: #5c5850; margin: 0 0 
 # ------------------------------------------------------------------ export and launch
 
 def plan(slug, camp, include_all=False):
-    """Campaign Manager structure: a test group with 1 campaign per persona, and a scale group for winners."""
+    """Campaign Manager structure: a test group with 1 campaign per persona and ad format (LinkedIn sets the
+    format on the campaign), and a scale group for winners later."""
     ads = [a for a in camp["ads"] if a.get("status") == "approved" or (include_all and a.get("status") != "retired")]
     if not ads:
         sys.exit("no approved ads: set \"status\": \"approved\" on the ads the owner approved (or --all to preview)")
-    daily = (camp.get("budget") or {}).get("daily_usd")
-    share = (camp.get("budget") or {}).get("test_share", SCORING["budget"]["test_share"])
-    personas = sorted({a["persona"] for a in ads})
-    per = round(daily * share / len(personas), 2) if daily else None
+    budget = camp.get("budget") or {}
+    daily = budget.get("daily_usd")
+    share = budget.get("test_share", SCORING["budget"]["test_share"])
+    fixed = budget.get("campaigns") or {}          # {"demand-gen": 50, ...}: the owner's split for this round
     minimum = SCORING["budget"]["linkedin_min_daily_per_campaign"]
+    keys = sorted({(a["persona"], fmt(a).get("kind")) for a in ads}, key=lambda k: (k[0], ["image", "document", "video", "post"].index(k[1])))
+    personas = sorted({p for p, _ in keys})
     campaigns = []
-    for p in personas:
-        mine = [a for a in ads if a["persona"] == p]
+    for p, kind in keys:
+        mine = [a for a in ads if a["persona"] == p and fmt(a).get("kind") == kind]
+        kinds_here = sum(1 for q, _ in keys if q == p)
+        if p in fixed:
+            usd = fixed[p] / kinds_here
+        elif daily:
+            usd = daily * share / len(personas) / kinds_here
+        else:
+            usd = None
         campaigns.append({
-            "name": f"{camp['code']} | test | {p}", "group": "test", "persona": p,
-            "daily_usd": max(per, minimum) if per else None,
+            "name": f"{camp['code']} | test | {p} | {kind}", "group": "test", "persona": p, "kind": kind,
+            "daily_usd": round(max(usd, minimum), 2) if usd else None,
             "targeting": linkedin.targeting(AUD["shared"], AUD["personas"][p]),
             "targeting_labels": {k: v for k, v in AUD["personas"][p].items() if k.endswith("_label")},
             "ads": [a["id"] for a in mine],
         })
         if len(mine) > SCORING["budget"]["max_active_ads_per_campaign"]:
-            print(f"warn   {p}: {len(mine)} ads in one campaign; LinkedIn favours 1 or 2 early, so launch at most "
+            print(f"warn   {p} {kind}: {len(mine)} ads in one campaign; LinkedIn favours 1 or 2 early, so launch at most "
                   f"{SCORING['budget']['max_active_ads_per_campaign']} at a time (1 per concept) and rotate the rest in")
     creatives = []
     for a in ads:
         c = a.get("copy") or {}
         f = creative_file(slug, a)
-        creatives.append({"ad_id": a["id"], "name": ad_name(a), "kind": fmt(a).get("kind"), "intro": c.get("intro", ""),
-                          "headline": c.get("headline", ""), "description": c.get("description", ""),
+        creatives.append({"ad_id": a["id"], "name": ad_name(a), "kind": fmt(a).get("kind"), "format": a["format"],
+                          "intro": c.get("intro", ""), "headline": c.get("headline", ""), "description": c.get("description", ""),
                           "cta": c.get("cta") or camp["cta"], "url": landing_url(camp, a),
-                          "file": str(f.relative_to(ROOT)) if f else None})
-    return {"campaign": slug, "code": camp["code"], "objective": camp["objective"],
+                          "file": str(f.relative_to(ROOT)) if f else None, "script": a.get("script")})
+    return {"campaign": slug, "code": camp["code"], "objective": camp["objective"], "daily_usd": daily,
             "groups": [f"{camp['code']} | test", f"{camp['code']} | scale"], "campaigns": campaigns, "creatives": creatives}
 
 
@@ -495,6 +506,24 @@ def cmd_export(a):
     print(f"ads/campaigns/{a.campaign}/launch/ads.csv and plan.json: {len(p['campaigns'])} campaigns, {len(p['creatives'])} ads")
     if missing:
         print(f"warn   not rendered yet: {', '.join(missing)} (run render)")
+
+
+def cmd_kit(a):
+    import os
+    import kit
+    camp = load(a.campaign)
+    errs, _ = lint_campaign(a.campaign, camp, quiet=True)
+    if errs:
+        print("\n".join(f"error  {e}" for e in errs))
+        sys.exit("lint errors: no kit")
+    p = plan(a.campaign, camp, a.all)
+    d = CAMPAIGNS / a.campaign / "launch"
+    d.mkdir(exist_ok=True)
+    page = kit.build(a.campaign, camp, p, AUD, BRAND.get("reviewed"), lambda f: os.path.relpath(ROOT / f, d))
+    (d / "kit.html").write_text(page)
+    missing = [c["ad_id"] for c in p["creatives"] if c["file"] and not (ROOT / c["file"]).exists()]
+    print(f"ads/campaigns/{a.campaign}/launch/kit.html: {len(p['campaigns'])} campaigns, {len(p['creatives'])} ads"
+          + (f"; not rendered yet: {', '.join(missing)}" if missing else ""))
 
 
 def cmd_launch(a):
@@ -563,6 +592,7 @@ ALIASES = {
     "leads": ["leads", "lead form completions", "one click leads"],
     "ad_id": ["ad_id", "utm_content", "utm content"],
     "meetings": ["meetings", "meetings booked", "meeting booked"],
+    "trials": ["trials", "trial signups", "trial sign-ups", "signups", "sign-ups"],
     "sqls": ["sqls", "sql", "sales qualified leads"],
     "pipeline": ["pipeline", "pipeline usd", "amount", "pipeline amount"],
 }
@@ -652,20 +682,25 @@ def cmd_ingest(a):
                 skipped += 1
                 continue
             o = {"ad_id": m[1], "date": (r.get(cols.get("date", ""), "") or "total").strip()}
+            counted = [f for f in CRM_COLS[2:] if f in cols]
             for f in CRM_COLS[2:]:
                 o[f] = num(r.get(cols[f], 0)) if f in cols else 0
+            if not counted:   # 1 row per meeting (a HubSpot meetings or contacts export): each row is 1 meeting
+                o["meetings"] = 1
         out.append(o)
     if a.source == "crm":   # one row per ad and date: sum the deals
         agg = {}
         for o in out:
             k = (o["ad_id"], o["date"])
-            agg.setdefault(k, {"ad_id": o["ad_id"], "date": o["date"], "meetings": 0, "sqls": 0, "pipeline": 0})
+            agg.setdefault(k, {"ad_id": o["ad_id"], "date": o["date"], **{f: 0 for f in CRM_COLS[2:]}})
             for f in CRM_COLS[2:]:
                 agg[k][f] += o[f]
         out = list(agg.values())
     path, header = (PERF, PERF_COLS) if a.source == "linkedin" else (CRM, CRM_COLS)
     print(f"{upsert(path, header, out)} rows into ads/data/{path.name}" + (f"; {skipped} rows had no ad id" if skipped else ""))
     print("mapped columns: " + ", ".join(f"{k} <- {v!r}" for k, v in cols.items()))
+    if a.source == "crm" and not any(f in cols for f in CRM_COLS[2:]):
+        print("no meetings, trials, SQL or pipeline column: counted each row as 1 meeting booked")
 
 
 # ------------------------------------------------------------------ score
@@ -700,8 +735,11 @@ def score(tot=None, ads=None, cfg=SCORING):
         ad = ads.get(ad_id, {})
         kind = TAX["formats"].get(ad.get("format"), {}).get("kind", "unknown")
         rows.append({"ad_id": ad_id, "kind": kind, "ad": ad, **{x: m.get(x, 0.0) for x in PERF_COLS[2:] + CRM_COLS[2:]}})
-    any_crm = any(r["meetings"] or r["sqls"] for r in rows)
-    conv_key = "meetings" if any(r["meetings"] for r in rows) else "sqls"
+    weights = cfg.get("outcomes", {"meetings": 1.0})
+    for r in rows:   # server-side outcomes, weighted (scoring.json "outcomes"); meetings booked count most
+        r["outcome"] = sum(r.get(o, 0) * w for o, w in weights.items())
+    any_crm = any(r["outcome"] for r in rows)
+    conv_key = "outcome"
     total_spend = sum(r["spend"] for r in rows) or 1
     conv_rate = sum(r[conv_key] for r in rows) / total_spend
     by_kind = defaultdict(list)
@@ -754,7 +792,7 @@ def score(tot=None, ads=None, cfg=SCORING):
             r["verdict"] = "pause"
         else:
             r["verdict"] = "keep testing"
-        r["conv_metric"] = conv_key if any_crm else None
+        r["conv_metric"] = "meetings" if any_crm else None
     rows.sort(key=lambda r: (r["verdict"] == "learning", -(r["banger"] or 0)))
     return rows
 
@@ -771,10 +809,10 @@ def cmd_score(a):
     lines = ["# Creative leaderboard", "",
              f"Generated {dt.date.today().isoformat()} by `python3 ads/engine/ads.py score`. The Banger Score (0 to 100) ranks each ad against ads of the same kind on "
              + ", ".join(f"{m} {int(v * 100)}%" for m, v in SCORING["weights"].items())
-             + f". Conversions are server-side {conv or 'outcomes (none ingested yet, so the score runs without them)'}, never the platform's own count. "
+             + f". Conversions are server-side meetings booked from HubSpot (trial signups weighted per scoring.json `outcomes`){'' if conv else ', none ingested yet, so the score runs without them'}, never the platform's own count. "
              f"An ad needs {SCORING['min_impressions']:,} impressions and {money(SCORING['min_spend'])} before it is judged. Do not edit by hand.", "",
-             "| # | Ad | Banger | Verdict | Concept / angle / persona | Format | Impr. | Spend | CTR | CPM | Hook | Hold | " + ("Meetings" if conv == "meetings" else "SQLs") + " | Pipeline |",
-             "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+             "| # | Ad | Banger | Verdict | Concept / angle / persona | Format | Impr. | Spend | CTR | CPM | Hook | Hold | Meetings | Trials | Pipeline |",
+             "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for i, r in enumerate(rows, 1):
         ad = r["ad"]
         flag = " (hook trap)" if r["hook_trap"] else ""
@@ -782,7 +820,7 @@ def cmd_score(a):
         hold = f"{r['raw_hold'] * 100:.1f}%" if r.get("raw_hold") is not None else ""
         lines.append(f"| {i} | {r['ad_id']} | {r['banger'] if r['banger'] is not None else ''} | {r['verdict']}{flag} | "
                      f"{ad.get('concept', '?')} / {ad.get('angle', '?')} / {ad.get('persona', '?')} | {ad.get('format', '?')} | {r['impressions']:,.0f} | {money(r['spend'])} | "
-                     f"{r['raw_ctr'] * 100:.2f}% | {money(r['cpm']) if r['cpm'] is not None else ''} | {hook} | {hold} | {r[conv or 'meetings']:.0f} | {money(r['pipeline'])} |")
+                     f"{r['raw_ctr'] * 100:.2f}% | {money(r['cpm']) if r['cpm'] is not None else ''} | {hook} | {hold} | {r['meetings']:.0f} | {r['trials']:.0f} | {money(r['pipeline'])} |")
     (ADS / "LEADERBOARD.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines[6:]))
     print("\nads/LEADERBOARD.md written")
@@ -924,6 +962,7 @@ def main(argv=None):
     s = sub.add_parser("lint"); s.add_argument("campaign"); s.set_defaults(fn=cmd_lint)
     s = sub.add_parser("render"); s.add_argument("campaign"); s.add_argument("--ids", nargs="*"); s.add_argument("--force", action="store_true"); s.set_defaults(fn=cmd_render)
     s = sub.add_parser("export"); s.add_argument("campaign"); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_export)
+    s = sub.add_parser("kit"); s.add_argument("campaign"); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_kit)
     s = sub.add_parser("launch"); s.add_argument("campaign"); s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.add_argument("--org"); s.set_defaults(fn=cmd_launch)
     s = sub.add_parser("audience"); s.add_argument("action", choices=["resolve"]); s.add_argument("facet"); s.add_argument("query"); s.add_argument("--live", action="store_true"); s.set_defaults(fn=cmd_audience)
     s = sub.add_parser("ingest"); s.add_argument("source", choices=["linkedin", "crm", "api"]); s.add_argument("file", nargs="?")

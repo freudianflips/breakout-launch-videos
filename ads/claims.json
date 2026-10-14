@@ -1,4 +1,65 @@
 {
   "note": "Numbers and claims approved for ads beyond brand/brand.json copy. Each needs a source the owner can point to (a page, a report, a signed case study) and the date it was checked. The linter allows a number on an ad only if it appears here or in brand.json copy.",
-  "claims": []
+  "claims": [
+    {
+      "text": "Identify ready-to-buy visitors before they fill a form",
+      "source": "https://getbreakout.ai/product/identify",
+      "checked": "2026-10-14"
+    },
+    {
+      "text": "Breakout reveals the companies and people visiting your site so you can fill your sales funnel with high-intent inbound leads.",
+      "source": "https://getbreakout.ai/product/identify",
+      "checked": "2026-10-14"
+    },
+    {
+      "text": "30-day free trial · No credit card required · Live in 5 minutes",
+      "source": "https://getbreakout.ai/product/identify",
+      "checked": "2026-10-14"
+    },
+    {
+      "text": "Go live in <5min",
+      "source": "https://getbreakout.ai/product/identify",
+      "checked": "2026-10-14"
+    },
+    {
+      "text": "Know every buyer on your site.",
+      "source": "https://getbreakout.ai/product/identify",
+      "checked": "2026-10-14"
+    },
+    {
+      "text": "Automatically identify which companies and individuals are visiting your website in real-time.",
+      "source": "https://getbreakout.ai/product/identify",
+      "checked": "2026-10-14"
+    },
+    {
+      "text": "70%+ accuracy",
+      "source": "https://getbreakout.ai/product/identify",
+      "checked": "2026-10-14",
+      "note": "Website deanonymization feature list"
+    },
+    {
+      "text": "99.9% fill rates",
+      "source": "https://getbreakout.ai/product/identify",
+      "checked": "2026-10-14",
+      "note": "Waterfall enrichment"
+    },
+    {
+      "text": "For every new visitor, hand your SDRs a fully-researched account with the exact people to reach out to",
+      "source": "https://getbreakout.ai/product/identify",
+      "checked": "2026-10-14"
+    },
+    {
+      "text": "Ready to turn browsers into hand-raisers?",
+      "source": "https://getbreakout.ai/product/identify",
+      "checked": "2026-10-14"
+    },
+    {
+      "text": "Signals: for teams just getting started with website deanonymization. Starts at $500/mo. No credit card required.",
+      "source": "https://getbreakout.ai/pricing",
+      "checked": "2026-10-14"
+    }
+  ],
+  "not_usable": [
+    "The Identify page's counters (Companies Identified Daily, Identification Accuracy, Setup Time) render as 0 in the page source: do not quote them until the real figures are confirmed."
+  ]
 }
