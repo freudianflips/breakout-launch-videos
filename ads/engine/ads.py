@@ -484,7 +484,7 @@ def plan(slug, camp, include_all=False, rnd=None):
         campaigns.append({
             "name": f"{camp['code']} | test | {p} | {kind}", "group": "test", "persona": p, "kind": kind,
             "daily_usd": round(max(usd, minimum), 2) if usd else None,
-            "targeting": linkedin.targeting(AUD["shared"], AUD["personas"][p]),
+            "targeting": linkedin.targeting({**AUD["shared"], "company_size": [] if "company_size" in (camp.get("audience") or {}).get("replaces", []) else AUD["shared"].get("company_size")}, AUD["personas"][p]),
             "targeting_labels": {k: v for k, v in AUD["personas"][p].items() if k.endswith("_label")},
             "ads": [a["id"] for a in mine],
         })

@@ -64,12 +64,20 @@
     // Today versus with Breakout. Keep each side to 2 to 4 words.
     split() {
       return `<div class="ad split"><div class="pane today"><div class="k">${esc(f.left_label || 'Your site today')}</div><h1 class="display" data-fit-pane>${mk(f.left)}</h1><div class="spacer"></div></div>
-        <div class="pane with"><div class="k">${esc(f.right_label || 'With Breakout')}</div><h1 class="display" data-fit-pane>${mk(f.right)}</h1>${logo(true)}</div></div>`;
+        <div class="pane with"><div class="k">${esc(f.right_label || 'With Breakout')}</div><h1 class="display" data-fit-pane>${mk(f.right)}</h1>${logo(true)}</div>${f.source ? `<div class="src">${esc(f.source)}</div>` : ''}</div>`;
     },
     // A real product screen (assets/screens/), cropped to crop: [x, y, w, h] in image pixels.
     screen() {
       return `<div class="ad screen lav"><div class="copy">${kicker()}${headline()}${sub()}${shape === 'wide' ? foot(false) : ''}</div>
         <div class="shot"><img id="shot" src="../../${esc(f.image)}"></div>${shape === 'wide' ? '' : foot(false)}</div>`;
+    },
+    // A generic button-only chat widget (no vendor's UI or logo) beside Breakout's open question.
+    buttons() {
+      const bs = (f.buttons || ['Pricing', 'Book a demo', 'Careers', 'Something else']).map((b) => `<div class="b">${esc(b)}</div>`).join('');
+      return `<div class="ad buttons light"><div class="bloom"></div><div class="copy">${kicker()}${headline()}${shape === 'wide' ? foot(false) : ''}</div>
+        <div class="bw"><div class="gen"><div class="hi"><span class="dot"></span>${esc(f.greeting || 'Hi there! Choose an option:')}</div>${bs}<div class="miss">${esc(f.miss || 'No text box.')}</div></div>
+        <div class="ask"><div class="q">${esc(f.question || 'Can it work with our CRM?')}</div><div class="display">${mk(f.answer || 'Go ahead.\n*Ask me stuff.*')}</div><div class="input">Type your message...</div></div></div>
+        ${shape === 'wide' ? '' : foot(false)}</div>`;
     },
     // Pattern break: a lead form with every field struck through.
     form() {

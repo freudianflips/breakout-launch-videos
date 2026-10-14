@@ -127,3 +127,28 @@ body { font-family: "Manrope", sans-serif; color: var(--ink); -webkit-font-smoot
 .quiet .corner img { height: calc(var(--u) * 3.6); opacity: .9; }
 .notice .note-card .msg em { font-style: normal; font-weight: 800; color: var(--accent); }
 .quiet .line em { font-weight: 800; }
+
+/* a quote's source, small, while it is on screen */
+.src { position: absolute; left: 0; right: 0; bottom: calc(var(--u) * 2.2); text-align: center; font: 400 calc(var(--u) * 1.6)/1 "Fragment Mono"; color: rgba(255, 255, 255, .7); }
+.light .src, .lav .src { color: var(--ink-2); }
+
+/* buttons: a generic button-only chat widget (never a real vendor's UI) */
+.buttons .copy { display: flex; flex-direction: column; gap: calc(var(--u) * 2); }
+.square .buttons .copy .stage { height: calc(var(--u) * 20); }
+.tall .buttons .copy .stage { height: calc(var(--u) * 30); }
+.wide .buttons { flex-direction: row; align-items: stretch; }
+.wide .buttons .copy { flex: 0 0 46%; justify-content: space-between; }
+.wide .buttons .copy .stage { flex: 1; }
+.buttons .bw { flex: 1; min-height: 0; display: flex; gap: calc(var(--u) * 2.4); }
+.buttons .gen { flex: 1; background: #fff; border-radius: calc(var(--u) * 2.4); border: 1px solid #e3e1ea; padding: calc(var(--u) * 2.6); display: flex; flex-direction: column; gap: calc(var(--u) * 1.4); box-shadow: 0 calc(var(--u) * 1.2) calc(var(--u) * 5) rgba(0, 0, 0, .08); }
+.buttons .gen .hi { display: flex; gap: calc(var(--u) * 1.2); align-items: center; font: 500 calc(var(--u) * 2.2)/1.3 "Manrope"; color: #444; }
+.buttons .gen .dot { width: calc(var(--u) * 4); height: calc(var(--u) * 4); border-radius: 50%; background: #cfcfd6; flex: 0 0 auto; }
+.buttons .gen .b { align-self: flex-end; font: 600 calc(var(--u) * 2.1)/1 "Manrope"; color: #555; border: 1px solid #c9c8d2; border-radius: 999px; padding: calc(var(--u) * 1.3) calc(var(--u) * 2.2); }
+.buttons .gen .miss { margin-top: auto; align-self: stretch; text-align: center; font: 500 calc(var(--u) * 2)/1.3 "Manrope"; color: #999; border-top: 1px dashed #ddd; padding-top: calc(var(--u) * 1.4); }
+.buttons .ask { flex: 1; background: var(--accent); color: #fff; border-radius: calc(var(--u) * 2.4); padding: calc(var(--u) * 2.6); display: flex; flex-direction: column; justify-content: space-between; }
+.buttons .ask .q { align-self: flex-end; background: rgba(255, 255, 255, .18); border-radius: calc(var(--u) * 2); padding: calc(var(--u) * 1.3) calc(var(--u) * 2); font: 500 calc(var(--u) * 2.2)/1.35 "Manrope"; max-width: 92%; }
+.buttons .ask .display { font-size: calc(var(--u) * 5.4); color: #fff; }
+.buttons .ask .display em { color: var(--blush); }
+.buttons .ask .input { background: #fff; color: #9aa0a6; border-radius: calc(var(--u) * 1.6); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.8); font: 500 calc(var(--u) * 2)/1 "Manrope"; }
+.buttons .copy .stage { flex: 0 0 auto; }
+.wide .buttons .copy .stage { flex: 1; }

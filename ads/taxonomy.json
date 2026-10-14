@@ -10,11 +10,16 @@
     "follow-up": "The visitor left; Breakout follows up by email and LinkedIn",
     "integrations": "It talks to your stack; you touch grass",
     "humour": "A joke about something the persona already cares about, then the product",
-    "identify": "See which companies and people are on your site before they fill a form (the free trial: Signals)"
+    "identify": "See which companies and people are on your site before they fill a form (the free trial: Signals)",
+    "contract": "Switching cost: the contract, the renewal, the buyout that removes it",
+    "go-live": "Time to live: hours, not an implementation project",
+    "signals": "What you can see about a visitor and account: signals, people, not just the account",
+    "pricing": "Published pricing against quote-first buying"
   },
   "personas": {
     "demand-gen": "Head of demand gen or growth marketing: owns the website's conversion and the MQL to meeting number",
     "markops": "Marketing operations: owns the martech stack, enrichment, routing and CRM data quality",
+    "practitioner": "Demand gen and marketing ops in one audience, for small lists (a company list) where splitting by role would starve each campaign",
     "cmo": "CMO or VP marketing at a B2B software company: owns pipeline targets and headcount; buys the full product through a demo",
     "founder": "Founder or CEO of a startup that sells to businesses: buys alone, decides fast",
     "revops": "RevOps or marketing ops: owns the stack, routing and the CRM",

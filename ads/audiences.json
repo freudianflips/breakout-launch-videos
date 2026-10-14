@@ -66,6 +66,35 @@
         "Revenue Marketing Operations Manager"
       ]
     },
+    "practitioner": {
+      "seniorities": [
+        "urn:li:seniority:4",
+        "urn:li:seniority:5",
+        "urn:li:seniority:6",
+        "urn:li:seniority:7"
+      ],
+      "seniorities_label": [
+        "Senior",
+        "Manager",
+        "Director",
+        "VP"
+      ],
+      "titles_label": [
+        "Demand Generation Manager",
+        "Director of Demand Generation",
+        "Head of Demand Generation",
+        "VP Demand Generation",
+        "Growth Marketing Manager",
+        "Head of Growth",
+        "Digital Marketing Manager",
+        "Marketing Operations Manager",
+        "Director of Marketing Operations",
+        "Head of Marketing Operations",
+        "Marketing Operations Specialist",
+        "Marketing Technology Manager",
+        "Revenue Marketing Operations Manager"
+      ]
+    },
     "cmo": {
       "functions": [
         "urn:li:function:15"

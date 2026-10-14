@@ -3,7 +3,7 @@
   "code": "QSW",
   "status": "draft",
   "platform": "linkedin",
-  "idea": "Win teams running Qualified's widget: show them what they're missing and remove the reason not to switch, the contract, before the buyout offer ends on 30 November 2026.",
+  "idea": "Qualified alternative (internal name: Qualified killer). Win teams running Qualified's widget: show what they're missing, and remove the reason not to switch, the contract, before the buyout offer ends on 30 November 2026.",
   "objective": "WEBSITE_CONVERSION",
   "landing_url": "https://getbreakout.ai/compare/qualified-alternative",
   "cta": "REQUEST_DEMO",
@@ -11,45 +11,39 @@
   "budget": {
     "daily_usd": null,
     "test_share": 0.2,
-    "note": "Not set: on top of round 1's $100/day, or out of it? (to ask)"
+    "note": "Not set yet: on top of round 1's $100/day, or out of it? Suggested $50/day, $25 per campaign."
   },
   "personas": [
-    "demand-gen",
-    "markops",
+    "practitioner",
     "cmo"
   ],
   "concepts": [
     {
       "code": "buyout",
-      "status": "proposed",
       "name": "We'll buy out the rest of it",
       "idea": "Remove the reason not to switch: the contract. Offer-led, with the deadline.",
       "source": "claims.json: \"Still under contract? We'll buy out the rest of it.\", \"Up to $30,000 covered\", \"LIMITED OFFER · ENDS 30 NOVEMBER 2026\""
     },
     {
       "code": "hours",
-      "status": "proposed",
       "name": "Hours, not weeks",
       "idea": "Go-live: <3 hours, self-serve vs 8-12 weeks. Speaks to whoever ran the implementation.",
       "source": "claims.json: Go-live time; \"No implementation project. No admin ticket or technical handoff.\""
     },
     {
       "code": "just-ask",
-      "status": "proposed",
       "name": "Ask, don't click",
       "idea": "The buyer's side: buttons that wait versus a question that gets answered. Unnamed: the audience recognises its own widget.",
       "source": "\"Go ahead. Ask me stuff.\"; \"Modern demand gen teams need agents that act, not a widget that waits.\""
     },
     {
       "code": "signals",
-      "status": "proposed",
       "name": "700+ versus one",
       "idea": "What you can see about a visitor: 700+ buying signals versus one.",
       "source": "claims.json: \"Breakout tracks 700+ buying signals. Qualified tracks one.\""
     },
     {
       "code": "tried-others",
-      "status": "proposed",
       "name": "\"Pretty good, actually\"",
       "idea": "Social proof written for people who already bought the other one.",
       "source": "copy.site_h2[1]"
@@ -60,12 +54,215 @@
       "name": "Your widget, today (tier 1, 1:1)",
       "idea": "For the biggest accounts only: their own widget as captured on their own site, next to Breakout. Built from accounts/<slug>/ and the abm-split template.",
       "source": "accounts/<slug>/account.json widget_notes"
+    },
+    {
+      "code": "pricing",
+      "name": "See the number first",
+      "idea": "Published pricing against a demo, a quote and an annual contract before you see a number.",
+      "source": "claims.json: \"Transparent pricing, published. Qualified requires a demo, a quote, and an annual contract before you see a number.\", \"Platform: from $2,000/month (Breakout); quote-based (Qualified)\""
     }
   ],
-  "ads": [],
+  "ads": [
+    {
+      "id": "QSW-001",
+      "status": "draft",
+      "round": 1,
+      "concept": "hours",
+      "angle": "go-live",
+      "persona": "practitioner",
+      "awareness": "product",
+      "format": "img-1x1",
+      "hook": "contrast",
+      "copy": {
+        "intro": "Remember the implementation?\nGo live in 3 hours. No implementation project. No admin ticket or technical handoff.",
+        "headline": "<3 hours, self-serve.",
+        "description": "Talk to an AI SDR on the page."
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left_label": "Qualified",
+          "left": "8-12 *weeks.*",
+          "right_label": "Breakout",
+          "right": "<3 *hours.*",
+          "source": "Source: getbreakout.ai/compare/qualified-alternative"
+        }
+      }
+    },
+    {
+      "id": "QSW-002",
+      "status": "draft",
+      "round": 1,
+      "concept": "just-ask",
+      "angle": "buyer-experience",
+      "persona": "practitioner",
+      "awareness": "solution",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Your buyer has a question. Does your widget let them ask it?\nModern demand gen teams need agents that act, not a widget that waits.",
+        "headline": "Go ahead. Ask me stuff."
+      },
+      "design": {
+        "template": "buttons",
+        "fields": {
+          "headline": "Buyers have questions.\nNot *buttons.*",
+          "label": "Illustrative example"
+        }
+      }
+    },
+    {
+      "id": "QSW-003",
+      "status": "draft",
+      "round": 1,
+      "concept": "signals",
+      "angle": "signals",
+      "persona": "practitioner",
+      "awareness": "solution",
+      "format": "img-4x5",
+      "hook": "verdict",
+      "copy": {
+        "intro": "Breakout tracks 700+ buying signals. Qualified tracks one.\nFunding, hiring surges, job changes, exec moves and tech stack. Not just the account.",
+        "headline": "700+ buying signals, out of the box."
+      },
+      "design": {
+        "template": "slam",
+        "fields": {
+          "index": "700+",
+          "kicker": "getbreakout.ai/compare",
+          "lines": [
+            "700+ buying",
+            "signals.",
+            "*Or one.*"
+          ]
+        }
+      }
+    },
+    {
+      "id": "QSW-004",
+      "status": "draft",
+      "round": 1,
+      "concept": "buyout",
+      "angle": "contract",
+      "persona": "practitioner",
+      "awareness": "most-aware",
+      "format": "img-1x1",
+      "hook": "verdict",
+      "copy": {
+        "intro": "Still under contract? We'll buy out the rest of it.\nSwitch to Breakout by November 30, 2026 and we'll cover what's left on your Qualified contract. You stop paying for the widget the day you go live on Breakout.",
+        "headline": "Up to $30,000 covered.",
+        "description": "Go live in 3 hours."
+      },
+      "design": {
+        "template": "verdict",
+        "fields": {
+          "theme": "dark",
+          "kicker": "LIMITED OFFER · ENDS 30 NOVEMBER 2026",
+          "headline": "Still under contract?\n*We'll buy out the rest of it.*",
+          "cta": "Up to $30,000 covered"
+        }
+      }
+    },
+    {
+      "id": "QSW-005",
+      "status": "draft",
+      "round": 1,
+      "concept": "buyout",
+      "angle": "contract",
+      "persona": "cmo",
+      "awareness": "most-aware",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Teams are paying top-of-market rates and getting a fraction of it back.\nSwitch to Breakout by November 30, 2026 and we'll cover what's left on your Qualified contract.",
+        "headline": "Still under contract? We'll buy out the rest of it.",
+        "description": "Up to $30,000 covered."
+      },
+      "design": {
+        "template": "quiet",
+        "fields": {
+          "line": "Stop paying for Qualified\n*the day you switch.*"
+        }
+      }
+    },
+    {
+      "id": "QSW-006",
+      "status": "draft",
+      "round": 1,
+      "concept": "hours",
+      "angle": "go-live",
+      "persona": "cmo",
+      "awareness": "product",
+      "format": "img-1x1",
+      "hook": "verdict",
+      "copy": {
+        "intro": "Your next platform shouldn't need a quarter to go live.\nGo live in 3 hours. No implementation project. No admin ticket or technical handoff.",
+        "headline": "<3 hours, self-serve."
+      },
+      "design": {
+        "template": "verdict",
+        "fields": {
+          "kicker": "Go live in 3 hours.",
+          "headline": "No implementation *project.*",
+          "cta": "Book a demo"
+        }
+      }
+    },
+    {
+      "id": "QSW-007",
+      "status": "draft",
+      "round": 1,
+      "concept": "tried-others",
+      "angle": "humour",
+      "persona": "cmo",
+      "awareness": "product",
+      "format": "img-1x1",
+      "hook": "joke",
+      "copy": {
+        "intro": "You've tried one. Meet the other.\nMeet the AI SDR considered \"pretty good, actually\" by people who've tried others.",
+        "headline": "The #1 Qualified alternative"
+      },
+      "design": {
+        "template": "verdict",
+        "fields": {
+          "kicker": "Meet the AI SDR considered",
+          "headline": "*\"Pretty good,\nactually\"*",
+          "sub": "by people who've tried others."
+        }
+      }
+    },
+    {
+      "id": "QSW-008",
+      "status": "draft",
+      "round": 1,
+      "concept": "pricing",
+      "angle": "pricing",
+      "persona": "cmo",
+      "awareness": "product",
+      "format": "img-wide",
+      "hook": "contrast",
+      "copy": {
+        "intro": "See the number before the demo.\nTransparent pricing, published. Qualified requires a demo, a quote, and an annual contract before you see a number.",
+        "headline": "From $2,000/month. Published."
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left_label": "Qualified",
+          "left": "Quote-*based.*",
+          "right_label": "Breakout",
+          "right": "From $2,000/*month.*",
+          "source": "Source: getbreakout.ai/compare/qualified-alternative"
+        }
+      }
+    }
+  ],
   "audience": {
-    "matched": "qualified-users (company list from ads/engine/stack.py)",
-    "retarget": "compare-page-visitors"
+    "company_list": "Qualified users: the company list from ads/engine/stack.py qualified, uploaded as a Matched Audience",
+    "replaces": [
+      "company_size",
+      "industries"
+    ]
   },
   "deadline": "2026-11-30"
 }

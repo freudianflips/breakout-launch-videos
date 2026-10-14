@@ -1,6 +1,6 @@
 # qualified-switch (QSW)
 
-Companies running Qualified's website widget. **Draft for the owner's approval**: the concepts below are proposed, no ad is written yet, and naming Qualified in ads needs the owner's yes (the repo's rule allows it in the ABM video templates only).
+Companies running Qualified's website widget. Campaign idea from the owner (2026-10-14): "Qualified alternative / Qualified killer". "Qualified killer" is the internal name only; no ad says it. **Draft**: 8 ads written, awaiting the owner's look at the feed preview; budget and the domain list not set.
 
 ## Who they are
 They already bought the category: an AI or chat widget on their site, an annual contract, an admin, a Salesforce-first setup. So skip education; they are **product-aware**. What stops them is not desire, it is switching cost: the contract, the implementation, the risk. The best creative names what they live with, then removes the reason not to move.
@@ -42,8 +42,16 @@ CTA Request demo, to getbreakout.ai/compare/qualified-alternative (the buyout is
 ## Budget
 To ask: on top of round 1's $100/day, or out of it. Suggested: $50/day, $25 per campaign, for 2 weeks, then everything behind the winners until 30 November. A small audience means higher CPMs than round 1's assumed $45 and fast frequency: judge at 2,000 impressions an ad here, not 3,000, and watch frequency weekly.
 
+## Round 1 (8 ads, statics)
+| Campaign | Ads |
+|---|---|
+| QSW \| test \| practitioner \| image (demand gen + marketing ops titles, on the company list) | QSW-001 hours (split, 8-12 weeks vs <3 hours), QSW-002 just-ask (pattern break: buttons vs a question), QSW-003 signals (700+ or one), QSW-004 buyout (dark verdict) |
+| QSW \| test \| cmo \| image (on the company list) | QSW-005 buyout (pattern break: one quiet line), QSW-006 hours (no implementation project), QSW-007 tried-others ("Pretty good, actually"), QSW-008 pricing (quote-based vs from $2,000/month) |
+
+Every line naming Qualified is word for word from the compare page (the linter checks it), and the splits show the page as their source. Stop QSW-004 and QSW-005 on 30 November 2026.
+
 ## Approval
-- [ ] Concepts approved; naming Qualified in ads (verbatim, no logo) approved
+- [x] Concepts and naming Qualified in ads (verbatim from the compare page, no logo) taken as approved with the campaign idea (2026-10-14)
 - [ ] Domain list source agreed; company list built and uploaded
 - [ ] Feed preview approved
 - [ ] Budget approved

@@ -17,6 +17,8 @@ Starting beliefs, borrowed from Wispr Flow's playbook and not yet tested on Brea
 
 ## Log
 
+- 2026-10-14: Second campaign: qualified-switch, the owner's "Qualified alternative" idea. Product-aware buyers held back by switching cost, so the buyout offer (ends 30 November 2026) leads; Qualified named only in compare-page lines, word for word. Pattern breaks added to round 1 at the owner's ask, one per campaign beside a standard version of the same concept, to measure the break itself.
+
 - 2026-10-14: Round 1 set (owner): personas demand-gen, markops and cmo at about $33/day each. Identify is a 30-day free trial, not a free tier. A trial signup counts 0.24 of a booked meeting (ACV $6,000 vs $25,000). The LinkedIn Insight Tag is installed.
 
 - 2026-10-14: Facts from the owner. A free trial exists: Signals (identify visitors) is self-serve, $500/mo after a 30-day trial with no credit card, so one person can buy it; Growth (the AI SDR) goes through a demo. Meeting booked is the outcome that counts. HubSpot keeps utm_content on conversion. Budget starts at $100/day. Launch by hand in Campaign Manager until the Advertising API is approved.

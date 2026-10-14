@@ -53,6 +53,11 @@ def build(slug, camp, p, aud, reviewed, file_url):
         persona = aud["personas"][c["persona"]]
         sizes = persona.get("company_size_override") or shared.get("company_size") or []
         aud_rows = [("Locations", shared.get("locations_label", ""))]
+        override = camp.get("audience") or {}
+        if override.get("company_list"):
+            aud_rows.append(("Company list (Matched Audience)", override["company_list"]))
+            if "company_size" in override.get("replaces", []):
+                sizes = []
         if sizes:
             aud_rows.append(("Company size", ", ".join(SIZE_LABEL[x] for x in sizes)))
         for k, lab in (("functions_label", "Job functions"), ("seniorities_label", "Job seniorities"), ("titles_label", "Job titles")):
