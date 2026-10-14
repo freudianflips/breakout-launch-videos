@@ -47,7 +47,8 @@
     slam() {
       const lines = (f.lines || [f.headline]).map((l) => {
         const key = /^\*.*\*?$/.test(l);
-        return `<div class="line${key ? ' key' : ''}" data-slam>${esc(l.replace(/\*/g, ''))}</div>`;
+        const strike = /^~.*~$/.test(l);
+        return `<div class="line${key ? ' key' : ''}${strike ? ' strike' : ''}" data-slam>${esc(l.replace(/[*~]/g, ''))}</div>`;
       }).join('');
       return `<div class="ad slam light"><div class="grid"></div><div class="top mono"><span>${esc(f.index || '01')}</span><span>${esc(f.kicker || 'getbreakout.ai')}</span></div><div class="lines">${lines}</div>${sub()}${foot(false)}</div>`;
     },
@@ -79,6 +80,32 @@
         <div class="ask"><div class="q">${esc(f.question || 'Can it work with our CRM?')}</div><div class="display">${mk(f.answer || 'Go ahead.\n*Ask me stuff.*')}</div><div class="input">Type your message...</div></div></div>
         ${shape === 'wide' ? '' : foot(false)}</div>`;
     },
+    // Conceptual: Breakout's resume, stamped.
+    resume() {
+      const secs = (f.sections || []).map((x) => `<div><h4>${esc(x.title)}</h4>${x.items ? `<ul>${x.items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>` : `<p>${esc(x.text)}</p>`}</div>`).join('');
+      return `<div class="ad resume objbg lav"><div class="paper"><div class="nm">${esc(f.name || 'Breakout')}</div><div class="role">${esc(f.role)}</div>${secs}<div class="stamp">${esc(f.stamp)}</div></div>${foot(false)}</div>`;
+    },
+    // Conceptual: a multiple-choice question, one answer ringed.
+    quiz() {
+      const opts = (f.options || []).map((o, i) => `<div class="opt${i === f.answer ? ' right' : ''}"><span class="bub">${'abcdef'[i]}</span>${esc(o)}${i === f.answer ? '<svg class="ring" viewBox="0 0 100 40" preserveAspectRatio="none"><ellipse cx="50" cy="20" rx="48" ry="17" transform="rotate(-1.5 50 20)"/></svg>' : ''}</div>`).join('');
+      return `<div class="ad quiz objbg lav"><div class="paper"><div class="qn">${esc(f.index || 'Question')}</div><div class="q">${mk(f.question)}</div>${opts}</div>${foot(false)}</div>`;
+    },
+    // Conceptual: a lost poster with tear-off tabs.
+    poster() {
+      const tabs = Array.from({ length: f.tab_count || 7 }, () => `<span>${esc(f.tab || 'getbreakout.ai')}</span>`).join('');
+      const cursor = '<svg viewBox="0 0 24 32"><path d="M2 2 L2 26 L8 20 L12 30 L16 28 L12 18 L20 18 Z" fill="#4c00ff" stroke="#140b3c" stroke-width="1.2" stroke-linejoin="round"/></svg>';
+      return `<div class="ad poster objbg violet"><div class="paper"><div class="big">${esc(f.big || 'MISSING')}</div><div class="pic">${cursor}</div><div class="who">${mk(f.who)}</div><div class="desc">${mk(f.desc)}</div><div class="tabs">${tabs}</div></div>${foot(true)}</div>`;
+    },
+    // Conceptual: a letter.
+    letter() {
+      const body = (f.body || []).map((p) => `<p>${mk(p)}</p>`).join('');
+      return `<div class="ad letter objbg lav"><div class="paper"><p class="salut">${esc(f.salutation)}</p>${body}<p class="sign">${mk(f.signoff)}</p></div>${foot(false)}</div>`;
+    },
+    // Conceptual: a till receipt.
+    receipt() {
+      const rows = (f.items || []).map(([a, b]) => `<div class="row"><span>${esc(a)}</span><span class="dots"></span><span>${esc(b)}</span></div>`).join('');
+      return `<div class="ad receipt objbg violet"><div class="paper"><div class="c hd">${esc(f.title)}</div><div class="c">${esc(f.subtitle || '')}</div><div class="rule"></div>${rows}<div class="rule"></div><div class="row tot"><span>${esc(f.total_label || 'TOTAL')}</span><span class="dots"></span><span>${esc(f.total)}</span></div><div class="bars"></div><div class="c ft">${esc(f.footer || '')}</div></div>${foot(true)}</div>`;
+    },
     // Pattern break: a lead form with every field struck through.
     form() {
       const fields = f.fields || ['First name', 'Last name', 'Work email', 'Company', 'Job title', 'Phone', 'How did you hear about us?'];
@@ -89,7 +116,7 @@
     // Pattern break: one small notification in a lot of empty space (a sample: label it).
     notice() {
       return `<div class="ad notice dark"><div class="corner">${f.logo === false ? '' : '<img src="../../brand/logo-on-dark.svg">'}</div>
-        <div class="note-card"><img src="../../brand/mark.svg"><div class="app">${esc(f.app || 'Breakout')}</div><div class="when">${esc(f.when || 'now')}</div><div class="msg">${mk(f.message)}</div></div>
+        <div class="note-card">${f.generic ? '<img style="background:#cfcfd6">' : '<img src="../../brand/mark.svg">'}<div class="app">${esc(f.app || 'Breakout')}</div><div class="when">${esc(f.when || 'now')}</div><div class="msg">${mk(f.message)}</div></div>
         ${f.caption ? `<div class="caption">${mk(f.caption)}</div>` : ''}${f.label ? `<div class="caption" style="bottom:calc(var(--u)*3);font-size:calc(var(--u)*1.7)">${esc(f.label)}</div>` : ''}</div>`;
     },
     // Pattern break: a near-empty violet field and one small line.

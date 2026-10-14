@@ -60,6 +60,69 @@
       "name": "See the number first",
       "idea": "Published pricing against a demo, a quote and an annual contract before you see a number.",
       "source": "claims.json: \"Transparent pricing, published. Qualified requires a demo, a quote, and an annual contract before you see a number.\", \"Platform: from $2,000/month (Breakout); quote-based (Qualified)\""
+    },
+    {
+      "code": "overqualified",
+      "name": "Overqualified",
+      "idea": "Breakout applies for the job: a resume of its real features, stamped \"Overqualified.\" The word does the subtle work.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; the word \"qualified\" used as a plain word, never the company's name or logo"
+    },
+    {
+      "code": "booked",
+      "name": "qualified. booked.",
+      "idea": "The word \"qualified\" struck through, \"booked.\" under it: the step versus the outcome, read twice by this audience.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; the word \"qualified\" used as a plain word, never the company's name or logo"
+    },
+    {
+      "code": "pop-quiz",
+      "name": "Pop quiz",
+      "idea": "A multiple-choice question about what the buyer wants; the answer is the one a button tree can't give.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; the word \"qualified\" used as a plain word, never the company's name or logo"
+    },
+    {
+      "code": "missing-buyer",
+      "name": "Missing: one buyer",
+      "idea": "A lost poster for the buyer who left with a question, with tear-off tabs.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; the word \"qualified\" used as a plain word, never the company's name or logo"
+    },
+    {
+      "code": "breakup",
+      "name": "Dear chat widget",
+      "idea": "A breakup letter from the buyers: it's not you, it's the buttons.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; the word \"qualified\" used as a plain word, never the company's name or logo"
+    },
+    {
+      "code": "receipt",
+      "name": "The receipt",
+      "idea": "The compare page's own list of what the chat-era setup needs, itemised on a till receipt. Total: still waiting.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; the word \"qualified\" used as a plain word, never the company's name or logo"
+    },
+    {
+      "code": "on-hold",
+      "name": "Please hold",
+      "idea": "Hold-music language for a widget that waits.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; the word \"qualified\" used as a plain word, never the company's name or logo"
+    },
+    {
+      "code": "offline",
+      "name": "We're offline",
+      "idea": "The away message every buyer has met, against an SDR that never misses a visitor.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; the word \"qualified\" used as a plain word, never the company's name or logo"
+    },
+    {
+      "code": "disqualified",
+      "name": "Disqualified",
+      "idea": "Buttons. Forms. Waiting. Disqualified: a type slam with the word turned around.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; the word \"qualified\" used as a plain word, never the company's name or logo"
     }
   ],
   "ads": [
@@ -92,7 +155,7 @@
     {
       "id": "QSW-002",
       "status": "draft",
-      "round": 1,
+      "round": 2,
       "concept": "just-ask",
       "angle": "buyer-experience",
       "persona": "practitioner",
@@ -114,7 +177,7 @@
     {
       "id": "QSW-003",
       "status": "draft",
-      "round": 1,
+      "round": 2,
       "concept": "signals",
       "angle": "signals",
       "persona": "practitioner",
@@ -188,7 +251,7 @@
     {
       "id": "QSW-006",
       "status": "draft",
-      "round": 1,
+      "round": 2,
       "concept": "hours",
       "angle": "go-live",
       "persona": "cmo",
@@ -211,7 +274,7 @@
     {
       "id": "QSW-007",
       "status": "draft",
-      "round": 1,
+      "round": 2,
       "concept": "tried-others",
       "angle": "humour",
       "persona": "cmo",
@@ -253,6 +316,279 @@
           "right_label": "Breakout",
           "right": "From $2,000/*month.*",
           "source": "Source: getbreakout.ai/compare/qualified-alternative"
+        }
+      }
+    },
+    {
+      "id": "QSW-009",
+      "status": "draft",
+      "round": 1,
+      "concept": "overqualified",
+      "angle": "humour",
+      "persona": "cmo",
+      "awareness": "unaware",
+      "format": "img-4x5",
+      "hook": "joke",
+      "copy": {
+        "intro": "We'd like to apply for the role of your website's SDR.\nBreakout is a full-time, always-on SDR that never misses a website visitor.",
+        "headline": "Inbound SDR, powered by AI."
+      },
+      "design": {
+        "template": "resume",
+        "fields": {
+          "role": "Inbound SDR, powered by AI.",
+          "sections": [
+            {
+              "title": "Experience",
+              "items": [
+                "Identifies the visitor: company, person, buying group and intent signals",
+                "Engages them in real time: answers questions, shares content, qualifies and books meetings",
+                "Converts drop-offs with personalized email and LinkedIn follow-ups"
+              ]
+            },
+            {
+              "title": "Availability",
+              "text": "Full-time. Always on."
+            },
+            {
+              "title": "Start date",
+              "text": "Go live in 3 hours."
+            },
+            {
+              "title": "References",
+              "text": "People who've tried others."
+            }
+          ],
+          "stamp": "Overqualified."
+        }
+      }
+    },
+    {
+      "id": "QSW-010",
+      "status": "draft",
+      "round": 1,
+      "concept": "booked",
+      "angle": "outcome",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "A qualified lead is a promise. A booked meeting is pipeline.\nBreakout engages visitors in real time: answers questions, shares content, qualifies and books meetings.",
+        "headline": "Pageview to pipeline."
+      },
+      "design": {
+        "template": "slam",
+        "fields": {
+          "index": "getbreakout.ai",
+          "kicker": "pageview to pipeline",
+          "lines": [
+            "~qualified.~",
+            "*booked.*"
+          ]
+        }
+      }
+    },
+    {
+      "id": "QSW-011",
+      "status": "draft",
+      "round": 1,
+      "concept": "pop-quiz",
+      "angle": "buyer-experience",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "question",
+      "copy": {
+        "intro": "Pop quiz for whoever owns the website chat.\nBuyers have questions, not buttons. Breakout answers questions, shares content, qualifies and books meetings.",
+        "headline": "Go ahead. Ask me stuff."
+      },
+      "design": {
+        "template": "quiz",
+        "fields": {
+          "question": "What does your buyer *actually* want?",
+          "options": [
+            "Pricing",
+            "Book a demo",
+            "Careers",
+            "To just ask a question"
+          ],
+          "answer": 3
+        }
+      }
+    },
+    {
+      "id": "QSW-012",
+      "status": "draft",
+      "round": 1,
+      "concept": "missing-buyer",
+      "angle": "wasted-traffic",
+      "persona": "practitioner",
+      "awareness": "unaware",
+      "format": "img-4x5",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Last seen on your pricing page.\nBreakout identifies the visitor: company, person, buying group and intent signals, and answers their questions in real time.",
+        "headline": "Identify ready-to-buy visitors before they fill a form"
+      },
+      "design": {
+        "template": "poster",
+        "fields": {
+          "who": "One *buyer.*",
+          "desc": "Last seen on your pricing page. Had a question. Found only buttons.",
+          "tab": "Ask me stuff"
+        }
+      }
+    },
+    {
+      "id": "QSW-013",
+      "status": "draft",
+      "round": 1,
+      "concept": "breakup",
+      "angle": "buyer-experience",
+      "persona": "cmo",
+      "awareness": "problem",
+      "format": "img-4x5",
+      "hook": "joke",
+      "copy": {
+        "intro": "The letter your buyers would write, if you asked them.\nGo ahead. Ask me stuff. Breakout answers questions, shares content, qualifies and books meetings.",
+        "headline": "The #1 Qualified alternative"
+      },
+      "design": {
+        "template": "letter",
+        "fields": {
+          "salutation": "Dear chat widget,",
+          "body": [
+            "It's not you. It's the *buttons.*",
+            "We had questions. You had options.",
+            "We've met someone who just *answers.*"
+          ],
+          "signoff": "Love,\nyour buyers"
+        }
+      }
+    },
+    {
+      "id": "QSW-014",
+      "status": "draft",
+      "round": 1,
+      "concept": "receipt",
+      "angle": "contract",
+      "persona": "cmo",
+      "awareness": "problem",
+      "format": "img-4x5",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Itemised.\nModern demand gen teams need agents that act, not a widget that waits.",
+        "headline": "From $2,000/month. Published."
+      },
+      "design": {
+        "template": "receipt",
+        "fields": {
+          "title": "CHAT-ERA WIDGET",
+          "subtitle": "Annual plan",
+          "items": [
+            [
+              "A demo",
+              "required"
+            ],
+            [
+              "A quote",
+              "required"
+            ],
+            [
+              "An annual contract",
+              "signed"
+            ],
+            [
+              "A CRM",
+              "required"
+            ],
+            [
+              "An admin",
+              "required"
+            ],
+            [
+              "A hand-raise event",
+              "pending"
+            ]
+          ],
+          "total": "still waiting",
+          "footer": "Agents that act, not a widget that waits."
+        }
+      }
+    },
+    {
+      "id": "QSW-015",
+      "status": "draft",
+      "round": 2,
+      "concept": "on-hold",
+      "angle": "speed",
+      "persona": "cmo",
+      "awareness": "unaware",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Your buyer asked a question. Your widget is waiting for a hand-raise.\nModern demand gen teams need agents that act, not a widget that waits.",
+        "headline": "Go ahead. Ask me stuff."
+      },
+      "design": {
+        "template": "quiet",
+        "fields": {
+          "line": "Your buyer is important to us.\n*Please hold.*"
+        }
+      }
+    },
+    {
+      "id": "QSW-016",
+      "status": "draft",
+      "round": 2,
+      "concept": "offline",
+      "angle": "never-miss",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Saturday, on your pricing page.\nBreakout is a full-time, always-on SDR that never misses a website visitor.",
+        "headline": "Inbound SDR, powered by AI."
+      },
+      "design": {
+        "template": "notice",
+        "fields": {
+          "generic": true,
+          "app": "Website chat",
+          "when": "Sat",
+          "message": "We're offline right now. Leave your email and we'll get back to you.",
+          "caption": "Breakout is a full-time, always-on SDR that *never misses a website visitor.*",
+          "label": "Illustrative example"
+        }
+      }
+    },
+    {
+      "id": "QSW-017",
+      "status": "draft",
+      "round": 2,
+      "concept": "disqualified",
+      "angle": "humour",
+      "persona": "cmo",
+      "awareness": "problem",
+      "format": "img-4x5",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Buttons. Forms. Waiting for a hand-raise.\nModern demand gen teams need agents that act, not a widget that waits.",
+        "headline": "Agents that act."
+      },
+      "design": {
+        "template": "slam",
+        "fields": {
+          "index": "getbreakout.ai",
+          "kicker": "chat-era",
+          "lines": [
+            "Buttons.",
+            "Forms.",
+            "Waiting.",
+            "*Disqualified.*"
+          ]
         }
       }
     }

@@ -7,11 +7,16 @@ The static ad designs, in the brand, for every LinkedIn size. The last three are
 | Design | Looks like | Fields |
 |---|---|---|
 | `verdict` | A short claim in the display face, key words in italic violet; light ground with a soft bloom, or `"theme": "dark"` on the homepage mesh | `headline`, `kicker`, `sub`, `cta`, `theme`, `label`, `logo` |
-| `slam` | The approved Swiss grid: hairlines, a mono index, lines in Manrope 800 that fill the width, one in violet | `lines` (wrap a line in `*` for violet), `index`, `kicker`, `sub` |
+| `slam` | The approved Swiss grid: hairlines, a mono index, lines in Manrope 800 that fill the width, one in violet | `lines` (wrap a line in `*` for violet, in `~` to strike it through), `index`, `kicker`, `sub` |
 | `chat` | Breakout's website agent rebuilt from the real widget, answering a visitor | `headline`, `turns` (`{"who": "me" or "agent", "text"}`), `label` ("Illustrative example") |
 | `split` | Today versus with Breakout: grey and violet panes, 2 to 4 words a side | `left`, `right`, `left_label`, `right_label`, `source` (shown while a quote is up) |
 | `screen` | A real product screen, pushed in on the part that matters | `headline`, `image` (`assets/screens/...`), `crop` (`[x, y, w, h]` in image pixels) |
 | `buttons` | A generic button-only chat widget (never a real vendor's UI or logo) beside Breakout's open question | `headline`, `buttons`, `greeting`, `miss`, `question`, `answer`, `label` |
+| `resume` | Conceptual: a resume on paper, with a rubber stamp | `name`, `role`, `sections` (`{title, items}` or `{title, text}`), `stamp` |
+| `quiz` | Conceptual: a multiple-choice question on lined paper, one answer ringed in violet | `question`, `options`, `answer` (index), `index` |
+| `poster` | Conceptual: a lost poster with tear-off tabs, on violet | `big`, `who`, `desc`, `tab` |
+| `letter` | Conceptual: a letter in the display face | `salutation`, `body` (paragraphs), `signoff` |
+| `receipt` | Conceptual: a till receipt, line items with leaders, a total and a barcode | `title`, `subtitle`, `items` (`[label, value]`), `total`, `footer` |
 | `form` | Pattern break: a lead form with every field struck through in violet | `headline`, `kicker`, `fields`, `submit`, `cta` |
 | `notice` | Pattern break: one small Breakout notification in a lot of dark, empty space | `message`, `when`, `app`, `caption`, `label` ("Illustrative example") |
 | `quiet` | Pattern break: a near-empty violet field and one small line | `line` |

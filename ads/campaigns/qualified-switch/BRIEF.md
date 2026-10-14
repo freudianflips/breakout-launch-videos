@@ -42,16 +42,18 @@ CTA Request demo, to getbreakout.ai/compare/qualified-alternative (the buyout is
 ## Budget
 To ask: on top of round 1's $100/day, or out of it. Suggested: $50/day, $25 per campaign, for 2 weeks, then everything behind the winners until 30 November. A small audience means higher CPMs than round 1's assumed $45 and fast frequency: judge at 2,000 impressions an ad here, not 3,000, and watch frequency weekly.
 
-## Round 1 (8 ads, statics)
-| Campaign | Ads |
-|---|---|
-| QSW \| test \| practitioner \| image (demand gen + marketing ops titles, on the company list) | QSW-001 hours (split, 8-12 weeks vs <3 hours), QSW-002 just-ask (pattern break: buttons vs a question), QSW-003 signals (700+ or one), QSW-004 buyout (dark verdict) |
-| QSW \| test \| cmo \| image (on the company list) | QSW-005 buyout (pattern break: one quiet line), QSW-006 hours (no implementation project), QSW-007 tried-others ("Pretty good, actually"), QSW-008 pricing (quote-based vs from $2,000/month) |
+## Round 1: awareness first, the offer in every campaign
+The owner asked for more awareness and more conceptual, left-of-field work (2026-10-14), with Qualified used subtly. "Subtly" is done two ways that stay inside the rule: the word *qualified* used as a plain word the audience reads twice (Overqualified, ~~qualified.~~ booked., Disqualified), and the compare page's own description of the chat-era setup turned into objects (the receipt) without naming anyone. Lines that do name Qualified stay word for word from the compare page.
 
-Every line naming Qualified is word for word from the compare page (the linter checks it), and the splits show the page as their source. Stop QSW-004 and QSW-005 on 30 November 2026.
+| Campaign | Round 1 (5 active, 1 per concept) | Round 2 (rotate in as ads are judged) |
+|---|---|---|
+| QSW \| test \| practitioner \| image | QSW-010 ~~qualified.~~ booked. · QSW-011 pop quiz · QSW-012 missing: one buyer · QSW-001 8-12 weeks vs <3 hours · QSW-004 the buyout | QSW-016 we're offline · QSW-002 buttons vs a question · QSW-003 700+ or one |
+| QSW \| test \| cmo \| image | QSW-009 Overqualified. (resume) · QSW-013 Dear chat widget (breakup letter) · QSW-014 the receipt · QSW-008 quote-based vs from $2,000/month · QSW-005 the buyout (quiet) | QSW-015 please hold · QSW-017 Disqualified. · QSW-006 no implementation project · QSW-007 pretty good, actually |
+
+6 of the 10 round 1 ads are unaware or problem-aware; each campaign keeps 1 offer ad so the buyout is always running. Stop QSW-004 and QSW-005 on 30 November 2026.
 
 ## Approval
 - [x] Concepts and naming Qualified in ads (verbatim from the compare page, no logo) taken as approved with the campaign idea (2026-10-14)
-- [ ] Domain list source agreed; company list built and uploaded
+- [x] Company list built and uploaded by the owner (2026-10-14)
 - [ ] Feed preview approved
 - [ ] Budget approved

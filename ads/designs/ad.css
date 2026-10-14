@@ -152,3 +152,88 @@ body { font-family: "Manrope", sans-serif; color: var(--ink); -webkit-font-smoot
 .buttons .ask .input { background: #fff; color: #9aa0a6; border-radius: calc(var(--u) * 1.6); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.8); font: 500 calc(var(--u) * 2)/1 "Manrope"; }
 .buttons .copy .stage { flex: 0 0 auto; }
 .wide .buttons .copy .stage { flex: 1; }
+
+/* ---- conceptual formats: everyday objects that carry the idea ---- */
+.paper { background: #fffdf8; color: #1d1b16; box-shadow: 0 calc(var(--u) * 1.6) calc(var(--u) * 6) rgba(20, 11, 60, .22); position: relative; }
+.objbg { align-items: center; justify-content: center; }
+.objbg.violet { background: var(--accent); }
+.objbg.lav { background: var(--card-lavender); }
+.objbg .foot { position: absolute; left: calc(var(--u) * 6); right: calc(var(--u) * 6); bottom: calc(var(--u) * 4.5); }
+
+/* slam strike: ~word~ */
+.slam .line.strike { color: var(--ink-2); position: relative; width: max-content; }
+.slam .line.strike::after { content: ""; position: absolute; left: -2%; right: -2%; top: 52%; height: .09em; background: var(--accent); transform: rotate(-3deg); border-radius: 99px; }
+
+/* resume */
+.resume .paper { width: 76%; height: 80%; margin-top: -6%; padding: calc(var(--u) * 5) calc(var(--u) * 5.5); display: flex; flex-direction: column; gap: calc(var(--u) * 2.2); border-radius: calc(var(--u) * .6); }
+.resume .nm { font-family: "New Kansas", "Fraunces", serif; font-weight: 340; font-size: calc(var(--u) * 7); line-height: 1; letter-spacing: -0.03em; }
+.resume .role { font: 600 calc(var(--u) * 2.2)/1.2 "Manrope"; color: #5c5850; border-bottom: 1px solid #d8d3c6; padding-bottom: calc(var(--u) * 1.6); }
+.resume h4 { font: 400 calc(var(--u) * 1.6)/1 "Fragment Mono"; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin-bottom: calc(var(--u) * .8); }
+.resume li { font: 500 calc(var(--u) * 2)/1.35 "Manrope"; margin-left: calc(var(--u) * 2.4); }
+.resume p { font: 500 calc(var(--u) * 2)/1.35 "Manrope"; }
+.resume .stamp { position: absolute; right: -6%; bottom: 14%; transform: rotate(-12deg); border: calc(var(--u) * .7) solid var(--accent); color: var(--accent); border-radius: calc(var(--u) * 1.4); padding: calc(var(--u) * 1) calc(var(--u) * 2.6); font: 800 calc(var(--u) * 6.4)/1 "Manrope"; letter-spacing: -0.03em; background: rgba(255, 253, 248, .86); mix-blend-mode: multiply; }
+
+/* quiz */
+.quiz .paper { width: 80%; padding: calc(var(--u) * 5); margin-top: -6%; border-radius: calc(var(--u) * .6); background-image: repeating-linear-gradient(#fffdf8 0, #fffdf8 calc(var(--u) * 5.4), #e7eefb calc(var(--u) * 5.4), #e7eefb calc(var(--u) * 5.55)); }
+.quiz .qn { font: 400 calc(var(--u) * 1.8)/1 "Fragment Mono"; color: #8a8579; margin-bottom: calc(var(--u) * 2); }
+.quiz .q { font-family: "New Kansas", "Fraunces", serif; font-weight: 340; font-size: calc(var(--u) * 5.6); line-height: 1.05; letter-spacing: -0.03em; margin-bottom: calc(var(--u) * 3.4); }
+.quiz .opt { display: flex; gap: calc(var(--u) * 2); align-items: center; font: 500 calc(var(--u) * 3)/1 "Manrope"; padding: calc(var(--u) * 1.3) 0; position: relative; }
+.quiz .bub { width: calc(var(--u) * 3.6); height: calc(var(--u) * 3.6); border-radius: 50%; border: 2px solid #9a948a; display: grid; place-items: center; font: 600 calc(var(--u) * 1.7)/1 "Manrope"; color: #9a948a; flex: 0 0 auto; }
+.quiz .opt.right .bub { background: var(--accent); border-color: var(--accent); color: #fff; }
+.quiz .opt.right .ring { position: absolute; left: -3%; top: -18%; width: 104%; height: 136%; pointer-events: none; }
+.quiz .opt.right .ring ellipse { fill: none; stroke: var(--accent); stroke-width: 3; }
+
+/* poster */
+.poster .paper { width: 68%; height: 84%; margin-top: -7%; transform: rotate(-1.6deg); display: flex; flex-direction: column; align-items: center; padding: calc(var(--u) * 4) calc(var(--u) * 4) 0; text-align: center; }
+.poster .big { font: 800 calc(var(--u) * 10)/0.9 "Manrope"; letter-spacing: -0.05em; }
+.poster .pic { width: 62%; flex: 1; min-height: 0; margin: calc(var(--u) * 2.4) 0; background: #f2efff; display: grid; place-items: center; border: 1px solid #e3ddff; }
+.poster .pic svg { width: 34%; }
+.poster .who { font-family: "New Kansas", "Fraunces", serif; font-weight: 340; font-size: calc(var(--u) * 5); line-height: 1; letter-spacing: -0.03em; }
+.poster .who em { color: var(--accent); }
+.poster .desc { font: 500 calc(var(--u) * 2.1)/1.4 "Manrope"; color: #4a463e; margin: calc(var(--u) * 1.4) 0 calc(var(--u) * 2.4); max-width: 92%; }
+.poster .tabs { align-self: stretch; display: flex; border-top: 2px dashed #b9b3a6; height: calc(var(--u) * 12); }
+.poster .tabs span { flex: 1; border-left: 2px dashed #d3cdc0; writing-mode: vertical-rl; transform: rotate(180deg); font: 600 calc(var(--u) * 1.6)/1 "Manrope"; color: var(--accent); display: flex; align-items: center; justify-content: center; }
+.poster .tabs span:first-child { border-left: 0; }
+
+/* letter */
+.letter .paper { width: 74%; padding: calc(var(--u) * 6) calc(var(--u) * 6.5); margin-top: -6%; border-radius: calc(var(--u) * .5); display: flex; flex-direction: column; gap: calc(var(--u) * 2.2); }
+.letter .paper p { font-family: "New Kansas", "Fraunces", serif; font-weight: 340; font-size: calc(var(--u) * 4); line-height: 1.18; letter-spacing: -0.02em; }
+.letter .paper p.salut, .letter .paper p.sign { font-style: italic; }
+.letter .paper em { color: var(--accent); }
+.letter .paper .sign { color: var(--accent); }
+
+/* receipt */
+.receipt .paper { width: 56%; padding: calc(var(--u) * 4.4) calc(var(--u) * 4); margin-top: -6%; transform: rotate(1.4deg); font: 400 calc(var(--u) * 2.15)/1.55 "Fragment Mono"; color: #2a2722; -webkit-mask: radial-gradient(circle at 50% 100%, transparent calc(var(--u) * .9), #000 calc(var(--u) * .95)) 0 100% / calc(var(--u) * 2.6) calc(var(--u) * 1.6) repeat-x, linear-gradient(#000, #000) 0 0 / 100% calc(100% - calc(var(--u) * 1.5)) no-repeat; }
+.receipt .c { text-align: center; }
+.receipt .hd { font-weight: 400; font-size: calc(var(--u) * 2.8); letter-spacing: .06em; }
+.receipt .rule { border-top: 2px dashed #9b958a; margin: calc(var(--u) * 1.6) 0; }
+.receipt .row { display: flex; gap: calc(var(--u) * 1); }
+.receipt .row .dots { flex: 1; border-bottom: 2px dotted #b4aea3; transform: translateY(-.45em); }
+.receipt .tot { font-size: calc(var(--u) * 3); color: var(--accent); }
+.receipt .bars { height: calc(var(--u) * 6); margin: calc(var(--u) * 2) auto 0; width: 80%; background: repeating-linear-gradient(90deg, #2a2722 0 2px, transparent 2px 5px, #2a2722 5px 9px, transparent 9px 11px, #2a2722 11px 12px, transparent 12px 16px); }
+.receipt .ft { font-size: calc(var(--u) * 1.8); color: #6c665b; margin-top: calc(var(--u) * 1.4); }
+/* feed-size legibility for the object formats */
+.resume .paper { width: 84%; height: 84%; padding: calc(var(--u) * 5) calc(var(--u) * 6); gap: calc(var(--u) * 2.6); }
+.resume .nm { font-size: calc(var(--u) * 9); }
+.resume .role { font-size: calc(var(--u) * 3); }
+.resume h4 { font-size: calc(var(--u) * 2.2); }
+.resume li, .resume p { font-size: calc(var(--u) * 2.9); }
+.resume .stamp { font-size: calc(var(--u) * 8); right: -4%; bottom: 10%; }
+.letter .paper { width: 84%; padding: calc(var(--u) * 7) calc(var(--u) * 7.5); gap: calc(var(--u) * 3); }
+.letter .paper p { font-size: calc(var(--u) * 6.2); }
+.poster .paper { width: 78%; }
+.poster .big { font-size: calc(var(--u) * 13); }
+.poster .who { font-size: calc(var(--u) * 7); }
+.poster .desc { font-size: calc(var(--u) * 3); }
+.poster .tabs span { font-size: calc(var(--u) * 2.1); }
+.receipt .paper { width: 74%; font-size: calc(var(--u) * 3.1); padding: calc(var(--u) * 5) calc(var(--u) * 4.6); }
+.receipt .hd { font-size: calc(var(--u) * 4); }
+.receipt .tot { font-size: calc(var(--u) * 4); }
+.receipt .ft { font-size: calc(var(--u) * 2.5); }
+.quiz .paper { width: 86%; }
+.quiz .q { font-size: calc(var(--u) * 7); }
+.quiz .opt { font-size: calc(var(--u) * 3.8); }
+.quiz .bub { width: calc(var(--u) * 4.4); height: calc(var(--u) * 4.4); font-size: calc(var(--u) * 2); }
+.resume .stamp { top: 5%; bottom: auto; right: -5%; font-size: calc(var(--u) * 7); }
+.resume .stamp { top: auto; bottom: 3%; right: 5%; font-size: calc(var(--u) * 6.6); transform: rotate(-8deg); }
+.resume .stamp { bottom: -4%; right: -4%; font-size: calc(var(--u) * 6); }
