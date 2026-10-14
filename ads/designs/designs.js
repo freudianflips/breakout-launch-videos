@@ -106,6 +106,53 @@
       const rows = (f.items || []).map(([a, b]) => `<div class="row"><span>${esc(a)}</span><span class="dots"></span><span>${esc(b)}</span></div>`).join('');
       return `<div class="ad receipt objbg violet"><div class="paper"><div class="c hd">${esc(f.title)}</div><div class="c">${esc(f.subtitle || '')}</div><div class="rule"></div>${rows}<div class="rule"></div><div class="row tot"><span>${esc(f.total_label || 'TOTAL')}</span><span class="dots"></span><span>${esc(f.total)}</span></div><div class="bars"></div><div class="c ft">${esc(f.footer || '')}</div></div>${foot(true)}</div>`;
     },
+    // Conceptual: sticky notes; ~text~ is done, the last note with key: true is the answer.
+    sticky() {
+      const notes = (f.notes || []).map((n) => {
+        const done = /^~.*~$/.test(n);
+        return `<div class="n${done ? ' done' : ''}">${esc(n.replace(/~/g, ''))}</div>`;
+      }).join('') + (f.answer ? `<div class="n key">${mk(f.answer)}</div>` : '');
+      return `<div class="ad sticky objbg lav"><div class="wall">${notes}</div>${foot(false)}</div>`;
+    },
+    // Conceptual: a search box and its suggestions (no search engine's brand). The suggestion with * is highlighted.
+    search() {
+      const sug = (f.suggestions || []).map((x) => {
+        const key = x.startsWith('*');
+        return `<div class="s${key ? ' key' : ''}">${esc(f.query)} <b>${esc(x.replace(/^\*/, ''))}</b></div>`;
+      }).join('');
+      return `<div class="ad search objbg lav"><div class="box"><div class="q"><span class="glass"></span>${esc(f.query)}<span class="caret"></span></div>${sug}</div>${foot(false)}</div>`;
+    },
+    // Conceptual: a project plan. rows: [label, start, length] in twelfths of the chart; key: the Breakout row.
+    gantt() {
+      const rows = (f.rows || []).map(([l, a, w]) => `<div class="row"><div class="l">${esc(l)}</div><div class="track"><div class="bar" style="left:${a / 12 * 100}%;width:${w / 12 * 100}%"></div></div></div>`).join('');
+      const key = f.key ? `<div class="row key"><div class="l">${esc(f.key)}</div><div class="track"><div class="bar" style="left:0;width:1.2%"></div><div class="flag" style="left:3%">${esc(f.key_flag || '')}</div></div></div>` : '';
+      return `<div class="ad gantt objbg lav"><div class="chart"><div class="title"><span>${esc(f.title || 'Implementation plan')}</span></div>${rows}${key}</div>${foot(false)}</div>`;
+    },
+    // Conceptual: a text thread (generic bubbles). messages: [{from: them|me|bo, who?, text}]
+    thread() {
+      const ms = (f.messages || []).map((m) => `${m.who ? `<div class="who${m.from === 'me' ? ' r' : ''}">${esc(m.who)}</div>` : ''}<div class="m ${m.from}">${esc(m.text)}</div>`).join('');
+      return `<div class="ad thread objbg lav"><div class="phone"><div class="hdr">${esc(f.title || 'marketing')}</div>${ms}</div>${foot(false)}</div>`;
+    },
+    // Conceptual: a fortune cookie slip.
+    fortune() {
+      return `<div class="ad fortune objbg violet"><div class="slip"><p>${mk(f.fortune)}</p></div>${f.caption ? `<div class="cap">${mk(f.caption)}</div>` : ''}${foot(true)}</div>`;
+    },
+    // Conceptual: fine print, with highlighted lines; [[text]] marks a highlight.
+    fine() {
+      const t = esc(f.text || '').replace(/\[\[(.+?)\]\]/g, '<mark>$1</mark>');
+      return `<div class="ad fine objbg lav"><div class="doc"><h3>${esc(f.title || 'Terms')}</h3><div class="t">${t}</div>${f.ours ? `<div class="ours">${mk(f.ours)}</div>` : ''}</div>${foot(false)}</div>`;
+    },
+    // Conceptual: a dating profile card (generic, no app's UI).
+    dating() {
+      const sec = (lab, xs, no) => `<div class="lab">${esc(lab)}</div><div class="chips">${(xs || []).map((x) => `<span class="chip2${no ? ' no' : ''}">${esc(x)}</span>`).join('')}</div>`;
+      return `<div class="ad dating objbg lav"><div class="card"><div class="ph"><div class="nm">${esc(f.name || 'Breakout')}<small>${esc(f.tagline || '')}</small></div></div>
+        <div class="bd">${sec(f.looking_label || 'Looking for', f.looking)}${sec(f.green_label || 'Green flags', f.green)}${sec(f.no_label || 'Dealbreakers', f.no, true)}</div></div>${foot(false)}</div>`;
+    },
+    // A real review, quoted word for word, with its source. [[text]] highlights.
+    review() {
+      const body = esc(f.body || '').replace(/\[\[(.+?)\]\]/g, '<mark>$1</mark>');
+      return `<div class="ad review objbg lav"><div class="card"><div class="stars">\u2605\u2605\u2605\u2605\u2605</div><div class="ttl">${mk(f.title)}</div><div class="body">${body}</div><div class="by">${esc(f.source)}</div></div>${foot(false)}</div>`;
+    },
     // Pattern break: a lead form with every field struck through.
     form() {
       const fields = f.fields || ['First name', 'Last name', 'Work email', 'Company', 'Job title', 'Phone', 'How did you hear about us?'];

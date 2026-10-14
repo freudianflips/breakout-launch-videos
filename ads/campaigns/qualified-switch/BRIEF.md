@@ -42,15 +42,19 @@ CTA Request demo, to getbreakout.ai/compare/qualified-alternative (the buyout is
 ## Budget
 To ask: on top of round 1's $100/day, or out of it. Suggested: $50/day, $25 per campaign, for 2 weeks, then everything behind the winners until 30 November. A small audience means higher CPMs than round 1's assumed $45 and fast frequency: judge at 2,000 impressions an ad here, not 3,000, and watch frequency weekly.
 
-## Round 1: awareness first, the offer in every campaign
-The owner asked for more awareness and more conceptual, left-of-field work (2026-10-14), with Qualified used subtly. "Subtly" is done two ways that stay inside the rule: the word *qualified* used as a plain word the audience reads twice (Overqualified, ~~qualified.~~ booked., Disqualified), and the compare page's own description of the chat-era setup turned into objects (the receipt) without naming anyone. Lines that do name Qualified stay word for word from the compare page.
+## The creative set: 32 ads in 3 rounds
+The owner liked the conceptual direction ("I like these ideas") and asked for the full set (2026-10-14). 20 concepts in everyday-object formats, mostly unaware and problem-aware; the word *qualified* used as a plain word; the compare page's lines kept word for word wherever Qualified is named, and turned into objects (the receipt, the fine print) where it is not.
 
-| Campaign | Round 1 (5 active, 1 per concept) | Round 2 (rotate in as ads are judged) |
+| | Practitioner campaign | CMO campaign |
 |---|---|---|
-| QSW \| test \| practitioner \| image | QSW-010 ~~qualified.~~ booked. · QSW-011 pop quiz · QSW-012 missing: one buyer · QSW-001 8-12 weeks vs <3 hours · QSW-004 the buyout | QSW-016 we're offline · QSW-002 buttons vs a question · QSW-003 700+ or one |
-| QSW \| test \| cmo \| image | QSW-009 Overqualified. (resume) · QSW-013 Dear chat widget (breakup letter) · QSW-014 the receipt · QSW-008 quote-based vs from $2,000/month · QSW-005 the buyout (quiet) | QSW-015 please hold · QSW-017 Disqualified. · QSW-006 no implementation project · QSW-007 pretty good, actually |
+| **Every round** (the offer, until 30 Nov) | QSW-004 the buyout | one buyout per round, below |
+| **Round 1** | QSW-010 ~~qualified.~~ booked. · QSW-011 pop quiz · QSW-012 MISSING: one buyer · QSW-001 8-12 weeks vs <3 hours | QSW-005 the buyout (quiet) · QSW-009 Overqualified. · QSW-013 Dear chat widget · QSW-014 the receipt · QSW-008 quote-based vs $2,000/month |
+| **Round 2** | QSW-018 the Monday list (sticky notes) · QSW-019 "why does my website chat..." · QSW-021 the group chat · QSW-024 Not a fit. (the widget's resume) | QSW-030 the renewal (a note from Finance, buyout) · QSW-026 the fine print · QSW-027 the dating profile · QSW-032 "how much does our website chat..." · QSW-015 please hold |
+| **Round 3, the bench** (rotate in as slots free) | QSW-020 the project plan · QSW-022 fortune cookie · QSW-023 pop quiz, ops edition · QSW-025 FOUND: one buyer · QSW-002 buttons vs a question · QSW-003 700+ or one · QSW-016 we're offline | QSW-031 fortune: "You stop paying for the widget the day you go live." (buyout) · QSW-028 "Works like a charm" (a real G2 review) · QSW-029 our receipt · QSW-017 Disqualified. · QSW-006 no implementation project · QSW-007 pretty good, actually |
 
-6 of the 10 round 1 ads are unaware or problem-aware; each campaign keeps 1 offer ad so the buyout is always running. Stop QSW-004 and QSW-005 on 30 November 2026.
+Build sheets: `ads.py kit qualified-switch --round N` (launch/kit-roundN.html). The 4 buyout ads (QSW-004, 005, 030, 031) carry `"ends": "2026-11-30"`; the kit says when to stop them and the linter warns after.
+
+**Pace versus the deadline.** About 6 weeks remain. At $25 a day per campaign and 5 ads, each ad gets roughly $5 a day; at a $60 to $100 CPM (assumed for a small list) that is 2,000 impressions in 4 to 6 weeks, so only round 1 would be judged before 30 November. Either raise this campaign's budget, or judge round 1 earlier on CTR and engagement at about 1,000 impressions an ad and rotate weekly. To decide with the owner.
 
 ## Approval
 - [x] Concepts and naming Qualified in ads (verbatim from the compare page, no logo) taken as approved with the campaign idea (2026-10-14)

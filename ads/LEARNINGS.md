@@ -17,6 +17,8 @@ Starting beliefs, borrowed from Wispr Flow's playbook and not yet tested on Brea
 
 ## Log
 
+- 2026-10-14: Owner liked the conceptual, everyday-object direction for the Qualified audience ("I like these ideas") over the straight comparisons ("mostly straightforward"). Full set built: 32 ads, 20 concepts, 3 rounds. First test of the hypothesis: object formats beat comparisons on hold and CTR with a product-aware audience.
+
 - 2026-10-14: Owner on the first Qualified ads: "mostly straightforward"; wants more awareness and left-of-field concepts. Round 1 for qualified-switch is now 6 awareness ads in everyday-object formats plus 1 offer ad per campaign. Watch whether the objects (resume, quiz, poster, letter, receipt) beat the straight comparisons on hold and CTR, not only on hook.
 
 - 2026-10-14: Second campaign: qualified-switch, the owner's "Qualified alternative" idea. Product-aware buyers held back by switching cost, so the buyout offer (ends 30 November 2026) leads; Qualified named only in compare-page lines, word for word. Pattern breaks added to round 1 at the owner's ask, one per campaign beside a standard version of the same concept, to measure the break itself.

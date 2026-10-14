@@ -123,6 +123,90 @@
       "idea": "Buttons. Forms. Waiting. Disqualified: a type slam with the word turned around.",
       "awareness": "unaware or problem",
       "source": "Breakout copy and compare-page lines; the word \"qualified\" used as a plain word, never the company's name or logo"
+    },
+    {
+      "code": "monday-list",
+      "name": "The Monday list",
+      "idea": "Sticky notes of the chores a chat-era widget creates, crossed off one by one; the last note is the answer.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "search-bar",
+      "name": "What they search",
+      "idea": "A search box finishing the question every widget owner has typed.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "project-plan",
+      "name": "The project plan",
+      "idea": "A twelve-column implementation plan beside one tiny violet bar: live.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "group-chat",
+      "name": "The group chat",
+      "idea": "The marketing team's own thread about the weekend chat, then Breakout joins it.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "fortune",
+      "name": "Fortune cookie",
+      "idea": "A fortune slip: some predictions are easy.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "rejected",
+      "name": "Not a fit",
+      "idea": "The chat-era widget's resume, stamped \"Not a fit.\" Pair of Overqualified.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "found-buyer",
+      "name": "Found: one buyer",
+      "idea": "The happy ending to the missing poster.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "fine-print",
+      "name": "The fine print",
+      "idea": "Small print with the chat-era setup's conditions highlighted, and Breakout's one line underneath.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "profile",
+      "name": "The profile",
+      "idea": "A dating profile: green flags and dealbreakers.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "review",
+      "name": "Works like a charm",
+      "idea": "A real G2 review, quoted whole, with its source.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "ours-receipt",
+      "name": "Our receipt",
+      "idea": "The receipt again, Breakout's: what you get, and the total is a meeting.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "renewal",
+      "name": "The renewal",
+      "idea": "A note from Finance about the widget renewal; the buyout answers it.",
+      "awareness": "unaware or problem",
+      "source": "Breakout copy and compare-page lines; Qualified never named on these"
     }
   ],
   "ads": [
@@ -155,7 +239,7 @@
     {
       "id": "QSW-002",
       "status": "draft",
-      "round": 2,
+      "round": 3,
       "concept": "just-ask",
       "angle": "buyer-experience",
       "persona": "practitioner",
@@ -177,7 +261,7 @@
     {
       "id": "QSW-003",
       "status": "draft",
-      "round": 2,
+      "round": 3,
       "concept": "signals",
       "angle": "signals",
       "persona": "practitioner",
@@ -204,7 +288,7 @@
     {
       "id": "QSW-004",
       "status": "draft",
-      "round": 1,
+      "round": "always",
       "concept": "buyout",
       "angle": "contract",
       "persona": "practitioner",
@@ -224,7 +308,8 @@
           "headline": "Still under contract?\n*We'll buy out the rest of it.*",
           "cta": "Up to $30,000 covered"
         }
-      }
+      },
+      "ends": "2026-11-30"
     },
     {
       "id": "QSW-005",
@@ -246,12 +331,13 @@
         "fields": {
           "line": "Stop paying for Qualified\n*the day you switch.*"
         }
-      }
+      },
+      "ends": "2026-11-30"
     },
     {
       "id": "QSW-006",
       "status": "draft",
-      "round": 2,
+      "round": 3,
       "concept": "hours",
       "angle": "go-live",
       "persona": "cmo",
@@ -274,7 +360,7 @@
     {
       "id": "QSW-007",
       "status": "draft",
-      "round": 2,
+      "round": 3,
       "concept": "tried-others",
       "angle": "humour",
       "persona": "cmo",
@@ -541,7 +627,7 @@
     {
       "id": "QSW-016",
       "status": "draft",
-      "round": 2,
+      "round": 3,
       "concept": "offline",
       "angle": "never-miss",
       "persona": "practitioner",
@@ -567,7 +653,7 @@
     {
       "id": "QSW-017",
       "status": "draft",
-      "round": 2,
+      "round": 3,
       "concept": "disqualified",
       "angle": "humour",
       "persona": "cmo",
@@ -588,6 +674,490 @@
             "Forms.",
             "Waiting.",
             "*Disqualified.*"
+          ]
+        }
+      }
+    },
+    {
+      "id": "QSW-018",
+      "status": "draft",
+      "round": 2,
+      "concept": "monday-list",
+      "angle": "go-live",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Your Monday list, if you own the website chat.\nBreakout runs signals, engagement, follow-up, and CRM hygiene as four always-on agents.",
+        "headline": "Go live in 3 hours."
+      },
+      "design": {
+        "template": "sticky",
+        "fields": {
+          "notes": [
+            "~Update the decision tree~",
+            "~Add a pricing button~",
+            "~Ask the admin~",
+            "~Check for hand-raises~"
+          ],
+          "answer": "Or let them *just ask.*"
+        }
+      }
+    },
+    {
+      "id": "QSW-019",
+      "status": "draft",
+      "round": 2,
+      "concept": "search-bar",
+      "angle": "buyer-experience",
+      "persona": "practitioner",
+      "awareness": "unaware",
+      "format": "img-1x1",
+      "hook": "question",
+      "copy": {
+        "intro": "We've all typed it.\nModern demand gen teams need agents that act, not a widget that waits.",
+        "headline": "Go ahead. Ask me stuff."
+      },
+      "design": {
+        "template": "search",
+        "fields": {
+          "query": "why does my website chat",
+          "suggestions": [
+            "only have buttons",
+            "wait for a hand-raise",
+            "need an admin",
+            "*not just answer the question"
+          ]
+        }
+      }
+    },
+    {
+      "id": "QSW-020",
+      "status": "draft",
+      "round": 3,
+      "concept": "project-plan",
+      "angle": "go-live",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "contrast",
+      "copy": {
+        "intro": "Your implementation plan, simplified.\nGo live in 3 hours. No implementation project. No admin ticket or technical handoff.",
+        "headline": "<3 hours, self-serve."
+      },
+      "design": {
+        "template": "gantt",
+        "fields": {
+          "title": "Implementation plan",
+          "label": "Illustrative example",
+          "rows": [
+            [
+              "Kickoff",
+              0,
+              1
+            ],
+            [
+              "CRM setup",
+              1,
+              3
+            ],
+            [
+              "Admin training",
+              3,
+              2
+            ],
+            [
+              "Decision tree",
+              4,
+              4
+            ],
+            [
+              "Routing rules",
+              6,
+              3
+            ],
+            [
+              "QA",
+              9,
+              2
+            ],
+            [
+              "Launch",
+              11,
+              1
+            ]
+          ],
+          "key": "Breakout",
+          "key_flag": "Live."
+        }
+      }
+    },
+    {
+      "id": "QSW-021",
+      "status": "draft",
+      "round": 2,
+      "concept": "group-chat",
+      "angle": "never-miss",
+      "persona": "practitioner",
+      "awareness": "unaware",
+      "format": "img-4x5",
+      "hook": "pov",
+      "copy": {
+        "intro": "Every marketing team has had this conversation.\nBreakout is a full-time, always-on SDR that never misses a website visitor.",
+        "headline": "Inbound SDR, powered by AI."
+      },
+      "design": {
+        "template": "thread",
+        "fields": {
+          "title": "marketing team",
+          "label": "Illustrative example",
+          "messages": [
+            {
+              "from": "them",
+              "who": "Sam, VP Marketing",
+              "text": "did the website chat book anything this weekend?"
+            },
+            {
+              "from": "me",
+              "text": "it's waiting for a hand-raise"
+            },
+            {
+              "from": "them",
+              "who": "Sam, VP Marketing",
+              "text": "it's been waiting since Friday"
+            },
+            {
+              "from": "bo",
+              "who": "Breakout",
+              "text": "Meeting booked from the pricing page. On your calendar."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "QSW-022",
+      "status": "draft",
+      "round": 3,
+      "concept": "fortune",
+      "angle": "never-miss",
+      "persona": "practitioner",
+      "awareness": "unaware",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Some predictions are easy.\nBreakout is a full-time, always-on SDR that never misses a website visitor.",
+        "headline": "Inbound SDR, powered by AI."
+      },
+      "design": {
+        "template": "fortune",
+        "fields": {
+          "fortune": "A buyer with a question will visit your site today.",
+          "caption": "Be there. *Always on.*"
+        }
+      }
+    },
+    {
+      "id": "QSW-023",
+      "status": "draft",
+      "round": 3,
+      "concept": "pop-quiz",
+      "angle": "never-miss",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "question",
+      "copy": {
+        "intro": "Pop quiz, ops edition.\nBreakout is a full-time, always-on SDR that never misses a website visitor.",
+        "headline": "Inbound SDR, powered by AI."
+      },
+      "design": {
+        "template": "quiz",
+        "fields": {
+          "question": "Who answers your website chat on a *Sunday?*",
+          "options": [
+            "The admin",
+            "The decision tree",
+            "Nobody",
+            "An agent that never misses one"
+          ],
+          "answer": 3
+        }
+      }
+    },
+    {
+      "id": "QSW-024",
+      "status": "draft",
+      "round": 2,
+      "concept": "rejected",
+      "angle": "humour",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-4x5",
+      "hook": "joke",
+      "copy": {
+        "intro": "We read the other application too.\nModern demand gen teams need agents that act, not a widget that waits.",
+        "headline": "Agents that act."
+      },
+      "design": {
+        "template": "resume",
+        "fields": {
+          "name": "Chat widget",
+          "role": "Website chat, annual plan",
+          "sections": [
+            {
+              "title": "Experience",
+              "items": [
+                "Shows buttons",
+                "Waits for a hand-raise",
+                "Hands the work back to your team"
+              ]
+            },
+            {
+              "title": "Requires",
+              "text": "A CRM, an admin, and a hand-raise event."
+            },
+            {
+              "title": "Availability",
+              "text": "Once the decision tree is built."
+            },
+            {
+              "title": "References",
+              "text": "Available on request."
+            }
+          ],
+          "stamp": "Not a fit."
+        }
+      }
+    },
+    {
+      "id": "QSW-025",
+      "status": "draft",
+      "round": 3,
+      "concept": "found-buyer",
+      "angle": "never-miss",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-4x5",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "A happier ending.\nBreakout engages them in real time: answers questions, shares content, qualifies and books meetings.",
+        "headline": "Go ahead. Ask me stuff."
+      },
+      "design": {
+        "template": "poster",
+        "fields": {
+          "big": "FOUND",
+          "who": "One *buyer.*",
+          "desc": "Was on your pricing page. Asked a question. Got an answer. Booked a meeting.",
+          "tab": "Ask me stuff"
+        }
+      }
+    },
+    {
+      "id": "QSW-026",
+      "status": "draft",
+      "round": 2,
+      "concept": "fine-print",
+      "angle": "pricing",
+      "persona": "cmo",
+      "awareness": "problem",
+      "format": "img-4x5",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "We read the fine print.\nTransparent pricing, published. Breakout starts from $2,000/month.",
+        "headline": "From $2,000/month. Published."
+      },
+      "design": {
+        "template": "fine",
+        "fields": {
+          "title": "The fine print",
+          "text": "Before you see a number: [[a demo, a quote, and an annual contract]]. Runs on chat-era architecture that [[needs a CRM, an admin, and a hand-raise event]]. Go-live time: [[8-12 weeks, enterprise sales only]]. Sends rationed to manage the bill, features bought and never used, [[results that don't justify the line item at renewal]].",
+          "ours": "Ours: from $2,000/month. *Published.*"
+        }
+      }
+    },
+    {
+      "id": "QSW-027",
+      "status": "draft",
+      "round": 2,
+      "concept": "profile",
+      "angle": "humour",
+      "persona": "cmo",
+      "awareness": "unaware",
+      "format": "img-4x5",
+      "hook": "joke",
+      "copy": {
+        "intro": "Your website deserves better.\nMeet the AI SDR considered \"pretty good, actually\" by people who've tried others.",
+        "headline": "Inbound SDR, powered by AI."
+      },
+      "design": {
+        "template": "dating",
+        "fields": {
+          "name": "Breakout",
+          "tagline": "AI SDR · always on",
+          "looking": [
+            "Buyers with questions",
+            "Teams who hate waiting"
+          ],
+          "green": [
+            "Answers in real time",
+            "Live in 3 hours",
+            "Published pricing",
+            "700+ buying signals"
+          ],
+          "no": [
+            "Buttons",
+            "Annual quotes",
+            "Waiting for a hand-raise"
+          ]
+        }
+      }
+    },
+    {
+      "id": "QSW-028",
+      "status": "draft",
+      "round": 3,
+      "concept": "review",
+      "angle": "go-live",
+      "persona": "cmo",
+      "awareness": "product",
+      "format": "img-4x5",
+      "hook": "proof",
+      "copy": {
+        "intro": "No messy setup. No endless back and forth.\nGo live in 3 hours. No implementation project. No admin ticket or technical handoff.",
+        "headline": "<3 hours, self-serve."
+      },
+      "design": {
+        "template": "review",
+        "fields": {
+          "title": "\"Works like a *charm*\"",
+          "body": "\"Honestly, I was genuinely impressed by how fast we got things rolling. No messy setup, no endless back and forth, [[we were live in under 3 hours]]. The platform's super intuitive but still has all the power we need.\"",
+          "source": "Growth Manager, Mid-Market (51-1000 emp.) · G2 review, quoted on getbreakout.ai/compare/qualified-alternative"
+        }
+      }
+    },
+    {
+      "id": "QSW-029",
+      "status": "draft",
+      "round": 3,
+      "concept": "ours-receipt",
+      "angle": "signals",
+      "persona": "cmo",
+      "awareness": "product",
+      "format": "img-4x5",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Itemised, ours.\nBreakout runs signals, engagement, follow-up, and CRM hygiene as four always-on agents. Goes live in <3 hrs.",
+        "headline": "From $2,000/month. Published."
+      },
+      "design": {
+        "template": "receipt",
+        "fields": {
+          "title": "BREAKOUT",
+          "subtitle": "AI SDR, always on",
+          "items": [
+            [
+              "Buying signals",
+              "700+"
+            ],
+            [
+              "Go-live",
+              "<3 hours"
+            ],
+            [
+              "Implementation",
+              "none"
+            ],
+            [
+              "Pricing",
+              "published"
+            ],
+            [
+              "Contract buyout",
+              "up to $30,000"
+            ]
+          ],
+          "total_label": "TOTAL",
+          "total": "meeting booked",
+          "footer": "Pageview to pipeline."
+        }
+      }
+    },
+    {
+      "id": "QSW-030",
+      "status": "draft",
+      "round": 2,
+      "concept": "renewal",
+      "angle": "contract",
+      "persona": "cmo",
+      "awareness": "problem",
+      "format": "img-4x5",
+      "hook": "pov",
+      "copy": {
+        "intro": "Teams are paying top-of-market rates and getting a fraction of it back.\nStill under contract? We'll buy out the rest of it. Up to $30,000 covered, until November 30, 2026.",
+        "headline": "Still under contract? We'll buy out the rest of it."
+      },
+      "design": {
+        "template": "letter",
+        "fields": {
+          "salutation": "Dear Marketing,",
+          "body": [
+            "The chat widget renewal is on my desk.",
+            "Quick question: what did it *book?*"
+          ],
+          "signoff": "Regards,\nFinance"
+        }
+      },
+      "ends": "2026-11-30"
+    },
+    {
+      "id": "QSW-031",
+      "status": "draft",
+      "round": 3,
+      "concept": "fortune",
+      "angle": "contract",
+      "persona": "cmo",
+      "awareness": "most-aware",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Still under contract? We'll buy out the rest of it.\nSwitch to Breakout by November 30, 2026 and we'll cover what's left on your Qualified contract.",
+        "headline": "Up to $30,000 covered."
+      },
+      "design": {
+        "template": "fortune",
+        "fields": {
+          "fortune": "You stop paying for the widget the day you go live.",
+          "caption": "Switch by November 30. *We'll buy out the rest.*"
+        }
+      },
+      "ends": "2026-11-30"
+    },
+    {
+      "id": "QSW-032",
+      "status": "draft",
+      "round": 2,
+      "concept": "search-bar",
+      "angle": "pricing",
+      "persona": "cmo",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "question",
+      "copy": {
+        "intro": "Still waiting for the quote?\nTransparent pricing, published. Breakout starts from $2,000/month.",
+        "headline": "From $2,000/month. Published."
+      },
+      "design": {
+        "template": "search",
+        "fields": {
+          "query": "how much does our website chat",
+          "suggestions": [
+            "cost per meeting",
+            "cost at renewal",
+            "actually cost",
+            "*cost if pricing was just published"
           ]
         }
       }

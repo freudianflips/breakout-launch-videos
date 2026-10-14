@@ -49,4 +49,4 @@ scripts/private-terms.txt
 /ads/campaigns/*/launch/plan.json
 /ads/campaigns/*/launch/ads.csv
 /ads/data/*.csv
-/ads/campaigns/*/launch/kit.html
+/ads/campaigns/*/launch/kit*.html

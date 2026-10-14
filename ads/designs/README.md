@@ -17,6 +17,14 @@ The static ad designs, in the brand, for every LinkedIn size. The last three are
 | `poster` | Conceptual: a lost poster with tear-off tabs, on violet | `big`, `who`, `desc`, `tab` |
 | `letter` | Conceptual: a letter in the display face | `salutation`, `body` (paragraphs), `signoff` |
 | `receipt` | Conceptual: a till receipt, line items with leaders, a total and a barcode | `title`, `subtitle`, `items` (`[label, value]`), `total`, `footer` |
+| `sticky` | Conceptual: sticky notes; `~note~` is crossed off, the violet answer note spans the width | `notes`, `answer` |
+| `search` | Conceptual: a search box finishing the question (no search engine's brand); `*` marks the highlighted suggestion | `query`, `suggestions` |
+| `gantt` | Conceptual: an implementation plan in twelfths, beside one tiny violet bar | `rows` (`[label, start, length]`), `key`, `key_flag`, `title`, `label` |
+| `thread` | Conceptual: a text thread in generic bubbles (no messaging app's UI) | `title`, `messages` (`{from: them, me or bo, who, text}`), `label` |
+| `fortune` | Conceptual: a fortune cookie slip on violet | `fortune`, `caption` |
+| `fine` | Conceptual: fine print with `[[highlighted]]` phrases and Breakout's one line underneath | `title`, `text`, `ours` |
+| `dating` | Conceptual: a dating profile card (generic, no app's UI) | `name`, `tagline`, `looking`, `green`, `no` |
+| `review` | A real review, quoted whole, with its source | `title`, `body` (`[[highlight]]`), `source` |
 | `form` | Pattern break: a lead form with every field struck through in violet | `headline`, `kicker`, `fields`, `submit`, `cta` |
 | `notice` | Pattern break: one small Breakout notification in a lot of dark, empty space | `message`, `when`, `app`, `caption`, `label` ("Illustrative example") |
 | `quiet` | Pattern break: a near-empty violet field and one small line | `line` |

@@ -88,6 +88,7 @@ def build(slug, camp, p, aud, reviewed, file_url):
                         + (field("Document title" if cr["kind"] == "document" else "Headline", cr["headline"], k + "h"))
                         + (field("Description", cr["description"], k + "d") if cr["description"] else "")
                         + field("Destination URL", cr["url"], k + "u", True)
+                        + (f'<div class="f"><div class="fl">Stop on</div><div class="fv"><b>{e(cr["ends"])}</b>: the offer ends. Set an end date on this ad or pause it then.</div></div>' if cr.get("ends") else "")
                         + f'<div class="f"><div class="fl">Call to action</div><div class="fv">{e(CTA_LABEL.get(cr["cta"], cr["cta"]))} (pick from the list)</div></div>'
                         + "</div></div>")
             else:

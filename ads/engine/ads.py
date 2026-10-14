@@ -4,6 +4,7 @@
   python3 ads/engine/ads.py new <campaign> --code P2P --idea "..."   scaffold ads/campaigns/<campaign>/
   python3 ads/engine/ads.py lint <campaign>                          brand, claims, LinkedIn limits, tags, diversity
   python3 ads/engine/ads.py render <campaign> [--ids P2P-001 ...]    creatives + a feed preview contact sheet
+  python3 ads/engine/ads.py sheet <campaign>                         out/sheet.png: every creative on one page, by round
   python3 ads/engine/ads.py export <campaign> [--all]                launch/ads.csv and launch/plan.json (approved ads)
   python3 ads/engine/ads.py kit <campaign> [--all]                   launch/kit.html: build the round in Campaign Manager by hand
   python3 ads/engine/ads.py launch <campaign> [--live]               create DRAFT campaigns and PAUSED ads on LinkedIn (needs the API)
@@ -89,8 +90,8 @@ def all_ads():
 
 
 def in_round(ad, rnd):
-    """--round N keeps the ads planned for round N; no --round keeps them all."""
-    return rnd is None or ad.get("round") == rnd
+    """--round N keeps the ads planned for round N plus those marked "always" (an offer that runs every round); no --round keeps them all."""
+    return rnd is None or ad.get("round") in (rnd, "always")
 
 
 def ad_name(ad):
@@ -330,6 +331,8 @@ def lint_campaign(slug, camp, quiet=False):
             words = len(re.sub(r"[*\n]", " ", (p.get("fields") or {}).get("headline", "")).split())
             if words > 12:
                 Wn(f"the on-image headline is {words} words; little text, held long enough to read")
+        if ad.get("ends") and ad["ends"] < dt.date.today().isoformat() and ad.get("status") not in ("retired", "paused"):
+            Wn(f"its offer ended on {ad['ends']}: pause it in Campaign Manager and set \"status\": \"retired\"")
         if ad.get("asset") and not (ROOT / ad["asset"]).exists():
             E(f"asset {ad['asset']} does not exist")
         if ad.get("parent") and ad["parent"] not in ids and ad["parent"] not in all_ads():
@@ -456,6 +459,44 @@ h1 {{ font-size: 22px; margin: 0 0 4px; }} .lede {{ color: #5c5850; margin: 0 0 
     return out
 
 
+def cmd_sheet(a):
+    """A compact contact sheet of every rendered creative, grouped by round, for reviewing a big set at once."""
+    camp = load(a.campaign)
+    d = CAMPAIGNS / a.campaign / "out"
+    groups = defaultdict(list)
+    for ad in camp["ads"]:
+        if ad.get("status") == "retired":
+            continue
+        groups[str(ad.get("round", "-"))].append(ad)
+    order = sorted(groups, key=lambda r: (r != "always", r))
+    html = [f"""<!doctype html><meta charset="utf-8"><style>
+@font-face {{ font-family: Manrope; src: url("../../../../brand/fonts/manrope-200-800.woff2"); font-weight: 200 800; }}
+body {{ margin: 0; padding: 28px; background: #ebe9f2; font: 13px/1.35 Manrope, sans-serif; color: #111; }}
+h1 {{ font-size: 22px; margin: 0 0 4px; }} h2 {{ font-size: 15px; margin: 22px 0 10px; }} p {{ margin: 0; color: #5c5850; }}
+.g {{ display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }}
+.c img {{ width: 100%; display: block; border-radius: 6px; background: #fff; }}
+.c .t {{ font: 11px ui-monospace, monospace; margin-top: 5px; }} .c .t b {{ font-family: Manrope; }}
+.ph {{ aspect-ratio: 1; background: #f6f1ff; border-radius: 6px; display: grid; place-items: center; color: #5c5850; padding: 10px; text-align: center; }}
+</style><h1>{esc(a.campaign)} ({esc(camp['code'])}): every creative</h1><p>{esc(camp.get('idea'))}</p>"""]
+    for r in order:
+        title = "Every round (the offer)" if r == "always" else f"Round {r}"
+        html.append(f"<h2>{title}</h2><div class='g'>")
+        for ad in sorted(groups[r], key=lambda x: (x["persona"], x["id"])):
+            img = d / f"{ad['id']}.png"
+            p1 = d / f"{ad['id']}-p1.png"
+            src = img if img.exists() else p1 if p1.exists() else None
+            media = f"<img src='{src.name}'>" if src else f"<div class='ph'>{esc(fmt(ad).get('note', ad['format']))}</div>"
+            html.append(f"<div class='c'>{media}<div class='t'><b>{esc(ad['id'])}</b> {esc(ad['concept'])} · {esc(ad['persona'])} · {esc(ad['awareness'])}{' · ends ' + esc(ad['ends']) if ad.get('ends') else ''}</div></div>")
+        html.append("</div>")
+    page = d / "sheet.html"
+    page.write_text("".join(html))
+    jobs = d / "jobs.json"
+    jsave(jobs, [{"out": str(d / "sheet.png"), "url": page.as_uri(), "size": [1800, 1000], "full_page": True}])
+    subprocess.run(["node", str(HERE / "render.mjs"), str(jobs)], cwd=ROOT)
+    jobs.unlink()
+    print(f"ads/campaigns/{a.campaign}/out/sheet.png")
+
+
 # ------------------------------------------------------------------ export and launch
 
 def plan(slug, camp, include_all=False, rnd=None):
@@ -498,7 +539,7 @@ def plan(slug, camp, include_all=False, rnd=None):
         creatives.append({"ad_id": a["id"], "name": ad_name(a), "kind": fmt(a).get("kind"), "format": a["format"],
                           "intro": c.get("intro", ""), "headline": c.get("headline", ""), "description": c.get("description", ""),
                           "cta": c.get("cta") or camp["cta"], "url": landing_url(camp, a),
-                          "file": str(f.relative_to(ROOT)) if f else None, "script": a.get("script")})
+                          "file": str(f.relative_to(ROOT)) if f else None, "script": a.get("script"), "ends": a.get("ends")})
     return {"campaign": slug, "code": camp["code"], "objective": camp["objective"], "daily_usd": daily,
             "groups": [f"{camp['code']} | test", f"{camp['code']} | scale"], "campaigns": campaigns, "creatives": creatives}
 
@@ -541,9 +582,10 @@ def cmd_kit(a):
     d = CAMPAIGNS / a.campaign / "launch"
     d.mkdir(exist_ok=True)
     page = kit.build(a.campaign, camp, p, AUD, BRAND.get("reviewed"), lambda f: os.path.relpath(ROOT / f, d))
-    (d / "kit.html").write_text(page)
+    name = f"kit-round{a.round}.html" if a.round else "kit.html"
+    (d / name).write_text(page)
     missing = [c["ad_id"] for c in p["creatives"] if c["file"] and not (ROOT / c["file"]).exists()]
-    print(f"ads/campaigns/{a.campaign}/launch/kit.html: {len(p['campaigns'])} campaigns, {len(p['creatives'])} ads"
+    print(f"ads/campaigns/{a.campaign}/launch/{name}: {len(p['campaigns'])} campaigns, {len(p['creatives'])} ads"
           + (f"; not rendered yet: {', '.join(missing)}" if missing else ""))
 
 
@@ -982,6 +1024,7 @@ def main(argv=None):
     s = sub.add_parser("new"); s.add_argument("campaign"); s.add_argument("--code", required=True); s.add_argument("--idea"); s.set_defaults(fn=cmd_new)
     s = sub.add_parser("lint"); s.add_argument("campaign"); s.set_defaults(fn=cmd_lint)
     s = sub.add_parser("render"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--ids", nargs="*"); s.add_argument("--force", action="store_true"); s.set_defaults(fn=cmd_render)
+    s = sub.add_parser("sheet"); s.add_argument("campaign"); s.set_defaults(fn=cmd_sheet)
     s = sub.add_parser("export"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_export)
     s = sub.add_parser("kit"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_kit)
     s = sub.add_parser("launch"); s.add_argument("campaign"); s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.add_argument("--org"); s.set_defaults(fn=cmd_launch)
