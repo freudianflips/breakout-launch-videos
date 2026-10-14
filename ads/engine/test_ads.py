@@ -122,6 +122,9 @@ class Verify(unittest.TestCase):
         self.assertIn("intro text differs", msg)
         self.assertIn("utm_content", msg)
         self.assertTrue(any("campaign not found" in m for _, _, m in rows))   # the second campaign is missing
+        posts["urn:li:share:1"] = {"_error": 403}
+        rows, _ = ads.compare(p, camp, live_c, {"7": crs}, posts)
+        self.assertTrue(any(w == good and lvl == "warn" and "r_organization_social" in m for lvl, w, m in rows))
 
 
     def test_sync_creates_only_what_is_missing(self):

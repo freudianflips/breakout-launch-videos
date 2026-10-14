@@ -42,7 +42,7 @@ class Client:
                              "LINKEDIN_CLIENT_SECRET, in the environment's settings (never in the repo or the chat)")
         self._fake = 0
 
-    def call(self, method, path, body=None, query=None, raw=None, url=None, headers=None):
+    def call(self, method, path, body=None, query=None, raw=None, url=None, headers=None, soft=False):
         url = url or API + path + (("?" + query) if query else "")
         entry = {"method": method, "url": url, "body": body if raw is None else f"<{len(raw)} bytes>"}
         if self.log is not None:
@@ -73,6 +73,8 @@ class Client:
                 if e.code in (429, 500, 502, 503) and attempt < 3:
                     time.sleep(2 ** (attempt + 1))
                     continue
+                if soft and e.code in (401, 403, 404):   # the caller carries on without this one
+                    return {"_error": e.code, "_detail": e.read().decode()[:300]}
                 raise SystemExit(f"LinkedIn {e.code} on {method} {url}: {e.read().decode()[:800]}")
 
     # ---------------------------------------------------------------- build
@@ -148,7 +150,7 @@ class Client:
         return self._pages(f"/adAccounts/{account}/creatives", f"q=criteria&campaigns=List({ids})")
 
     def post(self, urn):
-        return self.call("GET", "/posts/" + urllib.parse.quote(urn, safe=""))
+        return self.call("GET", "/posts/" + urllib.parse.quote(urn, safe=""), soft=True)
 
     def typeahead(self, facet, query):
         q = urllib.parse.urlencode({"q": "typeahead", "facet": f"urn:li:adTargetingFacet:{facet}", "query": query, "locale": "(language:en,country:US)"}, safe="():,")

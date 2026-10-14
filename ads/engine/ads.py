@@ -692,6 +692,11 @@ def compare(p, camp, live_campaigns, creatives_by_campaign, posts):
             ref = (cr.get("content") or {}).get("reference")
             mapping[ad_id] = {"campaign": cid, "creative": cr.get("id"), "post": ref}
             post = posts.get(ref) or {}
+            status = cr.get("intendedStatus") or cr.get("status")
+            if post.get("_error"):
+                rows.append(("warn", ad_id, f"found, status {status}; its text, URL and CTA were not checked: the token "
+                             f"cannot read posts (LinkedIn {post['_error']}; needs the r_organization_social scope)"))
+                continue
             issues = []
             if _flat(post.get("commentary")) != _flat(want["intro"]):
                 issues.append("intro text differs")
@@ -702,7 +707,6 @@ def compare(p, camp, live_campaigns, creatives_by_campaign, posts):
                 issues.append(f"URL lacks utm_content={ad_id} (the scores cannot find its meetings)")
             if post.get("contentCallToActionLabel") and post["contentCallToActionLabel"] != want["cta"]:
                 issues.append(f"CTA {post['contentCallToActionLabel']}, plan says {want['cta']}")
-            status = cr.get("intendedStatus") or cr.get("status")
             rows.append(("error" if issues else "ok", ad_id, "; ".join(issues) or f"matches the kit, status {status}"))
         for c in live:
             if c.get("id") not in seen:
