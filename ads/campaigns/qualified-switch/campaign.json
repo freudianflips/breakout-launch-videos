@@ -212,7 +212,7 @@
   "ads": [
     {
       "id": "QSW-001",
-      "status": "draft",
+      "status": "approved",
       "round": 1,
       "concept": "hours",
       "angle": "go-live",
@@ -287,7 +287,7 @@
     },
     {
       "id": "QSW-004",
-      "status": "draft",
+      "status": "approved",
       "round": "always",
       "concept": "buyout",
       "angle": "contract",
@@ -313,7 +313,7 @@
     },
     {
       "id": "QSW-005",
-      "status": "draft",
+      "status": "approved",
       "round": 1,
       "concept": "buyout",
       "angle": "contract",
@@ -382,7 +382,7 @@
     },
     {
       "id": "QSW-008",
-      "status": "draft",
+      "status": "approved",
       "round": 1,
       "concept": "pricing",
       "angle": "pricing",
@@ -407,7 +407,7 @@
     },
     {
       "id": "QSW-009",
-      "status": "draft",
+      "status": "approved",
       "round": 1,
       "concept": "overqualified",
       "angle": "humour",
@@ -451,7 +451,7 @@
     },
     {
       "id": "QSW-010",
-      "status": "draft",
+      "status": "approved",
       "round": 1,
       "concept": "booked",
       "angle": "outcome",
@@ -477,7 +477,7 @@
     },
     {
       "id": "QSW-011",
-      "status": "draft",
+      "status": "approved",
       "round": 1,
       "concept": "pop-quiz",
       "angle": "buyer-experience",
@@ -505,7 +505,7 @@
     },
     {
       "id": "QSW-012",
-      "status": "draft",
+      "status": "approved",
       "round": 1,
       "concept": "missing-buyer",
       "angle": "wasted-traffic",
@@ -528,7 +528,7 @@
     },
     {
       "id": "QSW-013",
-      "status": "draft",
+      "status": "approved",
       "round": 1,
       "concept": "breakup",
       "angle": "buyer-experience",
@@ -555,7 +555,7 @@
     },
     {
       "id": "QSW-014",
-      "status": "draft",
+      "status": "approved",
       "round": 1,
       "concept": "receipt",
       "angle": "contract",
@@ -1163,12 +1163,27 @@
       }
     }
   ],
-  "audience": {
-    "company_list": "Qualified users: the company list from ads/engine/stack.py qualified, uploaded as a Matched Audience",
-    "replaces": [
-      "company_size",
-      "industries"
-    ]
+  "deadline": "2026-11-30",
+  "audience_by_persona": {
+    "practitioner": {
+      "contact_list": "QSW practitioners: upload qsw-linkedin-contacts.csv (1,377 demand gen, RevOps and marketing ops people, VP to senior, from the owner's export, 2026-10-14)",
+      "locations_label": "United States, India, United Kingdom, Canada, and the other countries in the list (or the regions North America, Europe, Asia)",
+      "replaces": [
+        "company_size",
+        "industries",
+        "functions",
+        "seniorities",
+        "titles"
+      ]
+    },
+    "cmo": {
+      "company_list": "QSW companies: upload qsw-linkedin-companies.csv (the 382 companies in the same export)",
+      "locations_label": "United States, India, United Kingdom, Canada, and the other countries in the list (or the regions North America, Europe, Asia)",
+      "replaces": [
+        "company_size",
+        "industries"
+      ]
+    }
   },
-  "deadline": "2026-11-30"
+  "round_1_approved": "2026-10-14: owner, \"load up the creatives\" with the audience export"
 }

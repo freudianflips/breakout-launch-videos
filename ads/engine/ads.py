@@ -581,9 +581,19 @@ def cmd_kit(a):
     p = plan(a.campaign, camp, a.all, a.round)
     d = CAMPAIGNS / a.campaign / "launch"
     d.mkdir(exist_ok=True)
-    page = kit.build(a.campaign, camp, p, AUD, BRAND.get("reviewed"), lambda f: os.path.relpath(ROOT / f, d))
     name = f"kit-round{a.round}.html" if a.round else "kit.html"
+    page = kit.build(a.campaign, camp, p, AUD, BRAND.get("reviewed"), lambda f: os.path.relpath(ROOT / f, d))
     (d / name).write_text(page)
+    # The same sheet as a publishable page (images under img/, files named rather than linked) and a zip of the files.
+    import zipfile
+    pub = d / name.replace(".html", "-page.html")
+    pub.write_text(kit.build(a.campaign, camp, p, AUD, BRAND.get("reviewed"), lambda f: "img/" + Path(f).name, artifact=True))
+    with zipfile.ZipFile(d / name.replace(".html", ".zip"), "w", zipfile.ZIP_DEFLATED) as z:
+        for c in p["creatives"]:
+            if c["file"] and (ROOT / c["file"]).exists():
+                z.write(ROOT / c["file"], f"creatives/{Path(c['file']).name}")
+        for f in sorted(DATA.glob(f"{camp['code'].lower()}-linkedin-*.csv")):
+            z.write(f, f"audiences/{f.name}")
     missing = [c["ad_id"] for c in p["creatives"] if c["file"] and not (ROOT / c["file"]).exists()]
     print(f"ads/campaigns/{a.campaign}/launch/{name}: {len(p['campaigns'])} campaigns, {len(p['creatives'])} ads"
           + (f"; not rendered yet: {', '.join(missing)}" if missing else ""))

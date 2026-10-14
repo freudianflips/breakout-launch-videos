@@ -31,7 +31,7 @@ def step(key, title, body):
     return f'<details class="step" open><summary><label><input type="checkbox" data-k="{key}"> {title}</label></summary><div class="sb">{body}</div></details>'
 
 
-def build(slug, camp, p, aud, reviewed, file_url):
+def build(slug, camp, p, aud, reviewed, file_url, artifact=False):
     """file_url(path) -> the href the page uses for a creative file."""
     shared = aud["shared"]
     blocks = []
@@ -52,16 +52,19 @@ def build(slug, camp, p, aud, reviewed, file_url):
         labels = c["targeting_labels"]
         persona = aud["personas"][c["persona"]]
         sizes = persona.get("company_size_override") or shared.get("company_size") or []
-        aud_rows = [("Locations", shared.get("locations_label", ""))]
-        override = camp.get("audience") or {}
-        if override.get("company_list"):
-            aud_rows.append(("Company list (Matched Audience)", override["company_list"]))
-            if "company_size" in override.get("replaces", []):
-                sizes = []
+        override = dict(camp.get("audience") or {})
+        override.update((camp.get("audience_by_persona") or {}).get(c["persona"], {}))
+        drop = set(override.get("replaces", []))
+        aud_rows = [("Locations", override.get("locations_label") or shared.get("locations_label", ""))]
+        for key, lab in (("contact_list", "Contact list (Matched Audience)"), ("company_list", "Company list (Matched Audience)")):
+            if override.get(key):
+                aud_rows.append((lab, override[key]))
+        if "company_size" in drop:
+            sizes = []
         if sizes:
             aud_rows.append(("Company size", ", ".join(SIZE_LABEL[x] for x in sizes)))
         for k, lab in (("functions_label", "Job functions"), ("seniorities_label", "Job seniorities"), ("titles_label", "Job titles")):
-            if labels.get(k):
+            if labels.get(k) and k.replace("_label", "") not in drop:
                 aud_rows.append((lab, ", ".join(labels[k])))
         aud_html = "".join(f"<tr><th>{e(a)}</th><td>{e(b)}</td></tr>" for a, b in aud_rows)
         alt = ('<p class="note">Facets combine with AND. Check the forecast on the right of Campaign Manager: aim for 50,000+ members; '
@@ -80,9 +83,13 @@ def build(slug, camp, p, aud, reviewed, file_url):
             k = f"c{ci}a{ai}"
             if cr["kind"] in ("image", "document") and cr["file"]:
                 href = file_url(cr["file"])
-                thumb = (f'<a href="{e(href)}" download><img src="{e(href)}" alt="{e(ad_id)} creative"></a>' if cr["kind"] == "image"
-                         else f'<a class="dl" href="{e(href)}" download>Download {e(ad_id)}.pdf</a>')
-                body = (f'<div class="ad"><div class="thumb">{thumb}<a class="dl" href="{e(href)}" download>Download file</a></div><div class="fields">'
+                fname = cr["file"].rsplit("/", 1)[-1]
+                img = f'<img src="{e(href)}" alt="{e(ad_id)} creative">' if cr["kind"] == "image" else ""
+                if artifact:   # a published page cannot hand out files: name the file in the zip instead
+                    thumb = f'{img}<span class="dl">Upload <b>{e(fname)}</b> from the zip</span>'
+                else:
+                    thumb = f'<a href="{e(href)}" download>{img}</a><a class="dl" href="{e(href)}" download>Download {e(fname)}</a>'
+                body = (f'<div class="ad"><div class="thumb">{thumb}</div><div class="fields">'
                         + field("Ad name", cr["name"], k + "n", True)
                         + field("Introductory text", cr["intro"], k + "i")
                         + (field("Document title" if cr["kind"] == "document" else "Headline", cr["headline"], k + "h"))
@@ -110,8 +117,18 @@ def build(slug, camp, p, aud, reviewed, file_url):
     unapproved = [c["ad_id"] for c in p["creatives"] if not any(a["id"] == c["ad_id"] and a.get("status") == "approved" for a in camp["ads"])]
     if unapproved:
         warn += f'<p class="draft">Preview only: {len(unapproved)} ads are not approved ({e(", ".join(unapproved))}). Do not build them.</p>'
-    return PAGE.format(title=e(f"{camp['code']} launch kit"), code=e(camp["code"]), slug=e(slug), idea=e(camp.get("idea")),
+    page = PAGE.format(title=e(f"{camp['code']} launch kit"), code=e(camp["code"]), slug=e(slug), idea=e(camp.get("idea")),
                        n_c=len(p["campaigns"]), n_a=len(p["creatives"]), total=f"${total:,.0f}", warn=warn, body="".join(blocks))
+    if not artifact:
+        return page
+    # A published page: the host adds the document skeleton, so keep only the title, styles and content,
+    # and give the gutter the safe-area padding the page contract asks for.
+    page = page.replace('<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">\n', '')
+    page = page.replace('</head>\n<body><main>', '<main>').replace('</body></html>', '')
+    page = page.replace('<title>', '<meta name="claude:viewport-fit-sides" content="cover">\n<title>', 1)
+    page = page.replace('main {{ max-width: 1040px; margin: 0 auto; padding: 32px 16px 80px; }}'.replace('{{', '{').replace('}}', '}'),
+                        'main { max-width: 1040px; margin: 0 auto; padding-block: 32px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }')
+    return page
 
 
 PAGE = """<!doctype html>
