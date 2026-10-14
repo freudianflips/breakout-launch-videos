@@ -43,7 +43,7 @@
   },
   "outcomes": {
     "meetings": 1.0,
-    "trials": 0.0
+    "trials": 0.24
   },
-  "outcomes_note": "Meetings booked count (owner, 2026-10-14). Trial signups are tracked but weigh 0 until the owner sets their worth relative to a meeting."
+  "outcomes_note": "Owner, 2026-10-14: meetings booked count; a trial signup is weighed by ACV against the full product's: Signals $6,000 / full product $25,000 = 0.24 of a meeting."
 }

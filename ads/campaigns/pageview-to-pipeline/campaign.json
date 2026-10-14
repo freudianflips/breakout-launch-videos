@@ -12,14 +12,16 @@
     "daily_usd": 100,
     "test_share": 0.2,
     "campaigns": {
-      "demand-gen": 50,
-      "founder": 50
+      "demand-gen": 33,
+      "markops": 33,
+      "cmo": 34
     },
-    "note": "Owner, 2026-10-14: start at $100/day. Round 1 has no proven winner, so all of it tests: 2 persona campaigns at $50 (proposed, awaiting approval). The 15 to 25% test share applies once winners exist."
+    "note": "Owner, 2026-10-14: $100/day; round 1 tests demand-gen, markops and cmo, about $33 each. No proven winner yet, so all of it tests; the 15 to 25% test share applies once winners exist."
   },
   "personas": [
     "demand-gen",
-    "marketing-leader",
+    "markops",
+    "cmo",
     "founder",
     "revops",
     "sales-leader"
@@ -58,7 +60,6 @@
     {
       "code": "know-who",
       "name": "Know every buyer on your site",
-      "status": "proposed",
       "idea": "The self-serve door: one person can start a free trial today and see who is on their site. Consumer-style, written for that one person.",
       "source": "ads/claims.json: \"Identify ready-to-buy visitors before they fill a form\", \"Know every buyer on your site.\", \"30-day free trial · No credit card required · Live in 5 minutes\""
     }
@@ -85,14 +86,15 @@
           "headline": "Your best SDR.\n*Always on.*",
           "cta": "Book a demo"
         }
-      }
+      },
+      "round": 1
     },
     {
       "id": "P2P-002",
       "status": "draft",
       "concept": "always-on",
       "angle": "headcount",
-      "persona": "founder",
+      "persona": "cmo",
       "awareness": "unaware",
       "format": "img-4x5",
       "hook": "joke",
@@ -110,7 +112,8 @@
             "*Neither do we.*"
           ]
         }
-      }
+      },
+      "round": 1
     },
     {
       "id": "P2P-003",
@@ -141,14 +144,15 @@
           ],
           "label": "Illustrative example"
         }
-      }
+      },
+      "round": 1
     },
     {
       "id": "P2P-004",
       "status": "draft",
       "concept": "ask-me",
       "angle": "speed",
-      "persona": "sales-leader",
+      "persona": "cmo",
       "awareness": "problem",
       "format": "img-wide",
       "hook": "contrast",
@@ -162,14 +166,15 @@
           "left": "Visitor *leaves.*",
           "right": "Meeting *booked.*"
         }
-      }
+      },
+      "round": 1
     },
     {
       "id": "P2P-005",
       "status": "draft",
       "concept": "earned",
       "angle": "attention",
-      "persona": "marketing-leader",
+      "persona": "cmo",
       "awareness": "unaware",
       "format": "img-1x1",
       "hook": "verdict",
@@ -184,14 +189,15 @@
           "headline": "Attention is *earned,*\nnot interrupted.",
           "cta": "Book a demo"
         }
-      }
+      },
+      "round": 1
     },
     {
       "id": "P2P-006",
       "status": "draft",
       "concept": "earned",
       "angle": "wasted-traffic",
-      "persona": "marketing-leader",
+      "persona": "cmo",
       "awareness": "problem",
       "format": "doc",
       "hook": "pov",
@@ -260,19 +266,20 @@
           "headline": "*\"Pretty good,\nactually\"*",
           "sub": "by people who've tried others."
         }
-      }
+      },
+      "round": 1
     },
     {
       "id": "P2P-008",
       "status": "draft",
       "concept": "touch-grass",
       "angle": "integrations",
-      "persona": "revops",
+      "persona": "markops",
       "awareness": "solution",
       "format": "img-4x5",
       "hook": "joke",
       "copy": {
-        "intro": "RevOps, this one's for you.\nTalks to Clay. Talks to Attio. And 55+ other tools. You touch grass.",
+        "intro": "Marketing ops, this one's for you.\nTalks to Clay. Talks to Attio. And 55+ other tools. You touch grass.",
         "headline": "An AI SDR that fits your stack."
       },
       "design": {
@@ -286,14 +293,15 @@
           ],
           "sub": "And 55+ other tools."
         }
-      }
+      },
+      "round": 1
     },
     {
       "id": "P2P-009",
       "status": "draft",
       "concept": "always-on",
       "angle": "follow-up",
-      "persona": "demand-gen",
+      "persona": "markops",
       "awareness": "problem",
       "format": "img-wide",
       "hook": "proof",
@@ -313,7 +321,8 @@
             200
           ]
         }
-      }
+      },
+      "round": 1
     },
     {
       "id": "P2P-010",
@@ -363,7 +372,7 @@
       "status": "draft",
       "concept": "earned",
       "angle": "attention",
-      "persona": "marketing-leader",
+      "persona": "cmo",
       "awareness": "unaware",
       "format": "video-motion",
       "hook": "verdict",
@@ -376,6 +385,64 @@
         "beats": "Signals drift, snap into \"Attention is earned.\" on the beat, burst into the wordmark",
         "sound": "The free bed; no narrator",
         "note": "Follows the video workflow in CLAUDE.md: storyboard approved before frames"
+      }
+    },
+    {
+      "id": "P2P-013",
+      "status": "draft",
+      "round": 1,
+      "concept": "know-who",
+      "angle": "identify",
+      "persona": "demand-gen",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "question",
+      "url": "https://getbreakout.ai/product/identify",
+      "copy": {
+        "intro": "Who was on your pricing page today?\nBreakout reveals the companies and people visiting your site so you can fill your sales funnel with high-intent inbound leads.",
+        "headline": "30-day free trial. No credit card required.",
+        "description": "Live in 5 minutes.",
+        "cta": "SIGN_UP"
+      },
+      "design": {
+        "template": "verdict",
+        "fields": {
+          "kicker": "Identify ready-to-buy visitors before they fill a form",
+          "headline": "Know every buyer on your *site.*",
+          "cta": "Start free trial"
+        }
+      }
+    },
+    {
+      "id": "P2P-014",
+      "status": "draft",
+      "round": 1,
+      "concept": "know-who",
+      "angle": "identify",
+      "persona": "markops",
+      "awareness": "solution",
+      "format": "img-4x5",
+      "hook": "proof",
+      "url": "https://getbreakout.ai/product/identify",
+      "copy": {
+        "intro": "Your CRM wants names, not \"anonymous visitor\".\nBreakout queries multiple premium data sources sequentially, ensuring maximum data coverage and accuracy for every visitor.",
+        "headline": "Waterfall enrichment. 99.9% fill rates.",
+        "description": "30-day free trial. No credit card required.",
+        "cta": "SIGN_UP"
+      },
+      "design": {
+        "template": "screen",
+        "fields": {
+          "kicker": "Waterfall enrichment",
+          "headline": "Know who's *browsing.*",
+          "image": "assets/screens/accounts.png",
+          "crop": [
+            282,
+            150,
+            1000,
+            580
+          ]
+        }
       }
     }
   ],

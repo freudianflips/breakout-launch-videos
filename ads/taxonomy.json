@@ -9,11 +9,13 @@
     "attention": "Attention is earned, not interrupted: inbound beats interruption",
     "follow-up": "The visitor left; Breakout follows up by email and LinkedIn",
     "integrations": "It talks to your stack; you touch grass",
-    "humour": "A joke about something the persona already cares about, then the product"
+    "humour": "A joke about something the persona already cares about, then the product",
+    "identify": "See which companies and people are on your site before they fill a form (the free trial: Signals)"
   },
   "personas": {
     "demand-gen": "Head of demand gen or growth marketing: owns the website's conversion and the MQL to meeting number",
-    "marketing-leader": "VP marketing or CMO at a B2B software company: owns pipeline targets and headcount",
+    "markops": "Marketing operations: owns the martech stack, enrichment, routing and CRM data quality",
+    "cmo": "CMO or VP marketing at a B2B software company: owns pipeline targets and headcount; buys the full product through a demo",
     "founder": "Founder or CEO of a startup that sells to businesses: buys alone, decides fast",
     "revops": "RevOps or marketing ops: owns the stack, routing and the CRM",
     "sales-leader": "VP sales or head of SDRs: owns speed-to-lead and the SDR team"

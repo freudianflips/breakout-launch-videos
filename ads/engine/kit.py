@@ -55,14 +55,12 @@ def build(slug, camp, p, aud, reviewed, file_url):
         aud_rows = [("Locations", shared.get("locations_label", ""))]
         if sizes:
             aud_rows.append(("Company size", ", ".join(SIZE_LABEL[x] for x in sizes)))
-        for k, lab in (("functions_label", "Job functions"), ("seniorities_label", "Job seniorities")):
+        for k, lab in (("functions_label", "Job functions"), ("seniorities_label", "Job seniorities"), ("titles_label", "Job titles")):
             if labels.get(k):
                 aud_rows.append((lab, ", ".join(labels[k])))
-        if not labels.get("functions_label") and labels.get("titles_label"):
-            aud_rows.append(("Job titles", ", ".join(labels["titles_label"])))
         aud_html = "".join(f"<tr><th>{e(a)}</th><td>{e(b)}</td></tr>" for a, b in aud_rows)
-        alt = (f'<p class="note">If the audience is under 50,000, add these titles as an alternative (OR) instead: {e(", ".join(labels.get("titles_label", [])))}.</p>'
-               if labels.get("functions_label") and labels.get("titles_label") else "")
+        alt = ('<p class="note">Facets combine with AND. Check the forecast on the right of Campaign Manager: aim for 50,000+ members; '
+               + e(persona.get("note", "")) + '</p>')
         settings = (field("Campaign name", c["name"], f"c{ci}")
                     + f'<table class="kv"><tr><th>Group</th><td>{e(p["groups"][0])}</td></tr>'
                     f'<tr><th>Objective</th><td>{e(OBJECTIVE_LABEL.get(p["objective"], p["objective"]))}</td></tr>{aud_html}'

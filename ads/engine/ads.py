@@ -88,6 +88,11 @@ def all_ads():
     return out
 
 
+def in_round(ad, rnd):
+    """--round N keeps the ads planned for round N; no --round keeps them all."""
+    return rnd is None or ad.get("round") == rnd
+
+
 def ad_name(ad):
     """The name LinkedIn shows: the id first (the join key), then every tag."""
     return f"{ad['id']} | {ad['concept']} {ad['angle']} | {ad['persona']} | {ad['awareness']} | {ad['format']} | {ad['hook']}"
@@ -355,7 +360,7 @@ def cmd_render(a):
         sys.exit("fix the lint errors first (or --force to preview anyway)")
     jobs = []
     for ad in camp["ads"]:
-        if a.ids and ad["id"] not in a.ids:
+        if (a.ids and ad["id"] not in a.ids) or not in_round(ad, a.round):
             continue
         if ad.get("status") == "retired" or ad.get("asset"):
             continue
@@ -369,7 +374,7 @@ def cmd_render(a):
     jobs_file = d / "out" / "jobs.json"
     jsave(jobs_file, jobs)
     r = subprocess.run(["node", str(HERE / "render.mjs"), str(jobs_file)], cwd=ROOT)
-    feed = write_feed(a.campaign, camp)
+    feed = write_feed(a.campaign, camp, a.round)
     jsave(jobs_file, [{"out": str(d / "out" / "feed.png"), "url": feed.as_uri(), "size": [1500, 1000], "full_page": True}])
     subprocess.run(["node", str(HERE / "render.mjs"), str(jobs_file)], cwd=ROOT)
     jobs_file.unlink()
@@ -381,12 +386,12 @@ def esc(s):
     return (str(s or "")).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
-def write_feed(slug, camp):
+def write_feed(slug, camp, rnd=None):
     """A contact sheet: every ad as it reads in a feed, with its tags, for the owner to approve."""
     d = CAMPAIGNS / slug / "out"
     cards = []
     for ad in camp["ads"]:
-        if ad.get("status") == "retired":
+        if ad.get("status") == "retired" or not in_round(ad, rnd):
             continue
         c = ad.get("copy") or {}
         intro = c.get("intro", "")
@@ -437,10 +442,10 @@ h1 {{ font-size: 22px; margin: 0 0 4px; }} .lede {{ color: #5c5850; margin: 0 0 
 
 # ------------------------------------------------------------------ export and launch
 
-def plan(slug, camp, include_all=False):
+def plan(slug, camp, include_all=False, rnd=None):
     """Campaign Manager structure: a test group with 1 campaign per persona and ad format (LinkedIn sets the
     format on the campaign), and a scale group for winners later."""
-    ads = [a for a in camp["ads"] if a.get("status") == "approved" or (include_all and a.get("status") != "retired")]
+    ads = [a for a in camp["ads"] if in_round(a, rnd) and (a.get("status") == "approved" or (include_all and a.get("status") != "retired"))]
     if not ads:
         sys.exit("no approved ads: set \"status\": \"approved\" on the ads the owner approved (or --all to preview)")
     budget = camp.get("budget") or {}
@@ -488,7 +493,7 @@ def cmd_export(a):
     if errs:
         print("\n".join(f"error  {e}" for e in errs))
         sys.exit("lint errors: nothing exported")
-    p = plan(a.campaign, camp, a.all)
+    p = plan(a.campaign, camp, a.all, a.round)
     d = CAMPAIGNS / a.campaign / "launch"
     d.mkdir(exist_ok=True)
     jsave(d / "plan.json", p)
@@ -516,7 +521,7 @@ def cmd_kit(a):
     if errs:
         print("\n".join(f"error  {e}" for e in errs))
         sys.exit("lint errors: no kit")
-    p = plan(a.campaign, camp, a.all)
+    p = plan(a.campaign, camp, a.all, a.round)
     d = CAMPAIGNS / a.campaign / "launch"
     d.mkdir(exist_ok=True)
     page = kit.build(a.campaign, camp, p, AUD, BRAND.get("reviewed"), lambda f: os.path.relpath(ROOT / f, d))
@@ -960,9 +965,9 @@ def main(argv=None):
     sub = p.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("new"); s.add_argument("campaign"); s.add_argument("--code", required=True); s.add_argument("--idea"); s.set_defaults(fn=cmd_new)
     s = sub.add_parser("lint"); s.add_argument("campaign"); s.set_defaults(fn=cmd_lint)
-    s = sub.add_parser("render"); s.add_argument("campaign"); s.add_argument("--ids", nargs="*"); s.add_argument("--force", action="store_true"); s.set_defaults(fn=cmd_render)
-    s = sub.add_parser("export"); s.add_argument("campaign"); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_export)
-    s = sub.add_parser("kit"); s.add_argument("campaign"); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_kit)
+    s = sub.add_parser("render"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--ids", nargs="*"); s.add_argument("--force", action="store_true"); s.set_defaults(fn=cmd_render)
+    s = sub.add_parser("export"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_export)
+    s = sub.add_parser("kit"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_kit)
     s = sub.add_parser("launch"); s.add_argument("campaign"); s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.add_argument("--org"); s.set_defaults(fn=cmd_launch)
     s = sub.add_parser("audience"); s.add_argument("action", choices=["resolve"]); s.add_argument("facet"); s.add_argument("query"); s.add_argument("--live", action="store_true"); s.set_defaults(fn=cmd_audience)
     s = sub.add_parser("ingest"); s.add_argument("source", choices=["linkedin", "crm", "api"]); s.add_argument("file", nargs="?")
