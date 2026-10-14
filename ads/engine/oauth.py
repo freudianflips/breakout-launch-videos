@@ -47,6 +47,25 @@ def exchange(code, client_id, client_secret):
             return json.loads(r.read().decode())
     except urllib.error.HTTPError as e:
         sys.exit(f"LinkedIn refused the exchange ({e.code}): {e.read().decode()[:400]}")
+    except urllib.error.URLError as e:
+        if "CERTIFICATE_VERIFY_FAILED" not in str(e):
+            raise
+        # Python does not trust this network's certificates (a VPN or security software, or python.org's
+        # Python without its certificates). The system's curl uses the computer's own trust store.
+        return exchange_with_curl(data)
+
+
+def exchange_with_curl(data):
+    import subprocess
+    r = subprocess.run(["curl", "-sS", "-X", "POST", "https://www.linkedin.com/oauth/v2/accessToken",
+                        "-H", "Content-Type: application/x-www-form-urlencoded", "--data-binary", "@-"],
+                       input=data, capture_output=True, timeout=60)   # the secret goes in on stdin, not the command line
+    if r.returncode != 0:
+        sys.exit(f"curl could not reach LinkedIn: {r.stderr.decode()[:300]}")
+    tok = json.loads(r.stdout.decode() or "{}")
+    if "access_token" not in tok:
+        sys.exit(f"LinkedIn refused the exchange: {r.stdout.decode()[:400]}")
+    return tok
 
 
 def wait_for_code(state):
