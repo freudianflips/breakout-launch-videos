@@ -579,7 +579,7 @@ def cmd_audience(a):
 
 ALIASES = {
     "ad_name": ["ad name", "creative name", "ad", "creative", "name"],
-    "date": ["start date (in utc)", "start date", "date", "day"],
+    "date": ["start date (in utc)", "start date", "date", "day", "meeting date", "activity date", "create date", "close date"],
     "impressions": ["impressions"],
     "clicks": ["clicks to landing page", "landing page clicks", "clicks"],
     "spend": ["total spent", "amount spent", "spend", "cost", "cost in usd"],
