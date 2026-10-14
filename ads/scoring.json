@@ -1,0 +1,18 @@
+{
+  "note": "The Banger Score: one 0 to 100 number per ad from hook, hold, CTR, CPM and server-side conversions, each as a percentile against ads of the same kind (image, video, document). Weights are renormalised over the metrics an ad has. Small samples are shrunk toward the average, so an ad cannot win on 400 impressions.",
+  "weights": {"conversion": 0.35, "ctr": 0.25, "hold": 0.15, "hook": 0.10, "cpm": 0.15},
+  "definitions": {
+    "hook": "video_views / impressions (LinkedIn counts a view at 2 s with half the player on screen)",
+    "hold": "video_q25 / video_views: of the people who stopped, the share still there at 25%",
+    "ctr": "clicks / impressions (landing page clicks when the export has them)",
+    "cpm": "spend / impressions * 1000; lower is better",
+    "conversion": "server-side meetings (or SQLs) from the CRM per 1,000 USD spent; never the platform's own conversions"
+  },
+  "min_impressions": 3000,
+  "min_spend": 150,
+  "prior_strength": {"ctr": 2000, "hook": 1000, "hold": 300, "conversion_spend": 1500},
+  "thresholds": {"winner": 70, "loser": 35},
+  "hook_trap": {"hook_pct_at_least": 70, "hold_pct_at_most": 35, "why": "A big hook with no hold burns money (Wispr: 39.5% hook rate, 14.3% to 25%)"},
+  "budget": {"test_share": 0.2, "test_share_min": 0.15, "test_share_max": 0.25, "linkedin_min_daily_per_campaign": 10, "max_active_ads_per_campaign": 5},
+  "iterate": {"executions_per_winner": 10}
+}

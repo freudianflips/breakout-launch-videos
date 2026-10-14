@@ -42,3 +42,10 @@ __pycache__/
 scripts/private-terms.txt
 /docs/styles/*/renders/
 /docs/styles/*/snapshots/
+
+# ads engine: renders, request logs and raw performance data stay local
+/ads/campaigns/*/out/
+/ads/campaigns/*/launch/requests*.json
+/ads/campaigns/*/launch/plan.json
+/ads/campaigns/*/launch/ads.csv
+/ads/data/*.csv

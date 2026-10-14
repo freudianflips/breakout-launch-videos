@@ -1,0 +1,52 @@
+{
+  "note": "LinkedIn targeting per persona. These are hypotheses until the owner confirms them (status). Facet URNs for functions, seniorities and company size are LinkedIn's standard values; titles, industries and skills must be resolved with `python3 ads/engine/ads.py audience resolve` (the adTargetingEntities API) before a live launch. Audience size for Sponsored Content should be at least 50,000 members; LinkedIn will not serve under 300.",
+  "status": "draft: not yet confirmed by the owner",
+  "shared": {
+    "locations": ["urn:li:geo:103644278"],
+    "locations_label": "United States",
+    "company_size": ["SIZE_51_TO_200", "SIZE_201_TO_500", "SIZE_501_TO_1000", "SIZE_1001_TO_5000"],
+    "industries_label": ["Software Development", "IT Services and IT Consulting", "Technology, Information and Internet"],
+    "exclude": {"label": "Breakout employees and current customers (upload a company list as a Matched Audience)", "matched_audiences": []}
+  },
+  "personas": {
+    "demand-gen": {
+      "functions": ["urn:li:function:15"],
+      "functions_label": ["Marketing"],
+      "seniorities": ["urn:li:seniority:5", "urn:li:seniority:6", "urn:li:seniority:7"],
+      "seniorities_label": ["Manager", "Director", "VP"],
+      "titles_label": ["Head of Demand Generation", "Director of Demand Generation", "Growth Marketing Manager", "Head of Growth", "Director of Marketing"]
+    },
+    "marketing-leader": {
+      "functions": ["urn:li:function:15"],
+      "functions_label": ["Marketing"],
+      "seniorities": ["urn:li:seniority:7", "urn:li:seniority:8"],
+      "seniorities_label": ["VP", "CXO"],
+      "titles_label": ["CMO", "VP Marketing", "VP Demand Generation", "Head of Marketing"]
+    },
+    "founder": {
+      "seniorities": ["urn:li:seniority:8", "urn:li:seniority:10"],
+      "seniorities_label": ["CXO", "Owner"],
+      "titles_label": ["Founder", "Co-Founder", "CEO"],
+      "company_size_override": ["SIZE_11_TO_50", "SIZE_51_TO_200"]
+    },
+    "revops": {
+      "functions": ["urn:li:function:18"],
+      "functions_label": ["Operations"],
+      "seniorities": ["urn:li:seniority:5", "urn:li:seniority:6", "urn:li:seniority:7"],
+      "seniorities_label": ["Manager", "Director", "VP"],
+      "titles_label": ["Revenue Operations", "Marketing Operations Manager", "Head of RevOps", "Director of Revenue Operations"]
+    },
+    "sales-leader": {
+      "functions": ["urn:li:function:25"],
+      "functions_label": ["Sales"],
+      "seniorities": ["urn:li:seniority:6", "urn:li:seniority:7", "urn:li:seniority:8"],
+      "seniorities_label": ["Director", "VP", "CXO"],
+      "titles_label": ["VP Sales", "Head of Sales Development", "SDR Manager", "Chief Revenue Officer"]
+    }
+  },
+  "retargeting": {
+    "site-visitors-90d": {"label": "Website visitors, last 90 days (Insight Tag)", "matched_audience": null},
+    "video-viewers-50": {"label": "Watched 50% or more of any Breakout video ad", "matched_audience": null},
+    "abm-accounts": {"label": "Company list from accounts/ (ABM targets)", "matched_audience": null}
+  }
+}

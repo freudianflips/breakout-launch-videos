@@ -1,0 +1,134 @@
+{
+  "note": "Every ad is tagged on 5 dimensions before launch so a win can be explained. Concepts are per campaign (campaign.json). Add a value here before using it; the linter rejects unknown tags. Codes go into the ad name, so keep them short and never reuse a retired one.",
+  "angles": {
+    "never-miss": "Every visitor gets an answer; nobody leaves unseen (copy: \"A full-time, always-on SDR that never misses a website visitor.\")",
+    "headcount": "Pipeline without adding headcount (copy: subhead)",
+    "speed": "Speed-to-lead: answer and book while the buyer is still on the page",
+    "wasted-traffic": "Traffic you already paid for leaves without a word",
+    "buyer-experience": "What the buyer sees: they ask, it answers (\"Go ahead. Ask me stuff.\")",
+    "attention": "Attention is earned, not interrupted: inbound beats interruption",
+    "follow-up": "The visitor left; Breakout follows up by email and LinkedIn",
+    "integrations": "It talks to your stack; you touch grass",
+    "humour": "A joke about something the persona already cares about, then the product"
+  },
+  "personas": {
+    "demand-gen": "Head of demand gen or growth marketing: owns the website's conversion and the MQL to meeting number",
+    "marketing-leader": "VP marketing or CMO at a B2B software company: owns pipeline targets and headcount",
+    "founder": "Founder or CEO of a startup that sells to businesses: buys alone, decides fast",
+    "revops": "RevOps or marketing ops: owns the stack, routing and the CRM",
+    "sales-leader": "VP sales or head of SDRs: owns speed-to-lead and the SDR team"
+  },
+  "awareness": {
+    "unaware": "Does not know the problem exists. Lead with something they already care about",
+    "problem": "Feels the problem (traffic that leaves, slow follow-up). Name it, then the turn",
+    "solution": "Knows AI SDRs exist. Show what makes this one different",
+    "product": "Knows Breakout. Show proof and the product up close",
+    "most-aware": "Ready to act. The offer and the CTA, nothing else"
+  },
+  "formats": {
+    "img-1x1": {
+      "kind": "image",
+      "size": [
+        1200,
+        1200
+      ],
+      "note": "Single image, square. The default in feed"
+    },
+    "img-wide": {
+      "kind": "image",
+      "size": [
+        1200,
+        627
+      ],
+      "note": "Single image, 1.91:1. Desktop feed and the right rail"
+    },
+    "img-4x5": {
+      "kind": "image",
+      "size": [
+        1080,
+        1350
+      ],
+      "note": "Single image, vertical 4:5. Mobile feed only"
+    },
+    "doc": {
+      "kind": "document",
+      "size": [
+        1080,
+        1080
+      ],
+      "note": "Document ad: a swipeable PDF, 3 to 6 pages"
+    },
+    "video-motion": {
+      "kind": "video",
+      "size": [
+        1080,
+        1080
+      ],
+      "note": "Motion design from a video template (particle-swarm, dot-matrix, swiss-grid) cut to 6 to 15 s"
+    },
+    "video-creator": {
+      "kind": "video",
+      "size": [
+        1080,
+        1350
+      ],
+      "note": "A real person talking to camera (team member or a creator who signed a release). The engine writes the script"
+    },
+    "thought-leader": {
+      "kind": "post",
+      "size": [
+        1080,
+        1350
+      ],
+      "note": "Thought Leader Ad: a member's own post (Sachin, the team, or a creator) sponsored from the company page"
+    }
+  },
+  "hooks": {
+    "verdict": "A short, confident claim in the brand's words",
+    "question": "A question the persona already asks themselves",
+    "joke": "A joke about the persona's world",
+    "proof": "The product doing the thing, up close",
+    "contrast": "Today versus with Breakout, 2 to 4 words a side",
+    "pov": "First person: the buyer's or the marketer's point of view"
+  },
+  "competitors": [
+    "Qualified",
+    "Drift",
+    "Intercom",
+    "6sense",
+    "Demandbase",
+    "ZoomInfo",
+    "Warmly",
+    "RB2B",
+    "Clearbit",
+    "Chili Piper",
+    "Salesloft",
+    "Apollo",
+    "Common Room",
+    "Koala",
+    "Conversica",
+    "11x",
+    "Artisan",
+    "Regie"
+  ],
+  "fluff": [
+    "revolutionize",
+    "revolutionise",
+    "game-changer",
+    "game changer",
+    "leverage",
+    "unlock",
+    "seamless",
+    "seamlessly",
+    "cutting-edge",
+    "synergy",
+    "supercharge",
+    "empower",
+    "next-generation",
+    "best-in-class",
+    "world-class",
+    "robust",
+    "in today's fast-paced"
+  ],
+  "competitors_note": "Matched as whole words, case-sensitive. Vendors whose names are everyday words (Default, Outreach, Unify) are left out to avoid false alarms: check for them by eye."
+}

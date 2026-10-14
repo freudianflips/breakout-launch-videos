@@ -1,6 +1,6 @@
 # Breakout Videos
 
-**Breakout's brand, styles and video templates, made with a coding agent.**
+**Breakout's brand, styles, video templates and ads engine, made with a coding agent.**
 
 One brand kit, a set of proven styles, and a pipeline that turns Breakout's own words into finished videos: launch films, ABM sends to target accounts, teasers. Claude Code (or Codex) writes the story with you, builds every frame from the brand kit, scores it, mixes it, and renders it locally with HyperFrames. The first version of every video is free and needs no accounts.
 
@@ -13,7 +13,8 @@ One brand kit, a set of proven styles, and a pipeline that turns Breakout's own 
 | [`templates/`](templates/README.md) | 10 styles, each a complete template with a worked example film and a poster |
 | [`videos/`](videos/README.md) | Where new videos are made, one folder each, copied from a template |
 | [`accounts/`](accounts/README.md) | Target accounts for the ABM templates (captures of their site and chat) |
-| [`skills/`](skills/README.md) | 10 agent manuals: story, voice, score, sound, mix, review, motion, 3D, brand |
+| [`ads/`](ads/README.md) | The **ads engine**: a campaign idea to tagged, on-brand ad variants on LinkedIn, scored (the Banger Score leaderboard) and learned from |
+| [`skills/`](skills/README.md) | 11 agent manuals: story, voice, score, sound, mix, review, motion, 3D, brand, ads |
 | [`docs/`](docs/) | Setup, costs, rights, the [style log](docs/breakout-style.md) and [style references](docs/styles/aesthetic-options.md) (look tests, moodboard) |
 | `scripts/`, `tools/`, `examples/` | `new-video.py`, the pre-commit check, the website-to-brand extractor and its offline test site |
 

@@ -65,6 +65,7 @@ Never show a competitor's name or logo, with one exception: the ABM templates ma
 | Cartoon story: simple, colourful characters, the agent as a friendly violet character | `cartoon` | Rejected ("This animation style is bad. The story is also too b2b"). Kept for reference only |
 | Dot matrix: a dark halftone grid; the visitor and Breakout as blooms of dots that ripple, follow and blend; wordless | [`dot-matrix`](../templates/dot-matrix/README.md) | Chosen from the abstract reel ("Use the dot matrix style"); v2 awaiting a verdict. Motion snaps on the beat ("very cool snappy motion"); upbeat swing, never downbeat ("too downbeat. Make the whole thing upbeat"); captions small and precise |
 | Voice-led Apple-style launch | `voice-led` | The kit's base; not yet judged |
+| Static ads: verdict, Swiss slam, the agent's chat, split, real screen | [`ads/designs`](../ads/designs/README.md) | Awaiting a verdict (style log round 20) |
 | Analog, vintage, psychedelic | `analog-psych` | Rejected for product launches ("more modern, more unexpected"); kept as a style to draw on |
 
 More directions to explore are in [`docs/styles/`](../docs/styles/aesthetic-options.md) (look tests and the moodboard).

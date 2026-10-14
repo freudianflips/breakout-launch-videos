@@ -49,6 +49,11 @@
       "name": "launch-motion",
       "description": "Tool manual under launch-film (the motion language for launch films built in HyperFrames). Ease tokens, camera doctrine, continuity at every cut, type and cursor craft, and brand-neutral signature moves (logo build, world pass, branch and pulse, waterfall fill, identity morph, macro pull-back, rise) that replace HyperFrames' stock look. Says which HyperFrames blueprints and transitions to keep, transform or avoid. Use whenever a launch film's picture is designed or animated, for \"animation\", \"motion design\", \"transitions\", \"camera move\", \"make it feel like Apple\", \"less template\".",
       "path": "skills/launch-motion/SKILL.md"
+    },
+    {
+      "name": "ads-engine",
+      "description": "Run Breakout's paid social ads engine (LinkedIn first). Turns a campaign idea into a brief, a matrix of genuinely different concepts, audiences per persona, and tagged ad variants (copy plus on-brand static designs, document ads, creator and Thought Leader scripts), lints them against the brand and LinkedIn's limits, renders a feed preview, exports or launches them paused, ingests LinkedIn and CRM results, scores every ad with the Banger Score, writes the learnings and spins 10 new executions around each winner. Use for \"ads\", \"ad creative\", \"LinkedIn ads\", \"campaign\", \"ad variants\", \"test concepts\", \"ad copy\", \"creative testing\", \"leaderboard\", \"what's winning\", \"scale the winners\", \"ad budget\".",
+      "path": "skills/ads-engine/SKILL.md"
     }
   ]
 }

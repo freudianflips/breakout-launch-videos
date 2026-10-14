@@ -1,0 +1,4 @@
+{
+  "note": "Numbers and claims approved for ads beyond brand/brand.json copy. Each needs a source the owner can point to (a page, a report, a signed case study) and the date it was checked. The linter allows a number on an ad only if it appears here or in brand.json copy.",
+  "claims": []
+}

@@ -1,0 +1,370 @@
+{
+  "campaign": "pageview-to-pipeline",
+  "code": "P2P",
+  "status": "draft",
+  "platform": "linkedin",
+  "idea": "Introduce Breakout to people who own website conversion, in consumer-style ads that speak to one person, across 5 genuinely different concepts.",
+  "objective": "WEBSITE_VISIT",
+  "landing_url": "https://getbreakout.ai/",
+  "cta": "REQUEST_DEMO",
+  "abm": false,
+  "budget": {
+    "daily_usd": null,
+    "test_share": 0.2
+  },
+  "personas": [
+    "demand-gen",
+    "marketing-leader",
+    "founder",
+    "revops",
+    "sales-leader"
+  ],
+  "concepts": [
+    {
+      "code": "always-on",
+      "name": "Your best SDR, always on",
+      "idea": "The website never closes; Breakout never misses a visitor.",
+      "source": "copy.one_liners[2]: \"A full-time, always-on SDR that never misses a website visitor.\""
+    },
+    {
+      "code": "ask-me",
+      "name": "Go ahead. Ask me stuff.",
+      "idea": "The buyer's side: they ask, it answers, no form.",
+      "source": "The website agent's own welcome line (GUIDELINES, Product and people); copy.features[1]"
+    },
+    {
+      "code": "earned",
+      "name": "Attention is earned",
+      "idea": "A challenger verdict on interruption marketing: inbound is the future.",
+      "source": "copy.h2[0], copy.h2[1], copy.h2[2]"
+    },
+    {
+      "code": "pretty-good",
+      "name": "\"Pretty good, actually\"",
+      "idea": "Consumer-style self-deprecating humour instead of a B2B superlative.",
+      "source": "copy.site_h2[1]"
+    },
+    {
+      "code": "touch-grass",
+      "name": "You touch grass",
+      "idea": "A joke about the stack RevOps already lives in, then the product.",
+      "source": "copy.site_h2[3]"
+    }
+  ],
+  "ads": [
+    {
+      "id": "P2P-001",
+      "status": "draft",
+      "concept": "always-on",
+      "angle": "never-miss",
+      "persona": "demand-gen",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "verdict",
+      "copy": {
+        "intro": "Your website gets visitors at night, on weekends and over lunch.\nBreakout is a full-time, always-on SDR that never misses a website visitor.",
+        "headline": "Inbound SDR, powered by AI.",
+        "description": "See an AI SDR qualify and book in minutes, not months."
+      },
+      "design": {
+        "template": "verdict",
+        "fields": {
+          "kicker": "Inbound SDR, powered by AI.",
+          "headline": "Your best SDR.\n*Always on.*",
+          "cta": "Book a demo"
+        }
+      }
+    },
+    {
+      "id": "P2P-002",
+      "status": "draft",
+      "concept": "always-on",
+      "angle": "headcount",
+      "persona": "founder",
+      "awareness": "unaware",
+      "format": "img-4x5",
+      "hook": "joke",
+      "copy": {
+        "intro": "Your website works nights. Your SDR doesn't.\nBreakout turns your website visitors into qualified meetings, without adding headcount.",
+        "headline": "Pipeline without adding headcount."
+      },
+      "design": {
+        "template": "slam",
+        "fields": {
+          "index": "02",
+          "lines": [
+            "Your site",
+            "never sleeps.",
+            "*Neither do we.*"
+          ]
+        }
+      }
+    },
+    {
+      "id": "P2P-003",
+      "status": "draft",
+      "concept": "ask-me",
+      "angle": "buyer-experience",
+      "persona": "demand-gen",
+      "awareness": "solution",
+      "format": "img-1x1",
+      "hook": "proof",
+      "copy": {
+        "intro": "Buyers don't want a form. They want an answer.\nBreakout engages them in real time: answers questions, shares content, qualifies and books meetings.",
+        "headline": "Go ahead. Ask me stuff."
+      },
+      "design": {
+        "template": "chat",
+        "fields": {
+          "headline": "Go ahead. *Ask me stuff.*",
+          "turns": [
+            {
+              "who": "me",
+              "text": "How does Breakout identify buyer signals?"
+            },
+            {
+              "who": "agent",
+              "text": "It identifies the visitor: company, person, buying group and intent signals."
+            }
+          ],
+          "label": "Illustrative example"
+        }
+      }
+    },
+    {
+      "id": "P2P-004",
+      "status": "draft",
+      "concept": "ask-me",
+      "angle": "speed",
+      "persona": "sales-leader",
+      "awareness": "problem",
+      "format": "img-wide",
+      "hook": "contrast",
+      "copy": {
+        "intro": "Speed-to-lead and orchestration beat bloated headcount.\nBreakout answers on the page, while the buyer is still there.",
+        "headline": "Answer while they're still on the page."
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left": "Visitor *leaves.*",
+          "right": "Meeting *booked.*"
+        }
+      }
+    },
+    {
+      "id": "P2P-005",
+      "status": "draft",
+      "concept": "earned",
+      "angle": "attention",
+      "persona": "marketing-leader",
+      "awareness": "unaware",
+      "format": "img-1x1",
+      "hook": "verdict",
+      "copy": {
+        "intro": "Inbound is the future.\nAttention is earned, not interrupted. Every visit is a growth opportunity.",
+        "headline": "Pageview to pipeline."
+      },
+      "design": {
+        "template": "verdict",
+        "fields": {
+          "theme": "dark",
+          "headline": "Attention is *earned,*\nnot interrupted.",
+          "cta": "Book a demo"
+        }
+      }
+    },
+    {
+      "id": "P2P-006",
+      "status": "draft",
+      "concept": "earned",
+      "angle": "wasted-traffic",
+      "persona": "marketing-leader",
+      "awareness": "problem",
+      "format": "doc",
+      "hook": "pov",
+      "copy": {
+        "intro": "You paid for every visit. What happens when they leave without a word?\nBreakout turns every pageview into a person, every person into a conversation on any channel, and every conversation into pipeline.",
+        "headline": "Pageview to pipeline."
+      },
+      "design": {
+        "pages": [
+          {
+            "template": "verdict",
+            "fields": {
+              "headline": "You paid for\nthat *visit.*",
+              "logo": false
+            }
+          },
+          {
+            "template": "split",
+            "fields": {
+              "left": "They *leave.*",
+              "right": "Breakout *follows up.*"
+            }
+          },
+          {
+            "template": "screen",
+            "fields": {
+              "headline": "Every visit is a growth *opportunity.*",
+              "image": "assets/screens/plays-personalization.png",
+              "crop": [
+                316,
+                628,
+                1116,
+                250
+              ],
+              "logo": false
+            }
+          },
+          {
+            "template": "verdict",
+            "fields": {
+              "theme": "dark",
+              "headline": "Pageview to\n*pipeline.*",
+              "cta": "Book a demo"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "P2P-007",
+      "status": "draft",
+      "concept": "pretty-good",
+      "angle": "humour",
+      "persona": "demand-gen",
+      "awareness": "solution",
+      "format": "img-1x1",
+      "hook": "joke",
+      "copy": {
+        "intro": "Not the most humble ad you'll see today.\nMeet the AI SDR considered \"pretty good, actually\" by people who've tried others.",
+        "headline": "Inbound SDR, powered by AI."
+      },
+      "design": {
+        "template": "verdict",
+        "fields": {
+          "kicker": "Meet the AI SDR considered",
+          "headline": "*\"Pretty good,\nactually\"*",
+          "sub": "by people who've tried others."
+        }
+      }
+    },
+    {
+      "id": "P2P-008",
+      "status": "draft",
+      "concept": "touch-grass",
+      "angle": "integrations",
+      "persona": "revops",
+      "awareness": "solution",
+      "format": "img-4x5",
+      "hook": "joke",
+      "copy": {
+        "intro": "RevOps, this one's for you.\nTalks to Clay. Talks to Attio. And 55+ other tools. You touch grass.",
+        "headline": "An AI SDR that fits your stack."
+      },
+      "design": {
+        "template": "slam",
+        "fields": {
+          "index": "08",
+          "lines": [
+            "Talks to Clay.",
+            "Talks to Attio.",
+            "*You touch grass.*"
+          ],
+          "sub": "And 55+ other tools."
+        }
+      }
+    },
+    {
+      "id": "P2P-009",
+      "status": "draft",
+      "concept": "always-on",
+      "angle": "follow-up",
+      "persona": "demand-gen",
+      "awareness": "problem",
+      "format": "img-wide",
+      "hook": "proof",
+      "copy": {
+        "intro": "Not every visitor is ready to talk today.\nBreakout converts drop-offs with personalized email and LinkedIn follow-ups.",
+        "headline": "They left. Breakout followed up."
+      },
+      "design": {
+        "template": "screen",
+        "fields": {
+          "headline": "They left.\n*Breakout followed up.*",
+          "image": "assets/screens/plays-personalization.png",
+          "crop": [
+            316,
+            640,
+            760,
+            200
+          ]
+        }
+      }
+    },
+    {
+      "id": "P2P-010",
+      "status": "draft",
+      "concept": "always-on",
+      "angle": "never-miss",
+      "persona": "founder",
+      "awareness": "problem",
+      "format": "thought-leader",
+      "hook": "pov",
+      "copy": {
+        "intro": "",
+        "headline": ""
+      },
+      "script": {
+        "author": "Sachin Gupta, co-founder and CEO (his post, his approval; write it with the sachin-linkedin-posts skill)",
+        "hook": "The best SDR on your team should be the one who never leaves the website.",
+        "body": "A founder's view: every visitor is someone who already chose to show up. Breakout turns your website visitors into qualified meetings, without adding headcount. One idea per line, no numbers we can't source.",
+        "image": "Optional: P2P-001's image, or none",
+        "cta": "A link to getbreakout.ai in the first comment, not the post"
+      }
+    },
+    {
+      "id": "P2P-011",
+      "status": "draft",
+      "concept": "ask-me",
+      "angle": "buyer-experience",
+      "persona": "demand-gen",
+      "awareness": "unaware",
+      "format": "video-creator",
+      "hook": "pov",
+      "copy": {
+        "intro": "POV: you asked a website a question and it actually answered.\nBreakout engages visitors in real time: answers questions, shares content, qualifies and books meetings.",
+        "headline": "Go ahead. Ask me stuff."
+      },
+      "script": {
+        "talent": "A team member or a creator with a signed release; never a lookalike",
+        "length": "20 to 30 s, vertical 4:5, captions burned in",
+        "hook_0_3s": "To camera, mid-scroll: \"I asked a website a question. It answered.\"",
+        "hold_3_10s": "Screen recording of the real widget on getbreakout.ai: type the question, the answer appears. No cuts away from the answer",
+        "product_10_20s": "The Book a Meeting button, a slot picked, \"Meeting booked.\"",
+        "cta": "\"Go ahead. Ask me stuff.\" on screen, then the wordmark"
+      }
+    },
+    {
+      "id": "P2P-012",
+      "status": "draft",
+      "concept": "earned",
+      "angle": "attention",
+      "persona": "marketing-leader",
+      "awareness": "unaware",
+      "format": "video-motion",
+      "hook": "verdict",
+      "copy": {
+        "intro": "Attention is earned, not interrupted.\nBreakout turns your website visitors into qualified meetings, without adding headcount.",
+        "headline": "Pageview to pipeline."
+      },
+      "script": {
+        "template": "particle-swarm (liked) cut to 10 s square: python3 scripts/new-video.py particle-swarm p2p-teaser",
+        "beats": "Signals drift, snap into \"Attention is earned.\" on the beat, burst into the wordmark",
+        "sound": "The free bed; no narrator",
+        "note": "Follows the video workflow in CLAUDE.md: storyboard approved before frames"
+      }
+    }
+  ]
+}
