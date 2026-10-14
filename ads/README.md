@@ -80,7 +80,7 @@ From [`CLAUDE.md`](../CLAUDE.md) and the [guidelines](../brand/GUIDELINES.md), c
 
 **The LinkedIn API**, so a session can verify, sync and report:
 
-1. In the LinkedIn developer portal, on the app that has the Advertising API, generate a token with the token generator (Docs and tools, OAuth token tools) with the scopes `r_ads`, `rw_ads`, `r_ads_reporting` and `w_organization_social` (posting the ads as the company page). The person signing in needs a Campaign Manager role on the ad account and an admin role on the company page.
+1. In the LinkedIn developer portal, on the app that has the Advertising API, generate a token with the token generator (Docs and tools, OAuth token tools) with the scopes `r_ads`, `rw_ads`, `r_ads_reporting`, `r_organization_social` (reading the ads' posts, for verify) and `w_organization_social` (posting the ads as the company page); `python3 ads/engine/oauth.py` on your own computer does this when the token generator fails. The person signing in needs a Campaign Manager role on the ad account and an admin role on the company page.
 2. Store it in the environment's settings (the cloud environment menu in the session's title bar, Edit) as environment variables, never in the repo or a chat:
    - `LINKEDIN_ACCESS_TOKEN`: the token (60 days), or, where the app issues refresh tokens, `LINKEDIN_REFRESH_TOKEN`, `LINKEDIN_CLIENT_ID` and `LINKEDIN_CLIENT_SECRET` instead (about a year; the engine fetches fresh tokens itself)
    - `LINKEDIN_AD_ACCOUNT`: the number in Campaign Manager's URL after `/accounts/`

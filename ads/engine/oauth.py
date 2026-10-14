@@ -29,7 +29,7 @@ import webbrowser
 
 PORT = int(os.environ.get("LINKEDIN_OAUTH_PORT", "8765"))
 REDIRECT = f"http://localhost:{PORT}/callback"
-SCOPES = os.environ.get("LINKEDIN_SCOPES", "r_ads rw_ads r_ads_reporting w_organization_social")
+SCOPES = os.environ.get("LINKEDIN_SCOPES", "r_ads rw_ads r_ads_reporting r_organization_social w_organization_social")
 
 
 def auth_url(client_id, state, scopes=SCOPES):
