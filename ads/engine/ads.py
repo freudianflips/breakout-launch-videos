@@ -8,6 +8,7 @@
   python3 ads/engine/ads.py export <campaign> [--all]                launch/ads.csv and launch/plan.json (approved ads)
   python3 ads/engine/ads.py kit <campaign> [--all]                   launch/kit.html: build the round in Campaign Manager by hand
   python3 ads/engine/ads.py launch <campaign> [--live]               create DRAFT campaigns and PAUSED ads on LinkedIn (needs the API)
+  python3 ads/engine/ads.py verify <campaign> [--round N]           read Campaign Manager (API) and check it against the kit
   python3 ads/engine/ads.py audience resolve <facet> <query> [--live]   look up targeting URNs (titles, industries, skills)
   python3 ads/engine/ads.py ingest linkedin <export.csv>             Campaign Manager ad performance export
   python3 ads/engine/ads.py ingest crm <export.csv>                  server-side outcomes by utm_content (meetings, SQLs, pipeline)
@@ -641,6 +642,112 @@ def cmd_launch(a):
     print(f"{len(log)} requests logged to ads/campaigns/{a.campaign}/launch/. Everything is paused: activate in Campaign Manager.")
 
 
+def _flat(t):
+    return re.sub(r"\s+", " ", (t or "").replace("\u2019", "'")).strip()
+
+
+def compare(p, camp, live_campaigns, creatives_by_campaign, posts):
+    """What Campaign Manager holds against the plan. Pure: the API reads happen in cmd_verify.
+
+    Returns (rows, mapping): rows are (level, where, message) with level ok, warn or error;
+    mapping is {ad_id: {campaign, creative, post}} for ingest.
+    """
+    rows, mapping = [], {}
+    by_name = {c.get("name"): c for c in live_campaigns}
+    by_id = {c["ad_id"]: c for c in p["creatives"]}
+    audiences = camp.get("audience_by_persona") or {}
+    for pc in p["campaigns"]:
+        lc = by_name.get(pc["name"])
+        if not lc:
+            rows.append(("error", pc["name"], "campaign not found (names must match the kit exactly)"))
+            continue
+        cid = str(lc.get("id"))
+        rows.append(("ok", pc["name"], f"found, status {lc.get('status')}"))
+        if lc.get("objectiveType") and lc["objectiveType"] != p["objective"]:
+            rows.append(("warn", pc["name"], f"objective {lc['objectiveType']}, plan says {p['objective']}"))
+        if lc.get("audienceExpansionEnabled"):
+            rows.append(("warn", pc["name"], "audience expansion is on; the plan says off"))
+        if lc.get("offsiteDeliveryEnabled"):
+            rows.append(("warn", pc["name"], "LinkedIn Audience Network is on; the plan says off"))
+        budget = (lc.get("dailyBudget") or {}).get("amount")
+        if pc.get("daily_usd") and budget and abs(float(budget) - pc["daily_usd"]) > 0.01:
+            rows.append(("warn", pc["name"], f"daily budget {budget}, plan says {pc['daily_usd']}"))
+        rows.append(("ok" if budget else "warn", pc["name"], f"daily budget {budget or 'not set'}"))
+        tgt = json.dumps(lc.get("targetingCriteria") or {})
+        want_list = audiences.get(pc["persona"], {})
+        if (want_list.get("contact_list") or want_list.get("company_list")) and "audienceMatchingSegments" not in tgt:
+            rows.append(("error", pc["name"], "no Matched Audience in the targeting; the plan targets an uploaded list"))
+        live = creatives_by_campaign.get(cid, [])
+        seen = set()
+        for ad_id in pc["ads"]:
+            want = by_id[ad_id]
+            match = [c for c in live if (c.get("name") or "").startswith(ad_id)]
+            if not match:
+                rows.append(("error", ad_id, "ad not found in this campaign (its name must start with the ad id)"))
+                continue
+            cr = match[0]
+            seen.add(cr.get("id"))
+            ref = (cr.get("content") or {}).get("reference")
+            mapping[ad_id] = {"campaign": cid, "creative": cr.get("id"), "post": ref}
+            post = posts.get(ref) or {}
+            issues = []
+            if _flat(post.get("commentary")) != _flat(want["intro"]):
+                issues.append("intro text differs")
+            if _flat(((post.get("content") or {}).get("media") or {}).get("title")) != _flat(want["headline"]):
+                issues.append("headline differs")
+            landing = post.get("contentLandingPage") or ""
+            if f"utm_content={ad_id}" not in landing:
+                issues.append(f"URL lacks utm_content={ad_id} (the scores cannot find its meetings)")
+            if post.get("contentCallToActionLabel") and post["contentCallToActionLabel"] != want["cta"]:
+                issues.append(f"CTA {post['contentCallToActionLabel']}, plan says {want['cta']}")
+            status = cr.get("intendedStatus") or cr.get("status")
+            rows.append(("error" if issues else "ok", ad_id, "; ".join(issues) or f"matches the kit, status {status}"))
+        for c in live:
+            if c.get("id") not in seen:
+                rows.append(("warn", pc["name"], f"extra ad not in the plan: {c.get('name')!r}"))
+    return rows, mapping
+
+
+def cmd_verify(a):
+    import os
+    camp = load(a.campaign)
+    p = plan(a.campaign, camp, False, a.round)
+    account = os.environ.get("LINKEDIN_AD_ACCOUNT") or a.account
+    if not os.environ.get("LINKEDIN_ACCESS_TOKEN"):
+        sys.exit("no LINKEDIN_ACCESS_TOKEN in the environment: add a read-only token (r_ads, r_ads_reporting) to the "
+                 "environment's settings, never to the repo or the chat")
+    cl = linkedin.Client(live=True)
+    if not account:
+        accts = cl.ad_accounts()
+        print("set LINKEDIN_AD_ACCOUNT to one of: " + ", ".join(f"{x.get('id')} ({x.get('name')})" for x in accts))
+        sys.exit(1)
+    live_campaigns = cl.campaigns(account)
+    ids = [str(c["id"]) for c in live_campaigns if c.get("name") in {x["name"] for x in p["campaigns"]}]
+    creatives = cl.creatives(account, ids) if ids else []
+    by_campaign = defaultdict(list)
+    for c in creatives:
+        by_campaign[str(c.get("campaign", "")).split(":")[-1]].append(c)
+    posts = {}
+    for c in creatives:
+        ref = (c.get("content") or {}).get("reference")
+        if ref and ref.startswith(("urn:li:share", "urn:li:ugcPost")):
+            posts[ref] = cl.post(ref)
+    rows, mapping = compare(p, camp, live_campaigns, by_campaign, posts)
+    for level, where, msg in rows:
+        print(f"{level:5}  {where}: {msg}")
+    errs = sum(1 for r in rows if r[0] == "error")
+    print(f"\n{len(mapping)} of {len(p['creatives'])} ads found, {errs} errors, {sum(1 for r in rows if r[0] == 'warn')} warnings")
+    if mapping:
+        d = CAMPAIGNS / a.campaign / "launch"
+        d.mkdir(exist_ok=True)
+        known = jload(d / "launched.json") if (d / "launched.json").exists() else {"ads": {}}
+        known.update({"verified": dt.datetime.now().isoformat(timespec="seconds"), "account": account})
+        known["ads"].update(mapping)
+        jsave(d / "launched.json", known)
+        print(f"ads/campaigns/{a.campaign}/launch/launched.json: the ad ids LinkedIn uses, for `ingest api`")
+    sys.exit(1 if errs else 0)
+
+
 def cmd_audience(a):
     cl = linkedin.Client(live=a.live)
     res = cl.typeahead(a.facet, a.query)
@@ -1038,6 +1145,7 @@ def main(argv=None):
     s = sub.add_parser("export"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_export)
     s = sub.add_parser("kit"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_kit)
     s = sub.add_parser("launch"); s.add_argument("campaign"); s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.add_argument("--org"); s.set_defaults(fn=cmd_launch)
+    s = sub.add_parser("verify"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--account"); s.set_defaults(fn=cmd_verify)
     s = sub.add_parser("audience"); s.add_argument("action", choices=["resolve"]); s.add_argument("facet"); s.add_argument("query"); s.add_argument("--live", action="store_true"); s.set_defaults(fn=cmd_audience)
     s = sub.add_parser("ingest"); s.add_argument("source", choices=["linkedin", "crm", "api"]); s.add_argument("file", nargs="?")
     s.add_argument("--since"); s.add_argument("--account"); s.add_argument("--live", action="store_true"); s.set_defaults(fn=cmd_ingest)

@@ -115,6 +115,30 @@ class Client:
 
     # ---------------------------------------------------------------- read
 
+    def _pages(self, path, query):
+        """Every element of a paged search."""
+        out, token = [], None
+        while True:
+            q = query + "&pageSize=100" + (f"&pageToken={urllib.parse.quote(token)}" if token else "")
+            res = self.call("GET", path, query=q)
+            out += res.get("elements", [])
+            token = (res.get("metadata") or {}).get("nextPageToken")
+            if not token or not self.live:
+                return out
+
+    def ad_accounts(self):
+        return self._pages("/adAccounts", "q=search")
+
+    def campaigns(self, account):
+        return self._pages(f"/adAccounts/{account}/adCampaigns", "q=search")
+
+    def creatives(self, account, campaign_ids):
+        ids = ",".join(urllib.parse.quote(f"urn:li:sponsoredCampaign:{c}", safe="") for c in campaign_ids)
+        return self._pages(f"/adAccounts/{account}/creatives", f"q=criteria&campaigns=List({ids})")
+
+    def post(self, urn):
+        return self.call("GET", "/posts/" + urllib.parse.quote(urn, safe=""))
+
     def typeahead(self, facet, query):
         q = urllib.parse.urlencode({"q": "typeahead", "facet": f"urn:li:adTargetingFacet:{facet}", "query": query, "locale": "(language:en,country:US)"}, safe="():,")
         return self.call("GET", "/adTargetingEntities", query=q)

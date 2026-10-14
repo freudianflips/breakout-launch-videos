@@ -100,5 +100,29 @@ class Lint(unittest.TestCase):
         self.assertTrue(any("em dash" in e for e in self.errors()))
 
 
+class Verify(unittest.TestCase):
+    def test_compare_finds_matches_and_mistakes(self):
+        camp = copy.deepcopy(ads.load("qualified-switch"))
+        p = ads.plan("qualified-switch", camp, False, 1)
+        pc = p["campaigns"][0]
+        live_c = [{"id": 7, "name": pc["name"], "status": "DRAFT", "objectiveType": p["objective"],
+                   "dailyBudget": {"amount": "25"}, "targetingCriteria": {"include": {"and": [{"or": {"urn:li:adTargetingFacet:audienceMatchingSegments": ["x"]}}]}}}]
+        by_id = {c["ad_id"]: c for c in p["creatives"]}
+        good, bad = pc["ads"][0], pc["ads"][1]
+        crs = [{"id": 1, "name": by_id[good]["name"], "content": {"reference": "urn:li:share:1"}, "intendedStatus": "PAUSED"},
+               {"id": 2, "name": by_id[bad]["name"], "content": {"reference": "urn:li:share:2"}}]
+        posts = {"urn:li:share:1": {"commentary": by_id[good]["intro"], "content": {"media": {"title": by_id[good]["headline"]}},
+                                    "contentLandingPage": by_id[good]["url"], "contentCallToActionLabel": by_id[good]["cta"]},
+                 "urn:li:share:2": {"commentary": "something else", "content": {"media": {"title": by_id[bad]["headline"]}},
+                                    "contentLandingPage": "https://getbreakout.ai/"}}
+        rows, mapping = ads.compare(p, camp, live_c, {"7": crs}, posts)
+        self.assertIn(good, mapping)
+        self.assertTrue(any(w == good and lvl == "ok" for lvl, w, _ in rows))
+        msg = next(m for lvl, w, m in rows if w == bad)
+        self.assertIn("intro text differs", msg)
+        self.assertIn("utm_content", msg)
+        self.assertTrue(any("campaign not found" in m for _, _, m in rows))   # the second campaign is missing
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -15,6 +15,7 @@ LinkedIn first; the engine keeps platform specifics in [`engine/linkedin.py`](en
 | 3. Copy and design | Agent, from the brand's own words | edit `campaign.json`, then `ads.py lint <campaign>` | tagged ads that pass the linter |
 | 4. Preview | Owner approves the feed preview | `ads.py render <campaign>`, `ads.py sheet <campaign>` | `out/<id>.png`, `out/<id>.pdf`, `out/feed.png` (as in a feed), `out/sheet.png` (every creative by round) |
 | 5. Launch | Owner says yes to the spend | `ads.py kit <campaign> [--round N]` (by hand, now), or `ads.py launch <campaign> [--live]` (the API, once approved) | `launch/kit.html`: every campaign setting and ad field with Copy buttons and the files to upload; or DRAFT campaigns and PAUSED ads via the API |
+| 5b. Verify | After loading | `ads.py verify <campaign> --round N` (read-only API) | every campaign and ad checked against the kit; `launch/launched.json` for API reporting |
 | 6. Read results | Weekly | `ads.py ingest linkedin <export.csv>`, `ads.py ingest crm <export.csv>` (or `ingest api`) | `data/performance.csv`, `data/crm.csv` |
 | 7. Score | | `ads.py score` | [`LEADERBOARD.md`](LEADERBOARD.md) |
 | 8. Learn | Agent and owner | `ads.py learn`, `ads.py learn --note "..."` | [`LEARNINGS.md`](LEARNINGS.md) |

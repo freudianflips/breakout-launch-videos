@@ -58,6 +58,7 @@ State the plan and the spend: personas, ads per campaign, daily budget, test sha
 - **Audience files** (contact or company lists) hold personal data: build them in `ads/data/` (not in git) with only the columns LinkedIn matches on (email, name, title, company, country; or company name, website, domain). Drop phone numbers and profile text.
 - `export <campaign>` writes `launch/ads.csv` (manual upload: ad name with tags, intro, headline, CTA, URL with `utm_content=<id>`, file) and `launch/plan.json`.
 - `launch <campaign>` is a dry run that logs every API request. `launch <campaign> --live` (token in the environment, never in the repo) creates the campaign group and campaigns as DRAFT and the ads as PAUSED. A person activates them in Campaign Manager. Video and Thought Leader ads are set up by hand.
+- **After loading**, run `verify <campaign> --round N` (read-only API: `LINKEDIN_ACCESS_TOKEN` with r_ads and r_ads_reporting, `LINKEDIN_AD_ACCOUNT`, both in the environment's settings). It checks every campaign and ad against the kit (names, intro, headline, URL with `utm_content`, CTA, budget, Matched Audience, audience expansion and the Audience Network off) and writes `launch/launched.json`, which `ingest api` needs. Fix every error before activating.
 - At most 5 active ads per campaign, 1 per concept; rotate the next set in as ads are judged.
 
 ## 6. Results, score, learn

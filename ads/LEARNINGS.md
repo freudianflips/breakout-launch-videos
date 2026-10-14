@@ -17,6 +17,8 @@ Starting beliefs, borrowed from Wispr Flow's playbook and not yet tested on Brea
 
 ## Log
 
+- 2026-10-14: qualified-switch round 1 loaded into Campaign Manager by the owner (in their own Claude window). The 382 companies in the audience export are verified Qualified users (owner checked them). Advertising API access granted; `ads.py verify` checks the live setup against the kit once a read-only token is in the environment.
+
 - 2026-10-14: Owner liked the conceptual, everyday-object direction for the Qualified audience ("I like these ideas") over the straight comparisons ("mostly straightforward"). Full set built: 32 ads, 20 concepts, 3 rounds. First test of the hypothesis: object formats beat comparisons on hold and CTR with a product-aware audience.
 
 - 2026-10-14: Owner on the first Qualified ads: "mostly straightforward"; wants more awareness and left-of-field concepts. Round 1 for qualified-switch is now 6 awareness ads in everyday-object formats plus 1 offer ad per campaign. Watch whether the objects (resume, quiz, poster, letter, receipt) beat the straight comparisons on hold and CTR, not only on hook.
