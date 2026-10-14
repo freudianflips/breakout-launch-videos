@@ -11,6 +11,7 @@
   python3 ads/engine/ads.py verify <campaign> [--round N]           read Campaign Manager (API) and check it against the kit
   python3 ads/engine/ads.py sync <campaign> --round N [--live]       add a round's approved ads to the live campaigns, PAUSED
   python3 ads/engine/ads.py status <campaign> <ids> --pause|--activate|--archive [--live]   change ads' status (activate only on the owner's yes)
+  python3 ads/engine/ads.py probe [<campaign>]                       which LinkedIn permissions the token has (creates nothing)
   python3 ads/engine/ads.py audience resolve <facet> <query> [--live]   look up targeting URNs (titles, industries, skills)
   python3 ads/engine/ads.py ingest linkedin <export.csv>             Campaign Manager ad performance export
   python3 ads/engine/ads.py ingest crm <export.csv>                  server-side outcomes by utm_content (meetings, SQLs, pipeline)
@@ -700,8 +701,12 @@ def compare(p, camp, live_campaigns, creatives_by_campaign, posts):
             issues = []
             if _flat(post.get("commentary")) != _flat(want["intro"]):
                 issues.append("intro text differs")
-            if _flat(((post.get("content") or {}).get("media") or {}).get("title")) != _flat(want["headline"]):
-                issues.append("headline differs")
+            content = post.get("content") or {}
+            box = content.get("article") or content.get("media") or {}   # Campaign Manager builds single-image ads as articles
+            if _flat(box.get("title")) != _flat(want["headline"]):
+                issues.append(f"headline differs ({box.get('title')!r})")
+            if want.get("description") and _flat(box.get("description")) != _flat(want["description"]):
+                issues.append("description differs")
             landing = post.get("contentLandingPage") or ""
             if f"utm_content={ad_id}" not in landing:
                 issues.append(f"URL lacks utm_content={ad_id} (the scores cannot find its meetings)")
@@ -822,8 +827,11 @@ def cmd_sync(a):
             print(f"skip   {ad_id}: {cr['kind']} ads, or ads not rendered yet, are set up by hand")
             continue
         asset = writer.upload(org, ROOT / cr["file"], "image" if cr["kind"] == "image" else "document")
-        post = writer.dark_post(org, account, cr["intro"], cr["headline"], asset, cr["url"], cr["cta"], cr["name"])
-        creative = writer.creative(account, cid, post, cr["name"])
+        body = writer.post_body(org, account, cr["intro"], cr["headline"], asset, cr["url"], cr["cta"], cr["name"], cr.get("description", ""))
+        creative, post = writer.inline_creative(account, cid, body, cr["name"]), None   # 1 call, ads permission only
+        if not creative:   # fall back to a dark post (company page permission) and a creative pointing at it
+            post = writer.dark_post(org, account, cr["intro"], cr["headline"], asset, cr["url"], cr["cta"], cr["name"], cr.get("description", ""))
+            creative = writer.creative(account, cid, post, cr["name"])
         known["ads"][ad_id] = {"campaign": cid, "creative": str(creative).split(":")[-1], "post": post}
         jsave(d / "launched.json", known)
         print(f"made   {ad_id}: creative {creative}, PAUSED")
@@ -843,6 +851,40 @@ def cmd_status(a):
             continue
         cl.set_creative_status(account, str(x["creative"]).split(":")[-1], status)
         print(f"{'set' if a.live else 'dry run'}  {ad_id} -> {status}")
+
+
+def cmd_probe(a):
+    """Which LinkedIn permissions the token(s) have, without creating any ad, post or campaign."""
+    import os
+    account, org = _account_and_org(a)
+    cl = linkedin.Client(live=True)
+    checks = []
+    r = cl.call("GET", "/adAccounts", query="q=search&pageSize=1", soft=True)
+    checks.append(("Read ad accounts (r_ads)", not r.get("_error"), r.get("_error")))
+    r = cl.call("GET", f"/adAccounts/{account}/adCampaigns", query="q=search&pageSize=1", soft=True)
+    checks.append(("Read campaigns (r_ads)", not r.get("_error"), r.get("_error")))
+    day = (dt.date.today() - dt.timedelta(days=1))
+    acct = urllib.parse.quote(f"urn:li:sponsoredAccount:{account}", safe="")
+    r = cl.call("GET", "/adAnalytics", query=f"q=analytics&pivot=ACCOUNT&timeGranularity=ALL&dateRange=(start:(year:{day.year},month:{day.month},day:{day.day}))&accounts=List({acct})&fields=impressions", soft=True)
+    checks.append(("Read performance (r_ads_reporting)", not r.get("_error"), r.get("_error")))
+    if org:
+        body = {"initializeUploadRequest": {"owner": f"urn:li:organization:{org}"}}
+        r = cl.call("POST", "/images", body, query="action=initializeUpload", soft=True)   # reserves an upload slot only
+        ok = not r.get("_error")
+        if not ok and cl.social_token != cl.token:
+            r = cl.call("POST", "/images", body, query="action=initializeUpload", soft=True, social=True)
+            ok = not r.get("_error")
+        checks.append(("Upload ad images", ok, r.get("_error")))
+    else:
+        checks.append(("Upload ad images", False, "LINKEDIN_ORG not set"))
+    known = CAMPAIGNS / (a.campaign or "") / "launch" / "launched.json"
+    refs = [x.get("post") for x in (jload(known)["ads"].values() if a.campaign and known.exists() else []) if x.get("post")]
+    if refs:
+        r = cl.post(refs[0])
+        checks.append(("Read ad posts (r_organization_social)", not r.get("_error"), r.get("_error")))
+    for name, ok, err in checks:
+        print(f"{'yes' if ok else 'NO ':4} {name}" + ("" if ok else f"  ({err})"))
+    print("\nCreating ads in one call (createInline) is only proven by a real sync; nothing was created here.")
 
 
 def cmd_audience(a):
@@ -1247,6 +1289,7 @@ def main(argv=None):
     s = sub.add_parser("status"); s.add_argument("campaign"); s.add_argument("ad_ids", nargs="+"); g = s.add_mutually_exclusive_group(required=True)
     g.add_argument("--pause", action="store_true"); g.add_argument("--activate", action="store_true"); g.add_argument("--archive", action="store_true")
     s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.set_defaults(fn=cmd_status)
+    s = sub.add_parser("probe"); s.add_argument("campaign", nargs="?"); s.add_argument("--account"); s.set_defaults(fn=cmd_probe)
     s = sub.add_parser("audience"); s.add_argument("action", choices=["resolve"]); s.add_argument("facet"); s.add_argument("query"); s.add_argument("--live", action="store_true"); s.set_defaults(fn=cmd_audience)
     s = sub.add_parser("ingest"); s.add_argument("source", choices=["linkedin", "crm", "api"]); s.add_argument("file", nargs="?")
     s.add_argument("--since"); s.add_argument("--account"); s.add_argument("--live", action="store_true"); s.set_defaults(fn=cmd_ingest)

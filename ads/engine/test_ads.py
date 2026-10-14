@@ -111,7 +111,7 @@ class Verify(unittest.TestCase):
         good, bad = pc["ads"][0], pc["ads"][1]
         crs = [{"id": 1, "name": by_id[good]["name"], "content": {"reference": "urn:li:share:1"}, "intendedStatus": "PAUSED"},
                {"id": 2, "name": by_id[bad]["name"], "content": {"reference": "urn:li:share:2"}}]
-        posts = {"urn:li:share:1": {"commentary": by_id[good]["intro"], "content": {"media": {"title": by_id[good]["headline"]}},
+        posts = {"urn:li:share:1": {"commentary": by_id[good]["intro"], "content": {"article": {"title": by_id[good]["headline"], "description": by_id[good]["description"]}},
                                     "contentLandingPage": by_id[good]["url"], "contentCallToActionLabel": by_id[good]["cta"]},
                  "urn:li:share:2": {"commentary": "something else", "content": {"media": {"title": by_id[bad]["headline"]}},
                                     "contentLandingPage": "https://getbreakout.ai/"}}

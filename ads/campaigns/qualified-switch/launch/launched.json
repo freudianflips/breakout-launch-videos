@@ -1,0 +1,56 @@
+{
+  "ads": {
+    "QSW-005": {
+      "campaign": "912454556",
+      "creative": "urn:li:sponsoredCreative:1642039266",
+      "post": "urn:li:share:7516083846279331842"
+    },
+    "QSW-008": {
+      "campaign": "912454556",
+      "creative": "urn:li:sponsoredCreative:1642207036",
+      "post": "urn:li:share:7516083853153959936"
+    },
+    "QSW-009": {
+      "campaign": "912454556",
+      "creative": "urn:li:sponsoredCreative:1642263516",
+      "post": "urn:li:share:7516083860791668736"
+    },
+    "QSW-013": {
+      "campaign": "912454556",
+      "creative": "urn:li:sponsoredCreative:1642235196",
+      "post": "urn:li:share:7516083869352243200"
+    },
+    "QSW-014": {
+      "campaign": "912454556",
+      "creative": "urn:li:sponsoredCreative:1642263526",
+      "post": "urn:li:share:7516083878298800128"
+    },
+    "QSW-001": {
+      "campaign": "912444656",
+      "creative": "urn:li:sponsoredCreative:1642216596",
+      "post": "urn:li:share:7516095233722572800"
+    },
+    "QSW-004": {
+      "campaign": "912444656",
+      "creative": "urn:li:sponsoredCreative:1642310036",
+      "post": "urn:li:share:7516095242282991616"
+    },
+    "QSW-010": {
+      "campaign": "912444656",
+      "creative": "urn:li:sponsoredCreative:1642128316",
+      "post": "urn:li:share:7516095248914337792"
+    },
+    "QSW-011": {
+      "campaign": "912444656",
+      "creative": "urn:li:sponsoredCreative:1642207346",
+      "post": "urn:li:share:7516095256367534080"
+    },
+    "QSW-012": {
+      "campaign": "912444656",
+      "creative": "urn:li:sponsoredCreative:1642089816",
+      "post": "urn:li:share:7516095264776970240"
+    }
+  },
+  "verified": "2026-10-14T12:38:31",
+  "account": "514347134"
+}

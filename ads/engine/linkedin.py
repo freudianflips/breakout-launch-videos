@@ -40,9 +40,12 @@ class Client:
         if live and not self.token:
             raise SystemExit("set LINKEDIN_ACCESS_TOKEN, or LINKEDIN_REFRESH_TOKEN with LINKEDIN_CLIENT_ID and "
                              "LINKEDIN_CLIENT_SECRET, in the environment's settings (never in the repo or the chat)")
+        # Company-page calls (posts) can use a second app's token: LinkedIn grants the Community Management API
+        # only on an app with no other product, so it cannot sit on the Advertising API app.
+        self.social_token = os.environ.get("LINKEDIN_SOCIAL_TOKEN") or self.token
         self._fake = 0
 
-    def call(self, method, path, body=None, query=None, raw=None, url=None, headers=None, soft=False):
+    def call(self, method, path, body=None, query=None, raw=None, url=None, headers=None, soft=False, social=False):
         url = url or API + path + (("?" + query) if query else "")
         entry = {"method": method, "url": url, "body": body if raw is None else f"<{len(raw)} bytes>"}
         if self.log is not None:
@@ -53,15 +56,16 @@ class Client:
             return {"id": f"DRYRUN-{self._fake}", "value": {"uploadUrl": "https://example.invalid/upload", "image": f"urn:li:image:DRYRUN-{self._fake}", "document": f"urn:li:document:DRYRUN-{self._fake}"}}
         data = raw if raw is not None else (json.dumps(body).encode() if body is not None else None)
         req = urllib.request.Request(url, data=data, method=method)
+        token = self.social_token if social else self.token
         if raw is None:
-            req.add_header("Authorization", f"Bearer {self.token}")
+            req.add_header("Authorization", f"Bearer {token}")
             req.add_header("LinkedIn-Version", VERSION)
             req.add_header("X-Restli-Protocol-Version", "2.0.0")
             req.add_header("Content-Type", "application/json")
             for k, v in (headers or {}).items():
                 req.add_header(k, v)
         else:
-            req.add_header("Authorization", f"Bearer {self.token}")
+            req.add_header("Authorization", f"Bearer {token}")
         for attempt in range(4):
             try:
                 with urllib.request.urlopen(req, timeout=60) as r:
@@ -73,7 +77,7 @@ class Client:
                 if e.code in (429, 500, 502, 503) and attempt < 3:
                     time.sleep(2 ** (attempt + 1))
                     continue
-                if soft and e.code in (401, 403, 404):   # the caller carries on without this one
+                if soft and e.code in (400, 401, 403, 404, 422):   # the caller carries on without this one
                     return {"_error": e.code, "_detail": e.read().decode()[:300]}
                 raise SystemExit(f"LinkedIn {e.code} on {method} {url}: {e.read().decode()[:800]}")
 
@@ -98,22 +102,42 @@ class Client:
 
     def upload(self, org, path, kind="image"):
         """kind: image or document. Returns the asset URN."""
-        init = self.call("POST", f"/{kind}s", {"initializeUploadRequest": {"owner": f"urn:li:organization:{org}"}},
-                         query="action=initializeUpload")["value"]
+        body = {"initializeUploadRequest": {"owner": f"urn:li:organization:{org}"}}
+        res = self.call("POST", f"/{kind}s", body, query="action=initializeUpload", soft=True)
+        if res.get("_error") and self.social_token != self.token:   # try the company page app's token
+            res = self.call("POST", f"/{kind}s", body, query="action=initializeUpload", soft=True, social=True)
+        if res.get("_error"):
+            raise SystemExit(f"LinkedIn {res['_error']} uploading the {kind}: {res.get('_detail')}")
+        init = res["value"]
         raw = open(path, "rb").read() if self.live else b"x" * os.path.getsize(path)
         self.call("PUT", "", raw=raw, url=init["uploadUrl"])
         return init[kind]
 
-    def dark_post(self, org, account, intro, headline, asset_urn, url, cta, name):
-        body = {
+    def post_body(self, org, account, intro, headline, asset_urn, url, cta, name, description=""):
+        return {
             "author": f"urn:li:organization:{org}", "commentary": intro, "visibility": "PUBLIC",
             "distribution": {"feedDistribution": "NONE", "targetEntities": [], "thirdPartyDistributionChannels": []},
-            "content": {"media": {"title": headline, "id": asset_urn}},
+            # The shape Campaign Manager itself gives single-image ads (seen on the owner's account, 2026-10-14)
+            "content": {"article": {k: v for k, v in (("source", url), ("thumbnail", asset_urn), ("title", headline),
+                                                      ("description", description)) if v}},
             "contentLandingPage": url, "contentCallToActionLabel": cta,
             "lifecycleState": "PUBLISHED", "isReshareDisabledByAuthor": False,
             "adContext": {"dscAdAccount": f"urn:li:sponsoredAccount:{account}", "dscStatus": "ACTIVE", "dscName": name},
         }
-        return self.call("POST", "/posts", body)["id"]
+
+    def inline_creative(self, account, campaign_id, post, name):
+        """The ad and its post in one call (Advertising API, createInline). Returns the creative id, or None when refused."""
+        body = {"creative": {"campaign": f"urn:li:sponsoredCampaign:{campaign_id}", "intendedStatus": "PAUSED", "name": name,
+                             "inlineContent": {"post": {k: v for k, v in post.items() if k != "distribution"}}}}
+        res = self.call("POST", f"/adAccounts/{account}/creatives", body, query="action=createInline", soft=True)
+        if res.get("_error"):
+            print(f"  inline creation refused ({res['_error']}): {res.get('_detail', '')[:160]}")
+            return None
+        return (res.get("value") or {}).get("creative") or res.get("id")
+
+    def dark_post(self, org, account, intro, headline, asset_urn, url, cta, name, description=""):
+        body = self.post_body(org, account, intro, headline, asset_urn, url, cta, name, description)
+        return self.call("POST", "/posts", body, social=True)["id"]
 
     def creative(self, account, campaign_id, post_urn, name):
         body = {"campaign": f"urn:li:sponsoredCampaign:{campaign_id}", "content": {"reference": post_urn},
@@ -150,7 +174,10 @@ class Client:
         return self._pages(f"/adAccounts/{account}/creatives", f"q=criteria&campaigns=List({ids})")
 
     def post(self, urn):
-        return self.call("GET", "/posts/" + urllib.parse.quote(urn, safe=""), soft=True)
+        res = self.call("GET", "/posts/" + urllib.parse.quote(urn, safe=""), soft=True)
+        if res.get("_error") and self.social_token != self.token:
+            res = self.call("GET", "/posts/" + urllib.parse.quote(urn, safe=""), soft=True, social=True)
+        return res
 
     def typeahead(self, facet, query):
         q = urllib.parse.urlencode({"q": "typeahead", "facet": f"urn:li:adTargetingFacet:{facet}", "query": query, "locale": "(language:en,country:US)"}, safe="():,")
