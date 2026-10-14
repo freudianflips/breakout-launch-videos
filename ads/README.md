@@ -76,8 +76,27 @@ From [`CLAUDE.md`](../CLAUDE.md) and the [guidelines](../brand/GUIDELINES.md), c
 
 ## Setup
 
-`npm install` (puppeteer renders the ads). For the API: a LinkedIn developer app with the Advertising API (scopes `r_ads`, `rw_ads`, `r_ads_reporting`) and Community Management (`w_organization_social`) for the company page, then set `LINKEDIN_ACCESS_TOKEN`, `LINKEDIN_AD_ACCOUNT`, `LINKEDIN_ORG` and optionally `LINKEDIN_VERSION` in the environment. Never write a token into the repo. Until the API is approved (applied for 2026-10-14), `kit` writes the page to build each round by hand in Campaign Manager and `ingest linkedin` reads Campaign Manager's ad performance export.
+`npm install` renders the ads (a session-start hook, `scripts/session-start.sh`, runs it in fresh cloud sessions).
 
-The API payloads follow LinkedIn's versioned REST docs but have only been dry-run so far: check them against the current API version before the first live launch.
+**The LinkedIn API**, so a session can verify, sync and report:
+
+1. In the LinkedIn developer portal, on the app that has the Advertising API, generate a token with the token generator (Docs and tools, OAuth token tools) with the scopes `r_ads`, `rw_ads`, `r_ads_reporting` and `w_organization_social` (posting the ads as the company page). The person signing in needs a Campaign Manager role on the ad account and an admin role on the company page.
+2. Store it in the environment's settings (the cloud environment menu in the session's title bar, Edit) as environment variables, never in the repo or a chat:
+   - `LINKEDIN_ACCESS_TOKEN`: the token (60 days), or, where the app issues refresh tokens, `LINKEDIN_REFRESH_TOKEN`, `LINKEDIN_CLIENT_ID` and `LINKEDIN_CLIENT_SECRET` instead (about a year; the engine fetches fresh tokens itself)
+   - `LINKEDIN_AD_ACCOUNT`: the number in Campaign Manager's URL after `/accounts/`
+   - `LINKEDIN_ORG`: the number in the company page's admin URL after `/company/`
+   - `LINKEDIN_VERSION` (optional): the API version as YYYYMM, if LinkedIn says the default is no longer active
+3. Start a new session; it reads them.
+
+api.linkedin.com and www.linkedin.com (uploads, tokens) are reachable from the cloud environment as it is set up now.
+
+| Command | What it does | Changes anything? |
+|---|---|---|
+| `verify <campaign> --round N` | Campaign Manager against the kit, ad by ad; writes `launch/launched.json` | No |
+| `sync <campaign> --round N` | Lists the approved ads missing from the live campaigns | No (dry run) |
+| `sync <campaign> --round N --live` | Uploads them and creates them **paused** in the existing campaigns | Creates paused ads |
+| `status <campaign> <ids> --pause --live` | Pauses ads (e.g. the buyout on 30 November) | Stops spend |
+| `status <campaign> <ids> --activate --live` | Turns ads on: only after the owner says yes | Spends money |
+| `ingest api --since YYYY-MM-DD --live` | Daily metrics per ad into `data/performance.csv` | No |
 
 Tests: `python3 ads/engine/test_ads.py`.

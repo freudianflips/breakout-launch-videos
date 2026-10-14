@@ -124,5 +124,20 @@ class Verify(unittest.TestCase):
         self.assertTrue(any("campaign not found" in m for _, _, m in rows))   # the second campaign is missing
 
 
+    def test_sync_creates_only_what_is_missing(self):
+        camp = copy.deepcopy(ads.load("qualified-switch"))
+        for a in camp["ads"]:
+            if a.get("round") == 2:
+                a["status"] = "approved"
+        p = ads.plan("qualified-switch", camp, False, 2)
+        live_c = [{"id": 7, "name": p["campaigns"][0]["name"]}]
+        first = p["campaigns"][0]["ads"][0]
+        name = next(c["name"] for c in p["creatives"] if c["ad_id"] == first)
+        acts = ads.sync_actions(p, live_c, [{"campaign": "urn:li:sponsoredCampaign:7", "name": name}])
+        self.assertIn(("exists", first, "7"), acts)
+        self.assertTrue(all(x[0] == "create" for x in acts if x[1] in p["campaigns"][0]["ads"][1:]))
+        self.assertTrue(any(x[0] == "missing-campaign" for x in acts))
+
+
 if __name__ == "__main__":
     unittest.main()

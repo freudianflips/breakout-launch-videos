@@ -9,6 +9,8 @@
   python3 ads/engine/ads.py kit <campaign> [--all]                   launch/kit.html: build the round in Campaign Manager by hand
   python3 ads/engine/ads.py launch <campaign> [--live]               create DRAFT campaigns and PAUSED ads on LinkedIn (needs the API)
   python3 ads/engine/ads.py verify <campaign> [--round N]           read Campaign Manager (API) and check it against the kit
+  python3 ads/engine/ads.py sync <campaign> --round N [--live]       add a round's approved ads to the live campaigns, PAUSED
+  python3 ads/engine/ads.py status <campaign> <ids> --pause|--activate|--archive [--live]   change ads' status (activate only on the owner's yes)
   python3 ads/engine/ads.py audience resolve <facet> <query> [--live]   look up targeting URNs (titles, industries, skills)
   python3 ads/engine/ads.py ingest linkedin <export.csv>             Campaign Manager ad performance export
   python3 ads/engine/ads.py ingest crm <export.csv>                  server-side outcomes by utm_content (meetings, SQLs, pipeline)
@@ -748,6 +750,97 @@ def cmd_verify(a):
     sys.exit(1 if errs else 0)
 
 
+def sync_actions(p, live_campaigns, live_creatives):
+    """Which planned ads are missing from the campaigns already in Campaign Manager. Pure, for testing."""
+    by_name = {c.get("name"): c for c in live_campaigns}
+    by_campaign = defaultdict(list)
+    for c in live_creatives:
+        by_campaign[str(c.get("campaign", "")).split(":")[-1]].append(c.get("name") or "")
+    actions = []
+    for pc in p["campaigns"]:
+        lc = by_name.get(pc["name"])
+        if not lc:
+            actions.append(("missing-campaign", pc["name"], None))
+            continue
+        names = by_campaign.get(str(lc["id"]), [])
+        for ad_id in pc["ads"]:
+            if not any(n.startswith(ad_id) for n in names):
+                actions.append(("create", ad_id, str(lc["id"])))
+            else:
+                actions.append(("exists", ad_id, str(lc["id"])))
+    return actions
+
+
+def _account_and_org(a):
+    import os
+    account = os.environ.get("LINKEDIN_AD_ACCOUNT") or getattr(a, "account", None)
+    org = os.environ.get("LINKEDIN_ORG") or getattr(a, "org", None)
+    if not account:
+        sys.exit("set LINKEDIN_AD_ACCOUNT (the numeric ad account id) in the environment's settings")
+    return account, org
+
+
+def cmd_sync(a):
+    """Add a round's approved ads to the campaigns already in Campaign Manager, PAUSED. Reads live; writes only with --live."""
+    camp = load(a.campaign)
+    errs, _ = lint_campaign(a.campaign, camp, quiet=True)
+    if errs:
+        print("\n".join(f"error  {e}" for e in errs))
+        sys.exit("lint errors: nothing synced")
+    p = plan(a.campaign, camp, False, a.round)
+    account, org = _account_and_org(a)
+    reader = linkedin.Client(live=True)
+    live_campaigns = reader.campaigns(account)
+    ids = [str(c["id"]) for c in live_campaigns if c.get("name") in {x["name"] for x in p["campaigns"]}]
+    actions = sync_actions(p, live_campaigns, reader.creatives(account, ids) if ids else [])
+    todo = [x for x in actions if x[0] == "create"]
+    for kind, what, cid in actions:
+        print({"missing-campaign": f"campaign  {what}: not in Campaign Manager; build it from the kit first",
+               "create": f"create    {what} in campaign {cid} (PAUSED)", "exists": f"exists    {what}"}[kind])
+    if not todo:
+        print("nothing to create")
+        return
+    if not a.live:
+        print(f"\ndry run: {len(todo)} ads would be created PAUSED. Add --live to create them.")
+        return
+    if not org:
+        sys.exit("set LINKEDIN_ORG (the company page id) to post the ads as Breakout")
+    if not BRAND.get("reviewed"):
+        print("note   brand/brand.json says reviewed: false; these ads are drafts in the repo's terms")
+    writer = linkedin.Client(live=True)
+    by_id = {c["ad_id"]: c for c in p["creatives"]}
+    d = CAMPAIGNS / a.campaign / "launch"
+    d.mkdir(exist_ok=True)
+    known = jload(d / "launched.json") if (d / "launched.json").exists() else {"ads": {}}
+    for _, ad_id, cid in todo:
+        cr = by_id[ad_id]
+        if cr["kind"] not in ("image", "document") or not cr["file"] or not (ROOT / cr["file"]).exists():
+            print(f"skip   {ad_id}: {cr['kind']} ads, or ads not rendered yet, are set up by hand")
+            continue
+        asset = writer.upload(org, ROOT / cr["file"], "image" if cr["kind"] == "image" else "document")
+        post = writer.dark_post(org, account, cr["intro"], cr["headline"], asset, cr["url"], cr["cta"], cr["name"])
+        creative = writer.creative(account, cid, post, cr["name"])
+        known["ads"][ad_id] = {"campaign": cid, "creative": str(creative).split(":")[-1], "post": post}
+        jsave(d / "launched.json", known)
+        print(f"made   {ad_id}: creative {creative}, PAUSED")
+    print("Created paused. Activate in Campaign Manager, or `ads.py status ... --activate --live` after the owner says yes.")
+
+
+def cmd_status(a):
+    """Pause, archive or activate ads by id, using launch/launched.json (written by verify and sync)."""
+    account, _ = _account_and_org(a)
+    known = jload(CAMPAIGNS / a.campaign / "launch" / "launched.json")
+    status = "ACTIVE" if a.activate else "ARCHIVED" if a.archive else "PAUSED"
+    cl = linkedin.Client(live=a.live)
+    for ad_id in a.ad_ids:
+        x = known["ads"].get(ad_id)
+        if not x:
+            print(f"skip   {ad_id}: not in launched.json (run verify first)")
+            continue
+        cl.set_creative_status(account, str(x["creative"]).split(":")[-1], status)
+        print(f"{'set' if a.live else 'dry run'}  {ad_id} -> {status}")
+
+
 def cmd_audience(a):
     cl = linkedin.Client(live=a.live)
     res = cl.typeahead(a.facet, a.query)
@@ -1146,6 +1239,10 @@ def main(argv=None):
     s = sub.add_parser("kit"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_kit)
     s = sub.add_parser("launch"); s.add_argument("campaign"); s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.add_argument("--org"); s.set_defaults(fn=cmd_launch)
     s = sub.add_parser("verify"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--account"); s.set_defaults(fn=cmd_verify)
+    s = sub.add_parser("sync"); s.add_argument("campaign"); s.add_argument("--round", type=int, required=True); s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.add_argument("--org"); s.set_defaults(fn=cmd_sync)
+    s = sub.add_parser("status"); s.add_argument("campaign"); s.add_argument("ad_ids", nargs="+"); g = s.add_mutually_exclusive_group(required=True)
+    g.add_argument("--pause", action="store_true"); g.add_argument("--activate", action="store_true"); g.add_argument("--archive", action="store_true")
+    s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.set_defaults(fn=cmd_status)
     s = sub.add_parser("audience"); s.add_argument("action", choices=["resolve"]); s.add_argument("facet"); s.add_argument("query"); s.add_argument("--live", action="store_true"); s.set_defaults(fn=cmd_audience)
     s = sub.add_parser("ingest"); s.add_argument("source", choices=["linkedin", "crm", "api"]); s.add_argument("file", nargs="?")
     s.add_argument("--since"); s.add_argument("--account"); s.add_argument("--live", action="store_true"); s.set_defaults(fn=cmd_ingest)

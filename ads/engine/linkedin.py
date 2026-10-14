@@ -35,11 +35,14 @@ class Client:
         self.live = live
         self.log = log            # a list that collects every request, for the launch record
         self.token = os.environ.get("LINKEDIN_ACCESS_TOKEN")
+        if live and not self.token and os.environ.get("LINKEDIN_REFRESH_TOKEN"):
+            self.token = refresh_access_token()
         if live and not self.token:
-            raise SystemExit("set LINKEDIN_ACCESS_TOKEN (never commit it) or drop --live for a dry run")
+            raise SystemExit("set LINKEDIN_ACCESS_TOKEN, or LINKEDIN_REFRESH_TOKEN with LINKEDIN_CLIENT_ID and "
+                             "LINKEDIN_CLIENT_SECRET, in the environment's settings (never in the repo or the chat)")
         self._fake = 0
 
-    def call(self, method, path, body=None, query=None, raw=None, url=None):
+    def call(self, method, path, body=None, query=None, raw=None, url=None, headers=None):
         url = url or API + path + (("?" + query) if query else "")
         entry = {"method": method, "url": url, "body": body if raw is None else f"<{len(raw)} bytes>"}
         if self.log is not None:
@@ -55,6 +58,8 @@ class Client:
             req.add_header("LinkedIn-Version", VERSION)
             req.add_header("X-Restli-Protocol-Version", "2.0.0")
             req.add_header("Content-Type", "application/json")
+            for k, v in (headers or {}).items():
+                req.add_header(k, v)
         else:
             req.add_header("Authorization", f"Bearer {self.token}")
         for attempt in range(4):
@@ -113,6 +118,12 @@ class Client:
                 "intendedStatus": "PAUSED", "name": name}
         return self.call("POST", f"/adAccounts/{account}/creatives", body)["id"]
 
+    def set_creative_status(self, account, creative_id, status):
+        """status: ACTIVE, PAUSED or ARCHIVED. ACTIVE spends money: only on the owner's yes."""
+        urn = urllib.parse.quote(f"urn:li:sponsoredCreative:{creative_id}", safe="")
+        return self.call("POST", f"/adAccounts/{account}/creatives/{urn}", {"patch": {"$set": {"intendedStatus": status}}},
+                         headers={"X-RestLi-Method": "PARTIAL_UPDATE"})
+
     # ---------------------------------------------------------------- read
 
     def _pages(self, path, query):
@@ -152,6 +163,20 @@ class Client:
              f"&dateRange=(start:(year:{y1},month:{m1},day:{d1}),end:(year:{y2},month:{m2},day:{d2}))"
              f"&accounts=List({acct})&fields={','.join(METRICS)}")
         return self.call("GET", "/adAnalytics", query=q).get("elements", [])
+
+
+def refresh_access_token():
+    """Trade a refresh token (valid about a year) for a fresh access token (valid 60 days). Nothing is written to disk."""
+    data = urllib.parse.urlencode({"grant_type": "refresh_token", "refresh_token": os.environ["LINKEDIN_REFRESH_TOKEN"],
+                                   "client_id": os.environ.get("LINKEDIN_CLIENT_ID", ""),
+                                   "client_secret": os.environ.get("LINKEDIN_CLIENT_SECRET", "")}).encode()
+    req = urllib.request.Request("https://www.linkedin.com/oauth/v2/accessToken", data=data, method="POST")
+    req.add_header("Content-Type", "application/x-www-form-urlencoded")
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode())["access_token"]
+    except urllib.error.HTTPError as e:
+        raise SystemExit(f"LinkedIn refused the refresh token ({e.code}): {e.read().decode()[:300]}")
 
 
 def targeting(shared, persona):
