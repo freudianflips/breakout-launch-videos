@@ -153,6 +153,11 @@
       const body = esc(f.body || '').replace(/\[\[(.+?)\]\]/g, '<mark>$1</mark>');
       return `<div class="ad review objbg lav"><div class="card"><div class="stars">\u2605\u2605\u2605\u2605\u2605</div><div class="ttl">${mk(f.title)}</div><div class="body">${body}</div><div class="by">${esc(f.source)}</div></div>${foot(false)}</div>`;
     },
+    // An offer as a gift tag on a string. No product photography or third-party logos: the gift is named in type.
+    gift() {
+      const lines = (f.lines || []).map(([k, v]) => `<div class="ln"><b>${esc(k)}</b><span>${mk(v)}</span></div>`).join('');
+      return `<div class="ad gift objbg violet"><div class="string"></div><div class="tag"><span class="hole"></span>${lines}<div class="prize">${mk(f.prize)}</div></div>${foot(true)}${f.terms ? `<div class="terms">${esc(f.terms)}</div>` : ''}</div>`;
+    },
     // Pattern break: a lead form with every field struck through.
     form() {
       const fields = f.fields || ['First name', 'Last name', 'Work email', 'Company', 'Job title', 'Phone', 'How did you hear about us?'];

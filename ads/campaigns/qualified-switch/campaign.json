@@ -207,6 +207,12 @@
       "idea": "A note from Finance about the widget renewal; the buyout answers it.",
       "awareness": "unaware or problem",
       "source": "Breakout copy and compare-page lines; Qualified never named on these"
+    },
+    {
+      "code": "demo-gift",
+      "name": "Book a demo, get a gift",
+      "idea": "The owner's offer (2026-10-14): book a demo, get an Apple HomeView. A gift tag, the gift named in type.",
+      "source": "the owner, 2026-10-14 (claims.json)"
     }
   ],
   "ads": [
@@ -1159,6 +1165,72 @@
             "actually cost",
             "*cost if pricing was just published"
           ]
+        }
+      }
+    },
+    {
+      "id": "QSW-033",
+      "status": "approved",
+      "round": 1,
+      "concept": "demo-gift",
+      "angle": "incentive",
+      "persona": "practitioner",
+      "awareness": "solution",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Book a demo. Get an Apple HomeView.\nSee an AI SDR qualify and book in minutes, not months. Go ahead. Ask me stuff. Terms apply.",
+        "headline": "Book a demo, get an Apple HomeView.",
+        "description": "Terms apply."
+      },
+      "design": {
+        "template": "gift",
+        "fields": {
+          "lines": [
+            [
+              "To",
+              "whoever books a demo"
+            ],
+            [
+              "From",
+              "Breakout"
+            ]
+          ],
+          "prize": "An Apple *HomeView.*",
+          "terms": "Terms apply. Apple is not a sponsor of this offer."
+        }
+      }
+    },
+    {
+      "id": "QSW-034",
+      "status": "approved",
+      "round": 1,
+      "concept": "demo-gift",
+      "angle": "incentive",
+      "persona": "cmo",
+      "awareness": "solution",
+      "format": "img-1x1",
+      "hook": "verdict",
+      "copy": {
+        "intro": "A demo worth your time. And a little extra.\nBook a Breakout demo and get an Apple HomeView. See an AI SDR qualify and book in minutes, not months. Terms apply.",
+        "headline": "Book a demo, get an Apple HomeView.",
+        "description": "Terms apply."
+      },
+      "design": {
+        "template": "gift",
+        "fields": {
+          "lines": [
+            [
+              "To",
+              "the team still using buttons"
+            ],
+            [
+              "From",
+              "Breakout"
+            ]
+          ],
+          "prize": "Book a demo.\nGet an Apple *HomeView.*",
+          "terms": "Terms apply. Apple is not a sponsor of this offer."
         }
       }
     }
