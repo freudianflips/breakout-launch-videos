@@ -1199,7 +1199,8 @@
           "prize": "An Apple *HomeView.*",
           "terms": "Terms apply. Apple is not a sponsor of this offer."
         }
-      }
+      },
+      "url": "https://getbreakout.ai/"
     },
     {
       "id": "QSW-034",
@@ -1232,7 +1233,8 @@
           "prize": "Book a demo.\nGet an Apple *HomeView.*",
           "terms": "Terms apply. Apple is not a sponsor of this offer."
         }
-      }
+      },
+      "url": "https://getbreakout.ai/"
     }
   ],
   "deadline": "2026-11-30",

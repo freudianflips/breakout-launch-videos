@@ -17,6 +17,8 @@ Starting beliefs, borrowed from Wispr Flow's playbook and not yet tested on Brea
 
 ## Log
 
+- 2026-10-14: First ads loaded over the API (QSW-033, QSW-034, the demo gift, clicks to the home page). What LinkedIn's API actually does on Breakout's account: the Advertising API token alone uploads images and creates ads in one call (createInline), so the Community Management app is not needed; a new ad cannot start PAUSED before its review (DRAFT works); Campaign Manager stores single-image ads as an "article" (title, description, thumbnail, source); uploads need `Content-Type: application/octet-stream`.
+
 - 2026-10-14: qualified-switch round 1 loaded into Campaign Manager by the owner (in their own Claude window). The 382 companies in the audience export are verified Qualified users (owner checked them). Advertising API access granted; `ads.py verify` checks the live setup against the kit once a read-only token is in the environment.
 
 - 2026-10-14: Owner liked the conceptual, everyday-object direction for the Qualified audience ("I like these ideas") over the straight comparisons ("mostly straightforward"). Full set built: 32 ads, 20 concepts, 3 rounds. First test of the hypothesis: object formats beat comparisons on hold and CTR with a product-aware audience.

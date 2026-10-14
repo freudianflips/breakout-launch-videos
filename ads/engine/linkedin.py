@@ -64,8 +64,9 @@ class Client:
             req.add_header("Content-Type", "application/json")
             for k, v in (headers or {}).items():
                 req.add_header(k, v)
-        else:
+        else:   # an upload: raw bytes (urllib would otherwise label them as a form)
             req.add_header("Authorization", f"Bearer {token}")
+            req.add_header("Content-Type", "application/octet-stream")
         for attempt in range(4):
             try:
                 with urllib.request.urlopen(req, timeout=60) as r:
@@ -125,9 +126,9 @@ class Client:
             "adContext": {"dscAdAccount": f"urn:li:sponsoredAccount:{account}", "dscStatus": "ACTIVE", "dscName": name},
         }
 
-    def inline_creative(self, account, campaign_id, post, name):
+    def inline_creative(self, account, campaign_id, post, name, status="PAUSED"):
         """The ad and its post in one call (Advertising API, createInline). Returns the creative id, or None when refused."""
-        body = {"creative": {"campaign": f"urn:li:sponsoredCampaign:{campaign_id}", "intendedStatus": "PAUSED", "name": name,
+        body = {"creative": {"campaign": f"urn:li:sponsoredCampaign:{campaign_id}", "intendedStatus": status, "name": name,
                              "inlineContent": {"post": {k: v for k, v in post.items() if k != "distribution"}}}}
         res = self.call("POST", f"/adAccounts/{account}/creatives", body, query="action=createInline", soft=True)
         if res.get("_error"):
@@ -139,10 +140,14 @@ class Client:
         body = self.post_body(org, account, intro, headline, asset_urn, url, cta, name, description)
         return self.call("POST", "/posts", body, social=True)["id"]
 
-    def creative(self, account, campaign_id, post_urn, name):
+    def creative(self, account, campaign_id, post_urn, name, status="PAUSED"):
         body = {"campaign": f"urn:li:sponsoredCampaign:{campaign_id}", "content": {"reference": post_urn},
-                "intendedStatus": "PAUSED", "name": name}
-        return self.call("POST", f"/adAccounts/{account}/creatives", body)["id"]
+                "intendedStatus": status, "name": name}
+        res = self.call("POST", f"/adAccounts/{account}/creatives", body, soft=True)
+        if res.get("_error"):
+            print(f"  creative refused as {status} ({res['_error']}): {res.get('_detail', '')[:160]}")
+            return None
+        return res["id"]
 
     def set_creative_status(self, account, creative_id, status):
         """status: ACTIVE, PAUSED or ARCHIVED. ACTIVE spends money: only on the owner's yes."""

@@ -805,7 +805,7 @@ def cmd_sync(a):
     todo = [x for x in actions if x[0] == "create"]
     for kind, what, cid in actions:
         print({"missing-campaign": f"campaign  {what}: not in Campaign Manager; build it from the kit first",
-               "create": f"create    {what} in campaign {cid} (PAUSED)", "exists": f"exists    {what}"}[kind])
+               "create": f"create    {what} in campaign {cid}", "exists": f"exists    {what}"}[kind])
     if not todo:
         print("nothing to create")
         return
@@ -817,6 +817,7 @@ def cmd_sync(a):
     if not BRAND.get("reviewed"):
         print("note   brand/brand.json says reviewed: false; these ads are drafts in the repo's terms")
     writer = linkedin.Client(live=True)
+    camp_status = {str(c["id"]): c.get("status") for c in live_campaigns}
     by_id = {c["ad_id"]: c for c in p["creatives"]}
     d = CAMPAIGNS / a.campaign / "launch"
     d.mkdir(exist_ok=True)
@@ -828,14 +829,29 @@ def cmd_sync(a):
             continue
         asset = writer.upload(org, ROOT / cr["file"], "image" if cr["kind"] == "image" else "document")
         body = writer.post_body(org, account, cr["intro"], cr["headline"], asset, cr["url"], cr["cta"], cr["name"], cr.get("description", ""))
-        creative, post = writer.inline_creative(account, cid, body, cr["name"]), None   # 1 call, ads permission only
+        # LinkedIn won't create an ad as PAUSED before its review. DRAFT first; ACTIVE only inside a campaign that is
+        # still a draft, where nothing serves or spends until the owner launches the campaign.
+        statuses = ["DRAFT"] + (["ACTIVE"] if camp_status.get(cid) == "DRAFT" else [])
+        creative, post, used = None, None, None
+        for st in statuses:   # 1 call, ads permission only
+            creative = writer.inline_creative(account, cid, body, cr["name"], st)
+            if creative:
+                used = st
+                break
         if not creative:   # fall back to a dark post (company page permission) and a creative pointing at it
             post = writer.dark_post(org, account, cr["intro"], cr["headline"], asset, cr["url"], cr["cta"], cr["name"], cr.get("description", ""))
-            creative = writer.creative(account, cid, post, cr["name"])
+            for st in statuses:
+                creative = writer.creative(account, cid, post, cr["name"], st)
+                if creative:
+                    used = st
+                    break
+        if not creative:
+            print(f"FAIL   {ad_id}: LinkedIn refused every allowed status ({', '.join(statuses)}); nothing created for it")
+            continue
         known["ads"][ad_id] = {"campaign": cid, "creative": str(creative).split(":")[-1], "post": post}
         jsave(d / "launched.json", known)
-        print(f"made   {ad_id}: creative {creative}, PAUSED")
-    print("Created paused. Activate in Campaign Manager, or `ads.py status ... --activate --live` after the owner says yes.")
+        print(f"made   {ad_id}: creative {creative}, {used}" + (" (its campaign is a draft: nothing serves until the campaign is launched)" if used == "ACTIVE" else ""))
+    print("Done. Nothing spends until the owner launches the campaign (or activates a draft ad).")
 
 
 def cmd_status(a):

@@ -49,8 +49,18 @@
       "campaign": "912444656",
       "creative": "urn:li:sponsoredCreative:1642089816",
       "post": "urn:li:share:7516095264776970240"
+    },
+    "QSW-034": {
+      "campaign": "912454556",
+      "creative": "urn:li:sponsoredCreative:1642198876",
+      "post": "urn:li:share:7516116790326767618"
+    },
+    "QSW-033": {
+      "campaign": "912444656",
+      "creative": "urn:li:sponsoredCreative:1642273286",
+      "post": "urn:li:share:7516116802150682624"
     }
   },
-  "verified": "2026-10-14T12:38:31",
+  "verified": "2026-10-14T12:44:58",
   "account": "514347134"
 }
