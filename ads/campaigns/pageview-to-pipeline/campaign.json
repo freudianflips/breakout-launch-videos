@@ -444,6 +444,76 @@
           ]
         }
       }
+    },
+    {
+      "id": "P2P-015",
+      "status": "draft",
+      "round": 1,
+      "concept": "know-who",
+      "angle": "identify",
+      "persona": "demand-gen",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "url": "https://getbreakout.ai/product/identify",
+      "copy": {
+        "intro": "Be honest. When did you last fill one of these?\nBreakout reveals the companies and people visiting your site so you can fill your sales funnel with high-intent inbound leads.",
+        "headline": "Identify ready-to-buy visitors before they fill a form",
+        "description": "30-day free trial. No credit card required.",
+        "cta": "SIGN_UP"
+      },
+      "design": {
+        "template": "form",
+        "fields": {
+          "headline": "Skip the *form.*",
+          "cta": "Start free trial"
+        }
+      }
+    },
+    {
+      "id": "P2P-016",
+      "status": "draft",
+      "round": 1,
+      "concept": "always-on",
+      "angle": "never-miss",
+      "persona": "markops",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Sunday. Nobody on your team is online. Your website still is.\nBreakout is a full-time, always-on SDR that never misses a website visitor.",
+        "headline": "Inbound SDR, powered by AI."
+      },
+      "design": {
+        "template": "notice",
+        "fields": {
+          "when": "Sun",
+          "message": "Meeting *booked* with a website visitor.",
+          "caption": "A full-time, always-on SDR that *never misses a website visitor.*",
+          "label": "Illustrative example"
+        }
+      }
+    },
+    {
+      "id": "P2P-017",
+      "status": "draft",
+      "round": 1,
+      "concept": "earned",
+      "angle": "attention",
+      "persona": "cmo",
+      "awareness": "unaware",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "copy": {
+        "intro": "Sorry for the interruption. That's the point.\nAttention is earned, not interrupted. Breakout turns your website visitors into qualified meetings, without adding headcount.",
+        "headline": "Pageview to pipeline."
+      },
+      "design": {
+        "template": "quiet",
+        "fields": {
+          "line": "This ad just interrupted you.\n*Your website shouldn't.*"
+        }
+      }
     }
   ],
   "funnels": {

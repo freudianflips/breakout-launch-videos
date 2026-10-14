@@ -163,6 +163,14 @@
     "abm-accounts": {
       "label": "Company list from accounts/ (ABM targets)",
       "matched_audience": null
+    },
+    "qualified-users": {
+      "label": "Companies whose website runs Qualified's widget: a company list built with ads/engine/stack.py qualified <domains.csv>, uploaded as a Matched Audience",
+      "matched_audience": null
+    },
+    "compare-page-visitors": {
+      "label": "Visited getbreakout.ai/compare/qualified-alternative in the last 90 days (Insight Tag, URL contains /compare/qualified-alternative)",
+      "matched_audience": null
     }
   }
 }

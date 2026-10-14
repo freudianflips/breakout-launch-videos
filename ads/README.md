@@ -30,7 +30,8 @@ All commands are `python3 ads/engine/ads.py ...` from the repo root. The agent's
 | [`audiences.json`](audiences.json) | LinkedIn targeting per persona (functions, seniorities, company size, titles), retargeting pools. **Hypotheses until the owner confirms them** |
 | [`scoring.json`](scoring.json) | Banger Score weights, sample-size gates, the hook-trap rule, the 15 to 25% test budget, executions per winner |
 | [`claims.json`](claims.json) | Numbers and claims approved beyond `brand.json` copy, each with its source |
-| [`designs/`](designs/README.md) | The static ad designs in the brand (verdict, slam, chat, split, screen), one runtime for every LinkedIn size |
+| [`designs/`](designs/README.md) | The static ad designs in the brand (verdict, slam, chat, split, screen, and the pattern breaks form, notice, quiet), one runtime for every LinkedIn size |
+| [`stack.json`](stack.json), `engine/stack.py` | Find the companies whose site runs a vendor's widget (Qualified so far) and write a LinkedIn company list for a Matched Audience |
 | [`engine/`](engine/) | `ads.py` (the CLI), `linkedin.py` (Marketing API client), `render.mjs` (headless Chrome), `test_ads.py` |
 | `campaigns/<campaign>/` | `BRIEF.md`, `campaign.json` (every ad and its tags), `out/` (renders, not in git), `launch/` |
 | `data/` | Ingested performance and CRM exports (not in git: they hold spend and deal data) |
@@ -66,7 +67,7 @@ All commands are `python3 ads/engine/ads.py ...` from the repo root. The agent's
 From [`CLAUDE.md`](../CLAUDE.md) and the [guidelines](../brand/GUIDELINES.md), checked by `ads.py lint`:
 
 - Every number on an ad appears in `brand/brand.json` copy or [`claims.json`](claims.json). Never invent a number, customer or claim.
-- No competitor names (the ABM exception holds only for campaigns marked `"abm": true`, quoted verbatim from the compare page).
+- No competitor names. The one exception: campaigns marked `"abm": true` may name Qualified, but only in lines that appear word for word in `claims.json` (from the compare page), never with its logo.
 - No em dashes, no fluff words, little text on the image, real product screens from `assets/screens/` only, sample conversations labelled "Illustrative example".
 - LinkedIn limits: the hook lands in the first 150 characters (the "see more" fold), headline up to 70, description up to 100, a valid CTA.
 - While `brand.json` says `"reviewed": false`, every ad is a draft and `launch --live` refuses to run.

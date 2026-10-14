@@ -1,0 +1,71 @@
+{
+  "campaign": "qualified-switch",
+  "code": "QSW",
+  "status": "draft",
+  "platform": "linkedin",
+  "idea": "Win teams running Qualified's widget: show them what they're missing and remove the reason not to switch, the contract, before the buyout offer ends on 30 November 2026.",
+  "objective": "WEBSITE_CONVERSION",
+  "landing_url": "https://getbreakout.ai/compare/qualified-alternative",
+  "cta": "REQUEST_DEMO",
+  "abm": true,
+  "budget": {
+    "daily_usd": null,
+    "test_share": 0.2,
+    "note": "Not set: on top of round 1's $100/day, or out of it? (to ask)"
+  },
+  "personas": [
+    "demand-gen",
+    "markops",
+    "cmo"
+  ],
+  "concepts": [
+    {
+      "code": "buyout",
+      "status": "proposed",
+      "name": "We'll buy out the rest of it",
+      "idea": "Remove the reason not to switch: the contract. Offer-led, with the deadline.",
+      "source": "claims.json: \"Still under contract? We'll buy out the rest of it.\", \"Up to $30,000 covered\", \"LIMITED OFFER · ENDS 30 NOVEMBER 2026\""
+    },
+    {
+      "code": "hours",
+      "status": "proposed",
+      "name": "Hours, not weeks",
+      "idea": "Go-live: <3 hours, self-serve vs 8-12 weeks. Speaks to whoever ran the implementation.",
+      "source": "claims.json: Go-live time; \"No implementation project. No admin ticket or technical handoff.\""
+    },
+    {
+      "code": "just-ask",
+      "status": "proposed",
+      "name": "Ask, don't click",
+      "idea": "The buyer's side: buttons that wait versus a question that gets answered. Unnamed: the audience recognises its own widget.",
+      "source": "\"Go ahead. Ask me stuff.\"; \"Modern demand gen teams need agents that act, not a widget that waits.\""
+    },
+    {
+      "code": "signals",
+      "status": "proposed",
+      "name": "700+ versus one",
+      "idea": "What you can see about a visitor: 700+ buying signals versus one.",
+      "source": "claims.json: \"Breakout tracks 700+ buying signals. Qualified tracks one.\""
+    },
+    {
+      "code": "tried-others",
+      "status": "proposed",
+      "name": "\"Pretty good, actually\"",
+      "idea": "Social proof written for people who already bought the other one.",
+      "source": "copy.site_h2[1]"
+    },
+    {
+      "code": "your-widget",
+      "status": "proposed",
+      "name": "Your widget, today (tier 1, 1:1)",
+      "idea": "For the biggest accounts only: their own widget as captured on their own site, next to Breakout. Built from accounts/<slug>/ and the abm-split template.",
+      "source": "accounts/<slug>/account.json widget_notes"
+    }
+  ],
+  "ads": [],
+  "audience": {
+    "matched": "qualified-users (company list from ads/engine/stack.py)",
+    "retarget": "compare-page-visitors"
+  },
+  "deadline": "2026-11-30"
+}

@@ -219,10 +219,24 @@ def ad_texts(ad):
     return out
 
 
+def norm(t):
+    t = t.replace("\u2019", "'").replace("\u2018", "'").replace("\u201c", '"').replace("\u201d", '"').replace("*", "")
+    return re.sub(r"\s+", " ", t).strip().rstrip(".").lower()
+
+
+def verbatim(line):
+    """A line naming a competitor must sit word for word inside a competitive claim (ads/claims.json)."""
+    claims = ADS / "claims.json"
+    if not claims.exists():
+        return False
+    texts = [norm(c["text"]) for c in jload(claims).get("claims", []) if c.get("competitive")]
+    return any(norm(line) in t for t in texts)
+
+
 def lint_campaign(slug, camp, quiet=False):
     errs, warns = [], []
     concepts = {c["code"]: c for c in camp.get("concepts", [])}
-    sources = {n.rstrip(".,") for t in approved_text() for n in re.findall(r"\d[\d,.]*\+?%?", t)}
+    sources = {n.rstrip(".,") for t in approved_text() for n in re.findall(r"\d[\d,.]*\+?%?(?:[xX]\b)?", t)}
     comp = [c for c in TAX["competitors"]]
     ids = set()
     if camp.get("cta") not in linkedin.CTAS:
@@ -283,13 +297,15 @@ def lint_campaign(slug, camp, quiet=False):
             for name in comp:
                 if re.search(rf"(?<![\w-]){re.escape(name)}(?![\w-])", text):
                     if camp.get("abm") and name == "Qualified":
-                        Wn(f"{where} names Qualified: only verbatim from getbreakout.ai/compare/qualified-alternative, never its logo")
+                        bad = [ln for ln in text.split("\n") if "Qualified" in ln and not verbatim(ln)]
+                        if bad:
+                            E(f"{where} names Qualified outside a verbatim line from the compare page (ads/claims.json): {bad[0]!r}")
                     else:
                         E(f"{where} names a competitor ({name}); never in a Breakout ad")
             for word in TAX["fluff"]:
                 if re.search(rf"\b{re.escape(word)}\b", text, re.I):
                     Wn(f"{where}: {word!r} is fluff; say the concrete thing")
-            for num in re.findall(r"\d[\d,.]*\+?%?", text):
+            for num in re.findall(r"\d[\d,.]*\+?%?(?:[xX]\b)?", text):
                 core = num.rstrip(".,")
                 if core not in sources and core.rstrip("+%") not in {x.rstrip("+%") for x in sources}:
                     E(f"{where}: the number {core!r} has no source (brand.json copy or ads/claims.json). Never invent a number")

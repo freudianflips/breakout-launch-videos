@@ -85,6 +85,16 @@ class Lint(unittest.TestCase):
         self.camp["ads"][0]["persona"] = "everyone"
         self.assertTrue(any("persona" in e for e in self.errors()))
 
+    def test_qualified_only_verbatim_in_abm(self):
+        self.camp["abm"] = True
+        self.camp["ads"][0]["copy"]["intro"] = "Breakout tracks 700+ buying signals. Qualified tracks one."
+        self.assertEqual(self.errors(), [])
+        self.camp["ads"][0]["copy"]["intro"] = "Qualified is slow."
+        self.assertTrue(any("verbatim" in e for e in self.errors()))
+        self.camp["abm"] = False
+        self.camp["ads"][0]["copy"]["intro"] = "Breakout tracks 700+ buying signals. Qualified tracks one."
+        self.assertTrue(any("competitor" in e for e in self.errors()))
+
     def test_em_dash(self):
         self.camp["ads"][0]["copy"]["intro"] = "Pipeline \u2014 fast."
         self.assertTrue(any("em dash" in e for e in self.errors()))

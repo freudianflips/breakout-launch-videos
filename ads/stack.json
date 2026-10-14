@@ -1,0 +1,6 @@
+{
+  "note": "What a vendor's website widget leaves in a page: script hosts and globals. stack.py looks for them in each domain's homepage to build a company list for a LinkedIn Matched Audience. Verified on 2026-10-14: kornferry.com loads js.qualified.com/qualified.js and QualifiedObject. Add a vendor only after checking its markers on a site known to run it.",
+  "vendors": {
+    "qualified": ["js.qualified.com", "QualifiedObject", "app.qualified.com"]
+  }
+}

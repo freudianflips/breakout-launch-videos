@@ -71,6 +71,23 @@
       return `<div class="ad screen lav"><div class="copy">${kicker()}${headline()}${sub()}${shape === 'wide' ? foot(false) : ''}</div>
         <div class="shot"><img id="shot" src="../../${esc(f.image)}"></div>${shape === 'wide' ? '' : foot(false)}</div>`;
     },
+    // Pattern break: a lead form with every field struck through.
+    form() {
+      const fields = f.fields || ['First name', 'Last name', 'Work email', 'Company', 'Job title', 'Phone', 'How did you hear about us?'];
+      const items = fields.map((x, i) => `<div class="fld${i === fields.length - 1 ? ' full' : ''}"><label>${esc(x)}</label><div class="box"></div></div>`).join('');
+      return `<div class="ad form light"><div class="bloom"></div><div class="copy">${kicker()}${headline()}${sub()}${shape === 'wide' ? foot(false) : ''}</div>
+        <div class="card">${items}<div class="submit">${esc(f.submit || 'Submit')}</div></div>${shape === 'wide' ? '' : foot(false)}</div>`;
+    },
+    // Pattern break: one small notification in a lot of empty space (a sample: label it).
+    notice() {
+      return `<div class="ad notice dark"><div class="corner">${f.logo === false ? '' : '<img src="../../brand/logo-on-dark.svg">'}</div>
+        <div class="note-card"><img src="../../brand/mark.svg"><div class="app">${esc(f.app || 'Breakout')}</div><div class="when">${esc(f.when || 'now')}</div><div class="msg">${mk(f.message)}</div></div>
+        ${f.caption ? `<div class="caption">${mk(f.caption)}</div>` : ''}${f.label ? `<div class="caption" style="bottom:calc(var(--u)*3);font-size:calc(var(--u)*1.7)">${esc(f.label)}</div>` : ''}</div>`;
+    },
+    // Pattern break: a near-empty violet field and one small line.
+    quiet() {
+      return `<div class="ad quiet"><div class="line">${mk(f.line || f.headline)}</div>${f.logo === false ? '' : '<div class="corner"><img src="../../brand/logo-on-dark.svg"></div>'}</div>`;
+    },
   };
 
   // Shrink a box's font until it fits its parent, from big to small.

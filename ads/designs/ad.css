@@ -89,3 +89,41 @@ body { font-family: "Manrope", sans-serif; color: var(--ink); -webkit-font-smoot
 .square .chat .copy .stage, .square .screen .copy .stage { height: calc(var(--u) * 22); }
 .tall .chat .copy .stage, .tall .screen .copy .stage { height: calc(var(--u) * 34); }
 .split .pane.today .display em { color: var(--accent-on-dark); }
+
+/* pattern breaks: they should not look like the ads around them */
+/* form: a lead form, every field struck through */
+.form .card { background: #fff; border-radius: calc(var(--u) * 2.4); box-shadow: 0 calc(var(--u) * 1.5) calc(var(--u) * 6) rgba(28, 23, 120, .14); padding: calc(var(--u) * 3.2); display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--u) * 2) calc(var(--u) * 2.4); flex: 1; min-height: 0; align-content: start; overflow: hidden; }
+.wide .form { flex-direction: row; align-items: stretch; }
+.wide .form .copy { flex: 0 0 42%; display: flex; flex-direction: column; justify-content: space-between; }
+.form .copy { display: flex; flex-direction: column; gap: calc(var(--u) * 2); }
+.form .copy .stage { flex: 0 0 auto; }
+.square .form .copy .stage { height: calc(var(--u) * 20); }
+.tall .form .copy .stage { height: calc(var(--u) * 30); }
+.wide .form .copy .stage { flex: 1; }
+.form .fld { display: flex; flex-direction: column; gap: calc(var(--u) * .8); position: relative; }
+.form .fld.full { grid-column: 1 / -1; }
+.form .fld label { font: 600 calc(var(--u) * 1.9)/1 "Manrope"; color: #3a3a44; }
+.form .fld .box { height: calc(var(--u) * 5); border: 1px solid #d9d7e3; border-radius: calc(var(--u) * 1); background: #fbfbfd; }
+.form .fld::after { content: ""; position: absolute; left: -2%; right: -2%; top: 58%; height: calc(var(--u) * .55); background: var(--accent); transform: rotate(-2.5deg); border-radius: 99px; }
+.form .submit { grid-column: 1 / -1; justify-self: start; font: 700 calc(var(--u) * 2.2)/1 "Manrope"; color: #fff; background: #b9b6c8; border-radius: calc(var(--u) * 1); padding: calc(var(--u) * 1.6) calc(var(--u) * 3); }
+
+/* notice: one small notification in a lot of empty space */
+.notice { align-items: center; justify-content: center; }
+.notice .note-card { width: min(78%, calc(var(--u) * 78)); background: rgba(255, 255, 255, .92); border-radius: calc(var(--u) * 3); padding: calc(var(--u) * 2.6) calc(var(--u) * 3); display: grid; grid-template-columns: auto 1fr auto; gap: calc(var(--u) * .6) calc(var(--u) * 2); box-shadow: 0 calc(var(--u) * 1.5) calc(var(--u) * 6) rgba(0, 0, 0, .25); color: #111; }
+.notice .note-card img { grid-row: 1 / span 2; width: calc(var(--u) * 7); height: calc(var(--u) * 7); border-radius: calc(var(--u) * 1.6); }
+.notice .note-card .app { font: 700 calc(var(--u) * 2.6)/1.2 "Manrope"; align-self: end; }
+.notice .note-card .when { font: 500 calc(var(--u) * 2.1)/1.2 "Manrope"; color: #777; align-self: end; }
+.notice .note-card .msg { grid-column: 2 / -1; font: 500 calc(var(--u) * 2.6)/1.35 "Manrope"; }
+.notice .caption { position: absolute; left: 0; right: 0; bottom: calc(var(--u) * 7); text-align: center; font: 500 calc(var(--u) * 2.4)/1.3 "Manrope"; color: rgba(250, 250, 250, .72); }
+.notice .caption em { font-style: normal; color: var(--accent-on-dark); }
+.notice .corner { position: absolute; left: calc(var(--u) * 7); top: calc(var(--u) * 7); }
+.notice .corner img { height: calc(var(--u) * 4); }
+
+/* quiet: a near-empty violet field and one small line */
+.quiet { background: var(--accent); color: #fff; align-items: center; justify-content: center; text-align: center; }
+.quiet .line { font: 600 calc(var(--u) * 3.1)/1.45 "Manrope"; letter-spacing: -0.01em; max-width: 70%; }
+.quiet .line em { font-style: normal; color: var(--blush); }
+.quiet .corner { position: absolute; bottom: calc(var(--u) * 6); left: 0; right: 0; display: flex; justify-content: center; }
+.quiet .corner img { height: calc(var(--u) * 3.6); opacity: .9; }
+.notice .note-card .msg em { font-style: normal; font-weight: 800; color: var(--accent); }
+.quiet .line em { font-weight: 800; }

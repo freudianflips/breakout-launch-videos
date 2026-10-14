@@ -1,5 +1,5 @@
 {
-  "note": "Numbers and claims approved for ads beyond brand/brand.json copy. Each needs a source the owner can point to (a page, a report, a signed case study) and the date it was checked. The linter allows a number on an ad only if it appears here or in brand.json copy.",
+  "note": "Numbers and claims approved for ads beyond brand/brand.json copy. Each needs a source the owner can point to (a page, a report, a signed case study) and the date it was checked. The linter allows a number on an ad only if it appears here or in brand.json copy. Claims marked competitive name Qualified; an ad may use them only in a campaign marked \"abm\": true, word for word (curly quotes and line breaks aside), never with Qualified's logo, and only while the source page still says them. The buyout offer ends 30 November 2026.",
   "claims": [
     {
       "text": "Identify ready-to-buy visitors before they fill a form",
@@ -57,6 +57,114 @@
       "text": "Signals: for teams just getting started with website deanonymization. Starts at $500/mo. No credit card required.",
       "source": "https://getbreakout.ai/pricing",
       "checked": "2026-10-14"
+    },
+    {
+      "text": "The #1 Qualified alternative",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Qualified runs on chat-era architecture that needs a CRM, an admin, and a hand-raise event.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Breakout runs signals, engagement, follow-up, and CRM hygiene as four always-on agents. Goes live in <3 hrs.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Five reasons marketing teams are leaving Qualified for Breakout",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Breakout tracks 700+ buying signals. Qualified tracks one.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Modern demand gen teams need agents that act, not a widget that waits.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Teams are paying top-of-market rates and getting a fraction of it back.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "With Breakout, what you pay for is what you're actually running.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Go-live time: <3 hours, self-serve (Breakout); 8-12 weeks, enterprise sales only (Qualified)",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "LIMITED OFFER · ENDS 30 NOVEMBER 2026",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Still under contract? We'll buy out the rest of it.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Switch to Breakout by November 30, 2026 and we'll cover what's left on your Qualified contract. You stop paying for the widget the day you go live on Breakout.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Send us your contract. One document is all we need. Reviewed in two business days.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "We credit the remainder. Up to $30,000 covered. No costly overlap between platforms.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Go live in 3 hours. No implementation project. No admin ticket or technical handoff.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Stop paying for Qualified the day you switch",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Transparent pricing, published. Qualified requires a demo, a quote, and an annual contract before you see a number.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
+    },
+    {
+      "text": "Platform: from $2,000/month (Breakout); quote-based (Qualified)",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-14",
+      "competitive": true
     }
   ],
   "not_usable": [
