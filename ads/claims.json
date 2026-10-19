@@ -237,6 +237,30 @@
       "source": "https://getbreakout.ai/compare/qualified-alternative",
       "checked": "2026-10-19",
       "competitive": false
+    },
+    {
+      "text": "Qualified prioritizes accounts, then hands off to your own sequencer to actually send",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-19",
+      "competitive": true
+    },
+    {
+      "text": "Build the audience (CRM, website visitors, TAM list), filter, enrich, personalize and send 1:1 personalized emails",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-19",
+      "competitive": false
+    },
+    {
+      "text": "No assignment, replies have to be manually assigned to reps",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-19",
+      "competitive": true
+    },
+    {
+      "text": "Assign outbound and nurture emails based on account ownership or round-robin",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-19",
+      "competitive": false
     }
   ],
   "not_usable": [

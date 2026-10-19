@@ -220,6 +220,13 @@
       "idea": "Email volume too restrictive (the owner's brief, 2026-10-19): a ration book of email sends, nearly every coupon used. Answered with the compare page's own line.",
       "awareness": "problem",
       "source": "claims.json: \"With Breakout, what you pay for is what you're actually running.\""
+    },
+    {
+      "code": "email-sends",
+      "name": "Who sends the email",
+      "idea": "Qualified's email gap, said plainly (the owner's ask, 2026-10-19): it hands off to your own sequencer; Breakout sends 1:1 personalized emails.",
+      "awareness": "product",
+      "source": "compare page email rows (claims.json, checked 2026-10-19)"
     }
   ],
   "ads": [
@@ -1245,7 +1252,7 @@
     },
     {
       "id": "QSW-041",
-      "status": "approved",
+      "status": "retired",
       "round": 1,
       "concept": "email-ration",
       "angle": "pricing",
@@ -1266,6 +1273,32 @@
           "coupons": 12,
           "left": 1,
           "line": "With Breakout, what you pay for is *what you're actually running.*"
+        }
+      },
+      "retired_note": "Owner, 2026-10-19: \"this is bad... Ration book isn't the best way to say it\""
+    },
+    {
+      "id": "QSW-042",
+      "status": "approved",
+      "round": 1,
+      "concept": "email-sends",
+      "angle": "follow-up",
+      "persona": "practitioner",
+      "awareness": "product",
+      "format": "img-1x1",
+      "hook": "contrast",
+      "copy": {
+        "intro": "Qualified prioritizes accounts, then hands off to your own sequencer to actually send.\nBreakout builds the audience, filters, enriches, personalizes and sends 1:1 personalized emails.",
+        "headline": "Breakout sends 1:1 personalized emails."
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left_label": "Qualified",
+          "left": "Hands off to your own *sequencer.*",
+          "right_label": "Breakout",
+          "right": "Sends 1:1 personalized *emails.*",
+          "source": "Source: getbreakout.ai/compare/qualified-alternative"
         }
       }
     }

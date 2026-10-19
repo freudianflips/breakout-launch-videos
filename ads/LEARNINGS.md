@@ -17,6 +17,8 @@ Starting beliefs, borrowed from Wispr Flow's playbook and not yet tested on Brea
 
 ## Log
 
+- 2026-10-19: For a product callout, the owner wants it plain: "clearly and simply call out" the weakness, no metaphor (the ration book was rejected). Objects and wordplay suit awareness ads; a capability gap gets a clear, named, sourced split (QSW-042). LinkedIn: a draft ad cannot be archived before review, only deleted (`status --delete`).
+
 - 2026-10-19: Owner rejected 6 question-led pain-point ads ("These are terrible. Remove these."): a question as the headline with a quoted answer reads as straight B2B. Kept only email volume, redone as an object (a ration book, QSW-041). The owner's taste so far: everyday objects and wordplay, yes; questions, comparisons and feature lists, no.
 
 - 2026-10-14: First ads loaded over the API (QSW-033, QSW-034, the demo gift, clicks to the home page). What LinkedIn's API actually does on Breakout's account: the Advertising API token alone uploads images and creates ads in one call (createInline), so the Community Management app is not needed; a new ad cannot start PAUSED before its review (DRAFT works); Campaign Manager stores single-image ads as an "article" (title, description, thumbnail, source); uploads need `Content-Type: application/octet-stream`.

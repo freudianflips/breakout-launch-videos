@@ -10,7 +10,7 @@
   python3 ads/engine/ads.py launch <campaign> [--live]               create DRAFT campaigns and PAUSED ads on LinkedIn (needs the API)
   python3 ads/engine/ads.py verify <campaign> [--round N]           read Campaign Manager (API) and check it against the kit
   python3 ads/engine/ads.py sync <campaign> --round N [--live]       add a round's approved ads to the live campaigns, PAUSED
-  python3 ads/engine/ads.py status <campaign> <ids> --pause|--activate|--archive [--live]   change ads' status (activate only on the owner's yes)
+  python3 ads/engine/ads.py status <campaign> <ids> --pause|--activate|--archive|--delete [--live]   change ads' status (activate only on the owner's yes)
   python3 ads/engine/ads.py probe [<campaign>]                       which LinkedIn permissions the token has (creates nothing)
   python3 ads/engine/ads.py audience resolve <facet> <query> [--live]   look up targeting URNs (titles, industries, skills)
   python3 ads/engine/ads.py ingest linkedin <export.csv>             Campaign Manager ad performance export
@@ -858,14 +858,21 @@ def cmd_status(a):
     """Pause, archive or activate ads by id, using launch/launched.json (written by verify and sync)."""
     account, _ = _account_and_org(a)
     known = jload(CAMPAIGNS / a.campaign / "launch" / "launched.json")
-    status = "ACTIVE" if a.activate else "ARCHIVED" if a.archive else "PAUSED"
+    status = "ACTIVE" if a.activate else "ARCHIVED" if a.archive else "DELETE" if a.delete else "PAUSED"
     cl = linkedin.Client(live=a.live)
     for ad_id in a.ad_ids:
         x = known["ads"].get(ad_id)
         if not x:
             print(f"skip   {ad_id}: not in launched.json (run verify first)")
             continue
-        cl.set_creative_status(account, str(x["creative"]).split(":")[-1], status)
+        cid = str(x["creative"]).split(":")[-1]
+        if status == "DELETE":
+            cl.delete_creative(account, cid)
+            known["ads"].pop(ad_id, None)
+            if a.live:
+                jsave(CAMPAIGNS / a.campaign / "launch" / "launched.json", known)
+        else:
+            cl.set_creative_status(account, cid, status)
         print(f"{'set' if a.live else 'dry run'}  {ad_id} -> {status}")
 
 
@@ -1303,7 +1310,7 @@ def main(argv=None):
     s = sub.add_parser("verify"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--account"); s.set_defaults(fn=cmd_verify)
     s = sub.add_parser("sync"); s.add_argument("campaign"); s.add_argument("--round", type=int, required=True); s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.add_argument("--org"); s.set_defaults(fn=cmd_sync)
     s = sub.add_parser("status"); s.add_argument("campaign"); s.add_argument("ad_ids", nargs="+"); g = s.add_mutually_exclusive_group(required=True)
-    g.add_argument("--pause", action="store_true"); g.add_argument("--activate", action="store_true"); g.add_argument("--archive", action="store_true")
+    g.add_argument("--pause", action="store_true"); g.add_argument("--activate", action="store_true"); g.add_argument("--archive", action="store_true"); g.add_argument("--delete", action="store_true")
     s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.set_defaults(fn=cmd_status)
     s = sub.add_parser("probe"); s.add_argument("campaign", nargs="?"); s.add_argument("--account"); s.set_defaults(fn=cmd_probe)
     s = sub.add_parser("audience"); s.add_argument("action", choices=["resolve"]); s.add_argument("facet"); s.add_argument("query"); s.add_argument("--live", action="store_true"); s.set_defaults(fn=cmd_audience)

@@ -155,6 +155,11 @@ class Client:
         return self.call("POST", f"/adAccounts/{account}/creatives/{urn}", {"patch": {"$set": {"intendedStatus": status}}},
                          headers={"X-RestLi-Method": "PARTIAL_UPDATE"})
 
+    def delete_creative(self, account, creative_id):
+        """Only a DRAFT ad can be deleted (LinkedIn refuses to archive one before its review)."""
+        urn = urllib.parse.quote(f"urn:li:sponsoredCreative:{creative_id}", safe="")
+        return self.call("DELETE", f"/adAccounts/{account}/creatives/{urn}")
+
     # ---------------------------------------------------------------- read
 
     def _pages(self, path, query):
