@@ -215,46 +215,11 @@
       "source": "the owner, 2026-10-14 (claims.json)"
     },
     {
-      "code": "admin-queue",
-      "name": "Waiting on the admin",
-      "idea": "A support ticket that never closes: changing one answer needs someone else.",
+      "code": "email-ration",
+      "name": "The ration book",
+      "idea": "Email volume too restrictive (the owner's brief, 2026-10-19): a ration book of email sends, nearly every coupon used. Answered with the compare page's own line.",
       "awareness": "problem",
-      "source": "compare-page lines (claims.json, checked 2026-10-19); pain-point questions in the owner's direction, 2026-10-19"
-    },
-    {
-      "code": "feedback-loops",
-      "name": "Feedback sessions",
-      "idea": "How many sessions it takes to get one answer right, against a few instructions.",
-      "awareness": "problem",
-      "source": "compare-page lines (claims.json, checked 2026-10-19); pain-point questions in the owner's direction, 2026-10-19"
-    },
-    {
-      "code": "rationed",
-      "name": "Rationed sends",
-      "idea": "Sends rationed to manage the bill, against paying for what you run.",
-      "awareness": "problem",
-      "source": "compare-page lines (claims.json, checked 2026-10-19); pain-point questions in the owner's direction, 2026-10-19"
-    },
-    {
-      "code": "overpaying",
-      "name": "Overpaying",
-      "idea": "Top-of-market rates for a fraction back: the bloated-tool question.",
-      "awareness": "problem",
-      "source": "compare-page lines (claims.json, checked 2026-10-19); pain-point questions in the owner's direction, 2026-10-19"
-    },
-    {
-      "code": "roi-quiz",
-      "name": "The renewal question",
-      "idea": "What did the widget book? A quiz the renewal will ask.",
-      "awareness": "problem",
-      "source": "compare-page lines (claims.json, checked 2026-10-19); pain-point questions in the owner's direction, 2026-10-19"
-    },
-    {
-      "code": "new-csm",
-      "name": "Your new CSM",
-      "idea": "Accounts cycle through CSMs who don't know the deployment, against working with the team that builds it.",
-      "awareness": "problem",
-      "source": "compare-page lines (claims.json, checked 2026-10-19); pain-point questions in the owner's direction, 2026-10-19"
+      "source": "claims.json: \"With Breakout, what you pay for is what you're actually running.\""
     }
   ],
   "ads": [
@@ -1279,173 +1244,28 @@
       "url": "https://getbreakout.ai/"
     },
     {
-      "id": "QSW-035",
-      "status": "draft",
-      "round": 2,
-      "concept": "admin-queue",
-      "angle": "go-live",
-      "persona": "practitioner",
-      "awareness": "problem",
-      "format": "img-1x1",
-      "hook": "question",
-      "copy": {
-        "intro": "Still waiting on an admin to change one answer?\nPoint the agent to your knowledge base and give it a few instructions to stand up an AI SDR. No admin ticket or technical handoff.",
-        "headline": "<3 hours, self-serve."
-      },
-      "design": {
-        "template": "ticket",
-        "fields": {
-          "headline": "Still waiting to change *one answer?*",
-          "status": "Waiting on admin",
-          "title": "Update the chat's answer about pricing",
-          "rows": [
-            [
-              "Requested by",
-              "Marketing"
-            ],
-            [
-              "Assigned to",
-              "The admin"
-            ],
-            [
-              "Opened",
-              "Last Tuesday"
-            ],
-            [
-              "Updated",
-              "Not yet"
-            ]
-          ],
-          "tag": "Request"
-        }
-      }
-    },
-    {
-      "id": "QSW-036",
-      "status": "draft",
-      "round": 2,
-      "concept": "feedback-loops",
-      "angle": "buyer-experience",
-      "persona": "practitioner",
-      "awareness": "problem",
-      "format": "img-1x1",
-      "hook": "question",
-      "copy": {
-        "intro": "How many feedback sessions does it take to get one answer right?\nWith Breakout: point the agent to your knowledge base and give it a few instructions to stand up an AI SDR.",
-        "headline": "Go ahead. Ask me stuff."
-      },
-      "design": {
-        "template": "verdict",
-        "fields": {
-          "kicker": "Session one. Session two. Session three.",
-          "headline": "How many sessions for *one right answer?*",
-          "sub": "Breakout: point the agent to your knowledge base and give it a few instructions."
-        }
-      }
-    },
-    {
-      "id": "QSW-037",
-      "status": "draft",
-      "round": 2,
-      "concept": "rationed",
+      "id": "QSW-041",
+      "status": "approved",
+      "round": 1,
+      "concept": "email-ration",
       "angle": "pricing",
       "persona": "practitioner",
       "awareness": "problem",
-      "format": "img-4x5",
-      "hook": "question",
+      "format": "img-1x1",
+      "hook": "pattern-break",
       "copy": {
-        "intro": "Rationing email sends to manage the bill?\nWith Breakout, what you pay for is what you're actually running.",
+        "intro": "Email volume too restrictive?\nWith Breakout, what you pay for is what you're actually running.",
         "headline": "What you pay for is what you run."
       },
       "design": {
-        "template": "slam",
+        "template": "ration",
         "fields": {
-          "index": "getbreakout.ai",
-          "kicker": "sends this month",
-          "lines": [
-            "Rationing",
-            "your sends",
-            "*again?*"
-          ],
-          "sub": "With Breakout, what you pay for is what you're actually running."
-        }
-      }
-    },
-    {
-      "id": "QSW-038",
-      "status": "draft",
-      "round": 2,
-      "concept": "overpaying",
-      "angle": "pricing",
-      "persona": "cmo",
-      "awareness": "problem",
-      "format": "img-1x1",
-      "hook": "question",
-      "copy": {
-        "intro": "Overpaying for a bloated tool?\nFeatures bought and never used. Results that don't justify the line item at renewal. With Breakout, what you pay for is what you're actually running.",
-        "headline": "From $2,000/month. Published."
-      },
-      "design": {
-        "template": "verdict",
-        "fields": {
-          "theme": "dark",
-          "headline": "Paying top-of-market for *a fraction back?*",
-          "cta": "See the pricing"
-        }
-      }
-    },
-    {
-      "id": "QSW-039",
-      "status": "draft",
-      "round": 2,
-      "concept": "roi-quiz",
-      "angle": "outcome",
-      "persona": "cmo",
-      "awareness": "problem",
-      "format": "img-1x1",
-      "hook": "question",
-      "copy": {
-        "intro": "Ask it before the renewal does.\nBreakout engages them in real time: answers questions, shares content, qualifies and books meetings.",
-        "headline": "Pageview to pipeline."
-      },
-      "design": {
-        "template": "quiz",
-        "fields": {
-          "index": "Renewal review",
-          "question": "What did your website chat *book* last quarter?",
-          "options": [
-            "A lot",
-            "A few",
-            "We'd have to check",
-            "Ask the admin"
-          ],
-          "answer": 2
-        }
-      }
-    },
-    {
-      "id": "QSW-040",
-      "status": "draft",
-      "round": 2,
-      "concept": "new-csm",
-      "angle": "vendor",
-      "persona": "cmo",
-      "awareness": "problem",
-      "format": "img-4x5",
-      "hook": "pov",
-      "copy": {
-        "intro": "Met your new CSM yet?\nBreakout ships weekly and you work directly with the team that builds it.",
-        "headline": "Work with the team that builds it."
-      },
-      "design": {
-        "template": "letter",
-        "fields": {
-          "salutation": "Hi there,",
-          "body": [
-            "I'm your new CSM.",
-            "Could you walk me through *your deployment?*"
-          ],
-          "signoff": "Best,\nyour new CSM"
+          "title": "RATION BOOK",
+          "subtitle": "Email sends",
+          "coupon": "ONE SEND",
+          "coupons": 12,
+          "left": 1,
+          "line": "With Breakout, what you pay for is *what you're actually running.*"
         }
       }
     }

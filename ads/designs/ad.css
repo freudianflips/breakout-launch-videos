@@ -354,3 +354,21 @@ body { font-family: "Manrope", sans-serif; color: var(--ink); -webkit-font-smoot
 .ticket .t { font: 700 calc(var(--u) * 3.6)/1.2 "Manrope"; color: #111; margin: calc(var(--u) * .8) 0; }
 .ticket .row { display: grid; grid-template-columns: 34% 1fr; font: 500 calc(var(--u) * 2.6)/1.3 "Manrope"; padding: calc(var(--u) * .9) 0; border-bottom: 1px dashed #eceaf2; }
 .ticket .row b { font-weight: 500; color: #8a8795; }
+
+/* ration book: a coupon booklet, nearly every coupon used */
+.ration .book { width: 76%; margin-top: -8%; background: #f3ead2; color: #3b2f1c; padding: calc(var(--u) * 4.4) calc(var(--u) * 4.4) calc(var(--u) * 3.6); box-shadow: 0 calc(var(--u) * 1.6) calc(var(--u) * 6) rgba(20, 11, 60, .28); transform: rotate(-2deg); }
+.ration .bh { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #3b2f1c; padding-bottom: calc(var(--u) * 1.4); margin-bottom: calc(var(--u) * 2.4); }
+.ration .bt { font: 800 calc(var(--u) * 5)/1 "Manrope"; letter-spacing: .06em; }
+.ration .bs { font: 400 calc(var(--u) * 2)/1 "Fragment Mono"; text-transform: uppercase; letter-spacing: .06em; }
+.ration .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(var(--u) * 1.2); }
+.ration .cp { aspect-ratio: 1.2; border: 2px dashed #8f7d5a; display: grid; place-items: center; font: 700 calc(var(--u) * 1.9)/1.1 "Fragment Mono"; text-align: center; position: relative; }
+.ration .cp.gone { border-color: #cbbd9c; color: transparent; background: repeating-linear-gradient(-45deg, transparent 0 6px, rgba(143, 125, 90, .12) 6px 8px); }
+.ration .cp.used { color: #a99876; }
+.ration .cp.used::after { content: "USED"; position: absolute; font: 800 calc(var(--u) * 2.2)/1 "Manrope"; color: var(--accent); border: 2px solid var(--accent); padding: 2px 6px; transform: rotate(-14deg); opacity: .85; }
+.ration .cp.left { background: #fffaf0; border-color: #3b2f1c; }
+.ration .line { position: absolute; left: calc(var(--u) * 7); right: calc(var(--u) * 7); top: 76%; text-align: center; font-family: "New Kansas", "Fraunces", serif; font-weight: 340; font-size: calc(var(--u) * 4.4); line-height: 1.1; letter-spacing: -0.02em; color: var(--ink); }
+.ration .line em { color: var(--accent); }
+.ration .book { margin-top: -18%; width: 72%; }
+.ration .line { top: 77%; }
+.ration .cp.used { color: rgba(169, 152, 118, .35); }
+.ration .cp.left { font-size: calc(var(--u) * 2.2); box-shadow: 0 0 0 calc(var(--u) * .5) var(--accent); border-style: solid; }

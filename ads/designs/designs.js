@@ -164,6 +164,15 @@
       return `<div class="ad ticket lav"><div class="copy">${kicker()}${headline()}</div>
         <div class="card"><div class="hd"><span>${esc(f.tag || 'Request')}</span><span class="pill">${esc(f.status || 'Waiting')}</span></div><div class="t">${esc(f.title)}</div>${rows}</div>${foot(false)}</div>`;
     },
+    // Conceptual: a ration book of coupons; all but `left` are used or torn out.
+    ration() {
+      const n = f.coupons || 12, left = f.left ?? 1;
+      const cps = Array.from({ length: n }, (_, i) => {
+        const cls = i >= n - left ? 'left' : i % 3 === 1 ? 'gone' : 'used';
+        return `<div class="cp ${cls}">${esc(f.coupon || 'ONE')}</div>`;
+      }).join('');
+      return `<div class="ad ration objbg lav"><div class="book"><div class="bh"><span class="bt">${esc(f.title)}</span><span class="bs">${esc(f.subtitle || '')}</span></div><div class="grid">${cps}</div></div>${f.line ? `<div class="line">${mk(f.line)}</div>` : ''}${foot(false)}</div>`;
+    },
     // Pattern break: a lead form with every field struck through.
     form() {
       const fields = f.fields || ['First name', 'Last name', 'Work email', 'Company', 'Job title', 'Phone', 'How did you hear about us?'];
