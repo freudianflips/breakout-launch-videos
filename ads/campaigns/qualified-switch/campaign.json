@@ -1312,7 +1312,7 @@
     },
     {
       "id": "QSW-043",
-      "status": "approved",
+      "status": "retired",
       "round": 1,
       "concept": "never-raised",
       "angle": "follow-up",
@@ -1333,7 +1333,8 @@
           "right_label": "Breakout",
           "right": "Emails visitors who *never did.*"
         }
-      }
+      },
+      "retired_note": "Owner, 2026-10-19: \"Remove this creative. Doesn't make sense.\""
     }
   ],
   "deadline": "2026-11-30",
