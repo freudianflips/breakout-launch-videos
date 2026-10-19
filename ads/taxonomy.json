@@ -16,7 +16,8 @@
     "signals": "What you can see about a visitor and account: signals, people, not just the account",
     "pricing": "Published pricing against quote-first buying",
     "outcome": "Meetings booked, not leads qualified: the outcome, not the step before it",
-    "incentive": "A gift for taking the demo: lowers the cost of the first meeting"
+    "incentive": "A gift for taking the demo: lowers the cost of the first meeting",
+    "vendor": "Who builds and supports it: shipping weekly, working with the builders"
   },
   "personas": {
     "demand-gen": "Head of demand gen or growth marketing: owns the website's conversion and the MQL to meeting number",

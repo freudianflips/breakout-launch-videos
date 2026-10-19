@@ -201,6 +201,42 @@
       "source": "the owner, 2026-10-14",
       "checked": "2026-10-14",
       "note": "PENDING: confirm the product's exact name, who qualifies, the end date and where the terms live before the ads run. Name the gift in text only; never Apple's logo or product photography."
+    },
+    {
+      "text": "Heavily throttled feature-sets despite the high cost",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-19",
+      "competitive": true
+    },
+    {
+      "text": "Limited AI features means that Qualified hands work back to your team",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-19",
+      "competitive": true
+    },
+    {
+      "text": "Yes, point the agent to the knowledge base but getting responses right requires multiple feedback sessions",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-19",
+      "competitive": true
+    },
+    {
+      "text": "Point the agent to your knowledge base and give it a few instructions to stand up an AI SDR",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-19",
+      "competitive": false
+    },
+    {
+      "text": "After an acquisition, engineering attention shifts to integration work, roadmap items slip a quarter at a time, and accounts cycle through CSMs who don't know the deployment.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-19",
+      "competitive": true
+    },
+    {
+      "text": "Breakout ships weekly and you work directly with the team that builds it.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-19",
+      "competitive": false
     }
   ],
   "not_usable": [

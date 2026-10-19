@@ -343,3 +343,14 @@ body { font-family: "Manrope", sans-serif; color: var(--ink); -webkit-font-smoot
 .gift .terms { position: absolute; left: 0; right: 0; bottom: calc(var(--u) * 2.2); text-align: center; font: 400 calc(var(--u) * 1.7)/1 "Fragment Mono"; color: rgba(255, 255, 255, .75); }
 .gift .string { height: 34%; left: 49.4%; transform: none; }
 .gift .terms { left: auto; right: calc(var(--u) * 6); bottom: calc(var(--u) * 5.6); text-align: right; max-width: 52%; line-height: 1.4; }
+
+/* ticket: a generic support request (no helpdesk's UI) */
+.ticket .copy { display: flex; flex-direction: column; gap: calc(var(--u) * 2); }
+.square .ticket .copy .stage { height: calc(var(--u) * 22); flex: 0 0 auto; }
+.tall .ticket .copy .stage { height: calc(var(--u) * 30); flex: 0 0 auto; }
+.ticket .card { flex: 1; min-height: 0; background: #fff; border-radius: calc(var(--u) * 2); box-shadow: 0 calc(var(--u) * 1.5) calc(var(--u) * 6) rgba(20, 11, 60, .14); padding: calc(var(--u) * 3.4) calc(var(--u) * 4); display: flex; flex-direction: column; gap: calc(var(--u) * 1.2); }
+.ticket .hd { display: flex; justify-content: space-between; align-items: center; font: 400 calc(var(--u) * 1.9)/1 "Fragment Mono"; color: #8a8795; text-transform: uppercase; letter-spacing: .08em; padding-bottom: calc(var(--u) * 1.4); border-bottom: 1px solid #eceaf2; }
+.ticket .pill { font: 700 calc(var(--u) * 2.1)/1 "Manrope"; text-transform: none; letter-spacing: 0; color: #8a5a00; background: #fff1d6; padding: calc(var(--u) * 1) calc(var(--u) * 1.8); border-radius: 999px; }
+.ticket .t { font: 700 calc(var(--u) * 3.6)/1.2 "Manrope"; color: #111; margin: calc(var(--u) * .8) 0; }
+.ticket .row { display: grid; grid-template-columns: 34% 1fr; font: 500 calc(var(--u) * 2.6)/1.3 "Manrope"; padding: calc(var(--u) * .9) 0; border-bottom: 1px dashed #eceaf2; }
+.ticket .row b { font-weight: 500; color: #8a8795; }

@@ -158,6 +158,12 @@
       const lines = (f.lines || []).map(([k, v]) => `<div class="ln"><b>${esc(k)}</b><span>${mk(v)}</span></div>`).join('');
       return `<div class="ad gift objbg violet"><div class="string"></div><div class="tag"><span class="hole"></span>${lines}<div class="prize">${mk(f.prize)}</div></div>${foot(true)}${f.terms ? `<div class="terms">${esc(f.terms)}</div>` : ''}</div>`;
     },
+    // Conceptual: a generic support ticket, waiting. rows: [label, value]
+    ticket() {
+      const rows = (f.rows || []).map(([k, v]) => `<div class="row"><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join('');
+      return `<div class="ad ticket lav"><div class="copy">${kicker()}${headline()}</div>
+        <div class="card"><div class="hd"><span>${esc(f.tag || 'Request')}</span><span class="pill">${esc(f.status || 'Waiting')}</span></div><div class="t">${esc(f.title)}</div>${rows}</div>${foot(false)}</div>`;
+    },
     // Pattern break: a lead form with every field struck through.
     form() {
       const fields = f.fields || ['First name', 'Last name', 'Work email', 'Company', 'Job title', 'Phone', 'How did you hear about us?'];
