@@ -227,6 +227,13 @@
       "idea": "Qualified's email gap, said plainly (the owner's ask, 2026-10-19): it hands off to your own sequencer; Breakout sends 1:1 personalized emails.",
       "awareness": "product",
       "source": "compare page email rows (claims.json, checked 2026-10-19)"
+    },
+    {
+      "code": "never-raised",
+      "name": "Never raised a hand",
+      "idea": "Qualified's emails wait for a hand-raise and are generic; Breakout emails the identified visitors who never raised a hand, each email written from their own signals (the owner, 2026-10-19).",
+      "awareness": "product",
+      "source": "the owner, 2026-10-19; compare page: \"needs a CRM, an admin, and a hand-raise event\""
     }
   ],
   "ads": [
@@ -1279,7 +1286,7 @@
     },
     {
       "id": "QSW-042",
-      "status": "approved",
+      "status": "retired",
       "round": 1,
       "concept": "email-sends",
       "angle": "follow-up",
@@ -1299,6 +1306,32 @@
           "right_label": "Breakout",
           "right": "Sends 1:1 personalized *emails.*",
           "source": "Source: getbreakout.ai/compare/qualified-alternative"
+        }
+      },
+      "retired_note": "Owner, 2026-10-19: \"this creative doesn't make sense. Breakout also hands off to sequencer.\""
+    },
+    {
+      "id": "QSW-043",
+      "status": "approved",
+      "round": 1,
+      "concept": "never-raised",
+      "angle": "follow-up",
+      "persona": "practitioner",
+      "awareness": "product",
+      "format": "img-1x1",
+      "hook": "contrast",
+      "copy": {
+        "intro": "Qualified runs on chat-era architecture that needs a CRM, an admin, and a hand-raise event.\nBreakout emails the visitors who never raised a hand, and writes each email from that visitor's own signals.",
+        "headline": "Email the visitors who never raised a hand.",
+        "description": "Each email written from their own signals."
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left_label": "Chat-era widget",
+          "left": "Emails people who *raised a hand.*",
+          "right_label": "Breakout",
+          "right": "Emails visitors who *never did.*"
         }
       }
     }

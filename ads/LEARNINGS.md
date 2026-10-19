@@ -17,6 +17,8 @@ Starting beliefs, borrowed from Wispr Flow's playbook and not yet tested on Brea
 
 ## Log
 
+- 2026-10-19: A compare-page line can be true on the page and still wrong as an ad: the email rows (Qualified hands off to a sequencer, Breakout sends) are not a real difference ("Breakout also hands off to sequencer"). Before building a product contrast, confirm with the owner that the gap is real; claims.json now has a do_not_use list. The real email gaps (owner): personalization from each visitor's signals, and emailing visitors who never raised a hand (QSW-043).
+
 - 2026-10-19: For a product callout, the owner wants it plain: "clearly and simply call out" the weakness, no metaphor (the ration book was rejected). Objects and wordplay suit awareness ads; a capability gap gets a clear, named, sourced split (QSW-042). LinkedIn: a draft ad cannot be archived before review, only deleted (`status --delete`).
 
 - 2026-10-19: Owner rejected 6 question-led pain-point ads ("These are terrible. Remove these."): a question as the headline with a quoted answer reads as straight B2B. Kept only email volume, redone as an object (a ration book, QSW-041). The owner's taste so far: everyday objects and wordplay, yes; questions, comparisons and feature lists, no.

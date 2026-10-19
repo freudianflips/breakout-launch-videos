@@ -239,18 +239,6 @@
       "competitive": false
     },
     {
-      "text": "Qualified prioritizes accounts, then hands off to your own sequencer to actually send",
-      "source": "https://getbreakout.ai/compare/qualified-alternative",
-      "checked": "2026-10-19",
-      "competitive": true
-    },
-    {
-      "text": "Build the audience (CRM, website visitors, TAM list), filter, enrich, personalize and send 1:1 personalized emails",
-      "source": "https://getbreakout.ai/compare/qualified-alternative",
-      "checked": "2026-10-19",
-      "competitive": false
-    },
-    {
       "text": "No assignment, replies have to be manually assigned to reps",
       "source": "https://getbreakout.ai/compare/qualified-alternative",
       "checked": "2026-10-19",
@@ -261,9 +249,25 @@
       "source": "https://getbreakout.ai/compare/qualified-alternative",
       "checked": "2026-10-19",
       "competitive": false
+    },
+    {
+      "text": "Breakout emails visitors it identified who never filled a form or raised a hand.",
+      "source": "the owner, 2026-10-19",
+      "checked": "2026-10-19"
+    },
+    {
+      "text": "Breakout writes each email from that visitor's own signals.",
+      "source": "the owner, 2026-10-19",
+      "checked": "2026-10-19"
     }
   ],
   "not_usable": [
     "The Identify page's counters (Companies Identified Daily, Identification Accuracy, Setup Time) render as 0 in the page source: do not quote them until the real figures are confirmed."
+  ],
+  "do_not_use": [
+    {
+      "text": "The compare page's email rows (Qualified hands off to your own sequencer; Breakout sends 1:1 personalized emails)",
+      "why": "Owner, 2026-10-19: \"Breakout also hands off to sequencer.\" The contrast is not a real difference. The public compare page still says it: worth fixing there too."
+    }
   ]
 }
