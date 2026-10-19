@@ -9,9 +9,14 @@
   "cta": "REQUEST_DEMO",
   "abm": true,
   "budget": {
-    "daily_usd": null,
+    "daily_usd": 100,
     "test_share": 0.2,
-    "note": "Not set yet: on top of round 1's $100/day, or out of it? Suggested $50/day, $25 per campaign."
+    "note": "Not set yet: on top of round 1's $100/day, or out of it? Suggested $50/day, $25 per campaign.",
+    "campaigns": {
+      "QSW | S1 need | practitioner": 50,
+      "QSW | S1 why change | cmo": 25,
+      "QSW | S3 buyout | cmo": 25
+    }
   },
   "personas": [
     "practitioner",
@@ -315,7 +320,7 @@
     {
       "id": "QSW-004",
       "status": "approved",
-      "round": "always",
+      "round": "champion",
       "concept": "buyout",
       "angle": "contract",
       "persona": "practitioner",
@@ -336,12 +341,13 @@
           "cta": "Up to $30,000 covered"
         }
       },
-      "ends": "2026-11-30"
+      "ends": "2026-11-30",
+      "stage": "4 champion (weeks 5-6)"
     },
     {
       "id": "QSW-005",
       "status": "approved",
-      "round": 1,
+      "round": "w1",
       "concept": "buyout",
       "angle": "contract",
       "persona": "cmo",
@@ -359,7 +365,9 @@
           "line": "Stop paying for Qualified\n*the day you switch.*"
         }
       },
-      "ends": "2026-11-30"
+      "ends": "2026-11-30",
+      "li_campaign": "QSW | S3 buyout | cmo",
+      "stage": "3 habit and why now"
     },
     {
       "id": "QSW-006",
@@ -505,7 +513,7 @@
     {
       "id": "QSW-011",
       "status": "approved",
-      "round": 1,
+      "round": "w1",
       "concept": "pop-quiz",
       "angle": "buyer-experience",
       "persona": "practitioner",
@@ -528,7 +536,9 @@
           ],
           "answer": 3
         }
-      }
+      },
+      "li_campaign": "QSW | S1 need | practitioner",
+      "stage": "1 unconsidered need"
     },
     {
       "id": "QSW-012",
@@ -556,7 +566,7 @@
     {
       "id": "QSW-013",
       "status": "approved",
-      "round": 1,
+      "round": "w1",
       "concept": "breakup",
       "angle": "buyer-experience",
       "persona": "cmo",
@@ -578,7 +588,9 @@
           ],
           "signoff": "Love,\nyour buyers"
         }
-      }
+      },
+      "li_campaign": "QSW | S1 why change | cmo",
+      "stage": "1 why change"
     },
     {
       "id": "QSW-014",
@@ -1192,7 +1204,7 @@
     {
       "id": "QSW-033",
       "status": "approved",
-      "round": 1,
+      "round": "champion",
       "concept": "demo-gift",
       "angle": "incentive",
       "persona": "practitioner",
@@ -1221,11 +1233,12 @@
           "terms": "Terms apply. Apple is not a sponsor of this offer."
         }
       },
-      "url": "https://getbreakout.ai/"
+      "url": "https://getbreakout.ai/",
+      "stage": "4 champion (weeks 5-6)"
     },
     {
       "id": "QSW-034",
-      "status": "approved",
+      "status": "retired",
       "round": 1,
       "concept": "demo-gift",
       "angle": "incentive",
@@ -1255,7 +1268,8 @@
           "terms": "Terms apply. Apple is not a sponsor of this offer."
         }
       },
-      "url": "https://getbreakout.ai/"
+      "url": "https://getbreakout.ai/",
+      "retired_note": "2026-10-19: one offer per persona; CMOs get the buyout. Deleted from LinkedIn"
     },
     {
       "id": "QSW-041",
@@ -1359,5 +1373,24 @@
       ]
     }
   },
-  "round_1_approved": "2026-10-14: owner, \"load up the creatives\" with the audience export"
+  "round_1_approved": "2026-10-14: owner, \"load up the creatives\" with the audience export",
+  "sequence": {
+    "framework": "Four Forces (push + pull > anxiety + habit), why change vs why stay, one campaign per stage, retarget engagers and site visitors forward (2026-10-19)",
+    "practitioner": [
+      "1 unconsidered need (whole list)",
+      "2 pull: the product and proof (engagers + visitors)",
+      "3 anxiety: easy to switch (engagers + visitors)",
+      "4 champion: the buyout to take to the CMO, plus the demo gift (weeks 5-6)"
+    ],
+    "cmo": [
+      "1 why change (whole list)",
+      "2 pull and credibility (engagers + visitors)",
+      "3 habit and why now: the buyout (whole CMO list from day one, until 30 November)"
+    ],
+    "week1": [
+      "QSW-011",
+      "QSW-013",
+      "QSW-005"
+    ]
+  }
 }

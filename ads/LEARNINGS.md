@@ -17,6 +17,8 @@ Starting beliefs, borrowed from Wispr Flow's playbook and not yet tested on Brea
 
 ## Log
 
+- 2026-10-19: Strategy reset for qualified-switch: a displacement sequence (Four Forces: push + pull > anxiety + habit; why change vs why stay; don't attack a tool the buyer chose; one campaign per stage, retarget forward). Week 1 loaded as 3 stage campaigns: practitioners S1 (QSW-011, $50), CMOs S1 (QSW-013, $25), CMOs S3 buyout (QSW-005, $25). LinkedIn: an unreviewed ad cannot be paused or moved to draft, so a stage change means a new campaign, not pausing ads; attaching conversions needs rw_conversions (done by hand in Campaign Manager); the matched lists show 1,000 and 2,100 members but 0 active, which holds delivery until LinkedIn refreshes them.
+
 - 2026-10-19: A compare-page line can be true on the page and still wrong as an ad: the email rows (Qualified hands off to a sequencer, Breakout sends) are not a real difference ("Breakout also hands off to sequencer"). Before building a product contrast, confirm with the owner that the gap is real; claims.json now has a do_not_use list. The real email gaps (owner): personalization from each visitor's signals, and emailing visitors who never raised a hand (QSW-043).
 
 - 2026-10-19: For a product callout, the owner wants it plain: "clearly and simply call out" the weakness, no metaphor (the ration book was rejected). Objects and wordplay suit awareness ads; a capability gap gets a clear, named, sourced split (QSW-042). LinkedIn: a draft ad cannot be archived before review, only deleted (`status --delete`).

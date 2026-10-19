@@ -12,6 +12,7 @@
   python3 ads/engine/ads.py sync <campaign> --round N [--live]       add a round's approved ads to the live campaigns, PAUSED
   python3 ads/engine/ads.py status <campaign> <ids> --pause|--activate|--archive|--delete [--live]   change ads' status (activate only on the owner's yes)
   python3 ads/engine/ads.py probe [<campaign>]                       which LinkedIn permissions the token has (creates nothing)
+  python3 ads/engine/ads.py stage <campaign> --from NAME --name NEW --daily N [--live]   a stage campaign copied from a live one
   python3 ads/engine/ads.py audience resolve <facet> <query> [--live]   look up targeting URNs (titles, industries, skills)
   python3 ads/engine/ads.py ingest linkedin <export.csv>             Campaign Manager ad performance export
   python3 ads/engine/ads.py ingest crm <export.csv>                  server-side outcomes by utm_content (meetings, SQLs, pipeline)
@@ -95,7 +96,7 @@ def all_ads():
 
 def in_round(ad, rnd):
     """--round N keeps the ads planned for round N plus those marked "always" (an offer that runs every round); no --round keeps them all."""
-    return rnd is None or ad.get("round") in (rnd, "always")
+    return rnd is None or str(ad.get("round")) in (str(rnd), "always")
 
 
 def ad_name(ad):
@@ -514,27 +515,33 @@ def plan(slug, camp, include_all=False, rnd=None):
     share = budget.get("test_share", SCORING["budget"]["test_share"])
     fixed = budget.get("campaigns") or {}          # {"demand-gen": 50, ...}: the owner's split for this round
     minimum = SCORING["budget"]["linkedin_min_daily_per_campaign"]
-    keys = sorted({(a["persona"], fmt(a).get("kind")) for a in ads}, key=lambda k: (k[0], ["image", "document", "video", "post"].index(k[1])))
-    personas = sorted({p for p, _ in keys})
+    # An ad's campaign: its own `li_campaign` (one campaign per sequence stage), else 1 per persona and format.
+    def cname(a):
+        return a.get("li_campaign") or f"{camp['code']} | test | {a['persona']} | {fmt(a).get('kind')}"
+    names = sorted({cname(a) for a in ads})
+    personas = sorted({a["persona"] for a in ads})
     campaigns = []
-    for p, kind in keys:
-        mine = [a for a in ads if a["persona"] == p and fmt(a).get("kind") == kind]
-        kinds_here = sum(1 for q, _ in keys if q == p)
-        if p in fixed:
-            usd = fixed[p] / kinds_here
+    for name in names:
+        mine = [a for a in ads if cname(a) == name]
+        p, kind = mine[0]["persona"], fmt(mine[0]).get("kind")
+        same_persona = sum(1 for n in names if any(cname(a) == n and a["persona"] == p for a in ads))
+        if name in fixed:
+            usd = fixed[name]
+        elif p in fixed:
+            usd = fixed[p] / same_persona
         elif daily:
-            usd = daily * share / len(personas) / kinds_here
+            usd = daily * share / len(personas) / same_persona
         else:
             usd = None
         campaigns.append({
-            "name": f"{camp['code']} | test | {p} | {kind}", "group": "test", "persona": p, "kind": kind,
+            "name": name, "group": "test", "persona": p, "kind": kind,
             "daily_usd": round(max(usd, minimum), 2) if usd else None,
             "targeting": linkedin.targeting({**AUD["shared"], "company_size": [] if "company_size" in (camp.get("audience") or {}).get("replaces", []) else AUD["shared"].get("company_size")}, AUD["personas"][p]),
             "targeting_labels": {k: v for k, v in AUD["personas"][p].items() if k.endswith("_label")},
             "ads": [a["id"] for a in mine],
         })
         if len(mine) > SCORING["budget"]["max_active_ads_per_campaign"]:
-            print(f"warn   {p} {kind}: {len(mine)} ads in one campaign; LinkedIn favours 1 or 2 early, so launch at most "
+            print(f"warn   {name}: {len(mine)} ads in one campaign; LinkedIn favours 1 or 2 early, so launch at most "
                   f"{SCORING['budget']['max_active_ads_per_campaign']} at a time (1 per concept) and rotate the rest in")
     creatives = []
     for a in ads:
@@ -832,6 +839,8 @@ def cmd_sync(a):
         # LinkedIn won't create an ad as PAUSED before its review. DRAFT first; ACTIVE only inside a campaign that is
         # still a draft, where nothing serves or spends until the owner launches the campaign.
         statuses = ["DRAFT"] + (["ACTIVE"] if camp_status.get(cid) == "DRAFT" else [])
+        if a.ready and camp_status.get(cid) == "DRAFT":   # ready to run on launch; the draft campaign still holds it
+            statuses = ["ACTIVE", "DRAFT"]
         creative, post, used = None, None, None
         for st in statuses:   # 1 call, ads permission only
             creative = writer.inline_creative(account, cid, body, cr["name"], st)
@@ -908,6 +917,36 @@ def cmd_probe(a):
     for name, ok, err in checks:
         print(f"{'yes' if ok else 'NO ':4} {name}" + ("" if ok else f"  ({err})"))
     print("\nCreating ads in one call (createInline) is only proven by a real sync; nothing was created here.")
+
+
+def cmd_stage(a):
+    """Make a sequence-stage campaign: a DRAFT copy of a live campaign's audience, settings and conversions,
+    with its own name and budget. Its ads then go in with `sync --round <round> --ready`."""
+    account, _ = _account_and_org(a)
+    cl = linkedin.Client(live=True)
+    live = {c.get("name"): c for c in cl.campaigns(account)}
+    if a.name in live:
+        print(f"exists  {a.name} (id {live[a.name]['id']}, {live[a.name].get('status')})")
+        return
+    src = live.get(a.source)
+    if not src:
+        sys.exit(f"no live campaign named {a.source!r}")
+    convs = cl.campaign_conversions(src["id"])
+    if not a.live:
+        print(f"dry run: would create {a.name!r} (DRAFT, ${a.daily:.2f}/day) from {a.source!r}, with {len(convs)} conversions")
+        return
+    writer = linkedin.Client(live=True)
+    cid = writer.copy_campaign(account, src, a.name, a.daily)
+    cid = str(cid).split(":")[-1]
+    attached = 0
+    for conv in convs:
+        try:
+            writer.attach_conversion(cid, conv)
+            attached += 1
+        except SystemExit as e:   # needs the rw_conversions scope; Campaign Manager does it in 2 clicks
+            print(f"warn    could not attach conversion {conv.split(':')[-1]}: {str(e)[:120]}")
+    print(f"made    {a.name}: campaign {cid}, DRAFT, ${a.daily:.2f}/day, audience copied from {a.source!r}, "
+          f"{attached} of {len(convs)} conversions attached" + ("" if attached == len(convs) else " (tick the rest in Campaign Manager)"))
 
 
 def cmd_audience(a):
@@ -1302,17 +1341,19 @@ def main(argv=None):
     sub = p.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("new"); s.add_argument("campaign"); s.add_argument("--code", required=True); s.add_argument("--idea"); s.set_defaults(fn=cmd_new)
     s = sub.add_parser("lint"); s.add_argument("campaign"); s.set_defaults(fn=cmd_lint)
-    s = sub.add_parser("render"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--ids", nargs="*"); s.add_argument("--force", action="store_true"); s.set_defaults(fn=cmd_render)
+    s = sub.add_parser("render"); s.add_argument("campaign"); s.add_argument("--round"); s.add_argument("--ids", nargs="*"); s.add_argument("--force", action="store_true"); s.set_defaults(fn=cmd_render)
     s = sub.add_parser("sheet"); s.add_argument("campaign"); s.set_defaults(fn=cmd_sheet)
-    s = sub.add_parser("export"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_export)
-    s = sub.add_parser("kit"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_kit)
+    s = sub.add_parser("export"); s.add_argument("campaign"); s.add_argument("--round"); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_export)
+    s = sub.add_parser("kit"); s.add_argument("campaign"); s.add_argument("--round"); s.add_argument("--all", action="store_true"); s.set_defaults(fn=cmd_kit)
     s = sub.add_parser("launch"); s.add_argument("campaign"); s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.add_argument("--org"); s.set_defaults(fn=cmd_launch)
-    s = sub.add_parser("verify"); s.add_argument("campaign"); s.add_argument("--round", type=int); s.add_argument("--account"); s.set_defaults(fn=cmd_verify)
-    s = sub.add_parser("sync"); s.add_argument("campaign"); s.add_argument("--round", type=int, required=True); s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.add_argument("--org"); s.set_defaults(fn=cmd_sync)
+    s = sub.add_parser("verify"); s.add_argument("campaign"); s.add_argument("--round"); s.add_argument("--account"); s.set_defaults(fn=cmd_verify)
+    s = sub.add_parser("sync"); s.add_argument("campaign"); s.add_argument("--round", required=True); s.add_argument("--live", action="store_true"); s.add_argument("--ready", action="store_true"); s.add_argument("--account"); s.add_argument("--org"); s.set_defaults(fn=cmd_sync)
     s = sub.add_parser("status"); s.add_argument("campaign"); s.add_argument("ad_ids", nargs="+"); g = s.add_mutually_exclusive_group(required=True)
     g.add_argument("--pause", action="store_true"); g.add_argument("--activate", action="store_true"); g.add_argument("--archive", action="store_true"); g.add_argument("--delete", action="store_true")
     s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.set_defaults(fn=cmd_status)
     s = sub.add_parser("probe"); s.add_argument("campaign", nargs="?"); s.add_argument("--account"); s.set_defaults(fn=cmd_probe)
+    s = sub.add_parser("stage"); s.add_argument("campaign"); s.add_argument("--from", dest="source", required=True); s.add_argument("--name", required=True)
+    s.add_argument("--daily", type=float, required=True); s.add_argument("--live", action="store_true"); s.add_argument("--account"); s.set_defaults(fn=cmd_stage)
     s = sub.add_parser("audience"); s.add_argument("action", choices=["resolve"]); s.add_argument("facet"); s.add_argument("query"); s.add_argument("--live", action="store_true"); s.set_defaults(fn=cmd_audience)
     s = sub.add_parser("ingest"); s.add_argument("source", choices=["linkedin", "crm", "api"]); s.add_argument("file", nargs="?")
     s.add_argument("--since"); s.add_argument("--account"); s.add_argument("--live", action="store_true"); s.set_defaults(fn=cmd_ingest)

@@ -155,6 +155,27 @@ class Client:
         return self.call("POST", f"/adAccounts/{account}/creatives/{urn}", {"patch": {"$set": {"intendedStatus": status}}},
                          headers={"X-RestLi-Method": "PARTIAL_UPDATE"})
 
+    COPY_FIELDS = ("type", "costType", "objectiveType", "optimizationTargetType", "creativeSelection", "format", "locale",
+                   "offsiteDeliveryEnabled", "audienceExpansionEnabled", "targetingCriteria", "associatedEntity",
+                   "politicalIntent", "unitCost", "campaignGroup", "storyDeliveryEnabled")
+
+    def copy_campaign(self, account, src, name, daily_budget):
+        """A new DRAFT campaign with the source campaign's audience and settings, and its own daily budget."""
+        body = {k: src[k] for k in self.COPY_FIELDS if k in src}
+        body.update({"account": f"urn:li:sponsoredAccount:{account}", "name": name, "status": "DRAFT",
+                     "dailyBudget": {"amount": f"{daily_budget:.2f}", "currencyCode": (src.get("dailyBudget") or {}).get("currencyCode", "USD")},
+                     "runSchedule": {"start": int(time.time() * 1000)}})
+        return self.call("POST", f"/adAccounts/{account}/adCampaigns", body)["id"]
+
+    def campaign_conversions(self, campaign_id):
+        q = "q=campaigns&campaigns=List(" + urllib.parse.quote(f"urn:li:sponsoredCampaign:{campaign_id}", safe="") + ")"
+        return [x["conversion"] for x in self.call("GET", "/campaignConversions", query=q).get("elements", [])]
+
+    def attach_conversion(self, campaign_id, conversion_urn):
+        camp = f"urn:li:sponsoredCampaign:{campaign_id}"
+        key = f"(campaign:{urllib.parse.quote(camp, safe='')},conversion:{urllib.parse.quote(conversion_urn, safe='')})"
+        return self.call("PUT", f"/campaignConversions/{key}", {"campaign": camp, "conversion": conversion_urn})
+
     def delete_creative(self, account, creative_id):
         """Only a DRAFT ad can be deleted (LinkedIn refuses to archive one before its review)."""
         urn = urllib.parse.quote(f"urn:li:sponsoredCreative:{creative_id}", safe="")
