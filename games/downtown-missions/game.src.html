@@ -93,6 +93,7 @@
   #menu li.sel .n, #menu li button:hover .n, #menu li button:focus-visible .n { color: #ffffff; }
   #menu li.sel .n::before { content: "\25B6\00a0"; color: var(--sa-gold); }
   #menu li .done { font-family: var(--pd); font-size: 0.5em; color: var(--sa-gold); margin-left: 0.6em; vertical-align: 0.4em; }
+  #tLogo { height: clamp(18px, calc(var(--u) * 3.6), 40px); width: auto; background: #f4f2ee; padding: 6px 10px; border-radius: 4px; margin-left: 0.8em; vertical-align: 0.2em; }
   #menu .foot { margin-top: calc(var(--u) * 3); }
   .btn { font-family: var(--pd); font-size: clamp(16px, calc(var(--u) * 3.2), 34px); color: var(--paper); background: rgba(0,0,0,0.55); border: 3px solid var(--paper); border-radius: 6px; padding: 0.35em 0.9em; cursor: pointer; }
   .btn:hover, .btn:focus-visible { background: var(--violet); outline: none; border-color: var(--lilac); }
@@ -148,11 +149,12 @@
   <div class="screen" id="menu" hidden>
     <h2>Missions</h2>
     <ul id="menuList">
+      <li data-id="target"><button type="button"><span class="n">Target: <span id="tName">Vanta</span></span><img id="tLogo" alt=""><span class="d" id="tAddr">655 Montgomery St</span></button></li>
       <li data-id="m1"><button type="button"><span class="n">Pizza for the Buying Committee</span><span class="done" hidden>PASSED</span><span class="d">Speed: act before the signal cools. Signal: 3+ visitors from one office.</span></button></li>
       <li data-id="m2"><button type="button"><span class="n">Tail the Champion</span><span class="done" hidden>PASSED</span><span class="d">Patience: follow her from her old office to her new one. Signal: your champion changed jobs.</span></button></li>
       <li data-id="roam"><button type="button"><span class="n">Free roam</span><span class="d">Ride around downtown. Press Esc for this menu.</span></button></li>
     </ul>
-    <div class="small foot">Arrow keys and Enter, or click. Illustrative example: fictional people and companies.</div>
+    <div class="small foot">Arrow keys and Enter, or click. Illustrative example: the target accounts are real companies at their HQs; the visits, the people and the meetings are fictional.</div>
   </div>
   <div class="screen" id="endScreen" hidden>
     <div class="logo">__LOGO__</div>
@@ -172,19 +174,33 @@
   function rnd(i) { var x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
   function angDiff(a, b) { var d = (b - a) % (2 * PI); if (d > PI) d -= 2 * PI; if (d < -PI) d += 2 * PI; return d; }
 
-  // ------------------------------------------------------------ the words (fictional people and companies only)
-  var TXT = {
-    m1: { title: "Pizza for the Buying Committee", help: "<span class=\"v\">BREAKOUT:</span> 3 visitors. 1 office. Right now.",
-          mount: "Get on the <span class=\"b\">scooter</span>.", go: "Get the pizzas to <span class=\"y\">Northwind</span> before the signal cools.", fail: "The signal went cold.",
-          intro: [[0.2, 2.6, "BREAKOUT", "Three visitors. One office. Northwind. Right now."], [2.7, 4.8, "CJ", "Three people from the same office? I'm bringing pizza."]],
-          outro: [[0.5, 2.0, "Committee", "Pizza? We were just reading your site."], [2.0, 3.4, "CJ", "Figured. Let's book a meeting."]], passed: "Meeting booked." },
-    m2: { title: "Tail the Champion", help: "<span class=\"v\">PHONE:</span> Maya just left Northwind. New job, new company.",
-          go: "Follow <span class=\"b\">Maya</span>. Don't get too close.", spotted: "She spotted you.", lost: "You lost her.",
-          intro: [[0.2, 2.2, "BREAKOUT", "Your champion just changed jobs. She's leaving now."], [2.3, 4.4, "CJ", "Then I'll see where she lands."]],
-          outro: [[0.3, 1.8, "CJ", "Halcyon. New account. Same champion."]], passed: "New account. Same champion." },
-    label: { m1: "Illustrative example: Northwind, 3 visitors from 1 office", m2: "Illustrative example: Maya R., your champion", m2b: "Illustrative example: Maya R., now at Halcyon" },
-    signs: { committee: "NORTHWIND", newacct: "HALCYON", shop: "PIZZA" }
-  };
+  // ------------------------------------------------------------ the target accounts: real companies at their real HQs, their own logos (logos/*.svg)
+  var LOGOS = __LOGOS__;
+  var TARGETS = [
+    { id: "vanta", name: "Vanta", addr: "655 Montgomery St", block: [193, 227, 73, 107], ht: 64, kind: "glass", tint: "#e6ecff", door: [193, 90], out: [-1, 0],
+      route: [[84, 10.5], [170, 10.5], [176, 17], [176, 82], [182, 89], [186.5, 90]] },
+    { id: "grammarly", name: "Grammarly", addr: "548 Market St", block: [193, 227, 20, 46], ht: 110, kind: "glass", tint: "#e4f0ff", door: [210, 20], out: [0, -1],
+      route: [[84, 10.5], [170, 10.5], [176, 17], [176, 58], [182, 64], [236, 64], [244, 58], [244, 17], [238, 10.5], [216, 10.5], [210, 13]] },
+    { id: "anthropic", name: "Anthropic", addr: "500 Howard St", block: [193, 227, -47, -20], ht: 44, kind: "office", tint: "#efe6d8", door: [210, -47], out: [0, -1],
+      route: [[84, 10.5], [118, 10.5], [124, 4], [124, -50], [130, -56.2], [204, -56.2], [210, -54]] }
+  ];
+  // the words (the people, the visits and the meetings are fictional; the champion's old company, Northwind, is fictional too)
+  function words(t) { var n = t.name, team = n + " team"; return {
+    m1: { title: "Pizza for the Buying Committee", help: '<span class="v">BREAKOUT:</span> 3 visitors from ' + n + '. 1 office, ' + t.addr + '. Right now.',
+          mount: 'Get on the <span class="b">scooter</span>.', go: 'Get the pizzas to <span class="y">' + n + '</span> before the signal cools.', fail: "The signal went cold.",
+          intro: [[0.2, 2.6, "BREAKOUT", "Three visitors from " + n + ". One office. Right now."], [2.7, 4.8, "CJ", "Three people from the same office? I'm bringing pizza."]],
+          door: [[0.6, 2.3, team, "Pizza? For us?"], [2.3, 3.8, "CJ", "Got ten minutes? I'll explain upstairs."]],
+          room: [[0.3, 3.0, team, "Wait. How did you know we were looking?"], [3.1, 6.0, "CJ", "Three of y'all on our site at once? That's a buying committee."], [6.1, 8.3, "CJ", "Let's get everybody on one call. Thursday, 2 PM?"], [8.4, 10.0, team, "Book it."]],
+          passed: "Meeting booked." },
+    m2: { title: "Tail the Champion", help: '<span class="v">BREAKOUT:</span> Your champion Maya R. just left Northwind.',
+          alert: [[0.2, 2.9, "BREAKOUT", "Champion on the move: Maya R. just left Northwind."], [3.0, 5.6, "CJ", "Maya loved us at Northwind. Let's see where she lands."]],
+          go: 'Follow <span class="b">Maya</span>. Don\'t get too close.', spotted: "She spotted you.", lost: "You lost her.",
+          intro: [[0.2, 2.4, "CJ", "There she goes. Box of desk stuff and all."], [2.5, 4.5, "CJ", "Nice and easy. Don't spook her."]],
+          door: [[0.4, 2.4, "CJ", n + ", " + t.addr + ". New job, same Maya."]],
+          room: [[0.3, 2.8, "Maya", "CJ? I started at " + n + " on Monday!"], [2.9, 5.6, "CJ", "Breakout told me you moved. Congrats on the new gig."], [5.7, 8.3, "Maya", "We need what we had at Northwind. Can you meet my team?"], [8.4, 10.0, "CJ", "Thursday, 2 PM. Invite's on its way."]],
+          passed: "New account. Same champion." },
+    label: "Illustrative example: " + n + " (" + t.addr + ") is real. The visitors, the people and the meetings are fictional." }; }
+  var TXT = { signs: { shop: "PIZZA" } };
 
   // ------------------------------------------------------------ the city plan (metres; +x east to the bay, -z up the hill, +z north)
   var XL = []; for (var k = -8; k <= 5; k++) XL.push(k * 60);
@@ -431,7 +447,7 @@
     solid(x0, x1, z0, z1);
     return top;
   }
-  var SPEC = { committee: { x0: 193, z0: 20 }, newacct: { x0: 13, z0: -227 }, shop: { x0: -107, z0: -227 }, pyramid: { x0: 133, z0: 73 }, park: { x0: -47, z0: 73 }, sf: { x0: 253, z0: -47 } };
+  var SPEC = { vanta: { x0: 193, z0: 73 }, grammarly: { x0: 193, z0: 20 }, anthropic: { x0: 193, z0: -47 }, northwind: { x0: 73, z0: 20 }, shop: { x0: -107, z0: -227 }, pyramid: { x0: 133, z0: 73 }, park: { x0: -47, z0: 73 }, sf: { x0: 253, z0: -47 } };
   function isSpec(x0, z0) { for (var kk in SPEC) if (Math.abs(SPEC[kk].x0 - x0) < 1 && Math.abs(SPEC[kk].z0 - z0) < 1) return kk; return null; }
   var ROOFTOPS = [], seedN = 1;
   for (var xi = 0; xi < XL.length - 1; xi++) for (var zi = 0; zi < ZL.length - 1; zi++) {
@@ -456,8 +472,8 @@
       }
     }
   }
-  var CT = building("glass", 193.5, 226.5, 20.5, 46.5, 122, 3.3, "#e4f0ff");
-  var NT = building("glass", 13.5, 46.5, -226.5, -193.5, 24, 4.4, "#ffffff");
+  TARGETS.forEach(function (t, i) { var b = t.block; t.top = building(t.kind, b[0] + 0.5, b[1] - 0.5, b[2] + 0.5, b[3] - 0.5, t.ht, 3.3 + i, t.tint); t.dy = h(t.door[1]); t.ry = Math.atan2(t.out[0], t.out[1]); });
+  var NW = { name: "NORTHWIND", block: [73, 107, 20, 47], door: [90, 20], out: [0, -1], dy: 0, ry: PI }; NW.top = building("office", 73.5, 106.5, 20.5, 46.5, 58, 7.7, "#e3d3bb");
   building("office", -106.5, -88, -219, -195, 7, 2.2, "#f4e3c4");
   building("house", -88, -73.5, -219, -195, 10, 2.9, null, 1); building("house", -106.5, -73.5, -226.5, -220, 12, 3.9, null, -1);
 
@@ -564,14 +580,26 @@
     }) });
   }
   function plane(mat, w, hgt, x, y, z, ry) { var m = new THREE.Mesh(new THREE.PlaneGeometry(w, hgt), mat); m.position.set(x, y, z); m.rotation.y = ry; scene.add(m); return m; }
-  plane(sign(TXT.signs.committee, 30, 4.6, "#ffffff"), 26, 4, 210, CT - 6, 20.35, PI);
-  plane(sign(TXT.signs.committee, 12, 1.6, "#ffffff", "#1d2430"), 9, 1.2, 210, 5.8, 18.1, PI);
-  plane(sign(TXT.signs.newacct, 30, 4.6, "#ffffff"), 24, 3.7, 30, NT - 5, -193.35, PI);
-  plane(sign(TXT.signs.newacct, 12, 1.6, "#ffffff", "#1d2430"), 8, 1.1, 30, 38 + 5.4, -193.4, PI);
+  // each target's own logo on a light panel: high on the tower and over the door
+  function logoTex(id, w, hgt, bg) {
+    var c = document.createElement("canvas"); c.width = 1024; c.height = Math.round(1024 * hgt / w); var g = c.getContext("2d");
+    g.fillStyle = bg || "#f4f2ee"; g.fillRect(0, 0, c.width, c.height);
+    var tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace;
+    var img = new Image(); img.onload = function () { var ar = (img.naturalWidth / img.naturalHeight) || 4, bw = c.width * 0.82, bh = bw / ar; if (bh > c.height * 0.62) { bh = c.height * 0.62; bw = bh * ar; }
+      g.drawImage(img, (c.width - bw) / 2, (c.height - bh) / 2, bw, bh); tx.needsUpdate = true; };
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(LOGOS[id]); return tx;
+  }
+  function onFace(t, d, y) { return [t.door[0] + t.out[0] * d, y, t.door[1] + t.out[1] * d]; }
+  TARGETS.forEach(function (t) {
+    var a = onFace(t, 0.4, t.top - 7); plane(new THREE.MeshBasicMaterial({ map: logoTex(t.id, 24, 5.4) }), 24, 5.4, a[0], a[1], a[2], t.ry);
+    var b = onFace(t, 2.2, t.dy + 5.6); plane(new THREE.MeshBasicMaterial({ map: logoTex(t.id, 8, 1.4) }), 8, 1.4, b[0], b[1], b[2], t.ry);
+    var c2 = onFace(t, 1.8, t.dy + 4.6); PROPS.add(BOX, mx(c2[0], c2[1], c2[2], t.ry, 11, 0.4, 3.6), "#2a2f38");
+  });
+  plane(sign(NW.name, 30, 4.6, "#ffffff"), 22, 3.4, 90, NW.top - 6, 20.1, PI);
+  plane(sign(NW.name, 12, 1.6, "#ffffff", "#1d2430"), 8, 1.1, 90, 5.6, 18.1, PI);
   plane(sign(TXT.signs.shop, 12, 3, "#fff6dc", "#c9302c"), 10, 2.2, -107.0, 38 + 5.6, -207, -PI / 2);
   plane(sign("FERRY BUILDING", 30, 3, "#3a3020"), 14, 1.4, 313.8, 13, 0, -PI / 2);
-  PROPS.add(BOX, mx(210, 4.6, 18.4, 0, 12, 0.4, 3.6), "#2a2f38");
-  PROPS.add(BOX, mx(30, 38 + 4.4, -191.6, 0, 10, 0.4, 3.2), "#2a2f38");
+  PROPS.add(BOX, mx(90, 4.6, 18.2, 0, 11, 0.4, 3.6), "#2a2f38");
 
   // ------------------------------------------------------------ vehicles, shaped from side profiles
   var CARC = ["#6e1f22", "#1f3b63", "#b8bcc0", "#e8e6e0", "#1c1c1f", "#c9b48a", "#2d4a34", "#8a6a2a", "#5a5e66", "#7a2a3a", "#3a5a7a", "#a83a2a"];
@@ -693,6 +721,9 @@
     p.aL.rotation.set(carry ? -0.55 : o.mode === "ride" ? -0.95 : sw * 0.8, 0, carry ? 0.12 : 0.06); p.aR.rotation.set(carry ? -0.55 : o.mode === "ride" ? -0.95 : -sw * 0.8, 0, carry ? -0.12 : -0.06);
     p.eL.rotation.x = carry ? -1.0 : o.mode === "ride" ? -0.45 : -0.25 - (walk ? Math.max(0, sw) * 0.4 : 0); p.eR.rotation.x = carry ? -1.0 : o.mode === "ride" ? -0.45 : -0.25 - (walk ? Math.max(0, -sw) * 0.4 : 0);
     p.body.rotation.x = o.mode === "ride" ? 0.16 : walk ? 0.05 * amp : 0;
+    if (o.mode === "sit") { p.body.position.y = -0.47; p.lL.rotation.set(-1.52, 0, -0.05); p.lR.rotation.set(-1.52, 0, 0.05); p.kL.rotation.x = p.kR.rotation.x = 1.52;
+      p.aL.rotation.set(-0.75, 0, 0.1); p.aR.rotation.set(-0.75, 0, -0.1); p.eL.rotation.x = p.eR.rotation.x = -0.75; p.body.rotation.x = 0; }
+    if (o.point) { p.aR.rotation.set(-1.4, 0, -0.2); p.eR.rotation.x = -0.1; }
     p.shadow.position.set(o.x, h(o.z) + 0.07, o.z);
   }
   function hands(p, fwd) { var y = p.g.position.y + p.body.position.y + 1.18, yaw = p.g.rotation.y; return [p.g.position.x + Math.sin(yaw) * fwd, y, p.g.position.z + Math.cos(yaw) * fwd, yaw]; }
@@ -764,11 +795,16 @@
   var beamGeo = new THREE.CylinderGeometry(1, 1, 1, 12, 1, true);
   var BEAMS = []; for (var bi = 0; bi < 14; bi++) { var bm = new THREE.Mesh(beamGeo, new THREE.MeshBasicMaterial({ color: 0x7a2bff, transparent: true, opacity: 0.42, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false })); bm.visible = false; scene.add(bm); BEAMS.push(bm); }
   function beamAt(b, x, y, z, w) { b.visible = true; b.position.set(x, y + 160, z); b.scale.set(w, 320, w); }
-  var WIN = [0, 1, 2].map(function (i) { return plane(new THREE.MeshBasicMaterial({ color: 0xbe79ff, fog: false, transparent: true, opacity: 0 }), 2.9, 2.8, 205 + i * 5.2, 64.2, 20.4, PI); });
+  var WIN = [0, 1, 2].map(function () { return plane(new THREE.MeshBasicMaterial({ color: 0xbe79ff, fog: false, transparent: true, opacity: 0 }), 2.9, 2.8, 0, -50, 0, 0); });
   var glowTex = radial([[0, "rgba(190,121,255,0.9)"], [0.4, "rgba(122,43,255,0.35)"], [1, "rgba(76,0,255,0)"]]);
-  var GLOW = plane(new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0, fog: false }), 26, 14, 210.2, 64.2, 20.0, PI);
-  var GLOW2 = plane(GLOW.material.clone(), 14, 9, 30, 41, -193.0, PI);
-  var CLOSE_BLIPS = ROOFTOPS.filter(function (r, i) { return rnd(i + 70) > 0.45; }).slice(0, 10); CLOSE_BLIPS.unshift([30, NT, -210]); CLOSE_BLIPS.unshift([210, CT, 33.5]);
+  var GLOW = plane(new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0, fog: false }), 26, 14, 0, -50, 0, 0);
+  var GLOW2 = plane(GLOW.material.clone(), 14, 9, 0, -50, 0, 0);
+  function placeSignals(t) {             // the 3 violet windows on the target's door face, and the glow over its door
+    var sx = -t.out[1], sz = t.out[0], y = t.dy + Math.min(t.ht * 0.5, 30);
+    WIN.forEach(function (w, i) { var a = onFace(t, 0.45, y); w.position.set(a[0] + sx * (i - 1) * 5.2, y, a[2] + sz * (i - 1) * 5.2); w.rotation.y = t.ry; });
+    var g = onFace(t, 0.6, y); GLOW.position.set(g[0], y, g[2]); GLOW.rotation.y = t.ry; var g2 = onFace(t, 0.6, t.dy + 3); GLOW2.position.set(g2[0], g2[1], g2[2]); GLOW2.rotation.y = t.ry;
+  }
+  var CLOSE_BLIPS = ROOFTOPS.filter(function (r, i) { return rnd(i + 70) > 0.45; }).slice(0, 10); TARGETS.forEach(function (t) { CLOSE_BLIPS.unshift([(t.block[0] + t.block[1]) / 2, t.top, (t.block[2] + t.block[3]) / 2]); });
 
   // ------------------------------------------------------------ light from the game clock
   var PAL = {
@@ -960,17 +996,88 @@
     P.x = MP.x; P.z = MP.z; P.y = MP.y; P.yaw = MP.yaw;
   }
 
-  // ------------------------------------------------------------ the champion's taxi route (mission 2)
-  var ROUTE = [[198, 11.3], [180, 11.3], [166, -7], [132, -7], [124, -15], [124, -168], [118, -183.8], [44, -183.8], [36, -185.6]];
-  var RL = [0]; for (var ri = 1; ri < ROUTE.length; ri++) RL.push(RL[ri - 1] + Math.hypot(ROUTE[ri][0] - ROUTE[ri - 1][0], ROUTE[ri][1] - ROUTE[ri - 1][1]));
+  // ------------------------------------------------------------ the champion's taxi route (mission 2): from Northwind to the target's door
+  var ROUTE = TARGETS[0].route, RL = [0];
+  function setRoute(pts) { ROUTE = pts; RL = [0]; for (var i = 1; i < pts.length; i++) RL.push(RL[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])); }
   function routeAt(s) { s = Math.max(0, Math.min(RL[RL.length - 1], s)); var i = 1; while (i < RL.length - 1 && s > RL[i]) i++;
     var u = (s - RL[i - 1]) / (RL[i] - RL[i - 1]), a = ROUTE[i - 1], b = ROUTE[i]; return [lerp(a[0], b[0], u), lerp(a[1], b[1], u), Math.atan2(b[0] - a[0], b[1] - a[1]), i]; }
-  var TX = { s: 0, v: 0, yaw: -PI / 2 };
+  var TX = { s: 0, v: 0, yaw: PI / 2 };
 
-  // ------------------------------------------------------------ the game: title, mission select, two missions, free roam
+  // ------------------------------------------------------------ the conference room, where CJ books the meeting (a set far off the map)
+  var RM = { x: 3000, y: 300, z: 3000 };
+  var roomGroup = new THREE.Group(); scene.add(roomGroup); roomGroup.visible = false;
+  (function () {
+    var b = new Builder(), X = RM.x, Y = RM.y, Z = RM.z;
+    b.add(BOX, mx(X, Y - 0.1, Z, 0, 14, 0.2, 10), "#4e5866"); b.add(BOX, mx(X, Y + 3.5, Z, 0, 14, 0.2, 10), "#eceae4");
+    b.add(BOX, mx(X, Y + 1.7, Z - 5, 0, 14, 3.4, 0.2), "#dcd8d0"); b.add(BOX, mx(X, Y + 1.7, Z + 5, 0, 14, 3.4, 0.2), "#dcd8d0");
+    b.add(BOX, mx(X + 7, Y + 1.7, Z, 0, 0.2, 3.4, 10), "#d2d5da");
+    b.add(BOX, mx(X - 7, Y + 0.45, Z, 0, 0.2, 0.9, 10), "#d2d5da"); b.add(BOX, mx(X - 7, Y + 3.2, Z, 0, 0.2, 0.6, 10), "#d2d5da");
+    for (var k = -2; k <= 2; k++) b.add(BOX, mx(X - 6.95, Y + 1.85, Z + k * 2.5, 0, 0.12, 1.9, 0.12), "#3a3d42");
+    b.add(BOX, mx(X, Y + 0.74, Z + 0.3, 0, 2.0, 0.08, 5.8), "#6b4a32");
+    [[-0.8, -2.3], [0.8, -2.3], [-0.8, 3.0], [0.8, 3.0]].forEach(function (q) { b.add(BOX, mx(X + q[0], Y + 0.37, Z + q[1], 0, 0.1, 0.74, 0.1), "#2a2a2a"); });
+    function chair(x, z, ry) { b.add(BOX, mx(x, Y + 0.44, z, ry, 0.56, 0.08, 0.56), "#2b2f36"); b.add(BOX, mx(x - Math.sin(ry) * 0.27, Y + 0.82, z - Math.cos(ry) * 0.27, ry, 0.56, 0.7, 0.07), "#2b2f36"); b.add(BOX, mx(x, Y + 0.22, z, 0, 0.08, 0.44, 0.08), "#555555"); }
+    [-1.6, 0.0, 1.6].forEach(function (z) { chair(X - 1.5, Z + z, PI / 2); chair(X + 1.5, Z + z, -PI / 2); }); chair(X, Z + 3.9, PI);
+    b.add(BOX, mx(X, Y + 1.75, Z - 4.93, 0, 4.0, 2.34, 0.06), "#111111");
+    b.add(BOX, mx(X + 0.2, Y + 0.8, Z + 3.0, 0, 0.36, 0.02, 0.26), "#2a2a2e"); b.add(BOX, mx(X + 0.2, Y + 0.95, Z + 2.86, 0, 0.36, 0.26, 0.02, -0.3), "#2a2a2e");
+    b.add(CYL10, mx(X + 5.6, Y + 0.6, Z - 4.2, 0, 0.6, 1.2, 0.6), "#7a5236"); b.add(CONE6, mx(X + 5.6, Y + 1.7, Z - 4.2, 0, 1.0, 1.6, 1.0), "#3f7a34");
+    b.mesh(new THREE.MeshLambertMaterial({ vertexColors: true }), roomGroup);
+    var lb2 = new Builder(); [-3, 0, 3].forEach(function (x) { lb2.add(BOX, mx(X + x, Y + 3.39, Z, 0, 1.6, 0.02, 1.0), "#ffffff"); }); lb2.mesh(new THREE.MeshBasicMaterial({ vertexColors: true }), roomGroup);
+  })();
+  var skyline = canvasTex(1024, 200, function (g, W, H) { var gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#8fb2d8"); gr.addColorStop(1, "#f1d9b8"); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    for (var i = 0; i < 60; i++) { var x = rnd(i + 300) * W, w = 20 + rnd(i + 301) * 50, hh = 30 + rnd(i + 302) * 130; g.fillStyle = "rgba(70,80,95," + (0.5 + rnd(i + 303) * 0.4) + ")"; g.fillRect(x, H - hh, w, hh); }
+    g.fillStyle = "rgba(240,240,240,0.95)"; g.beginPath(); g.moveTo(600, H); g.lineTo(625, 14); g.lineTo(650, H); g.fill(); });
+  var winPane = new THREE.Mesh(new THREE.PlaneGeometry(10, 1.9), new THREE.MeshBasicMaterial({ map: skyline, fog: false })); winPane.position.set(RM.x - 7.05, RM.y + 1.85, RM.z); winPane.rotation.y = PI / 2; roomGroup.add(winPane);
+  var ROOMT = {};
+  function wallTex(id) { if (!ROOMT[id]) ROOMT[id] = logoTex(id, 3.4, 0.95, "#ffffff"); return ROOMT[id]; }
+  var wallLogo = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 0.95), new THREE.MeshBasicMaterial({ fog: false })); wallLogo.position.set(RM.x + 6.88, RM.y + 2.2, RM.z); wallLogo.rotation.y = -PI / 2; roomGroup.add(wallLogo);
+  // the wall screen: Breakout's own booking flow, drawn live ("Book a Meeting", then violet floods out of the slot into "Meeting booked.")
+  var scr = document.createElement("canvas"); scr.width = 1024; scr.height = 584; var sg = scr.getContext("2d");
+  var scrTex = new THREE.CanvasTexture(scr); scrTex.colorSpace = THREE.SRGBColorSpace;
+  var screenM = new THREE.Mesh(new THREE.PlaneGeometry(3.84, 2.19), new THREE.MeshBasicMaterial({ map: scrTex, fog: false })); screenM.position.set(RM.x, RM.y + 1.75, RM.z - 4.89); roomGroup.add(screenM);
+  var IMG = {}; Object.keys(LOGOS).forEach(function (k) { var im = new Image(); im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(LOGOS[k]); IMG[k] = im; });
+  function drawLogo(k, x, y, hgt) { var im = IMG[k]; if (!im || !im.complete || !im.naturalWidth) return 0; var w = hgt * im.naturalWidth / im.naturalHeight; sg.drawImage(im, x, y, w, hgt); return w; }
+  function rr(x, y, w, hh, r) { sg.beginPath(); sg.moveTo(x + r, y); sg.arcTo(x + w, y, x + w, y + hh, r); sg.arcTo(x + w, y + hh, x, y + hh, r); sg.arcTo(x, y + hh, x, y, r); sg.arcTo(x, y, x + w, y, r); sg.closePath(); }
+  function drawScreen(kind, u, t) {
+    var W = 1024, H = 584; sg.fillStyle = "#f6f1ff"; sg.fillRect(0, 0, W, H);
+    sg.fillStyle = "#ffffff"; sg.fillRect(0, 0, W, 72); sg.fillStyle = "#e6def8"; sg.fillRect(0, 72, W, 2);
+    drawLogo("breakout", 32, 20, 32);
+    sg.font = "700 18px Manrope, Arial, sans-serif"; sg.fillStyle = "#5c5850"; sg.textAlign = "right"; sg.fillText("Illustrative example", W - 32, 44); sg.textAlign = "left";
+    if (kind === "alert") {
+      rr(212, 120, 600, 360, 18); sg.fillStyle = "#ffffff"; sg.fill();
+      var pulse = 1 + 0.08 * Math.sin(u * 12); rr(244, 152, 124, 36, 18); sg.fillStyle = "#4c00ff"; sg.fill(); sg.fillStyle = "#ffffff"; sg.font = "800 17px Manrope, Arial"; sg.fillText("SIGNAL", 274, 176);
+      sg.beginPath(); sg.arc(780, 170, 12 * pulse, 0, 2 * PI); sg.fillStyle = "#ff5ad1"; sg.fill();
+      sg.fillStyle = "#040405"; sg.font = "800 40px Manrope, Arial"; sg.fillText("Champion on the move", 244, 244);
+      [["Person", "Maya R."], ["Left", "Northwind"], ["Heading to", u > 0.6 ? "Following her..." : "..."]].forEach(function (r, i) { var y = 310 + i * 52;
+        sg.fillStyle = "#5c5850"; sg.font = "600 24px Manrope, Arial"; sg.fillText(r[0], 244, y); sg.fillStyle = "#040405"; sg.font = "700 26px Manrope, Arial"; sg.fillText(r[1], 430, y); });
+      return;
+    }
+    sg.fillStyle = "#040405"; sg.font = "800 38px Manrope, Arial"; sg.fillText("Book a Meeting", 72, 140);
+    var lw = drawLogo(t.id, 72, 164, 34); sg.fillStyle = "#5c5850"; sg.font = "600 22px Manrope, Arial"; sg.fillText(t.addr, 72 + lw + 22, 190);
+    var slots = ["Tue 10:00 AM", "Wed 1:30 PM", "Thu 2:00 PM"], pick = u > 0.3;
+    slots.forEach(function (sl, i) { var x = 72 + i * 300, y = 246; rr(x, y, 270, 76, 14); var on = pick && i === 2; sg.fillStyle = on ? "#4c00ff" : "#ffffff"; sg.fill(); sg.strokeStyle = on ? "#4c00ff" : "#d9d0f0"; sg.lineWidth = 3; sg.stroke();
+      sg.fillStyle = on ? "#ffffff" : "#040405"; sg.font = "700 26px Manrope, Arial"; sg.textAlign = "center"; sg.fillText(sl, x + 135, y + 47); sg.textAlign = "left"; });
+    rr(72, 378, 250, 64, 32); sg.fillStyle = u > 0.45 ? "#4c00ff" : "#bdb3d8"; sg.fill(); sg.fillStyle = "#ffffff"; sg.font = "800 24px Manrope, Arial"; sg.fillText("Book meeting", 120, 418);
+    if (u > 0.5) {
+      var f = cl((u - 0.5) / 0.2); sg.fillStyle = "#4c00ff"; sg.beginPath(); sg.arc(197, 410, f * 1250, 0, 2 * PI); sg.fill();
+      if (u > 0.66) { sg.globalAlpha = cl((u - 0.66) / 0.1); sg.textAlign = "center";
+        sg.fillStyle = "#ffffff"; sg.font = "400 76px Fraunces, Georgia, serif"; sg.fillText("Meeting", W / 2 - 112, 236);
+        sg.fillStyle = "#be79ff"; sg.font = "italic 400 76px Fraunces, Georgia, serif"; sg.fillText("booked.", W / 2 + 160, 236); sg.textAlign = "left";
+        var c = cl((u - 0.68) / 0.12); sg.strokeStyle = "#ffffff"; sg.lineWidth = 12; sg.lineCap = "round"; sg.lineJoin = "round"; sg.beginPath(); sg.moveTo(W / 2 - 42, 318);
+        if (c > 0) sg.lineTo(W / 2 - 42 + 30 * Math.min(1, c * 2), 318 + 30 * Math.min(1, c * 2)); if (c > 0.5) sg.lineTo(W / 2 - 12 + 64 * (c - 0.5) * 2, 348 - 72 * (c - 0.5) * 2); sg.stroke();
+        rr(W / 2 - 270, 396, 540, 112, 16); sg.fillStyle = "rgba(255,255,255,0.97)"; sg.fill(); drawLogo("mark", W / 2 - 246, 422, 60);
+        sg.fillStyle = "#040405"; sg.font = "800 26px Manrope, Arial"; sg.fillText("Breakout × " + t.name, W / 2 - 168, 448);
+        sg.fillStyle = "#5c5850"; sg.font = "600 22px Manrope, Arial"; sg.fillText("Thursday, 2:00 PM · " + (G.roomKind === "m2" ? "Maya R. and team" : "3 attendees"), W / 2 - 168, 484);
+        sg.globalAlpha = 1; }
+    }
+  }
+
+  // ------------------------------------------------------------ the game: title, mission select (with the target account), two missions, free roam
   var G = { state: "title", t: 0, st: 0, gm: 3 * 1440 + 18 * 60 + 5, rate: 1, control: false, shake: 0, meter: 1, sus: 0, lost: 0, done: { m1: false, m2: false },
-            cutCam: null, menu: false, sel: 0, money: 350, moneyShown: 350, health: 100, wanted: 0, wantedT: 0, subs: null, story: false };
-  var COMMITTEE_DOOR = [210, 15.6], SHOP_DOOR = [-109.6, -207], HALCYON_DOOR = [30, -191.2];
+            cutCam: null, menu: false, sel: 0, money: 350, moneyShown: 350, health: 100, wanted: 0, wantedT: 0, story: false, target: 0, roomKind: null };
+  function T() { return TARGETS[G.target]; }
+  G.W = words(T());
+  var SHOP_DOOR = [-109.6, -207];
+  function doorAt(t, a, b) { var n = t.out; return [t.door[0] + n[0] * a - n[1] * b, t.door[1] + n[1] * a + n[0] * b]; }
   var hud = $("hud"), help = $("help"), obj = $("obj"), sub = $("sub"), mtitle = $("mtitle"), pass = $("pass"), label = $("label"), meter = $("meter"), warn = $("warn");
   function setHelp(html) { if (!html) { help.hidden = true; return; } help.innerHTML = html; help.hidden = false; SFX.ping(); }
   function setObj(html) { if (!html) { obj.hidden = true; return; } obj.innerHTML = html; obj.hidden = false; }
@@ -979,7 +1086,7 @@
     void pass.offsetWidth; pass.classList.add("slam"); }
   function cut(on) { $("game").classList.toggle("cut", !!on); }
   function fadeTo(fn) { $("fade").classList.add("on"); setTimeout(function () { fn(); $("fade").classList.remove("on"); }, 650); }
-  function enter(state) { G.state = state; G.st = 0; G.subs = null; sub.hidden = true; }
+  function enter(state) { G.state = state; G.st = 0; sub.hidden = true; }
   function subtitles(list, t) {                   // cutscene lines, the speaker's name in the game's colours
     var on = null; list.forEach(function (l) { if (t >= l[0] && t < l[1]) on = l; });
     if (!on) { sub.hidden = true; return; }
@@ -988,22 +1095,26 @@
   }
   function clearUI() { pass.hidden = true; meter.hidden = true; warn.hidden = true; mtitle.hidden = true; setObj(null); setHelp(null); setLabel(null); sub.hidden = true; cut(false); }
   function placeHeroAtShop() { P.onMoped = false; P.carry = false; P.x = -110.4; P.z = -210.4; P.yaw = -PI * 0.6; P.speed = 0; MP.x = -114; MP.z = -207; MP.y = h(MP.z); MP.yaw = 0; MP.speed = 0; MP.air = false; MP.vyG = 0; look.yaw = 0; camYawS = 0; snapCam = true; }
-  function start() {
-    audioInit();
-    if (G.state !== "title") return;
-    $("titleScreen").hidden = true; enter("idle"); openMenu();
-  }
-  // the mission menu
+  function placeHeroOutside(t) { var a = doorAt(t, 4, 0), m = doorAt(t, 7.6, 1.5); P.onMoped = false; P.carry = false; P.x = a[0]; P.z = a[1]; P.yaw = t.ry; MP.x = m[0]; MP.z = m[1]; MP.y = h(m[1]); MP.yaw = t.ry + PI / 2; MP.speed = 0; camYawS = t.ry; snapCam = true; }
+  function start() { audioInit(); if (G.state !== "title") return; $("titleScreen").hidden = true; enter("idle"); openMenu(); }
+  // the mission menu, with the target account on top
   var MENU = Array.prototype.slice.call(document.querySelectorAll("#menuList li"));
-  function drawMenu() { MENU.forEach(function (li, i) { li.classList.toggle("sel", i === G.sel); var d = li.querySelector(".done"); if (d) d.hidden = !G.done[li.dataset.id]; }); }
+  function drawMenu() {
+    MENU.forEach(function (li, i) { li.classList.toggle("sel", i === G.sel); var d = li.querySelector(".done"); if (d) d.hidden = !G.done[li.dataset.id]; });
+    var t = T(); $("tName").textContent = t.name; $("tAddr").textContent = t.addr + ". Left or right to change the target account.";
+    $("tLogo").src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(LOGOS[t.id]); $("tLogo").alt = t.name + " logo";
+  }
+  function cycleTarget(d) { G.target = (G.target + d + TARGETS.length) % TARGETS.length; G.W = words(T()); drawMenu(); SFX.menu(); }
   function openMenu() { if (G.state === "title") return; G.menu = true; $("menu").hidden = false; $("endScreen").hidden = true; drawMenu(); SFX.menu(); }
   function closeMenu() { G.menu = false; $("menu").hidden = true; }
+  function leaveRoom() { roomGroup.visible = false; G.roomKind = null; COMM.forEach(function (p) { pose(p, { hidden: true }); }); pose(champM, { hidden: true }); }
   function choose(id) {
-    closeMenu(); SFX.click(); taxi.g.visible = taxi.shadow.visible = false; COMM.forEach(function (p) { pose(p, { hidden: true }); });
+    if (id === "target") { cycleTarget(1); return; }
+    closeMenu(); SFX.click(); taxi.g.visible = taxi.shadow.visible = false; leaveRoom();
     fadeTo(function () {
-      clearUI(); G.wanted = 0; G.health = 100;
+      clearUI(); G.wanted = 0; G.health = 100; placeSignals(T());
       if (id === "m1") { G.gm = 3 * 1440 + 18 * 60 + 5; G.rate = 1; G.story = true; placeHeroAtShop(); startM1(); }
-      else if (id === "m2") { G.story = false; startM2(); }
+      else if (id === "m2") { G.story = false; G.gm = 7 * 1440 + 18 * 60 + 32; G.rate = 1; setLabel(G.W.label); roomScene("alert"); }
       else { G.gm = 3 * 1440 + 18 * 60 + 5; G.rate = 1; placeHeroAtShop(); G.control = true; enter("roam"); setHelp("Free roam. Press <span class=\"y\">Esc</span> for missions."); setTimeout(function () { if (G.state === "roam") setHelp(null); }, 5000); }
     });
   }
@@ -1013,6 +1124,7 @@
     if (G.menu) {
       if (k === "arrowdown" || k === "s") { G.sel = (G.sel + 1) % MENU.length; drawMenu(); SFX.menu(); }
       if (k === "arrowup" || k === "w") { G.sel = (G.sel + MENU.length - 1) % MENU.length; drawMenu(); SFX.menu(); }
+      if ((k === "arrowleft" || k === "a" || k === "arrowright" || k === "d") && MENU[G.sel].dataset.id === "target") cycleTarget(k === "arrowleft" || k === "a" ? -1 : 1);
       if (k === "enter" || k === " ") choose(MENU[G.sel].dataset.id);
       if (k === "escape" && G.state !== "idle") closeMenu();
       return;
@@ -1024,16 +1136,18 @@
   }
   $("titleScreen").addEventListener("click", start);
   $("again").addEventListener("click", function () { openMenu(); });
-  $("roam").addEventListener("click", function () { $("endScreen").hidden = true; G.control = true; cut(false); enter("roam"); setHelp("Free roam. Press <span class=\"y\">Esc</span> for missions."); });
+  $("roam").addEventListener("click", function () { $("endScreen").hidden = true; placeHeroOutside(T()); G.control = true; cut(false); enter("roam"); setHelp("Free roam. Press <span class=\"y\">Esc</span> for missions."); });
   function fail(reason) { G.control = false; SFX.fail(); showPass("MISSION FAILED!", reason, true); setObj("Press <span class=\"y\">Enter</span> or tap to retry, <span class=\"y\">Esc</span> for missions."); enter("fail"); G.failOf = G.mission; }
   $("game").addEventListener("pointerdown", function (e) { if (G.state === "fail" && G.st > 1.2 && !G.menu && e.target.tagName !== "BUTTON") retry(); });
   function retry() { clearUI(); fadeTo(function () { if (G.failOf === 1) { placeHeroAtShop(); G.gm = 3 * 1440 + 18 * 60 + 5; startM1(); } else startM2(); }); }
-  function startM1() { G.mission = 1; G.control = false; cut(true); setLabel(TXT.label.m1); setHelp(TXT.m1.help); enter("m1intro"); }
+  function startM1() { G.mission = 1; G.control = false; placeSignals(T()); cut(true); setLabel(G.W.label); setHelp(G.W.m1.help); enter("m1intro"); }
+  function roomScene(kind) { G.roomKind = kind; roomGroup.visible = true; wallLogo.material.map = wallTex(kind === "alert" ? "breakout" : T().id); wallLogo.material.needsUpdate = true; cut(true); enter("room"); }
   function startM2() {
-    G.gm = 7 * 1440 + 18 * 60 + 40; G.rate = 2.4; taxi.g.visible = taxi.shadow.visible = true; TX.s = 0; TX.v = 0;
-    P.onMoped = true; P.carry = false; MP.x = 232; MP.z = 9.6; MP.yaw = -PI / 2; MP.speed = 0; MP.air = false; MP.y = 0; MP.vyG = 0; look.yaw = 0; camYawS = MP.yaw; snapCam = true;
-    G.champ = { x: 210, z: 20.4, walk: 0, inTaxi: false }; G.mission = 2; G.sus = 0; G.lost = 0; G.control = false; cut(true);
-    setHelp(TXT.m2.help); setLabel(TXT.label.m2); setObj(null); mtitle.textContent = TXT.m2.title; SFX.phone(); enter("m2intro");
+    leaveRoom(); placeSignals(T()); setRoute(T().route);
+    G.gm = 7 * 1440 + 18 * 60 + 40; G.rate = 2.4; taxi.g.visible = taxi.shadow.visible = true; TX.s = 0; TX.v = 0; TX.yaw = PI / 2;
+    P.onMoped = true; P.carry = false; MP.x = 58; MP.z = 9.6; MP.yaw = PI / 2; MP.speed = 0; MP.air = false; MP.y = 0; MP.vyG = 0; look.yaw = 0; camYawS = MP.yaw; snapCam = true;
+    G.champ = { x: 90, z: 20.4, walk: 0, inTaxi: false }; G.mission = 2; G.sus = 0; G.lost = 0; G.control = false; cut(true);
+    setHelp(G.W.m2.help); setLabel(G.W.label); setObj(null); mtitle.textContent = G.W.m2.title; SFX.phone(); enter("m2intro");
   }
   function reward() { G.money += 1000; }
 
@@ -1061,60 +1175,86 @@
   }
 
   function mission(dt) {
-    var s = G.state, t = G.st, M = TXT;
+    var s = G.state, t = G.st, Wd = G.W, tg = T();
     corona.visible = false; ARR.forEach(function (a) { a.visible = false; });
-    if (s === "m1intro") {                                         // the 3 windows light up; the title; CJ gets the pizzas
-      G.cutCam = t < 2.6 ? { p: [201 + t * 0.6, 1.8 + t * 0.5, -12], l: [210, 52 + t * 5, 26], fov: 50 } : { p: [-109.8, 40.1, -216], l: [-113.2, 39, -206.5], fov: 54 };
-      subtitles(M.m1.intro, t);
-      if (t > 0.6) { mtitle.textContent = M.m1.title; mtitle.hidden = false; }
+    var mark = doorAt(tg, 4.4, 0);
+    if (s === "m1intro") {                                         // the 3 windows light up at the target; the title; CJ gets the pizzas
+      var wy = tg.dy + Math.min(tg.ht * 0.5, 30), c0 = doorAt(tg, 16, -7), l0 = doorAt(tg, 0, 0);
+      G.cutCam = t < 2.6 ? { p: [c0[0], tg.dy + 1.8 + t * 0.5, c0[1]], l: [l0[0], wy - 12 + t * 4, l0[1]], fov: 54 } : { p: [-109.8, 40.1, -216], l: [-113.2, 39, -206.5], fov: 54 };
+      subtitles(Wd.m1.intro, t);
+      if (t > 0.6) { mtitle.textContent = Wd.m1.title; mtitle.hidden = false; }
       if (t > 2.6) { P.carry = true; P.x = -112.3; P.z = -207.8; P.yaw = -PI / 2; }
-      if (t > 5.0) { mtitle.hidden = true; cut(false); G.control = true; G.meter = 1; meter.hidden = false; $("meterName").textContent = "SIGNAL"; $("zone").hidden = true; setObj(M.m1.mount); enter("m1"); }
+      if (t > 5.0) { mtitle.hidden = true; cut(false); G.control = true; G.meter = 1; meter.hidden = false; $("meterName").textContent = "SIGNAL"; $("zone").hidden = true; setObj(Wd.m1.mount); enter("m1"); }
     } else if (s === "m1") {
-      G.meter -= dt / 62; var d = Math.hypot(P.x - COMMITTEE_DOOR[0], P.z - COMMITTEE_DOOR[1]);
-      if (P.onMoped && obj.innerHTML.indexOf("scooter") >= 0) { setObj(M.m1.go); G.objT = 6; }
+      G.meter -= dt / 62; var d = Math.hypot(P.x - mark[0], P.z - mark[1]);
+      if (P.onMoped && obj.innerHTML.indexOf("scooter") >= 0) { setObj(Wd.m1.go); G.objT = 6; }
       if (G.objT > 0) { G.objT -= dt; if (G.objT <= 0) obj.hidden = true; }
-      corona.visible = true; corona.position.set(COMMITTEE_DOOR[0], 0.7, COMMITTEE_DOOR[1]); ARR[4].visible = true; ARR[4].position.set(COMMITTEE_DOOR[0], 3 + 0.2 * Math.sin(G.t * 4), COMMITTEE_DOOR[1]); ARR[4].rotation.set(PI, G.t * 2, 0);
+      corona.visible = true; corona.position.set(mark[0], h(mark[1]) + 0.7, mark[1]); ARR[4].visible = true; ARR[4].position.set(mark[0], h(mark[1]) + 3 + 0.2 * Math.sin(G.t * 4), mark[1]); ARR[4].rotation.set(PI, G.t * 2, 0);
       var fill = Math.max(0, G.meter), c1 = new THREE.Color("#e1a730").lerp(new THREE.Color("#5a5a5a"), 1 - fill);
       $("meterFill").style.width = (fill * 100).toFixed(1) + "%"; $("meterFill").style.background = "#" + c1.getHexString();
-      if (G.meter <= 0) { meter.hidden = true; fail(M.m1.fail); return; }
+      if (G.meter <= 0) { meter.hidden = true; fail(Wd.m1.fail); return; }
       if (d < 3.2 && Math.abs(MP.speed) < 10) { G.control = false; meter.hidden = true; obj.hidden = true; cut(true);
-        P.onMoped = false; MP.x = 210; MP.z = 11.3; MP.yaw = PI / 2; MP.speed = 0; MP.y = 0; P.x = 210; P.z = 17.3; P.yaw = 0; P.carry = true; enter("m1outro"); }
-    } else if (s === "m1outro") {
-      G.cutCam = { p: [198.4 + t * 0.2, 2.5, 9.8 + t * 0.1], l: [210.4, 2.2, 19.2], fov: 50 };
-      COMM.forEach(function (p, i) { var t0 = 0.3 + i * 0.35, u = cl((t - t0) / 0.7), tx = [207.3, 210.2, 213.1][i], tz = [18.6, 19.0, 18.6][i];
+        var hp = doorAt(tg, 3.6, 0), mp = doorAt(tg, 7.6, 1.5); P.onMoped = false; MP.x = mp[0]; MP.z = mp[1]; MP.y = h(mp[1]); MP.yaw = tg.ry + PI / 2; MP.speed = 0; MP.air = false;
+        P.x = hp[0]; P.z = hp[1]; P.y = h(hp[1]); P.yaw = tg.ry + PI; P.carry = true; enter("m1door"); }
+    } else if (s === "m1door") {                                    // the committee comes down; CJ hands over the pizzas
+      var cp1 = doorAt(tg, 10.5, -8.5), cl1 = doorAt(tg, 1.8, 0);
+      G.cutCam = { p: [cp1[0], tg.dy + 2.5, cp1[1]], l: [cl1[0], tg.dy + 2.0, cl1[1]], fov: 50 };
+      COMM.forEach(function (p, i) { var t0 = 0.3 + i * 0.35, u = cl((t - t0) / 0.7), a0 = doorAt(tg, 0.4, 0), a1 = doorAt(tg, 1.7 + (i === 1 ? 0.4 : 0), (i - 1) * 2.9);
         if (t < t0) { pose(p, { hidden: true }); return; }
-        pose(p, { x: lerp(210, tx, u), y: 0, z: lerp(20.6, tz, u), yaw: PI, mode: u < 1 ? "walk" : "stand", phase: u * 4, amp: 0.5, carry: i === 1 && t > 2.4 });
-        ARR[i].visible = true; ARR[i].position.set(p.g.position.x, 2.8 + 0.12 * Math.sin(G.t * 5 + i), p.g.position.z); ARR[i].rotation.set(PI, G.t * 2.5, 0); });
-      if (t < 3.5) subtitles(M.m1.outro, t); else sub.hidden = true;
-      if (t > 2.4) P.carry = false;
-      if (t > 3.5 && pass.hidden) { SFX.pass(); reward(); showPass("MISSION PASSED!", M.m1.passed); }
-      if (t > 8) { pass.hidden = true; COMM.forEach(function (p) { pose(p, { hidden: true }); }); G.done.m1 = true; setHelp(null); setLabel(null); cut(false);
-        if (G.story) { enter("lapse"); G.rate = 900; } else { G.control = true; enter("roam"); } }
+        var px = lerp(a0[0], a1[0], u), pz = lerp(a0[1], a1[1], u);
+        pose(p, { x: px, y: h(pz), z: pz, yaw: tg.ry, mode: u < 1 ? "walk" : "stand", phase: u * 4, amp: 0.5, carry: i === 1 && t > 2.6 });
+        ARR[i].visible = true; ARR[i].position.set(px, h(pz) + 2.8 + 0.12 * Math.sin(G.t * 5 + i), pz); ARR[i].rotation.set(PI, G.t * 2.5, 0); });
+      subtitles(Wd.m1.door, t); if (t > 2.6) P.carry = false;
+      if (t > 4.4) { enter("wait"); fadeTo(function () { roomScene("m1"); }); }
+    } else if (s === "room") {                                     // CJ, the SDR: pitch, pick a slot, book it live on the wall screen
+      var X = RM.x, Y = RM.y, Z = RM.z, k = G.roomKind;
+      if (k === "alert") {
+        pose(heroM, { x: X, y: Y, z: Z + 3.9, yaw: PI, mode: "sit", noShadow: true });
+        drawScreen("alert", t / 4, tg); scrTex.needsUpdate = true;
+        G.cutCam = t < 3.0 ? { p: [X + 0.4, Y + 1.6, Z - 1.4], l: [X, Y + 1.75, Z - 4.9], fov: 54 } : { p: [X - 1.8, Y + 1.5, Z + 1.4], l: [X, Y + 1.15, Z + 3.8], fov: 50 };
+        subtitles(Wd.m2.alert, t);
+        if (t > 5.9) { enter("wait"); fadeTo(startM2); }
+      } else {
+        var m2 = k === "m2";
+        pose(heroM, { x: X + 1.0, y: Y, z: Z - 3.7, yaw: 0, mode: "stand", noShadow: true, point: t > 6.1 && t < 9 });
+        if (m2) { pose(champM, { x: X - 1.5, y: Y, z: Z - 1.6, yaw: PI / 2, mode: "sit", noShadow: true }); pose(COMM[0], { x: X + 1.5, y: Y, z: Z - 1.6, yaw: -PI / 2, mode: "sit", noShadow: true }); pose(COMM[1], { hidden: true }); pose(COMM[2], { hidden: true }); }
+        else { pose(COMM[0], { x: X - 1.5, y: Y, z: Z - 1.6, yaw: PI / 2, mode: "sit", noShadow: true }); pose(COMM[1], { x: X + 1.5, y: Y, z: Z - 1.6, yaw: -PI / 2, mode: "sit", noShadow: true }); pose(COMM[2], { x: X - 1.5, y: Y, z: Z, yaw: PI / 2, mode: "sit", noShadow: true }); }
+        drawScreen("book", cl((t - 8.2) / 3.2), tg); scrTex.needsUpdate = true;
+        G.cutCam = t < 3.0 ? { p: [X + 4.8, Y + 2.5, Z + 4.2], l: [X - 0.3, Y + 1.0, Z - 2.4], fov: 54 }
+          : t < 6.0 ? { p: [X - 0.6, Y + 1.45, Z - 0.6], l: [X + 1.0, Y + 1.6, Z - 3.7], fov: 50 }
+          : t < 8.2 ? { p: [X + 1.6, Y + 1.8, Z - 3.6], l: [X - 1.5, Y + 1.1, Z - 0.6], fov: 52 }
+          : { p: [X + 0.2, Y + 1.7, Z - 1.9], l: [X, Y + 1.75, Z - 4.9], fov: 52 };
+        subtitles(m2 ? Wd.m2.room : Wd.m1.room, t);
+        if (t > 10.7 && pass.hidden) { SFX.pass(); reward(); showPass("MISSION PASSED!", m2 ? Wd.m2.passed : Wd.m1.passed); }
+        if (t > 15.5) { pass.hidden = true; setHelp(null);
+          if (m2) { G.done.m2 = true; enter("wait"); fadeTo(function () { leaveRoom(); taxi.g.visible = taxi.shadow.visible = false; setLabel(null); cut(false); placeHeroOutside(tg); enter("close"); }); }
+          else { G.done.m1 = true; enter("wait"); fadeTo(function () { leaveRoom(); cut(false); placeHeroOutside(tg); if (G.story) { setLabel(null); enter("lapse"); G.rate = 900; } else { setLabel(null); G.control = true; enter("roam"); } }); } }
+      }
     } else if (s === "lapse") {                                    // the clock spins to Monday evening
-      G.cutCam = { p: [210 + Math.sin(-2.45 + t * 0.2) * 290, 210, 33 + Math.cos(-2.45 + t * 0.2) * 290], l: [180, 40, 0], fov: 54 };
-      var target = 7 * 1440 + 18 * 60 + 40; G.rate = Math.max(1, (target - G.gm) / Math.max(0.3, 3.2 - t));
-      if (t > 3.2) { fadeTo(startM2); enter("wait"); }
-    } else if (s === "m2intro") {                                  // the phone rings; she leaves the office for a taxi
-      G.cutCam = { p: [201, 2.4, 6.5], l: [204, 1.6, 16], fov: 52 };
-      var ch = G.champ, tgt = [198.8, 13.2], dx = tgt[0] - ch.x, dz = tgt[1] - ch.z, dd = Math.hypot(dx, dz);
-      if (dd > 0.2) { ch.x += dx / dd * 3.0 * dt; ch.z += dz / dd * 3.0 * dt; ch.walk += dt * 6; }
+      G.cutCam = { p: [90 + Math.sin(-2.45 + t * 0.2) * 290, 210, 33 + Math.cos(-2.45 + t * 0.2) * 290], l: [120, 40, 0], fov: 54 };
+      var target = 7 * 1440 + 18 * 60 + 32; G.rate = Math.max(1, (target - G.gm) / Math.max(0.3, 3.2 - t));
+      if (t > 3.2) { G.rate = 1; enter("wait"); fadeTo(function () { setLabel(G.W.label); roomScene("alert"); }); }
+    } else if (s === "m2intro") {                                  // she leaves Northwind with her box for a taxi
+      G.cutCam = { p: [76, 2.4, 3.5], l: [86, 1.6, 15], fov: 52 };
+      var ch = G.champ, tgt = [85.4, 12.9], dx = tgt[0] - ch.x, dz = tgt[1] - ch.z, dd = Math.hypot(dx, dz);
+      if (dd > 0.2) { ch.x += dx / dd * 2.4 * dt; ch.z += dz / dd * 2.4 * dt; ch.walk += dt * 5.5; }
       pose(champM, { x: ch.x, y: 0, z: ch.z, yaw: Math.atan2(dx, dz), mode: dd > 0.2 ? "walk" : "stand", phase: ch.walk, carry: true, hidden: t > 4.6 });
-      taxiPose(); subtitles(M.m2.intro, t); if (t > 0.6) mtitle.hidden = false;
-      if (t > 4.6) { mtitle.hidden = true; cut(false); G.control = true; ch.inTaxi = true; meter.hidden = false; $("meterName").textContent = "DISTANCE"; $("zone").hidden = false; setObj(M.m2.go); G.objT = 6; enter("m2"); }
+      taxiPose(); subtitles(Wd.m2.intro, t); if (t > 0.6) mtitle.hidden = false;
+      if (t > 4.6) { mtitle.hidden = true; cut(false); G.control = true; ch.inTaxi = true; meter.hidden = false; $("meterName").textContent = "DISTANCE"; $("zone").hidden = false; setObj(Wd.m2.go); G.objT = 6; enter("m2"); }
     } else if (s === "m2") {
-      var ch2 = G.champ;
+      var ch2 = G.champ, entry = doorAt(tg, 1.2, 0);
       if (G.objT > 0) { G.objT -= dt; if (G.objT <= 0) obj.hidden = true; }
-      if (!ch2.inTaxi) {
-        var tg = ch2.x > 31 ? [30.2, -188] : HALCYON_DOOR, ex = tg[0] - ch2.x, ez = tg[1] - ch2.z, ed = Math.hypot(ex, ez);
-        if (ed > 0.2) { ch2.x += ex / ed * 1.7 * dt; ch2.z += ez / ed * 1.7 * dt; ch2.walk += dt * 4.4; }
-        else if (tg === HALCYON_DOOR) { G.control = false; cut(true); meter.hidden = true; warn.hidden = true; enter("m2outro"); }
+      if (!ch2.inTaxi) {                                           // out of the taxi, on foot to her new office
+        var ex = entry[0] - ch2.x, ez = entry[1] - ch2.z, ed = Math.hypot(ex, ez);
+        if (ed > 0.25) { ch2.x += ex / ed * 1.7 * dt; ch2.z += ez / ed * 1.7 * dt; ch2.walk += dt * 4.4; }
+        else { G.control = false; cut(true); meter.hidden = true; warn.hidden = true; enter("m2door"); }
         pose(champM, { x: ch2.x, y: h(ch2.z), z: ch2.z, yaw: Math.atan2(ex, ez), mode: "walk", phase: ch2.walk, carry: true });
       } else {
         var ahead = Math.hypot(P.x - taxi.g.position.x, P.z - taxi.g.position.z) < 8 && ((P.x - taxi.g.position.x) * Math.sin(TX.yaw) + (P.z - taxi.g.position.z) * Math.cos(TX.yaw)) > 0;
         var end = RL[RL.length - 1], left = end - TX.s, corner = 1e9, ri2 = routeAt(TX.s)[3];
         if (ri2 < RL.length) corner = RL[ri2] - TX.s;
         var vt = ahead ? 0 : Math.min(12, 3 + corner * 0.35, 1 + left * 0.5); TX.v = lerp(TX.v, vt, Math.min(1, dt * 1.6)); TX.s += TX.v * dt;
-        if (left < 0.3 && TX.v < 0.4) { ch2.inTaxi = false; ch2.x = 35.4; ch2.z = -187.6; ch2.walk = 0; }
+        if (left < 0.3 && TX.v < 0.4) { var ep = routeAt(end); ch2.inTaxi = false; ch2.x = ep[0] - tg.out[1] * 1.4; ch2.z = ep[1] + tg.out[0] * 1.4; ch2.walk = 0; }
         pose(champM, { hidden: true });
       }
       taxiPose();
@@ -1125,28 +1265,29 @@
       $("meterFill").style.width = (cl((gap - 4) / 90) * 100).toFixed(1) + "%"; $("meterFill").style.background = tooClose ? "#ff3b3b" : tooFar ? "#5a5a5a" : "#e1a730";
       $("zone").style.left = (cl((9 - 4) / 90) * 100) + "%"; $("zone").style.width = (cl((80 - 9) / 90) * 100) + "%";
       warn.hidden = !(tooClose || tooFar) || Math.floor(G.t * 3) % 2 === 1; warn.textContent = tooClose ? "TOO CLOSE" : "YOU'RE LOSING HER";
-      if (G.sus > 3) { warn.hidden = true; meter.hidden = true; fail(M.m2.spotted); return; }
-      if (G.lost > 4) { warn.hidden = true; meter.hidden = true; fail(M.m2.lost); return; }
-    } else if (s === "m2outro") {
-      G.cutCam = { p: [16 + t * 0.4, 39 + t * 0.1, -167 - t * 0.6], l: [30, 48 + t, -193], fov: 56 };
-      pose(champM, { x: 30, y: 38, z: -191.2 - Math.min(3, t * 1.4), yaw: PI, mode: "walk", phase: G.t * 4.4, carry: true, hidden: t > 1.4 });
-      GLOW2.material.opacity = cl((t - 1.2) / 0.3) * 0.9; ARR[5].visible = t > 1.2; ARR[5].scale.set(1.6, 2.4, 1.6); ARR[5].position.set(30, 46 + 0.3 * Math.sin(G.t * 4), -192); ARR[5].rotation.set(PI, G.t * 2, 0);
-      if (t < 2) subtitles(M.m2.outro, t); else sub.hidden = true;
-      if (t > 2 && pass.hidden) { SFX.pass(); reward(); setLabel(TXT.label.m2b); showPass("MISSION PASSED!", M.m2.passed); }
-      if (t > 7) { pass.hidden = true; G.done.m2 = true; taxi.g.visible = taxi.shadow.visible = false; enter("close"); cut(false); setHelp(null); setLabel(null); }
+      if (G.sus > 3) { warn.hidden = true; meter.hidden = true; fail(Wd.m2.spotted); return; }
+      if (G.lost > 4) { warn.hidden = true; meter.hidden = true; fail(Wd.m2.lost); return; }
+    } else if (s === "m2door") {                                   // she walks into her new company; Breakout lights it up
+      var cp2 = doorAt(tg, 16, -10), inn = doorAt(tg, 1.2 - Math.min(3.2, t * 1.4), 0);
+      G.cutCam = { p: [cp2[0], tg.dy + 3.2, cp2[1]], l: [tg.door[0], tg.dy + 6, tg.door[1]], fov: 56 };
+      pose(champM, { x: inn[0], y: tg.dy, z: inn[1], yaw: tg.ry + PI, mode: "walk", phase: G.t * 4.4, carry: true, hidden: t > 1.0 });
+      GLOW2.material.opacity = cl((t - 0.9) / 0.3) * 0.9; ARR[5].visible = t > 0.9; ARR[5].scale.set(1.6, 2.4, 1.6);
+      var a5 = doorAt(tg, 1.5, 0); ARR[5].position.set(a5[0], tg.dy + 8 + 0.3 * Math.sin(G.t * 4), a5[1]); ARR[5].rotation.set(PI, G.t * 2, 0);
+      subtitles(Wd.m2.door, t);
+      if (t > 3.0) { enter("wait"); fadeTo(function () { roomScene("m2"); }); }
     } else if (s === "close") {
-      var u = Math.min(1, t / 6), e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
-      G.cutCam = { p: [lerp(24, -150, e), lerp(82, 320, e), lerp(-138, 230, e)], l: [lerp(30, 110, e), lerp(44, 0, e), lerp(-200, -60, e)], fov: 54 };
+      var u = Math.min(1, t / 6), e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2, c3 = doorAt(tg, 30, -14);
+      G.cutCam = { p: [lerp(c3[0], -150, e), lerp(tg.dy + 30, 320, e), lerp(c3[1], 230, e)], l: [lerp(tg.door[0], 110, e), lerp(tg.dy + 20, 0, e), lerp(tg.door[1], -60, e)], fov: 54 };
       if (t > 2.4 && $("endScreen").hidden && !G.menu) { $("endScreen").hidden = false; SFX.ping(); }
     } else if (s === "idle") {
       G.cutCam = { p: [60 + Math.sin(G.t * 0.05) * 360, 170, -40 + Math.cos(G.t * 0.05) * 360], l: [80, 40, -20], fov: 52 };
     }
-    var winOn = s === "m1intro" ? [0, 1, 2].map(function (i) { return t > 0.3 + i * 0.4 ? 1 : 0; }) : s === "m1" || s === "m1outro" ? [1, 1, 1] : [0, 0, 0];
+    var winOn = s === "m1intro" ? [0, 1, 2].map(function (i) { return t > 0.3 + i * 0.4 ? 1 : 0; }) : s === "m1" || s === "m1door" ? [1, 1, 1] : [0, 0, 0];
     WIN.forEach(function (w, i) { w.material.opacity = winOn[i] * (0.85 + 0.15 * Math.sin(G.t * 6 + i)); }); GLOW.material.opacity = (winOn[0] + winOn[1] + winOn[2]) / 3 * 0.8;
-    if (s !== "m2outro") GLOW2.material.opacity = G.done.m2 ? 0.9 : 0;
+    if (s !== "m2door") GLOW2.material.opacity = G.done.m2 && s !== "m2" && s !== "m2intro" ? 0.9 : 0;
     BEAMS.forEach(function (b) { b.visible = false; });
-    if (s === "m1" || s === "m1intro") beamAt(BEAMS[0], 210, CT, 33.5, 5);
-    if (s === "close" || (s === "roam" && G.done.m2)) CLOSE_BLIPS.forEach(function (r, i) { if ((s === "roam" || G.st > i * 0.33) && i + 1 < BEAMS.length) beamAt(BEAMS[i + 1], r[0], r[1], r[2], i < 2 ? 5 : 3.5); });
+    if (s === "m1" || s === "m1intro") beamAt(BEAMS[0], (tg.block[0] + tg.block[1]) / 2, tg.top, (tg.block[2] + tg.block[3]) / 2, 5);
+    if (s === "close" || (s === "roam" && G.done.m2)) CLOSE_BLIPS.forEach(function (r, i) { if ((s === "roam" || G.st > i * 0.33) && i + 1 < BEAMS.length) beamAt(BEAMS[i + 1], r[0], r[1], r[2], i < 3 ? 5 : 3.5); });
   }
   function taxiPose() { var r = routeAt(TX.s); TX.yaw += angDiff(TX.yaw, r[2]) * 0.2; taxi.g.position.set(r[0], h(r[1]), r[1]); taxi.g.rotation.set(-Math.atan(slope(r[1]) * Math.cos(TX.yaw)), TX.yaw, 0, "YXZ"); taxi.shadow.position.set(r[0], h(r[1]) + 0.07, r[1]); taxi.shadow.rotation.set(-PI / 2, 0, -TX.yaw); }
 
@@ -1212,8 +1353,9 @@
     STARS.forEach(function (s, i) { s.classList.toggle("on", i >= 6 - G.wanted && (G.wantedT > 20 ? Math.floor(G.t * 4) % 2 === 0 : true)); });
     if (radioMsg > 0) { radioMsg -= dt; $("radio").hidden = false; } else $("radio").hidden = true;
     var blips = [], s = G.state;
-    if (s === "m1") [-6, 0, 6].forEach(function (o) { blips.push({ x: 210 + o, z: 33.5, color: "#be79ff", square: true, size: 7, pulse: true }); });
-    if (s === "m1") blips.push({ x: COMMITTEE_DOOR[0], z: COMMITTEE_DOOR[1], color: "#f0c850", size: 9 });
+    var tgt = T(), bc = [(tgt.block[0] + tgt.block[1]) / 2, (tgt.block[2] + tgt.block[3]) / 2], mk = doorAt(tgt, 4.4, 0);
+    if (s === "m1") [-6, 0, 6].forEach(function (o) { blips.push({ x: bc[0] + o, z: bc[1], color: "#be79ff", square: true, size: 7, pulse: true }); });
+    if (s === "m1") blips.push({ x: mk[0], z: mk[1], color: "#f0c850", size: 9 });
     if (s === "m2") blips.push({ x: G.champ.inTaxi ? taxi.g.position.x : champM.g.position.x, z: G.champ.inTaxi ? taxi.g.position.z : champM.g.position.z, color: "#6a8bf0", pulse: true, size: 10 });
     if (s === "roam" && G.done.m2) CLOSE_BLIPS.forEach(function (r) { blips.push({ x: r[0], z: r[2], color: "#be79ff", square: true, size: 6 }); });
     if (!P.onMoped && s !== "m2" && s !== "m2intro") blips.push({ x: MP.x, z: MP.z, color: "#6a8bf0", size: 6 });
@@ -1233,14 +1375,17 @@
   function frame(now) {
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (!G.menu || G.state === "idle") step(dt); else G.t += dt;
-    var pal = applyLight(G.gm);
+    var pal = applyLight(G.gm), inRoom = G.state === "room";
+    scene.fog = inRoom ? null : fog;
+    if (inRoom) { hemi.color.set("#ffffff"); hemi.groundColor.set("#7a7a7a"); hemi.intensity = 1.0; sun.intensity = 0.35; sun.color.set("#ffffff"); }
     moped.position.set(MP.x, MP.y, MP.z); moped.rotation.set(MP.pitch, MP.yaw, MP.roll, "YXZ"); wheelF.rotation.x = wheelB.rotation.x = MP.wheel;
     mopedShadow.position.set(MP.x, h(MP.z) + 0.07, MP.z); mopedShadow.rotation.set(-PI / 2, 0, -MP.yaw);
-    if (P.onMoped) { var fx = Math.sin(MP.yaw), fz = Math.cos(MP.yaw); pose(heroM, { x: MP.x - fx * 0.38, y: MP.y + 0.08 + Math.sin(MP.pitch) * 0.35, z: MP.z - fz * 0.38, yaw: MP.yaw, pitch: MP.pitch * 0.9, roll: MP.roll, mode: "ride", noShadow: true }); }
+    if (G.state === "room") { /* the room scene poses CJ */ }
+    else if (P.onMoped) { var fx = Math.sin(MP.yaw), fz = Math.cos(MP.yaw); pose(heroM, { x: MP.x - fx * 0.38, y: MP.y + 0.08 + Math.sin(MP.pitch) * 0.35, z: MP.z - fz * 0.38, yaw: MP.yaw, pitch: MP.pitch * 0.9, roll: MP.roll, mode: "ride", noShadow: true }); }
     else pose(heroM, { x: P.x, y: P.y, z: P.z, yaw: P.yaw, mode: P.speed > 0.3 ? "walk" : "stand", phase: P.phase, amp: Math.min(0.8, 0.3 + P.speed * 0.1), carry: P.carry });
-    PZ.visible = (P.carry && !P.onMoped) || (G.state === "m1outro" && G.st > 2.4);
+    PZ.visible = G.state !== "room" && ((P.carry && !P.onMoped) || (G.state === "m1door" && G.st > 2.6));
     if (PZ.visible) { var hh2 = P.carry ? hands(heroM, 0.44) : hands(COMM[1], 0.42); PZ.position.set(hh2[0], hh2[1], hh2[2]); PZ.rotation.y = hh2[3]; }
-    if (G.state !== "m2" && G.state !== "m2intro" && G.state !== "m2outro") pose(champM, { hidden: true });
+    if (G.state !== "m2" && G.state !== "m2intro" && G.state !== "m2door" && !(G.state === "room" && G.roomKind === "m2")) pose(champM, { hidden: true });
     BOXC.visible = champM.g.visible;
     if (BOXC.visible) { var bh = hands(champM, 0.4); BOXC.position.set(bh[0], bh[1], bh[2]); BOXC.rotation.set(0, bh[3], 0); }
     if (corona.visible) { corona.rotation.y = G.t; coronaMat.opacity = 0.3 + 0.15 * Math.sin(G.t * 4); }
@@ -1251,7 +1396,7 @@
     sunDisc.position.set(cam.position.x + sd.x * 2600, cam.position.y + Math.max(sd.y, 0.06) * 2600, cam.position.z + sd.z * 2600);
     sunDisc.scale.setScalar(1100); sunDisc.lookAt(cam.position); sunDisc.material.opacity = pal.disc;
     var speedTrail = P.onMoped ? cl(Math.abs(MP.speed) / 26) : 0;
-    render(0.25 + 0.35 * speedTrail, pal.tint, pal.ti);
+    render(inRoom ? 0.15 : 0.25 + 0.35 * speedTrail, pal.tint, inRoom ? 0.06 : pal.ti);
     updateHud(dt); engineSound();
     requestAnimationFrame(frame);
   }

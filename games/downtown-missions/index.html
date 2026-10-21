@@ -98,6 +98,7 @@
   #menu li.sel .n, #menu li button:hover .n, #menu li button:focus-visible .n { color: #ffffff; }
   #menu li.sel .n::before { content: "\25B6\00a0"; color: var(--sa-gold); }
   #menu li .done { font-family: var(--pd); font-size: 0.5em; color: var(--sa-gold); margin-left: 0.6em; vertical-align: 0.4em; }
+  #tLogo { height: clamp(18px, calc(var(--u) * 3.6), 40px); width: auto; background: #f4f2ee; padding: 6px 10px; border-radius: 4px; margin-left: 0.8em; vertical-align: 0.2em; }
   #menu .foot { margin-top: calc(var(--u) * 3); }
   .btn { font-family: var(--pd); font-size: clamp(16px, calc(var(--u) * 3.2), 34px); color: var(--paper); background: rgba(0,0,0,0.55); border: 3px solid var(--paper); border-radius: 6px; padding: 0.35em 0.9em; cursor: pointer; }
   .btn:hover, .btn:focus-visible { background: var(--violet); outline: none; border-color: var(--lilac); }
@@ -159,11 +160,12 @@
   <div class="screen" id="menu" hidden>
     <h2>Missions</h2>
     <ul id="menuList">
+      <li data-id="target"><button type="button"><span class="n">Target: <span id="tName">Vanta</span></span><img id="tLogo" alt=""><span class="d" id="tAddr">655 Montgomery St</span></button></li>
       <li data-id="m1"><button type="button"><span class="n">Pizza for the Buying Committee</span><span class="done" hidden>PASSED</span><span class="d">Speed: act before the signal cools. Signal: 3+ visitors from one office.</span></button></li>
       <li data-id="m2"><button type="button"><span class="n">Tail the Champion</span><span class="done" hidden>PASSED</span><span class="d">Patience: follow her from her old office to her new one. Signal: your champion changed jobs.</span></button></li>
       <li data-id="roam"><button type="button"><span class="n">Free roam</span><span class="d">Ride around downtown. Press Esc for this menu.</span></button></li>
     </ul>
-    <div class="small foot">Arrow keys and Enter, or click. Illustrative example: fictional people and companies.</div>
+    <div class="small foot">Arrow keys and Enter, or click. Illustrative example: the target accounts are real companies at their HQs; the visits, the people and the meetings are fictional.</div>
   </div>
   <div class="screen" id="endScreen" hidden>
     <div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="925 145 2135 390"><path fill="#9A95FF" d="M2422.63,253.48c-0.16,0-0.33,0-0.49,0c-80.36,0.25-141.25,60.38-141.65,139.86
@@ -226,19 +228,33 @@
   function rnd(i) { var x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
   function angDiff(a, b) { var d = (b - a) % (2 * PI); if (d > PI) d -= 2 * PI; if (d < -PI) d += 2 * PI; return d; }
 
-  // ------------------------------------------------------------ the words (fictional people and companies only)
-  var TXT = {
-    m1: { title: "Pizza for the Buying Committee", help: "<span class=\"v\">BREAKOUT:</span> 3 visitors. 1 office. Right now.",
-          mount: "Get on the <span class=\"b\">scooter</span>.", go: "Get the pizzas to <span class=\"y\">Northwind</span> before the signal cools.", fail: "The signal went cold.",
-          intro: [[0.2, 2.6, "BREAKOUT", "Three visitors. One office. Northwind. Right now."], [2.7, 4.8, "CJ", "Three people from the same office? I'm bringing pizza."]],
-          outro: [[0.5, 2.0, "Committee", "Pizza? We were just reading your site."], [2.0, 3.4, "CJ", "Figured. Let's book a meeting."]], passed: "Meeting booked." },
-    m2: { title: "Tail the Champion", help: "<span class=\"v\">PHONE:</span> Maya just left Northwind. New job, new company.",
-          go: "Follow <span class=\"b\">Maya</span>. Don't get too close.", spotted: "She spotted you.", lost: "You lost her.",
-          intro: [[0.2, 2.2, "BREAKOUT", "Your champion just changed jobs. She's leaving now."], [2.3, 4.4, "CJ", "Then I'll see where she lands."]],
-          outro: [[0.3, 1.8, "CJ", "Halcyon. New account. Same champion."]], passed: "New account. Same champion." },
-    label: { m1: "Illustrative example: Northwind, 3 visitors from 1 office", m2: "Illustrative example: Maya R., your champion", m2b: "Illustrative example: Maya R., now at Halcyon" },
-    signs: { committee: "NORTHWIND", newacct: "HALCYON", shop: "PIZZA" }
-  };
+  // ------------------------------------------------------------ the target accounts: real companies at their real HQs, their own logos (logos/*.svg)
+  var LOGOS = {"vanta": "<svg width=\"159\" height=\"39\" viewBox=\"0 0 159 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M103.053 35.099C102.129 33.9632 101.626 32.5448 101.626 31.0817V20.5157C101.626 13.0171 98.0921 8.72363 91.8406 8.72363C83.5171 8.72363 81.9054 13.2578 79.6903 17.1146C79.5827 17.3015 79.3457 17.3671 79.1561 17.2659L78.693 17.018C78.4952 16.9123 78.4232 16.6634 78.5353 16.4683L79.1671 15.3635C79.5663 14.678 79.7805 13.8995 79.7805 13.1055V11.5112C79.7805 10.4821 78.9465 9.64888 77.9182 9.64888H68.8545C67.4889 9.64888 66.7542 11.2514 67.6439 12.286L68.9648 13.822C70.2957 15.3708 71.0286 17.3453 71.0286 19.3872V30.3552C71.0286 31.5721 70.7688 32.7745 70.2656 33.8829L69.2155 36.1965C68.736 37.2539 69.509 38.4526 70.6694 38.4526H81.992C83.3402 38.4526 84.0813 36.8847 83.2263 35.8428L82.3102 34.7261C81.3749 33.5867 80.8635 32.1582 80.8635 30.6852V24.6333C80.8635 22.5202 81.3694 20.4245 82.4286 18.5959C83.714 16.3772 85.3931 15.2432 87.4942 15.2432C90.3219 15.2432 91.8424 17.2577 91.8424 20.8958V30.7262C91.8424 31.9139 91.5945 33.0881 91.115 34.1746L90.2162 36.2111C89.7504 37.2667 90.5234 38.4526 91.6765 38.4526H102.425C103.769 38.4526 104.511 36.892 103.664 35.8492L103.055 35.1008L103.053 35.099Z\" fill=\"#240642\"/>\n<path d=\"M123.239 34.2375C122.877 34.3095 122.522 34.3597 122.21 34.3669C119.289 34.3669 117.884 32.5283 117.884 28.7462V13.7172H123.203C123.818 13.7172 124.318 13.2185 124.318 12.6023V10.7819C124.318 10.1666 123.818 9.66707 123.203 9.66707H116.396C116.205 9.66707 116.051 9.5121 116.051 9.32159V8.81202C116.051 8.62241 116.204 8.46744 116.394 8.46653H117.085C117.526 8.46744 117.884 8.11011 117.884 7.66891V3.69265C117.884 2.93422 117.27 2.31982 116.511 2.31982H112.597C111.884 2.31982 111.253 2.78199 111.041 3.46293C110.59 4.95426 109.502 9.66707 105.964 9.66707H104.913C104.3 9.66707 103.801 10.1657 103.801 10.7819V12.6023C103.801 13.2185 104.3 13.7172 104.913 13.7172H108.156V29.1263C108.156 35.3952 111.346 38.8546 117.128 38.8546C120.013 38.8546 122.63 37.8008 124.214 35.9011C124.83 35.1591 124.189 34.0515 123.239 34.2375Z\" fill=\"#240642\"/>\n<path d=\"M66.4053 33.1028C64.6815 33.4136 63.5165 32.0636 63.5165 29.9451V19.7474C63.5165 12.4749 58.9067 8.56787 49.9533 8.56787C41.9351 8.56787 36.4584 11.6508 36.4438 16.3062C36.4402 17.1421 36.7538 17.9607 37.2159 18.7501C37.9589 19.8905 39.3016 20.6553 40.8394 20.6553C43.1803 20.6553 45.0782 18.8896 45.0782 16.7118C45.0709 14.4785 43.1849 13.3463 42.6133 13.1339C43.0199 12.7875 44.7756 11.4348 47.3681 11.4348C51.4893 11.4348 53.6962 14.5578 53.6962 19.4219V21.3554C50.6032 21.3554 47.1329 21.6662 44.6926 22.2605C38.7209 23.565 35.5742 26.9633 35.5742 31.1967C35.5742 35.9705 39.3736 38.9532 45.3954 38.9532C49.575 38.9532 53.0481 37.491 54.6752 35.0462C55.7035 37.1109 57.9833 38.4117 60.9158 38.4117C64.7079 38.4117 66.6942 36.4336 67.3214 34.0818C67.4837 33.4127 66.9777 32.9925 66.4071 33.1037L66.4053 33.1028ZM53.6953 30.8156C53.3726 33.0918 51.7992 34.4501 49.5194 34.4501C47.0208 34.4501 45.3398 32.7691 45.3398 30.1092C45.3398 28.0481 46.2614 26.245 48.2723 25.3772C49.6269 24.7783 51.7418 24.4529 53.6953 24.3991V30.8156Z\" fill=\"#240642\"/>\n<path d=\"M157.112 33.1028C155.388 33.4136 154.223 32.0636 154.223 29.9451V19.7474C154.223 12.4749 149.614 8.56787 140.66 8.56787C132.642 8.56787 127.165 11.6508 127.151 16.3062C127.147 17.1421 127.461 17.9607 127.923 18.7501C128.666 19.8905 130.009 20.6553 131.546 20.6553C133.887 20.6553 135.785 18.8896 135.785 16.7118C135.778 14.4785 133.892 13.3463 133.32 13.1339C133.727 12.7875 135.483 11.4348 138.075 11.4348C142.196 11.4348 144.403 14.5578 144.403 19.4219V21.3554C141.31 21.3554 137.84 21.6662 135.4 22.2605C129.428 23.565 126.281 26.9633 126.281 31.1967C126.281 35.9705 130.081 38.9532 136.102 38.9532C140.282 38.9532 143.755 37.491 145.382 35.0462C146.41 37.1109 148.69 38.4117 151.623 38.4117C155.415 38.4117 157.401 36.4336 158.028 34.0818C158.191 33.4127 157.685 32.9925 157.114 33.1037L157.112 33.1028ZM144.402 30.8156C144.08 33.0918 142.506 34.4501 140.226 34.4501C137.728 34.4501 136.047 32.7691 136.047 30.1092C136.047 28.0481 136.968 26.245 138.979 25.3772C140.334 24.7783 142.449 24.4529 144.402 24.3991V30.8156Z\" fill=\"#240642\"/>\n<path d=\"M37.1141 0.0482757H32.1925C31.1333 0.0482757 30.4988 1.22511 31.0813 2.11024L31.9245 3.391C32.6447 4.48579 32.786 5.86317 32.3019 7.08103L23.4725 29.2878C23.0659 30.357 22.6548 31.0899 22.467 31.2704C22.3667 31.3661 22.1999 31.3953 22.0696 31.2987L21.6038 30.9277C21.4561 30.8165 21.4643 30.6551 21.6001 30.5038C21.859 30.1601 22.0194 29.7454 22.1106 29.368C22.2191 28.9149 22.1826 28.4391 22.0167 28.0034L14.54 8.23872C14.0459 6.93427 14.066 5.49125 14.5938 4.20047L15.3923 2.2488C15.8226 1.19867 15.0496 0.0473633 13.9147 0.0473633H1.86646C0.242959 0.0473633 -0.60298 1.97898 0.496372 3.17222L1.263 4.00448C2.67138 5.53227 3.7844 7.30801 4.54739 9.24145L15.2829 37.2968C15.5637 38.0087 16.251 38.4764 17.0158 38.4764H22.9602C23.7241 38.4764 24.4105 38.0106 24.6912 37.3005L38.5972 2.23422C39.0129 1.18591 38.2408 0.0491882 37.1132 0.0491882L37.1141 0.0482757Z\" fill=\"#240642\"/>\n</svg>\n", "grammarly": "<svg width=\"158\" height=\"34\" viewBox=\"0 0 158 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M78.0885 11.736V12.9655C77.1092 12.02 75.8204 11.4521 74.3633 11.4521C71.0922 11.4521 68.584 14.1246 68.584 17.4352C68.584 20.7458 71.0906 23.3713 74.3633 23.3713C75.8204 23.3713 77.1092 22.8035 78.0885 21.8579V23.0882H80.4285V11.7368H78.0885V11.736ZM77.5546 19.2473C76.4372 21.0101 74.3246 21.5396 72.6464 20.4955C70.9682 19.4522 70.5189 17.3578 71.6363 15.5957C72.7538 13.8328 74.8782 13.283 76.5572 14.3271C78.2354 15.3705 78.6713 17.4852 77.5546 19.2473Z\" fill=\"#1C1C1C\"></path><path d=\"M128.21 11.736V12.9655C127.23 12.02 125.941 11.4521 124.484 11.4521C121.213 11.4521 118.705 14.1246 118.705 17.4352C118.705 20.7458 121.212 23.3713 124.484 23.3713C125.941 23.3713 127.23 22.8035 128.21 21.8579V23.0882H130.55V11.7368H128.21V11.736ZM127.677 19.2473C126.559 21.0101 124.446 21.5396 122.768 20.4955C121.09 19.4522 120.641 17.3578 121.758 15.5957C122.876 13.8328 125.001 13.283 126.679 14.3271C128.357 15.3705 128.793 17.4852 127.677 19.2473Z\" fill=\"#1C1C1C\"></path><path d=\"M89.6942 16.3187C89.6942 15.2551 89.4557 14.7342 89.0972 14.3557C88.7386 13.9772 88.1898 13.7644 87.5927 13.7644C86.9957 13.7644 86.4468 13.9772 86.0883 14.3557C85.7305 14.7342 85.4912 15.2543 85.4912 16.3187V23.0815H83.0557V11.7302H85.3475V12.5342C85.9919 11.8717 86.923 11.4463 87.9979 11.4463C89.3112 11.4463 90.4816 12.061 91.2216 13.0066C92.0097 12.061 93.2275 11.4463 94.6364 11.4463C96.0453 11.4463 97.1438 12.061 97.9075 13.0543C98.4327 13.7636 98.7667 14.6623 98.7667 16.1052V23.0815H96.3312V16.3187C96.3312 15.2551 96.0927 14.7342 95.7341 14.3557C95.3756 13.9772 94.8267 13.7644 94.2297 13.7644C93.6327 13.7644 93.0838 13.9772 92.7252 14.3557C92.3675 14.7342 92.1282 15.2543 92.1282 16.3187V23.0815H89.6926V16.3187H89.6942Z\" fill=\"#1C1C1C\"></path><path d=\"M107.906 16.3187C107.906 15.2551 107.668 14.7342 107.309 14.3557C106.951 13.9772 106.402 13.7644 105.805 13.7644C105.208 13.7644 104.659 13.9772 104.3 14.3557C103.942 14.7342 103.703 15.2543 103.703 16.3187V23.0815H101.268V11.7302H103.559V12.5342C104.204 11.8717 105.135 11.4463 106.21 11.4463C107.523 11.4463 108.694 12.061 109.433 13.0066C110.222 12.061 111.439 11.4463 112.848 11.4463C114.257 11.4463 115.356 12.061 116.119 13.0543C116.645 13.7636 116.979 14.6623 116.979 16.1052V23.0815H114.543V16.3187C114.543 15.2551 114.305 14.7342 113.946 14.3557C113.588 13.9772 113.039 13.7644 112.442 13.7644C111.845 13.7644 111.296 13.9772 110.937 14.3557C110.579 14.7342 110.34 15.2543 110.34 16.3187V23.0815H107.905V16.3187H107.906Z\" fill=\"#1C1C1C\"></path><path d=\"M142.115 4.68799H144.551V23.086H142.115V4.68799Z\" fill=\"#1C1C1C\"></path><path d=\"M55.3307 11.736V12.9655C54.3514 12.02 53.0626 11.4521 51.6055 11.4521C48.3344 11.4521 45.8262 14.0769 45.8262 17.3883C45.8262 20.6997 48.3336 23.3713 51.6055 23.3713C53.0381 23.3713 54.3277 22.827 55.2825 21.9049V23.0874C55.2825 25.0278 54.0624 26.4911 52.2428 26.7296C50.8213 26.9158 49.2592 26.513 48.2633 25.7027C48.1433 25.6042 48.0327 25.5002 47.9308 25.3915L46.6522 27.4531C46.6838 27.4796 46.7146 27.5062 46.7454 27.532C48.0082 28.5597 49.7788 29.1416 51.5439 29.1416C51.8827 29.1416 52.2207 29.1205 52.5555 29.0759C55.5692 28.6817 57.6691 26.2181 57.6691 23.0874V11.736H55.3291H55.3307ZM51.8448 21.0532C49.8625 21.0532 48.3589 19.4686 48.3589 17.3883C48.3589 15.3079 49.8633 13.7695 51.8448 13.7695C53.8262 13.7695 55.3307 15.3298 55.3307 17.4117C55.3307 19.4937 53.8262 21.0532 51.8448 21.0532Z\" fill=\"#1C1C1C\"></path><path d=\"M155.527 11.6958L151.918 19.8038L148.59 11.6958H146.147L150.647 22.6592L147.808 29.0372H150.282L151.834 25.5499L153.105 22.6944L158.001 11.6958H155.527Z\" fill=\"#1C1C1C\"></path><path d=\"M67.7449 12.0114C66.8999 11.6422 65.9704 11.489 65.0598 11.6735C64.2527 11.8378 63.5048 12.2398 62.9236 12.8162C62.8035 12.9351 62.6851 13.0524 62.5887 13.1947V11.7283H60.2969V23.0796H62.7324V17.4274C62.7324 16.1033 63.0673 15.3463 63.6154 14.8027C64.1887 14.2349 64.9761 13.9041 65.8843 13.9041C66.1662 13.9041 66.8928 13.9823 67.6809 14.4875L68.8387 12.6206C68.4944 12.386 68.1272 12.178 67.7449 12.0114Z\" fill=\"#1C1C1C\"></path><path d=\"M137.941 11.6553C137.134 11.8196 136.386 12.2216 135.805 12.798C135.685 12.9169 135.566 13.0342 135.47 13.1757V11.7093H133.178V23.0606H135.614V17.4084C135.614 16.0843 135.948 15.3273 136.497 14.7837C137.07 14.2159 137.857 13.8851 138.766 13.8851C139.048 13.8851 139.718 13.8913 140.556 14.2136V11.9682C139.73 11.6209 138.828 11.4739 137.941 11.6538V11.6553Z\" fill=\"#1C1C1C\"></path><path d=\"M0 16.8696C0 7.55095 7.62573 -0.000976562 17.0355 -0.000976562C26.4452 -0.000976562 34.0694 7.55095 34.0694 16.8696C34.0694 25.0222 28.2332 31.8225 20.4708 33.3969C19.3621 33.6221 18.213 33.7387 17.0402 33.7387H0V16.8688V16.8696Z\" fill=\"#027E6F\"></path><path d=\"M28.8225 15.2716H21.1462L19.3385 18.3726H25.6683C24.6764 23.7659 18.6199 27.4379 12.5673 24.3322C11.2658 23.665 10.206 22.6335 9.52126 21.3446C6.0393 14.7796 10.7959 8.17485 17.0728 8.17485C19.6607 8.17485 21.9913 9.29715 23.5921 11.0764L25.2142 8.29373C22.9034 6.12732 19.7137 4.8658 16.2356 5.10825C10.3142 5.51259 5.51333 10.3733 5.22508 16.243C4.89654 22.9823 10.3363 28.5657 17.0688 28.5657C23.8014 28.5657 28.9291 23.2951 28.9291 16.8194C28.9291 16.293 28.8889 15.7768 28.8217 15.2716H28.8225Z\" fill=\"white\"></path></svg>", "anthropic": "<svg width=\"570\" height=\"64\" viewBox=\"0 0 570 64\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M139.492 12.9945H160.265V62.9392H173.525V12.9945H194.298V1.06077H139.492V12.9945Z\" fill=\"#141413\"></path><path d=\"M116.066 44.3757L88.221 1.06077H73.1934V62.9392H86.011V19.6243L113.856 62.9392H128.884V1.06077H116.066V44.3757Z\" fill=\"#141413\"></path><path d=\"M247.337 25.7238H218.166V1.06077H204.906V62.9392H218.166V37.6575H247.337V62.9392H260.597V1.06077H247.337V25.7238Z\" fill=\"#141413\"></path><path d=\"M24.663 1.06077L0 62.9392H13.7901L18.834 49.9447H44.6365L49.6796 62.9392H63.4696L38.8066 1.06077H24.663ZM23.2946 38.453L31.7348 16.7072L40.175 38.453H23.2946Z\" fill=\"#141413\"></path><path d=\"M370.475 0C352.619 0 339.978 13.2597 339.978 32.0884C339.978 50.7403 352.619 64 370.475 64C388.243 64 400.796 50.7403 400.796 32.0884C400.796 13.2597 388.243 0 370.475 0ZM370.475 51.6243C360.044 51.6243 353.68 44.1989 353.68 32.0884C353.68 19.8011 360.044 12.3757 370.475 12.3757C380.818 12.3757 387.094 19.8011 387.094 32.0884C387.094 44.1989 380.818 51.6243 370.475 51.6243Z\" fill=\"#141413\"></path><path d=\"M555.845 42.1657C553.547 48.1768 548.95 51.6243 542.674 51.6243C532.243 51.6243 525.878 44.1989 525.878 32.0884C525.878 19.8011 532.243 12.3757 542.674 12.3757C548.95 12.3757 553.547 15.8232 555.845 21.8343H569.901C566.453 8.57459 556.11 0 542.674 0C524.818 0 512.177 13.2597 512.177 32.0884C512.177 50.7403 524.818 64 542.674 64C556.199 64 566.541 55.337 569.989 42.1657H555.845Z\" fill=\"#141413\"></path><path d=\"M471.337 1.06077L496 62.9392H509.525L484.862 1.06077H471.337Z\" fill=\"#141413\"></path><path d=\"M443.403 1.06077H413.171V62.9392H426.431V40.4862H443.403C457.459 40.4862 466.033 33.0608 466.033 20.7735C466.033 8.48619 457.459 1.06077 443.403 1.06077ZM442.784 28.5525H426.431V12.9945H442.784C449.326 12.9945 452.773 15.6464 452.773 20.7735C452.773 25.9006 449.326 28.5525 442.784 28.5525Z\" fill=\"#141413\"></path><path d=\"M329.812 19.8895C329.812 8.22099 321.238 1.06077 307.182 1.06077H276.95V62.9392H290.21V38.7182H304.971L318.232 62.9392H332.906L318.223 36.8734C325.593 34.0402 329.812 28.0743 329.812 19.8895ZM290.21 12.9945H306.564C313.105 12.9945 316.552 15.3812 316.552 19.8895C316.552 24.3978 313.105 26.7845 306.564 26.7845H290.21V12.9945Z\" fill=\"#141413\"></path></svg>", "breakout": "<svg width=\"2135\" height=\"390\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"925 145 2135 390\"><path fill=\"#4E46DC\" d=\"M2422.63,253.48c-0.16,0-0.33,0-0.49,0c-80.36,0.25-141.25,60.38-141.65,139.86\n\t\t\tc-0.19,37.8,13.99,72.95,39.92,98.98c26.58,26.68,62.96,41.37,102.45,41.37c0.07,0,0.14,0,0.21,0\n\t\t\tc39.26-0.05,75.49-14.76,102.04-41.41c25.93-26.03,40.15-61.12,40.05-98.81c-0.11-38.41-14.8-73.89-41.38-99.89\n\t\t\tC2497.32,267.71,2461.43,253.48,2422.63,253.48z M2352.16,393.55c0.02-20.21,7.69-38.98,21.61-52.84\n\t\t\tc13.13-13.09,30.48-20.29,48.85-20.29c0.07,0,0.14,0,0.2,0c39.62,0.11,70.63,32.28,70.59,73.24\n\t\t\tc-0.03,40.32-31.74,73.13-70.68,73.13c-18.94,0-36.68-7.56-49.94-21.29C2359.47,431.72,2352.15,413.27,2352.16,393.55z\"/><path fill=\"#4E46DC\" d=\"M2837.54,259.19h-60.41c-3.2,0-5.78,2.59-5.78,5.78c0,0-0.02,99.01,0.01,131.2\n\t\t\tc0.01,18.07-2.35,30.57-7.92,41.78c-10.27,20.68-29.5,30.54-54.3,27.7c-20.15-2.29-34.39-16.13-39.07-37.99\n\t\t\tc-1.34-6.29-1.97-13.31-2-22.79c-0.15-32.9-0.1-139.87-0.1-139.87c0-3.19-2.59-5.78-5.78-5.78h-60.31c-3.07,0-5.6,2.39-5.77,5.46\n\t\t\tc0,0-0.46,116.03-0.21,152.95c0.08,11.76,1.14,23.31,3.16,34.33c6.48,35.3,30.57,63.82,64.43,76.29\n\t\t\tc11.68,4.3,23.71,6.41,35.63,6.41c22.99,0,45.54-7.87,64.14-23.02c2.79-2.28,5.53-4.62,8.22-6.96v16c0,3.19,2.59,5.78,5.78,5.78\n\t\t\th60.29c3.2,0,5.78-2.59,5.78-5.78V264.97C2843.32,261.77,2840.74,259.19,2837.54,259.19z\"/><path fill=\"#4E46DC\" d=\"M3052.8,465.54c0-1.87-0.91-3.63-2.44-4.72c-1.53-1.09-3.5-1.37-5.26-0.74c-2,0.7-3.85,1.42-5.6,2.1\n\t\t\tc-3.22,1.25-6.01,2.34-8.7,2.89c-10.96,2.26-26.11,3.23-35.95-4.96c-7.04-5.85-10.48-15.87-10.21-29.77\n\t\t\tc0.46-24.61,0.16-108.49,0.19-108.99h61.6c3.2,0,5.78-2.59,5.78-5.78v-51.14c0-3.19-2.59-5.78-5.78-5.78h-61.9v-69.16\n\t\t\tc0-3.19-2.59-5.78-5.78-5.78h-60.23c-3.2,0-5.78,2.59-5.78,5.78v69.56h-31.48c-3.2,0-5.78,2.59-5.78,5.78v51.25\n\t\t\tc0,3.19,2.59,5.78,5.78,5.78h31.69c0,0-0.07,91.79,0.05,119.05c0.12,30.56,8.09,52.75,25.06,69.84\n\t\t\tc16.82,16.94,40.99,23.1,63.51,23.1c17.1,0,33.25-3.56,44.5-8.65c3.19-1.44,6.53-5.39,6.59-9.51\n\t\t\tC3052.84,502.73,3052.8,465.54,3052.8,465.54z\"/><path fill=\"#1C1778\" d=\"M1113.36,257.23c-43.43-10.27-80.67-0.19-110.83,29.94V156.2c0-3.19-2.59-5.78-5.78-5.78h-59.57\n\t\t\tc-3.2,0-5.78,2.59-5.78,5.78v364.62c0,3.19,2.59,5.78,5.78,5.78h59.68c3.2,0,5.78-2.59,5.78-5.78v-18.98\n\t\t\tc6.38,5.52,12.98,11.2,20.44,15.5c19.04,11,40.1,16.25,61.05,16.25c39.6,0,78.77-18.77,102.93-53.04\n\t\t\tc22.64-32.12,31.04-68.27,25.65-110.51C1205.56,314.09,1166.56,269.81,1113.36,257.23z M1071.15,320.05c0.01,0,0.03,0,0.04,0\n\t\t\tc40.33,0.02,70.84,31.5,70.96,73.21c0.06,20.69-7.5,39.7-21.28,53.52c-13.09,13.12-30.72,20.35-49.66,20.35c0,0-0.01,0-0.01,0\n\t\t\tc-39.69-0.01-70.88-32.17-71-73.22c-0.06-20.65,7.52-39.64,21.33-53.49C1034.63,327.29,1052.25,320.05,1071.15,320.05z\"/><path fill=\"#1C1778\" d=\"M1993.39,259.29h-59.21c-3.2,0-5.78,2.59-5.78,5.78v20.05c-3.21-3.13-6.41-6.07-9.94-8.7\n\t\t\tc-43.03-31.88-105.18-30.65-147.81,2.91c-35.53,27.98-53.61,65.67-53.72,112.01c-0.15,60.59,25.45,104.33,76.08,130.01\n\t\t\tc16.96,8.6,35.2,12.78,53.26,12.78c30.14,0,59.8-11.65,82.2-33.89v20.39c0,3.19,2.59,5.78,5.78,5.78h59.15\n\t\t\tc3.2,0,5.78-2.59,5.78-5.78V265.07C1999.17,261.88,1996.59,259.29,1993.39,259.29z M1931.05,393.39\n\t\t\tc0.06,20.51-7.5,39.43-21.29,53.26c-13.17,13.21-30.88,20.49-49.86,20.49c-0.01,0-0.02,0-0.03,0\n\t\t\tc-39.71-0.02-70.88-32.22-70.98-73.31c-0.1-41.19,30.88-73.59,70.52-73.76c0.11,0,0.21,0,0.32,0c18.96,0,36.64,7.19,49.81,20.27\n\t\t\tC1923.34,354.05,1930.99,372.89,1931.05,393.39z\"/><path fill=\"#4E46DC\" d=\"M2295.94,517.51l-117.47-142.26l106.82-106.52c1.66-1.65,2.16-4.14,1.26-6.3c-0.89-2.16-3-3.57-5.34-3.57\n\t\t\tc0,0-49.56,0.06-65.7-0.1c-6.3-0.01-10.97,1.87-15.31,6.28c-15.46,15.68-70.01,70.61-81.74,82.47V156.23\n\t\t\tc0-3.19-2.59-5.78-5.78-5.78h-59.69c-3.2,0-5.78,2.59-5.78,5.78v364.45c0,3.19,2.59,5.78,5.78,5.78h59.65\n\t\t\tc3.2,0,5.78-2.59,5.78-5.78c0,0,0.25-64.3-0.35-89.31c-0.16-6.62,1.5-10.81,6.95-15.35c0.53,0.64,62.53,77.57,84.23,104.31\n\t\t\tc0.86,1.06,5.47,6.37,11.17,6.45c12.85,0.18,71.07,0.19,71.07,0.19c2.24,0,4.27-1.29,5.23-3.32\n\t\t\tC2297.66,521.63,2297.36,519.24,2295.94,517.51z\"/><path fill=\"#1C1778\" d=\"M1686.2,354.45c-11.29-45.05-40.19-78.1-81.38-93.04c-42.21-15.3-90.66-8.61-126.48,17.47\n\t\t\tc-37.51,27.31-56.4,66.65-56.14,116.92c0.19,36.01,11.34,67.02,33.15,92.15c23.02,26.53,53.74,41.66,91.29,44.97\n\t\t\tc5.36,0.47,10.6,0.71,15.76,0.71c35.54,0,66.26-11.21,91.45-33.42c11.54-10.17,20.67-21.97,27.91-36.06\n\t\t\tc0.72-1.39,0.84-3.02,0.33-4.5s-1.59-2.7-3-3.37c-4.17-1.98-8.29-3.89-12.37-5.78c-9.76-4.54-18.98-8.82-28.08-13.56\n\t\t\tc-9.41-4.89-15.94-3.29-21.83,5.36c-13.99,20.58-36.44,30.91-61.64,28.39c-25.38-2.56-47.6-18.13-56.6-39.65\n\t\t\tc-1.63-3.89-2.71-8.29-3.86-12.94c-0.01-0.05-0.02-0.1-0.04-0.15h190.09c2.99,0,5.48-2.28,5.76-5.25c0.08-0.89,0.19-1.73,0.3-2.53\n\t\t\tc0.27-1.98,0.54-4.03,0.35-6.26c-0.42-4.81-0.67-9.68-0.91-14.54C1689.67,377.83,1689.06,365.91,1686.2,354.45z M1495.59,361.97\n\t\t\tc1.42-8.14,6.25-16.95,13.79-24.91c12.65-13.36,30.22-21.89,45.85-22.28c31.69-0.71,59.06,20.31,63.26,47.19H1495.59z\"/><path fill=\"#1C1778\" d=\"M1392.27,253.6c-26.06-0.37-47.86,8.07-64.97,25.21c-2.92,2.93-5.57,6.04-8.19,9.29v-23.27\n\t\t\tc0-3.19-2.59-5.78-5.78-5.78h-59.13c-3.2,0-5.78,2.59-5.78,5.78v255.91c0,3.19,2.59,5.78,5.78,5.78h59.77\n\t\t\tc3.2,0,5.78-2.59,5.78-5.78c0,0-0.05-84.27,0.07-109.04c0.03-6.52,0.23-15.06,1.45-23.24c3.69-24.75,13.16-41.42,29.78-52.47\n\t\t\tc13.2-8.77,28.9-11.42,49.43-8.36c1.67,0.27,3.35-0.24,4.62-1.34c1.28-1.1,2.01-2.7,2.01-4.38v-53.22\n\t\t\tC1407.1,257.16,1403.77,253.78,1392.27,253.6z\"/></svg>", "mark": "<svg width=\"685.08\" height=\"685.08\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 685.08 685.08\"><path fill=\"#4E46DC\" d=\"M362.09,300.8c-0.01,0-0.04,0-0.05,0c-23.53,0-45.48,9.01-61.81,25.38c-17.2,17.24-26.64,40.9-26.56,66.61\n\t\t\tc0.15,51.12,38.99,91.17,88.42,91.18c0.01,0,0.01,0,0.01,0c23.59,0,45.55-9,61.85-25.34c17.17-17.21,26.57-40.88,26.5-66.65\n\t\t\tC450.3,340.02,412.31,300.82,362.09,300.8z\"/><path fill=\"#4E46DC\" d=\"M342.54,0C153.36,0,0,153.36,0,342.54s153.36,342.54,342.54,342.54s342.54-153.36,342.54-342.54\n\t\t\tS531.71,0,342.54,0z M506.38,500.66c-30.09,42.68-78.87,66.05-128.18,66.06c-26.1,0-52.33-6.54-76.03-20.24\n\t\t\tc-9.28-5.35-17.5-12.43-25.45-19.3v23.63c0,3.98-3.22,7.2-7.2,7.2H195.2c-3.98,0-7.2-3.22-7.2-7.2V96.75c0-3.98,3.22-7.2,7.2-7.2\n\t\t\th74.18c3.98,0,7.2,3.22,7.2,7.2v163.09c37.56-37.52,83.94-50.07,138.02-37.28c66.25,15.67,114.81,70.81,123.72,140.49\n\t\t\tC545.03,415.65,534.58,460.66,506.38,500.66z\"/></svg>"};
+  var TARGETS = [
+    { id: "vanta", name: "Vanta", addr: "655 Montgomery St", block: [193, 227, 73, 107], ht: 64, kind: "glass", tint: "#e6ecff", door: [193, 90], out: [-1, 0],
+      route: [[84, 10.5], [170, 10.5], [176, 17], [176, 82], [182, 89], [186.5, 90]] },
+    { id: "grammarly", name: "Grammarly", addr: "548 Market St", block: [193, 227, 20, 46], ht: 110, kind: "glass", tint: "#e4f0ff", door: [210, 20], out: [0, -1],
+      route: [[84, 10.5], [170, 10.5], [176, 17], [176, 58], [182, 64], [236, 64], [244, 58], [244, 17], [238, 10.5], [216, 10.5], [210, 13]] },
+    { id: "anthropic", name: "Anthropic", addr: "500 Howard St", block: [193, 227, -47, -20], ht: 44, kind: "office", tint: "#efe6d8", door: [210, -47], out: [0, -1],
+      route: [[84, 10.5], [118, 10.5], [124, 4], [124, -50], [130, -56.2], [204, -56.2], [210, -54]] }
+  ];
+  // the words (the people, the visits and the meetings are fictional; the champion's old company, Northwind, is fictional too)
+  function words(t) { var n = t.name, team = n + " team"; return {
+    m1: { title: "Pizza for the Buying Committee", help: '<span class="v">BREAKOUT:</span> 3 visitors from ' + n + '. 1 office, ' + t.addr + '. Right now.',
+          mount: 'Get on the <span class="b">scooter</span>.', go: 'Get the pizzas to <span class="y">' + n + '</span> before the signal cools.', fail: "The signal went cold.",
+          intro: [[0.2, 2.6, "BREAKOUT", "Three visitors from " + n + ". One office. Right now."], [2.7, 4.8, "CJ", "Three people from the same office? I'm bringing pizza."]],
+          door: [[0.6, 2.3, team, "Pizza? For us?"], [2.3, 3.8, "CJ", "Got ten minutes? I'll explain upstairs."]],
+          room: [[0.3, 3.0, team, "Wait. How did you know we were looking?"], [3.1, 6.0, "CJ", "Three of y'all on our site at once? That's a buying committee."], [6.1, 8.3, "CJ", "Let's get everybody on one call. Thursday, 2 PM?"], [8.4, 10.0, team, "Book it."]],
+          passed: "Meeting booked." },
+    m2: { title: "Tail the Champion", help: '<span class="v">BREAKOUT:</span> Your champion Maya R. just left Northwind.',
+          alert: [[0.2, 2.9, "BREAKOUT", "Champion on the move: Maya R. just left Northwind."], [3.0, 5.6, "CJ", "Maya loved us at Northwind. Let's see where she lands."]],
+          go: 'Follow <span class="b">Maya</span>. Don\'t get too close.', spotted: "She spotted you.", lost: "You lost her.",
+          intro: [[0.2, 2.4, "CJ", "There she goes. Box of desk stuff and all."], [2.5, 4.5, "CJ", "Nice and easy. Don't spook her."]],
+          door: [[0.4, 2.4, "CJ", n + ", " + t.addr + ". New job, same Maya."]],
+          room: [[0.3, 2.8, "Maya", "CJ? I started at " + n + " on Monday!"], [2.9, 5.6, "CJ", "Breakout told me you moved. Congrats on the new gig."], [5.7, 8.3, "Maya", "We need what we had at Northwind. Can you meet my team?"], [8.4, 10.0, "CJ", "Thursday, 2 PM. Invite's on its way."]],
+          passed: "New account. Same champion." },
+    label: "Illustrative example: " + n + " (" + t.addr + ") is real. The visitors, the people and the meetings are fictional." }; }
+  var TXT = { signs: { shop: "PIZZA" } };
 
   // ------------------------------------------------------------ the city plan (metres; +x east to the bay, -z up the hill, +z north)
   var XL = []; for (var k = -8; k <= 5; k++) XL.push(k * 60);
@@ -485,7 +501,7 @@
     solid(x0, x1, z0, z1);
     return top;
   }
-  var SPEC = { committee: { x0: 193, z0: 20 }, newacct: { x0: 13, z0: -227 }, shop: { x0: -107, z0: -227 }, pyramid: { x0: 133, z0: 73 }, park: { x0: -47, z0: 73 }, sf: { x0: 253, z0: -47 } };
+  var SPEC = { vanta: { x0: 193, z0: 73 }, grammarly: { x0: 193, z0: 20 }, anthropic: { x0: 193, z0: -47 }, northwind: { x0: 73, z0: 20 }, shop: { x0: -107, z0: -227 }, pyramid: { x0: 133, z0: 73 }, park: { x0: -47, z0: 73 }, sf: { x0: 253, z0: -47 } };
   function isSpec(x0, z0) { for (var kk in SPEC) if (Math.abs(SPEC[kk].x0 - x0) < 1 && Math.abs(SPEC[kk].z0 - z0) < 1) return kk; return null; }
   var ROOFTOPS = [], seedN = 1;
   for (var xi = 0; xi < XL.length - 1; xi++) for (var zi = 0; zi < ZL.length - 1; zi++) {
@@ -510,8 +526,8 @@
       }
     }
   }
-  var CT = building("glass", 193.5, 226.5, 20.5, 46.5, 122, 3.3, "#e4f0ff");
-  var NT = building("glass", 13.5, 46.5, -226.5, -193.5, 24, 4.4, "#ffffff");
+  TARGETS.forEach(function (t, i) { var b = t.block; t.top = building(t.kind, b[0] + 0.5, b[1] - 0.5, b[2] + 0.5, b[3] - 0.5, t.ht, 3.3 + i, t.tint); t.dy = h(t.door[1]); t.ry = Math.atan2(t.out[0], t.out[1]); });
+  var NW = { name: "NORTHWIND", block: [73, 107, 20, 47], door: [90, 20], out: [0, -1], dy: 0, ry: PI }; NW.top = building("office", 73.5, 106.5, 20.5, 46.5, 58, 7.7, "#e3d3bb");
   building("office", -106.5, -88, -219, -195, 7, 2.2, "#f4e3c4");
   building("house", -88, -73.5, -219, -195, 10, 2.9, null, 1); building("house", -106.5, -73.5, -226.5, -220, 12, 3.9, null, -1);
 
@@ -618,14 +634,26 @@
     }) });
   }
   function plane(mat, w, hgt, x, y, z, ry) { var m = new THREE.Mesh(new THREE.PlaneGeometry(w, hgt), mat); m.position.set(x, y, z); m.rotation.y = ry; scene.add(m); return m; }
-  plane(sign(TXT.signs.committee, 30, 4.6, "#ffffff"), 26, 4, 210, CT - 6, 20.35, PI);
-  plane(sign(TXT.signs.committee, 12, 1.6, "#ffffff", "#1d2430"), 9, 1.2, 210, 5.8, 18.1, PI);
-  plane(sign(TXT.signs.newacct, 30, 4.6, "#ffffff"), 24, 3.7, 30, NT - 5, -193.35, PI);
-  plane(sign(TXT.signs.newacct, 12, 1.6, "#ffffff", "#1d2430"), 8, 1.1, 30, 38 + 5.4, -193.4, PI);
+  // each target's own logo on a light panel: high on the tower and over the door
+  function logoTex(id, w, hgt, bg) {
+    var c = document.createElement("canvas"); c.width = 1024; c.height = Math.round(1024 * hgt / w); var g = c.getContext("2d");
+    g.fillStyle = bg || "#f4f2ee"; g.fillRect(0, 0, c.width, c.height);
+    var tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace;
+    var img = new Image(); img.onload = function () { var ar = (img.naturalWidth / img.naturalHeight) || 4, bw = c.width * 0.82, bh = bw / ar; if (bh > c.height * 0.62) { bh = c.height * 0.62; bw = bh * ar; }
+      g.drawImage(img, (c.width - bw) / 2, (c.height - bh) / 2, bw, bh); tx.needsUpdate = true; };
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(LOGOS[id]); return tx;
+  }
+  function onFace(t, d, y) { return [t.door[0] + t.out[0] * d, y, t.door[1] + t.out[1] * d]; }
+  TARGETS.forEach(function (t) {
+    var a = onFace(t, 0.4, t.top - 7); plane(new THREE.MeshBasicMaterial({ map: logoTex(t.id, 24, 5.4) }), 24, 5.4, a[0], a[1], a[2], t.ry);
+    var b = onFace(t, 2.2, t.dy + 5.6); plane(new THREE.MeshBasicMaterial({ map: logoTex(t.id, 8, 1.4) }), 8, 1.4, b[0], b[1], b[2], t.ry);
+    var c2 = onFace(t, 1.8, t.dy + 4.6); PROPS.add(BOX, mx(c2[0], c2[1], c2[2], t.ry, 11, 0.4, 3.6), "#2a2f38");
+  });
+  plane(sign(NW.name, 30, 4.6, "#ffffff"), 22, 3.4, 90, NW.top - 6, 20.1, PI);
+  plane(sign(NW.name, 12, 1.6, "#ffffff", "#1d2430"), 8, 1.1, 90, 5.6, 18.1, PI);
   plane(sign(TXT.signs.shop, 12, 3, "#fff6dc", "#c9302c"), 10, 2.2, -107.0, 38 + 5.6, -207, -PI / 2);
   plane(sign("FERRY BUILDING", 30, 3, "#3a3020"), 14, 1.4, 313.8, 13, 0, -PI / 2);
-  PROPS.add(BOX, mx(210, 4.6, 18.4, 0, 12, 0.4, 3.6), "#2a2f38");
-  PROPS.add(BOX, mx(30, 38 + 4.4, -191.6, 0, 10, 0.4, 3.2), "#2a2f38");
+  PROPS.add(BOX, mx(90, 4.6, 18.2, 0, 11, 0.4, 3.6), "#2a2f38");
 
   // ------------------------------------------------------------ vehicles, shaped from side profiles
   var CARC = ["#6e1f22", "#1f3b63", "#b8bcc0", "#e8e6e0", "#1c1c1f", "#c9b48a", "#2d4a34", "#8a6a2a", "#5a5e66", "#7a2a3a", "#3a5a7a", "#a83a2a"];
@@ -747,6 +775,9 @@
     p.aL.rotation.set(carry ? -0.55 : o.mode === "ride" ? -0.95 : sw * 0.8, 0, carry ? 0.12 : 0.06); p.aR.rotation.set(carry ? -0.55 : o.mode === "ride" ? -0.95 : -sw * 0.8, 0, carry ? -0.12 : -0.06);
     p.eL.rotation.x = carry ? -1.0 : o.mode === "ride" ? -0.45 : -0.25 - (walk ? Math.max(0, sw) * 0.4 : 0); p.eR.rotation.x = carry ? -1.0 : o.mode === "ride" ? -0.45 : -0.25 - (walk ? Math.max(0, -sw) * 0.4 : 0);
     p.body.rotation.x = o.mode === "ride" ? 0.16 : walk ? 0.05 * amp : 0;
+    if (o.mode === "sit") { p.body.position.y = -0.47; p.lL.rotation.set(-1.52, 0, -0.05); p.lR.rotation.set(-1.52, 0, 0.05); p.kL.rotation.x = p.kR.rotation.x = 1.52;
+      p.aL.rotation.set(-0.75, 0, 0.1); p.aR.rotation.set(-0.75, 0, -0.1); p.eL.rotation.x = p.eR.rotation.x = -0.75; p.body.rotation.x = 0; }
+    if (o.point) { p.aR.rotation.set(-1.4, 0, -0.2); p.eR.rotation.x = -0.1; }
     p.shadow.position.set(o.x, h(o.z) + 0.07, o.z);
   }
   function hands(p, fwd) { var y = p.g.position.y + p.body.position.y + 1.18, yaw = p.g.rotation.y; return [p.g.position.x + Math.sin(yaw) * fwd, y, p.g.position.z + Math.cos(yaw) * fwd, yaw]; }
@@ -818,11 +849,16 @@
   var beamGeo = new THREE.CylinderGeometry(1, 1, 1, 12, 1, true);
   var BEAMS = []; for (var bi = 0; bi < 14; bi++) { var bm = new THREE.Mesh(beamGeo, new THREE.MeshBasicMaterial({ color: 0x7a2bff, transparent: true, opacity: 0.42, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false })); bm.visible = false; scene.add(bm); BEAMS.push(bm); }
   function beamAt(b, x, y, z, w) { b.visible = true; b.position.set(x, y + 160, z); b.scale.set(w, 320, w); }
-  var WIN = [0, 1, 2].map(function (i) { return plane(new THREE.MeshBasicMaterial({ color: 0xbe79ff, fog: false, transparent: true, opacity: 0 }), 2.9, 2.8, 205 + i * 5.2, 64.2, 20.4, PI); });
+  var WIN = [0, 1, 2].map(function () { return plane(new THREE.MeshBasicMaterial({ color: 0xbe79ff, fog: false, transparent: true, opacity: 0 }), 2.9, 2.8, 0, -50, 0, 0); });
   var glowTex = radial([[0, "rgba(190,121,255,0.9)"], [0.4, "rgba(122,43,255,0.35)"], [1, "rgba(76,0,255,0)"]]);
-  var GLOW = plane(new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0, fog: false }), 26, 14, 210.2, 64.2, 20.0, PI);
-  var GLOW2 = plane(GLOW.material.clone(), 14, 9, 30, 41, -193.0, PI);
-  var CLOSE_BLIPS = ROOFTOPS.filter(function (r, i) { return rnd(i + 70) > 0.45; }).slice(0, 10); CLOSE_BLIPS.unshift([30, NT, -210]); CLOSE_BLIPS.unshift([210, CT, 33.5]);
+  var GLOW = plane(new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0, fog: false }), 26, 14, 0, -50, 0, 0);
+  var GLOW2 = plane(GLOW.material.clone(), 14, 9, 0, -50, 0, 0);
+  function placeSignals(t) {             // the 3 violet windows on the target's door face, and the glow over its door
+    var sx = -t.out[1], sz = t.out[0], y = t.dy + Math.min(t.ht * 0.5, 30);
+    WIN.forEach(function (w, i) { var a = onFace(t, 0.45, y); w.position.set(a[0] + sx * (i - 1) * 5.2, y, a[2] + sz * (i - 1) * 5.2); w.rotation.y = t.ry; });
+    var g = onFace(t, 0.6, y); GLOW.position.set(g[0], y, g[2]); GLOW.rotation.y = t.ry; var g2 = onFace(t, 0.6, t.dy + 3); GLOW2.position.set(g2[0], g2[1], g2[2]); GLOW2.rotation.y = t.ry;
+  }
+  var CLOSE_BLIPS = ROOFTOPS.filter(function (r, i) { return rnd(i + 70) > 0.45; }).slice(0, 10); TARGETS.forEach(function (t) { CLOSE_BLIPS.unshift([(t.block[0] + t.block[1]) / 2, t.top, (t.block[2] + t.block[3]) / 2]); });
 
   // ------------------------------------------------------------ light from the game clock
   var PAL = {
@@ -1014,17 +1050,88 @@
     P.x = MP.x; P.z = MP.z; P.y = MP.y; P.yaw = MP.yaw;
   }
 
-  // ------------------------------------------------------------ the champion's taxi route (mission 2)
-  var ROUTE = [[198, 11.3], [180, 11.3], [166, -7], [132, -7], [124, -15], [124, -168], [118, -183.8], [44, -183.8], [36, -185.6]];
-  var RL = [0]; for (var ri = 1; ri < ROUTE.length; ri++) RL.push(RL[ri - 1] + Math.hypot(ROUTE[ri][0] - ROUTE[ri - 1][0], ROUTE[ri][1] - ROUTE[ri - 1][1]));
+  // ------------------------------------------------------------ the champion's taxi route (mission 2): from Northwind to the target's door
+  var ROUTE = TARGETS[0].route, RL = [0];
+  function setRoute(pts) { ROUTE = pts; RL = [0]; for (var i = 1; i < pts.length; i++) RL.push(RL[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])); }
   function routeAt(s) { s = Math.max(0, Math.min(RL[RL.length - 1], s)); var i = 1; while (i < RL.length - 1 && s > RL[i]) i++;
     var u = (s - RL[i - 1]) / (RL[i] - RL[i - 1]), a = ROUTE[i - 1], b = ROUTE[i]; return [lerp(a[0], b[0], u), lerp(a[1], b[1], u), Math.atan2(b[0] - a[0], b[1] - a[1]), i]; }
-  var TX = { s: 0, v: 0, yaw: -PI / 2 };
+  var TX = { s: 0, v: 0, yaw: PI / 2 };
 
-  // ------------------------------------------------------------ the game: title, mission select, two missions, free roam
+  // ------------------------------------------------------------ the conference room, where CJ books the meeting (a set far off the map)
+  var RM = { x: 3000, y: 300, z: 3000 };
+  var roomGroup = new THREE.Group(); scene.add(roomGroup); roomGroup.visible = false;
+  (function () {
+    var b = new Builder(), X = RM.x, Y = RM.y, Z = RM.z;
+    b.add(BOX, mx(X, Y - 0.1, Z, 0, 14, 0.2, 10), "#4e5866"); b.add(BOX, mx(X, Y + 3.5, Z, 0, 14, 0.2, 10), "#eceae4");
+    b.add(BOX, mx(X, Y + 1.7, Z - 5, 0, 14, 3.4, 0.2), "#dcd8d0"); b.add(BOX, mx(X, Y + 1.7, Z + 5, 0, 14, 3.4, 0.2), "#dcd8d0");
+    b.add(BOX, mx(X + 7, Y + 1.7, Z, 0, 0.2, 3.4, 10), "#d2d5da");
+    b.add(BOX, mx(X - 7, Y + 0.45, Z, 0, 0.2, 0.9, 10), "#d2d5da"); b.add(BOX, mx(X - 7, Y + 3.2, Z, 0, 0.2, 0.6, 10), "#d2d5da");
+    for (var k = -2; k <= 2; k++) b.add(BOX, mx(X - 6.95, Y + 1.85, Z + k * 2.5, 0, 0.12, 1.9, 0.12), "#3a3d42");
+    b.add(BOX, mx(X, Y + 0.74, Z + 0.3, 0, 2.0, 0.08, 5.8), "#6b4a32");
+    [[-0.8, -2.3], [0.8, -2.3], [-0.8, 3.0], [0.8, 3.0]].forEach(function (q) { b.add(BOX, mx(X + q[0], Y + 0.37, Z + q[1], 0, 0.1, 0.74, 0.1), "#2a2a2a"); });
+    function chair(x, z, ry) { b.add(BOX, mx(x, Y + 0.44, z, ry, 0.56, 0.08, 0.56), "#2b2f36"); b.add(BOX, mx(x - Math.sin(ry) * 0.27, Y + 0.82, z - Math.cos(ry) * 0.27, ry, 0.56, 0.7, 0.07), "#2b2f36"); b.add(BOX, mx(x, Y + 0.22, z, 0, 0.08, 0.44, 0.08), "#555555"); }
+    [-1.6, 0.0, 1.6].forEach(function (z) { chair(X - 1.5, Z + z, PI / 2); chair(X + 1.5, Z + z, -PI / 2); }); chair(X, Z + 3.9, PI);
+    b.add(BOX, mx(X, Y + 1.75, Z - 4.93, 0, 4.0, 2.34, 0.06), "#111111");
+    b.add(BOX, mx(X + 0.2, Y + 0.8, Z + 3.0, 0, 0.36, 0.02, 0.26), "#2a2a2e"); b.add(BOX, mx(X + 0.2, Y + 0.95, Z + 2.86, 0, 0.36, 0.26, 0.02, -0.3), "#2a2a2e");
+    b.add(CYL10, mx(X + 5.6, Y + 0.6, Z - 4.2, 0, 0.6, 1.2, 0.6), "#7a5236"); b.add(CONE6, mx(X + 5.6, Y + 1.7, Z - 4.2, 0, 1.0, 1.6, 1.0), "#3f7a34");
+    b.mesh(new THREE.MeshLambertMaterial({ vertexColors: true }), roomGroup);
+    var lb2 = new Builder(); [-3, 0, 3].forEach(function (x) { lb2.add(BOX, mx(X + x, Y + 3.39, Z, 0, 1.6, 0.02, 1.0), "#ffffff"); }); lb2.mesh(new THREE.MeshBasicMaterial({ vertexColors: true }), roomGroup);
+  })();
+  var skyline = canvasTex(1024, 200, function (g, W, H) { var gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#8fb2d8"); gr.addColorStop(1, "#f1d9b8"); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    for (var i = 0; i < 60; i++) { var x = rnd(i + 300) * W, w = 20 + rnd(i + 301) * 50, hh = 30 + rnd(i + 302) * 130; g.fillStyle = "rgba(70,80,95," + (0.5 + rnd(i + 303) * 0.4) + ")"; g.fillRect(x, H - hh, w, hh); }
+    g.fillStyle = "rgba(240,240,240,0.95)"; g.beginPath(); g.moveTo(600, H); g.lineTo(625, 14); g.lineTo(650, H); g.fill(); });
+  var winPane = new THREE.Mesh(new THREE.PlaneGeometry(10, 1.9), new THREE.MeshBasicMaterial({ map: skyline, fog: false })); winPane.position.set(RM.x - 7.05, RM.y + 1.85, RM.z); winPane.rotation.y = PI / 2; roomGroup.add(winPane);
+  var ROOMT = {};
+  function wallTex(id) { if (!ROOMT[id]) ROOMT[id] = logoTex(id, 3.4, 0.95, "#ffffff"); return ROOMT[id]; }
+  var wallLogo = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 0.95), new THREE.MeshBasicMaterial({ fog: false })); wallLogo.position.set(RM.x + 6.88, RM.y + 2.2, RM.z); wallLogo.rotation.y = -PI / 2; roomGroup.add(wallLogo);
+  // the wall screen: Breakout's own booking flow, drawn live ("Book a Meeting", then violet floods out of the slot into "Meeting booked.")
+  var scr = document.createElement("canvas"); scr.width = 1024; scr.height = 584; var sg = scr.getContext("2d");
+  var scrTex = new THREE.CanvasTexture(scr); scrTex.colorSpace = THREE.SRGBColorSpace;
+  var screenM = new THREE.Mesh(new THREE.PlaneGeometry(3.84, 2.19), new THREE.MeshBasicMaterial({ map: scrTex, fog: false })); screenM.position.set(RM.x, RM.y + 1.75, RM.z - 4.89); roomGroup.add(screenM);
+  var IMG = {}; Object.keys(LOGOS).forEach(function (k) { var im = new Image(); im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(LOGOS[k]); IMG[k] = im; });
+  function drawLogo(k, x, y, hgt) { var im = IMG[k]; if (!im || !im.complete || !im.naturalWidth) return 0; var w = hgt * im.naturalWidth / im.naturalHeight; sg.drawImage(im, x, y, w, hgt); return w; }
+  function rr(x, y, w, hh, r) { sg.beginPath(); sg.moveTo(x + r, y); sg.arcTo(x + w, y, x + w, y + hh, r); sg.arcTo(x + w, y + hh, x, y + hh, r); sg.arcTo(x, y + hh, x, y, r); sg.arcTo(x, y, x + w, y, r); sg.closePath(); }
+  function drawScreen(kind, u, t) {
+    var W = 1024, H = 584; sg.fillStyle = "#f6f1ff"; sg.fillRect(0, 0, W, H);
+    sg.fillStyle = "#ffffff"; sg.fillRect(0, 0, W, 72); sg.fillStyle = "#e6def8"; sg.fillRect(0, 72, W, 2);
+    drawLogo("breakout", 32, 20, 32);
+    sg.font = "700 18px Manrope, Arial, sans-serif"; sg.fillStyle = "#5c5850"; sg.textAlign = "right"; sg.fillText("Illustrative example", W - 32, 44); sg.textAlign = "left";
+    if (kind === "alert") {
+      rr(212, 120, 600, 360, 18); sg.fillStyle = "#ffffff"; sg.fill();
+      var pulse = 1 + 0.08 * Math.sin(u * 12); rr(244, 152, 124, 36, 18); sg.fillStyle = "#4c00ff"; sg.fill(); sg.fillStyle = "#ffffff"; sg.font = "800 17px Manrope, Arial"; sg.fillText("SIGNAL", 274, 176);
+      sg.beginPath(); sg.arc(780, 170, 12 * pulse, 0, 2 * PI); sg.fillStyle = "#ff5ad1"; sg.fill();
+      sg.fillStyle = "#040405"; sg.font = "800 40px Manrope, Arial"; sg.fillText("Champion on the move", 244, 244);
+      [["Person", "Maya R."], ["Left", "Northwind"], ["Heading to", u > 0.6 ? "Following her..." : "..."]].forEach(function (r, i) { var y = 310 + i * 52;
+        sg.fillStyle = "#5c5850"; sg.font = "600 24px Manrope, Arial"; sg.fillText(r[0], 244, y); sg.fillStyle = "#040405"; sg.font = "700 26px Manrope, Arial"; sg.fillText(r[1], 430, y); });
+      return;
+    }
+    sg.fillStyle = "#040405"; sg.font = "800 38px Manrope, Arial"; sg.fillText("Book a Meeting", 72, 140);
+    var lw = drawLogo(t.id, 72, 164, 34); sg.fillStyle = "#5c5850"; sg.font = "600 22px Manrope, Arial"; sg.fillText(t.addr, 72 + lw + 22, 190);
+    var slots = ["Tue 10:00 AM", "Wed 1:30 PM", "Thu 2:00 PM"], pick = u > 0.3;
+    slots.forEach(function (sl, i) { var x = 72 + i * 300, y = 246; rr(x, y, 270, 76, 14); var on = pick && i === 2; sg.fillStyle = on ? "#4c00ff" : "#ffffff"; sg.fill(); sg.strokeStyle = on ? "#4c00ff" : "#d9d0f0"; sg.lineWidth = 3; sg.stroke();
+      sg.fillStyle = on ? "#ffffff" : "#040405"; sg.font = "700 26px Manrope, Arial"; sg.textAlign = "center"; sg.fillText(sl, x + 135, y + 47); sg.textAlign = "left"; });
+    rr(72, 378, 250, 64, 32); sg.fillStyle = u > 0.45 ? "#4c00ff" : "#bdb3d8"; sg.fill(); sg.fillStyle = "#ffffff"; sg.font = "800 24px Manrope, Arial"; sg.fillText("Book meeting", 120, 418);
+    if (u > 0.5) {
+      var f = cl((u - 0.5) / 0.2); sg.fillStyle = "#4c00ff"; sg.beginPath(); sg.arc(197, 410, f * 1250, 0, 2 * PI); sg.fill();
+      if (u > 0.66) { sg.globalAlpha = cl((u - 0.66) / 0.1); sg.textAlign = "center";
+        sg.fillStyle = "#ffffff"; sg.font = "400 76px Fraunces, Georgia, serif"; sg.fillText("Meeting", W / 2 - 112, 236);
+        sg.fillStyle = "#be79ff"; sg.font = "italic 400 76px Fraunces, Georgia, serif"; sg.fillText("booked.", W / 2 + 160, 236); sg.textAlign = "left";
+        var c = cl((u - 0.68) / 0.12); sg.strokeStyle = "#ffffff"; sg.lineWidth = 12; sg.lineCap = "round"; sg.lineJoin = "round"; sg.beginPath(); sg.moveTo(W / 2 - 42, 318);
+        if (c > 0) sg.lineTo(W / 2 - 42 + 30 * Math.min(1, c * 2), 318 + 30 * Math.min(1, c * 2)); if (c > 0.5) sg.lineTo(W / 2 - 12 + 64 * (c - 0.5) * 2, 348 - 72 * (c - 0.5) * 2); sg.stroke();
+        rr(W / 2 - 270, 396, 540, 112, 16); sg.fillStyle = "rgba(255,255,255,0.97)"; sg.fill(); drawLogo("mark", W / 2 - 246, 422, 60);
+        sg.fillStyle = "#040405"; sg.font = "800 26px Manrope, Arial"; sg.fillText("Breakout × " + t.name, W / 2 - 168, 448);
+        sg.fillStyle = "#5c5850"; sg.font = "600 22px Manrope, Arial"; sg.fillText("Thursday, 2:00 PM · " + (G.roomKind === "m2" ? "Maya R. and team" : "3 attendees"), W / 2 - 168, 484);
+        sg.globalAlpha = 1; }
+    }
+  }
+
+  // ------------------------------------------------------------ the game: title, mission select (with the target account), two missions, free roam
   var G = { state: "title", t: 0, st: 0, gm: 3 * 1440 + 18 * 60 + 5, rate: 1, control: false, shake: 0, meter: 1, sus: 0, lost: 0, done: { m1: false, m2: false },
-            cutCam: null, menu: false, sel: 0, money: 350, moneyShown: 350, health: 100, wanted: 0, wantedT: 0, subs: null, story: false };
-  var COMMITTEE_DOOR = [210, 15.6], SHOP_DOOR = [-109.6, -207], HALCYON_DOOR = [30, -191.2];
+            cutCam: null, menu: false, sel: 0, money: 350, moneyShown: 350, health: 100, wanted: 0, wantedT: 0, story: false, target: 0, roomKind: null };
+  function T() { return TARGETS[G.target]; }
+  G.W = words(T());
+  var SHOP_DOOR = [-109.6, -207];
+  function doorAt(t, a, b) { var n = t.out; return [t.door[0] + n[0] * a - n[1] * b, t.door[1] + n[1] * a + n[0] * b]; }
   var hud = $("hud"), help = $("help"), obj = $("obj"), sub = $("sub"), mtitle = $("mtitle"), pass = $("pass"), label = $("label"), meter = $("meter"), warn = $("warn");
   function setHelp(html) { if (!html) { help.hidden = true; return; } help.innerHTML = html; help.hidden = false; SFX.ping(); }
   function setObj(html) { if (!html) { obj.hidden = true; return; } obj.innerHTML = html; obj.hidden = false; }
@@ -1033,7 +1140,7 @@
     void pass.offsetWidth; pass.classList.add("slam"); }
   function cut(on) { $("game").classList.toggle("cut", !!on); }
   function fadeTo(fn) { $("fade").classList.add("on"); setTimeout(function () { fn(); $("fade").classList.remove("on"); }, 650); }
-  function enter(state) { G.state = state; G.st = 0; G.subs = null; sub.hidden = true; }
+  function enter(state) { G.state = state; G.st = 0; sub.hidden = true; }
   function subtitles(list, t) {                   // cutscene lines, the speaker's name in the game's colours
     var on = null; list.forEach(function (l) { if (t >= l[0] && t < l[1]) on = l; });
     if (!on) { sub.hidden = true; return; }
@@ -1042,22 +1149,26 @@
   }
   function clearUI() { pass.hidden = true; meter.hidden = true; warn.hidden = true; mtitle.hidden = true; setObj(null); setHelp(null); setLabel(null); sub.hidden = true; cut(false); }
   function placeHeroAtShop() { P.onMoped = false; P.carry = false; P.x = -110.4; P.z = -210.4; P.yaw = -PI * 0.6; P.speed = 0; MP.x = -114; MP.z = -207; MP.y = h(MP.z); MP.yaw = 0; MP.speed = 0; MP.air = false; MP.vyG = 0; look.yaw = 0; camYawS = 0; snapCam = true; }
-  function start() {
-    audioInit();
-    if (G.state !== "title") return;
-    $("titleScreen").hidden = true; enter("idle"); openMenu();
-  }
-  // the mission menu
+  function placeHeroOutside(t) { var a = doorAt(t, 4, 0), m = doorAt(t, 7.6, 1.5); P.onMoped = false; P.carry = false; P.x = a[0]; P.z = a[1]; P.yaw = t.ry; MP.x = m[0]; MP.z = m[1]; MP.y = h(m[1]); MP.yaw = t.ry + PI / 2; MP.speed = 0; camYawS = t.ry; snapCam = true; }
+  function start() { audioInit(); if (G.state !== "title") return; $("titleScreen").hidden = true; enter("idle"); openMenu(); }
+  // the mission menu, with the target account on top
   var MENU = Array.prototype.slice.call(document.querySelectorAll("#menuList li"));
-  function drawMenu() { MENU.forEach(function (li, i) { li.classList.toggle("sel", i === G.sel); var d = li.querySelector(".done"); if (d) d.hidden = !G.done[li.dataset.id]; }); }
+  function drawMenu() {
+    MENU.forEach(function (li, i) { li.classList.toggle("sel", i === G.sel); var d = li.querySelector(".done"); if (d) d.hidden = !G.done[li.dataset.id]; });
+    var t = T(); $("tName").textContent = t.name; $("tAddr").textContent = t.addr + ". Left or right to change the target account.";
+    $("tLogo").src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(LOGOS[t.id]); $("tLogo").alt = t.name + " logo";
+  }
+  function cycleTarget(d) { G.target = (G.target + d + TARGETS.length) % TARGETS.length; G.W = words(T()); drawMenu(); SFX.menu(); }
   function openMenu() { if (G.state === "title") return; G.menu = true; $("menu").hidden = false; $("endScreen").hidden = true; drawMenu(); SFX.menu(); }
   function closeMenu() { G.menu = false; $("menu").hidden = true; }
+  function leaveRoom() { roomGroup.visible = false; G.roomKind = null; COMM.forEach(function (p) { pose(p, { hidden: true }); }); pose(champM, { hidden: true }); }
   function choose(id) {
-    closeMenu(); SFX.click(); taxi.g.visible = taxi.shadow.visible = false; COMM.forEach(function (p) { pose(p, { hidden: true }); });
+    if (id === "target") { cycleTarget(1); return; }
+    closeMenu(); SFX.click(); taxi.g.visible = taxi.shadow.visible = false; leaveRoom();
     fadeTo(function () {
-      clearUI(); G.wanted = 0; G.health = 100;
+      clearUI(); G.wanted = 0; G.health = 100; placeSignals(T());
       if (id === "m1") { G.gm = 3 * 1440 + 18 * 60 + 5; G.rate = 1; G.story = true; placeHeroAtShop(); startM1(); }
-      else if (id === "m2") { G.story = false; startM2(); }
+      else if (id === "m2") { G.story = false; G.gm = 7 * 1440 + 18 * 60 + 32; G.rate = 1; setLabel(G.W.label); roomScene("alert"); }
       else { G.gm = 3 * 1440 + 18 * 60 + 5; G.rate = 1; placeHeroAtShop(); G.control = true; enter("roam"); setHelp("Free roam. Press <span class=\"y\">Esc</span> for missions."); setTimeout(function () { if (G.state === "roam") setHelp(null); }, 5000); }
     });
   }
@@ -1067,6 +1178,7 @@
     if (G.menu) {
       if (k === "arrowdown" || k === "s") { G.sel = (G.sel + 1) % MENU.length; drawMenu(); SFX.menu(); }
       if (k === "arrowup" || k === "w") { G.sel = (G.sel + MENU.length - 1) % MENU.length; drawMenu(); SFX.menu(); }
+      if ((k === "arrowleft" || k === "a" || k === "arrowright" || k === "d") && MENU[G.sel].dataset.id === "target") cycleTarget(k === "arrowleft" || k === "a" ? -1 : 1);
       if (k === "enter" || k === " ") choose(MENU[G.sel].dataset.id);
       if (k === "escape" && G.state !== "idle") closeMenu();
       return;
@@ -1078,16 +1190,18 @@
   }
   $("titleScreen").addEventListener("click", start);
   $("again").addEventListener("click", function () { openMenu(); });
-  $("roam").addEventListener("click", function () { $("endScreen").hidden = true; G.control = true; cut(false); enter("roam"); setHelp("Free roam. Press <span class=\"y\">Esc</span> for missions."); });
+  $("roam").addEventListener("click", function () { $("endScreen").hidden = true; placeHeroOutside(T()); G.control = true; cut(false); enter("roam"); setHelp("Free roam. Press <span class=\"y\">Esc</span> for missions."); });
   function fail(reason) { G.control = false; SFX.fail(); showPass("MISSION FAILED!", reason, true); setObj("Press <span class=\"y\">Enter</span> or tap to retry, <span class=\"y\">Esc</span> for missions."); enter("fail"); G.failOf = G.mission; }
   $("game").addEventListener("pointerdown", function (e) { if (G.state === "fail" && G.st > 1.2 && !G.menu && e.target.tagName !== "BUTTON") retry(); });
   function retry() { clearUI(); fadeTo(function () { if (G.failOf === 1) { placeHeroAtShop(); G.gm = 3 * 1440 + 18 * 60 + 5; startM1(); } else startM2(); }); }
-  function startM1() { G.mission = 1; G.control = false; cut(true); setLabel(TXT.label.m1); setHelp(TXT.m1.help); enter("m1intro"); }
+  function startM1() { G.mission = 1; G.control = false; placeSignals(T()); cut(true); setLabel(G.W.label); setHelp(G.W.m1.help); enter("m1intro"); }
+  function roomScene(kind) { G.roomKind = kind; roomGroup.visible = true; wallLogo.material.map = wallTex(kind === "alert" ? "breakout" : T().id); wallLogo.material.needsUpdate = true; cut(true); enter("room"); }
   function startM2() {
-    G.gm = 7 * 1440 + 18 * 60 + 40; G.rate = 2.4; taxi.g.visible = taxi.shadow.visible = true; TX.s = 0; TX.v = 0;
-    P.onMoped = true; P.carry = false; MP.x = 232; MP.z = 9.6; MP.yaw = -PI / 2; MP.speed = 0; MP.air = false; MP.y = 0; MP.vyG = 0; look.yaw = 0; camYawS = MP.yaw; snapCam = true;
-    G.champ = { x: 210, z: 20.4, walk: 0, inTaxi: false }; G.mission = 2; G.sus = 0; G.lost = 0; G.control = false; cut(true);
-    setHelp(TXT.m2.help); setLabel(TXT.label.m2); setObj(null); mtitle.textContent = TXT.m2.title; SFX.phone(); enter("m2intro");
+    leaveRoom(); placeSignals(T()); setRoute(T().route);
+    G.gm = 7 * 1440 + 18 * 60 + 40; G.rate = 2.4; taxi.g.visible = taxi.shadow.visible = true; TX.s = 0; TX.v = 0; TX.yaw = PI / 2;
+    P.onMoped = true; P.carry = false; MP.x = 58; MP.z = 9.6; MP.yaw = PI / 2; MP.speed = 0; MP.air = false; MP.y = 0; MP.vyG = 0; look.yaw = 0; camYawS = MP.yaw; snapCam = true;
+    G.champ = { x: 90, z: 20.4, walk: 0, inTaxi: false }; G.mission = 2; G.sus = 0; G.lost = 0; G.control = false; cut(true);
+    setHelp(G.W.m2.help); setLabel(G.W.label); setObj(null); mtitle.textContent = G.W.m2.title; SFX.phone(); enter("m2intro");
   }
   function reward() { G.money += 1000; }
 
@@ -1115,60 +1229,86 @@
   }
 
   function mission(dt) {
-    var s = G.state, t = G.st, M = TXT;
+    var s = G.state, t = G.st, Wd = G.W, tg = T();
     corona.visible = false; ARR.forEach(function (a) { a.visible = false; });
-    if (s === "m1intro") {                                         // the 3 windows light up; the title; CJ gets the pizzas
-      G.cutCam = t < 2.6 ? { p: [201 + t * 0.6, 1.8 + t * 0.5, -12], l: [210, 52 + t * 5, 26], fov: 50 } : { p: [-109.8, 40.1, -216], l: [-113.2, 39, -206.5], fov: 54 };
-      subtitles(M.m1.intro, t);
-      if (t > 0.6) { mtitle.textContent = M.m1.title; mtitle.hidden = false; }
+    var mark = doorAt(tg, 4.4, 0);
+    if (s === "m1intro") {                                         // the 3 windows light up at the target; the title; CJ gets the pizzas
+      var wy = tg.dy + Math.min(tg.ht * 0.5, 30), c0 = doorAt(tg, 16, -7), l0 = doorAt(tg, 0, 0);
+      G.cutCam = t < 2.6 ? { p: [c0[0], tg.dy + 1.8 + t * 0.5, c0[1]], l: [l0[0], wy - 12 + t * 4, l0[1]], fov: 54 } : { p: [-109.8, 40.1, -216], l: [-113.2, 39, -206.5], fov: 54 };
+      subtitles(Wd.m1.intro, t);
+      if (t > 0.6) { mtitle.textContent = Wd.m1.title; mtitle.hidden = false; }
       if (t > 2.6) { P.carry = true; P.x = -112.3; P.z = -207.8; P.yaw = -PI / 2; }
-      if (t > 5.0) { mtitle.hidden = true; cut(false); G.control = true; G.meter = 1; meter.hidden = false; $("meterName").textContent = "SIGNAL"; $("zone").hidden = true; setObj(M.m1.mount); enter("m1"); }
+      if (t > 5.0) { mtitle.hidden = true; cut(false); G.control = true; G.meter = 1; meter.hidden = false; $("meterName").textContent = "SIGNAL"; $("zone").hidden = true; setObj(Wd.m1.mount); enter("m1"); }
     } else if (s === "m1") {
-      G.meter -= dt / 62; var d = Math.hypot(P.x - COMMITTEE_DOOR[0], P.z - COMMITTEE_DOOR[1]);
-      if (P.onMoped && obj.innerHTML.indexOf("scooter") >= 0) { setObj(M.m1.go); G.objT = 6; }
+      G.meter -= dt / 62; var d = Math.hypot(P.x - mark[0], P.z - mark[1]);
+      if (P.onMoped && obj.innerHTML.indexOf("scooter") >= 0) { setObj(Wd.m1.go); G.objT = 6; }
       if (G.objT > 0) { G.objT -= dt; if (G.objT <= 0) obj.hidden = true; }
-      corona.visible = true; corona.position.set(COMMITTEE_DOOR[0], 0.7, COMMITTEE_DOOR[1]); ARR[4].visible = true; ARR[4].position.set(COMMITTEE_DOOR[0], 3 + 0.2 * Math.sin(G.t * 4), COMMITTEE_DOOR[1]); ARR[4].rotation.set(PI, G.t * 2, 0);
+      corona.visible = true; corona.position.set(mark[0], h(mark[1]) + 0.7, mark[1]); ARR[4].visible = true; ARR[4].position.set(mark[0], h(mark[1]) + 3 + 0.2 * Math.sin(G.t * 4), mark[1]); ARR[4].rotation.set(PI, G.t * 2, 0);
       var fill = Math.max(0, G.meter), c1 = new THREE.Color("#e1a730").lerp(new THREE.Color("#5a5a5a"), 1 - fill);
       $("meterFill").style.width = (fill * 100).toFixed(1) + "%"; $("meterFill").style.background = "#" + c1.getHexString();
-      if (G.meter <= 0) { meter.hidden = true; fail(M.m1.fail); return; }
+      if (G.meter <= 0) { meter.hidden = true; fail(Wd.m1.fail); return; }
       if (d < 3.2 && Math.abs(MP.speed) < 10) { G.control = false; meter.hidden = true; obj.hidden = true; cut(true);
-        P.onMoped = false; MP.x = 210; MP.z = 11.3; MP.yaw = PI / 2; MP.speed = 0; MP.y = 0; P.x = 210; P.z = 17.3; P.yaw = 0; P.carry = true; enter("m1outro"); }
-    } else if (s === "m1outro") {
-      G.cutCam = { p: [198.4 + t * 0.2, 2.5, 9.8 + t * 0.1], l: [210.4, 2.2, 19.2], fov: 50 };
-      COMM.forEach(function (p, i) { var t0 = 0.3 + i * 0.35, u = cl((t - t0) / 0.7), tx = [207.3, 210.2, 213.1][i], tz = [18.6, 19.0, 18.6][i];
+        var hp = doorAt(tg, 3.6, 0), mp = doorAt(tg, 7.6, 1.5); P.onMoped = false; MP.x = mp[0]; MP.z = mp[1]; MP.y = h(mp[1]); MP.yaw = tg.ry + PI / 2; MP.speed = 0; MP.air = false;
+        P.x = hp[0]; P.z = hp[1]; P.y = h(hp[1]); P.yaw = tg.ry + PI; P.carry = true; enter("m1door"); }
+    } else if (s === "m1door") {                                    // the committee comes down; CJ hands over the pizzas
+      var cp1 = doorAt(tg, 10.5, -8.5), cl1 = doorAt(tg, 1.8, 0);
+      G.cutCam = { p: [cp1[0], tg.dy + 2.5, cp1[1]], l: [cl1[0], tg.dy + 2.0, cl1[1]], fov: 50 };
+      COMM.forEach(function (p, i) { var t0 = 0.3 + i * 0.35, u = cl((t - t0) / 0.7), a0 = doorAt(tg, 0.4, 0), a1 = doorAt(tg, 1.7 + (i === 1 ? 0.4 : 0), (i - 1) * 2.9);
         if (t < t0) { pose(p, { hidden: true }); return; }
-        pose(p, { x: lerp(210, tx, u), y: 0, z: lerp(20.6, tz, u), yaw: PI, mode: u < 1 ? "walk" : "stand", phase: u * 4, amp: 0.5, carry: i === 1 && t > 2.4 });
-        ARR[i].visible = true; ARR[i].position.set(p.g.position.x, 2.8 + 0.12 * Math.sin(G.t * 5 + i), p.g.position.z); ARR[i].rotation.set(PI, G.t * 2.5, 0); });
-      if (t < 3.5) subtitles(M.m1.outro, t); else sub.hidden = true;
-      if (t > 2.4) P.carry = false;
-      if (t > 3.5 && pass.hidden) { SFX.pass(); reward(); showPass("MISSION PASSED!", M.m1.passed); }
-      if (t > 8) { pass.hidden = true; COMM.forEach(function (p) { pose(p, { hidden: true }); }); G.done.m1 = true; setHelp(null); setLabel(null); cut(false);
-        if (G.story) { enter("lapse"); G.rate = 900; } else { G.control = true; enter("roam"); } }
+        var px = lerp(a0[0], a1[0], u), pz = lerp(a0[1], a1[1], u);
+        pose(p, { x: px, y: h(pz), z: pz, yaw: tg.ry, mode: u < 1 ? "walk" : "stand", phase: u * 4, amp: 0.5, carry: i === 1 && t > 2.6 });
+        ARR[i].visible = true; ARR[i].position.set(px, h(pz) + 2.8 + 0.12 * Math.sin(G.t * 5 + i), pz); ARR[i].rotation.set(PI, G.t * 2.5, 0); });
+      subtitles(Wd.m1.door, t); if (t > 2.6) P.carry = false;
+      if (t > 4.4) { enter("wait"); fadeTo(function () { roomScene("m1"); }); }
+    } else if (s === "room") {                                     // CJ, the SDR: pitch, pick a slot, book it live on the wall screen
+      var X = RM.x, Y = RM.y, Z = RM.z, k = G.roomKind;
+      if (k === "alert") {
+        pose(heroM, { x: X, y: Y, z: Z + 3.9, yaw: PI, mode: "sit", noShadow: true });
+        drawScreen("alert", t / 4, tg); scrTex.needsUpdate = true;
+        G.cutCam = t < 3.0 ? { p: [X + 0.4, Y + 1.6, Z - 1.4], l: [X, Y + 1.75, Z - 4.9], fov: 54 } : { p: [X - 1.8, Y + 1.5, Z + 1.4], l: [X, Y + 1.15, Z + 3.8], fov: 50 };
+        subtitles(Wd.m2.alert, t);
+        if (t > 5.9) { enter("wait"); fadeTo(startM2); }
+      } else {
+        var m2 = k === "m2";
+        pose(heroM, { x: X + 1.0, y: Y, z: Z - 3.7, yaw: 0, mode: "stand", noShadow: true, point: t > 6.1 && t < 9 });
+        if (m2) { pose(champM, { x: X - 1.5, y: Y, z: Z - 1.6, yaw: PI / 2, mode: "sit", noShadow: true }); pose(COMM[0], { x: X + 1.5, y: Y, z: Z - 1.6, yaw: -PI / 2, mode: "sit", noShadow: true }); pose(COMM[1], { hidden: true }); pose(COMM[2], { hidden: true }); }
+        else { pose(COMM[0], { x: X - 1.5, y: Y, z: Z - 1.6, yaw: PI / 2, mode: "sit", noShadow: true }); pose(COMM[1], { x: X + 1.5, y: Y, z: Z - 1.6, yaw: -PI / 2, mode: "sit", noShadow: true }); pose(COMM[2], { x: X - 1.5, y: Y, z: Z, yaw: PI / 2, mode: "sit", noShadow: true }); }
+        drawScreen("book", cl((t - 8.2) / 3.2), tg); scrTex.needsUpdate = true;
+        G.cutCam = t < 3.0 ? { p: [X + 4.8, Y + 2.5, Z + 4.2], l: [X - 0.3, Y + 1.0, Z - 2.4], fov: 54 }
+          : t < 6.0 ? { p: [X - 0.6, Y + 1.45, Z - 0.6], l: [X + 1.0, Y + 1.6, Z - 3.7], fov: 50 }
+          : t < 8.2 ? { p: [X + 1.6, Y + 1.8, Z - 3.6], l: [X - 1.5, Y + 1.1, Z - 0.6], fov: 52 }
+          : { p: [X + 0.2, Y + 1.7, Z - 1.9], l: [X, Y + 1.75, Z - 4.9], fov: 52 };
+        subtitles(m2 ? Wd.m2.room : Wd.m1.room, t);
+        if (t > 10.7 && pass.hidden) { SFX.pass(); reward(); showPass("MISSION PASSED!", m2 ? Wd.m2.passed : Wd.m1.passed); }
+        if (t > 15.5) { pass.hidden = true; setHelp(null);
+          if (m2) { G.done.m2 = true; enter("wait"); fadeTo(function () { leaveRoom(); taxi.g.visible = taxi.shadow.visible = false; setLabel(null); cut(false); placeHeroOutside(tg); enter("close"); }); }
+          else { G.done.m1 = true; enter("wait"); fadeTo(function () { leaveRoom(); cut(false); placeHeroOutside(tg); if (G.story) { setLabel(null); enter("lapse"); G.rate = 900; } else { setLabel(null); G.control = true; enter("roam"); } }); } }
+      }
     } else if (s === "lapse") {                                    // the clock spins to Monday evening
-      G.cutCam = { p: [210 + Math.sin(-2.45 + t * 0.2) * 290, 210, 33 + Math.cos(-2.45 + t * 0.2) * 290], l: [180, 40, 0], fov: 54 };
-      var target = 7 * 1440 + 18 * 60 + 40; G.rate = Math.max(1, (target - G.gm) / Math.max(0.3, 3.2 - t));
-      if (t > 3.2) { fadeTo(startM2); enter("wait"); }
-    } else if (s === "m2intro") {                                  // the phone rings; she leaves the office for a taxi
-      G.cutCam = { p: [201, 2.4, 6.5], l: [204, 1.6, 16], fov: 52 };
-      var ch = G.champ, tgt = [198.8, 13.2], dx = tgt[0] - ch.x, dz = tgt[1] - ch.z, dd = Math.hypot(dx, dz);
-      if (dd > 0.2) { ch.x += dx / dd * 3.0 * dt; ch.z += dz / dd * 3.0 * dt; ch.walk += dt * 6; }
+      G.cutCam = { p: [90 + Math.sin(-2.45 + t * 0.2) * 290, 210, 33 + Math.cos(-2.45 + t * 0.2) * 290], l: [120, 40, 0], fov: 54 };
+      var target = 7 * 1440 + 18 * 60 + 32; G.rate = Math.max(1, (target - G.gm) / Math.max(0.3, 3.2 - t));
+      if (t > 3.2) { G.rate = 1; enter("wait"); fadeTo(function () { setLabel(G.W.label); roomScene("alert"); }); }
+    } else if (s === "m2intro") {                                  // she leaves Northwind with her box for a taxi
+      G.cutCam = { p: [76, 2.4, 3.5], l: [86, 1.6, 15], fov: 52 };
+      var ch = G.champ, tgt = [85.4, 12.9], dx = tgt[0] - ch.x, dz = tgt[1] - ch.z, dd = Math.hypot(dx, dz);
+      if (dd > 0.2) { ch.x += dx / dd * 2.4 * dt; ch.z += dz / dd * 2.4 * dt; ch.walk += dt * 5.5; }
       pose(champM, { x: ch.x, y: 0, z: ch.z, yaw: Math.atan2(dx, dz), mode: dd > 0.2 ? "walk" : "stand", phase: ch.walk, carry: true, hidden: t > 4.6 });
-      taxiPose(); subtitles(M.m2.intro, t); if (t > 0.6) mtitle.hidden = false;
-      if (t > 4.6) { mtitle.hidden = true; cut(false); G.control = true; ch.inTaxi = true; meter.hidden = false; $("meterName").textContent = "DISTANCE"; $("zone").hidden = false; setObj(M.m2.go); G.objT = 6; enter("m2"); }
+      taxiPose(); subtitles(Wd.m2.intro, t); if (t > 0.6) mtitle.hidden = false;
+      if (t > 4.6) { mtitle.hidden = true; cut(false); G.control = true; ch.inTaxi = true; meter.hidden = false; $("meterName").textContent = "DISTANCE"; $("zone").hidden = false; setObj(Wd.m2.go); G.objT = 6; enter("m2"); }
     } else if (s === "m2") {
-      var ch2 = G.champ;
+      var ch2 = G.champ, entry = doorAt(tg, 1.2, 0);
       if (G.objT > 0) { G.objT -= dt; if (G.objT <= 0) obj.hidden = true; }
-      if (!ch2.inTaxi) {
-        var tg = ch2.x > 31 ? [30.2, -188] : HALCYON_DOOR, ex = tg[0] - ch2.x, ez = tg[1] - ch2.z, ed = Math.hypot(ex, ez);
-        if (ed > 0.2) { ch2.x += ex / ed * 1.7 * dt; ch2.z += ez / ed * 1.7 * dt; ch2.walk += dt * 4.4; }
-        else if (tg === HALCYON_DOOR) { G.control = false; cut(true); meter.hidden = true; warn.hidden = true; enter("m2outro"); }
+      if (!ch2.inTaxi) {                                           // out of the taxi, on foot to her new office
+        var ex = entry[0] - ch2.x, ez = entry[1] - ch2.z, ed = Math.hypot(ex, ez);
+        if (ed > 0.25) { ch2.x += ex / ed * 1.7 * dt; ch2.z += ez / ed * 1.7 * dt; ch2.walk += dt * 4.4; }
+        else { G.control = false; cut(true); meter.hidden = true; warn.hidden = true; enter("m2door"); }
         pose(champM, { x: ch2.x, y: h(ch2.z), z: ch2.z, yaw: Math.atan2(ex, ez), mode: "walk", phase: ch2.walk, carry: true });
       } else {
         var ahead = Math.hypot(P.x - taxi.g.position.x, P.z - taxi.g.position.z) < 8 && ((P.x - taxi.g.position.x) * Math.sin(TX.yaw) + (P.z - taxi.g.position.z) * Math.cos(TX.yaw)) > 0;
         var end = RL[RL.length - 1], left = end - TX.s, corner = 1e9, ri2 = routeAt(TX.s)[3];
         if (ri2 < RL.length) corner = RL[ri2] - TX.s;
         var vt = ahead ? 0 : Math.min(12, 3 + corner * 0.35, 1 + left * 0.5); TX.v = lerp(TX.v, vt, Math.min(1, dt * 1.6)); TX.s += TX.v * dt;
-        if (left < 0.3 && TX.v < 0.4) { ch2.inTaxi = false; ch2.x = 35.4; ch2.z = -187.6; ch2.walk = 0; }
+        if (left < 0.3 && TX.v < 0.4) { var ep = routeAt(end); ch2.inTaxi = false; ch2.x = ep[0] - tg.out[1] * 1.4; ch2.z = ep[1] + tg.out[0] * 1.4; ch2.walk = 0; }
         pose(champM, { hidden: true });
       }
       taxiPose();
@@ -1179,28 +1319,29 @@
       $("meterFill").style.width = (cl((gap - 4) / 90) * 100).toFixed(1) + "%"; $("meterFill").style.background = tooClose ? "#ff3b3b" : tooFar ? "#5a5a5a" : "#e1a730";
       $("zone").style.left = (cl((9 - 4) / 90) * 100) + "%"; $("zone").style.width = (cl((80 - 9) / 90) * 100) + "%";
       warn.hidden = !(tooClose || tooFar) || Math.floor(G.t * 3) % 2 === 1; warn.textContent = tooClose ? "TOO CLOSE" : "YOU'RE LOSING HER";
-      if (G.sus > 3) { warn.hidden = true; meter.hidden = true; fail(M.m2.spotted); return; }
-      if (G.lost > 4) { warn.hidden = true; meter.hidden = true; fail(M.m2.lost); return; }
-    } else if (s === "m2outro") {
-      G.cutCam = { p: [16 + t * 0.4, 39 + t * 0.1, -167 - t * 0.6], l: [30, 48 + t, -193], fov: 56 };
-      pose(champM, { x: 30, y: 38, z: -191.2 - Math.min(3, t * 1.4), yaw: PI, mode: "walk", phase: G.t * 4.4, carry: true, hidden: t > 1.4 });
-      GLOW2.material.opacity = cl((t - 1.2) / 0.3) * 0.9; ARR[5].visible = t > 1.2; ARR[5].scale.set(1.6, 2.4, 1.6); ARR[5].position.set(30, 46 + 0.3 * Math.sin(G.t * 4), -192); ARR[5].rotation.set(PI, G.t * 2, 0);
-      if (t < 2) subtitles(M.m2.outro, t); else sub.hidden = true;
-      if (t > 2 && pass.hidden) { SFX.pass(); reward(); setLabel(TXT.label.m2b); showPass("MISSION PASSED!", M.m2.passed); }
-      if (t > 7) { pass.hidden = true; G.done.m2 = true; taxi.g.visible = taxi.shadow.visible = false; enter("close"); cut(false); setHelp(null); setLabel(null); }
+      if (G.sus > 3) { warn.hidden = true; meter.hidden = true; fail(Wd.m2.spotted); return; }
+      if (G.lost > 4) { warn.hidden = true; meter.hidden = true; fail(Wd.m2.lost); return; }
+    } else if (s === "m2door") {                                   // she walks into her new company; Breakout lights it up
+      var cp2 = doorAt(tg, 16, -10), inn = doorAt(tg, 1.2 - Math.min(3.2, t * 1.4), 0);
+      G.cutCam = { p: [cp2[0], tg.dy + 3.2, cp2[1]], l: [tg.door[0], tg.dy + 6, tg.door[1]], fov: 56 };
+      pose(champM, { x: inn[0], y: tg.dy, z: inn[1], yaw: tg.ry + PI, mode: "walk", phase: G.t * 4.4, carry: true, hidden: t > 1.0 });
+      GLOW2.material.opacity = cl((t - 0.9) / 0.3) * 0.9; ARR[5].visible = t > 0.9; ARR[5].scale.set(1.6, 2.4, 1.6);
+      var a5 = doorAt(tg, 1.5, 0); ARR[5].position.set(a5[0], tg.dy + 8 + 0.3 * Math.sin(G.t * 4), a5[1]); ARR[5].rotation.set(PI, G.t * 2, 0);
+      subtitles(Wd.m2.door, t);
+      if (t > 3.0) { enter("wait"); fadeTo(function () { roomScene("m2"); }); }
     } else if (s === "close") {
-      var u = Math.min(1, t / 6), e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
-      G.cutCam = { p: [lerp(24, -150, e), lerp(82, 320, e), lerp(-138, 230, e)], l: [lerp(30, 110, e), lerp(44, 0, e), lerp(-200, -60, e)], fov: 54 };
+      var u = Math.min(1, t / 6), e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2, c3 = doorAt(tg, 30, -14);
+      G.cutCam = { p: [lerp(c3[0], -150, e), lerp(tg.dy + 30, 320, e), lerp(c3[1], 230, e)], l: [lerp(tg.door[0], 110, e), lerp(tg.dy + 20, 0, e), lerp(tg.door[1], -60, e)], fov: 54 };
       if (t > 2.4 && $("endScreen").hidden && !G.menu) { $("endScreen").hidden = false; SFX.ping(); }
     } else if (s === "idle") {
       G.cutCam = { p: [60 + Math.sin(G.t * 0.05) * 360, 170, -40 + Math.cos(G.t * 0.05) * 360], l: [80, 40, -20], fov: 52 };
     }
-    var winOn = s === "m1intro" ? [0, 1, 2].map(function (i) { return t > 0.3 + i * 0.4 ? 1 : 0; }) : s === "m1" || s === "m1outro" ? [1, 1, 1] : [0, 0, 0];
+    var winOn = s === "m1intro" ? [0, 1, 2].map(function (i) { return t > 0.3 + i * 0.4 ? 1 : 0; }) : s === "m1" || s === "m1door" ? [1, 1, 1] : [0, 0, 0];
     WIN.forEach(function (w, i) { w.material.opacity = winOn[i] * (0.85 + 0.15 * Math.sin(G.t * 6 + i)); }); GLOW.material.opacity = (winOn[0] + winOn[1] + winOn[2]) / 3 * 0.8;
-    if (s !== "m2outro") GLOW2.material.opacity = G.done.m2 ? 0.9 : 0;
+    if (s !== "m2door") GLOW2.material.opacity = G.done.m2 && s !== "m2" && s !== "m2intro" ? 0.9 : 0;
     BEAMS.forEach(function (b) { b.visible = false; });
-    if (s === "m1" || s === "m1intro") beamAt(BEAMS[0], 210, CT, 33.5, 5);
-    if (s === "close" || (s === "roam" && G.done.m2)) CLOSE_BLIPS.forEach(function (r, i) { if ((s === "roam" || G.st > i * 0.33) && i + 1 < BEAMS.length) beamAt(BEAMS[i + 1], r[0], r[1], r[2], i < 2 ? 5 : 3.5); });
+    if (s === "m1" || s === "m1intro") beamAt(BEAMS[0], (tg.block[0] + tg.block[1]) / 2, tg.top, (tg.block[2] + tg.block[3]) / 2, 5);
+    if (s === "close" || (s === "roam" && G.done.m2)) CLOSE_BLIPS.forEach(function (r, i) { if ((s === "roam" || G.st > i * 0.33) && i + 1 < BEAMS.length) beamAt(BEAMS[i + 1], r[0], r[1], r[2], i < 3 ? 5 : 3.5); });
   }
   function taxiPose() { var r = routeAt(TX.s); TX.yaw += angDiff(TX.yaw, r[2]) * 0.2; taxi.g.position.set(r[0], h(r[1]), r[1]); taxi.g.rotation.set(-Math.atan(slope(r[1]) * Math.cos(TX.yaw)), TX.yaw, 0, "YXZ"); taxi.shadow.position.set(r[0], h(r[1]) + 0.07, r[1]); taxi.shadow.rotation.set(-PI / 2, 0, -TX.yaw); }
 
@@ -1266,8 +1407,9 @@
     STARS.forEach(function (s, i) { s.classList.toggle("on", i >= 6 - G.wanted && (G.wantedT > 20 ? Math.floor(G.t * 4) % 2 === 0 : true)); });
     if (radioMsg > 0) { radioMsg -= dt; $("radio").hidden = false; } else $("radio").hidden = true;
     var blips = [], s = G.state;
-    if (s === "m1") [-6, 0, 6].forEach(function (o) { blips.push({ x: 210 + o, z: 33.5, color: "#be79ff", square: true, size: 7, pulse: true }); });
-    if (s === "m1") blips.push({ x: COMMITTEE_DOOR[0], z: COMMITTEE_DOOR[1], color: "#f0c850", size: 9 });
+    var tgt = T(), bc = [(tgt.block[0] + tgt.block[1]) / 2, (tgt.block[2] + tgt.block[3]) / 2], mk = doorAt(tgt, 4.4, 0);
+    if (s === "m1") [-6, 0, 6].forEach(function (o) { blips.push({ x: bc[0] + o, z: bc[1], color: "#be79ff", square: true, size: 7, pulse: true }); });
+    if (s === "m1") blips.push({ x: mk[0], z: mk[1], color: "#f0c850", size: 9 });
     if (s === "m2") blips.push({ x: G.champ.inTaxi ? taxi.g.position.x : champM.g.position.x, z: G.champ.inTaxi ? taxi.g.position.z : champM.g.position.z, color: "#6a8bf0", pulse: true, size: 10 });
     if (s === "roam" && G.done.m2) CLOSE_BLIPS.forEach(function (r) { blips.push({ x: r[0], z: r[2], color: "#be79ff", square: true, size: 6 }); });
     if (!P.onMoped && s !== "m2" && s !== "m2intro") blips.push({ x: MP.x, z: MP.z, color: "#6a8bf0", size: 6 });
@@ -1287,14 +1429,17 @@
   function frame(now) {
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (!G.menu || G.state === "idle") step(dt); else G.t += dt;
-    var pal = applyLight(G.gm);
+    var pal = applyLight(G.gm), inRoom = G.state === "room";
+    scene.fog = inRoom ? null : fog;
+    if (inRoom) { hemi.color.set("#ffffff"); hemi.groundColor.set("#7a7a7a"); hemi.intensity = 1.0; sun.intensity = 0.35; sun.color.set("#ffffff"); }
     moped.position.set(MP.x, MP.y, MP.z); moped.rotation.set(MP.pitch, MP.yaw, MP.roll, "YXZ"); wheelF.rotation.x = wheelB.rotation.x = MP.wheel;
     mopedShadow.position.set(MP.x, h(MP.z) + 0.07, MP.z); mopedShadow.rotation.set(-PI / 2, 0, -MP.yaw);
-    if (P.onMoped) { var fx = Math.sin(MP.yaw), fz = Math.cos(MP.yaw); pose(heroM, { x: MP.x - fx * 0.38, y: MP.y + 0.08 + Math.sin(MP.pitch) * 0.35, z: MP.z - fz * 0.38, yaw: MP.yaw, pitch: MP.pitch * 0.9, roll: MP.roll, mode: "ride", noShadow: true }); }
+    if (G.state === "room") { /* the room scene poses CJ */ }
+    else if (P.onMoped) { var fx = Math.sin(MP.yaw), fz = Math.cos(MP.yaw); pose(heroM, { x: MP.x - fx * 0.38, y: MP.y + 0.08 + Math.sin(MP.pitch) * 0.35, z: MP.z - fz * 0.38, yaw: MP.yaw, pitch: MP.pitch * 0.9, roll: MP.roll, mode: "ride", noShadow: true }); }
     else pose(heroM, { x: P.x, y: P.y, z: P.z, yaw: P.yaw, mode: P.speed > 0.3 ? "walk" : "stand", phase: P.phase, amp: Math.min(0.8, 0.3 + P.speed * 0.1), carry: P.carry });
-    PZ.visible = (P.carry && !P.onMoped) || (G.state === "m1outro" && G.st > 2.4);
+    PZ.visible = G.state !== "room" && ((P.carry && !P.onMoped) || (G.state === "m1door" && G.st > 2.6));
     if (PZ.visible) { var hh2 = P.carry ? hands(heroM, 0.44) : hands(COMM[1], 0.42); PZ.position.set(hh2[0], hh2[1], hh2[2]); PZ.rotation.y = hh2[3]; }
-    if (G.state !== "m2" && G.state !== "m2intro" && G.state !== "m2outro") pose(champM, { hidden: true });
+    if (G.state !== "m2" && G.state !== "m2intro" && G.state !== "m2door" && !(G.state === "room" && G.roomKind === "m2")) pose(champM, { hidden: true });
     BOXC.visible = champM.g.visible;
     if (BOXC.visible) { var bh = hands(champM, 0.4); BOXC.position.set(bh[0], bh[1], bh[2]); BOXC.rotation.set(0, bh[3], 0); }
     if (corona.visible) { corona.rotation.y = G.t; coronaMat.opacity = 0.3 + 0.15 * Math.sin(G.t * 4); }
@@ -1305,7 +1450,7 @@
     sunDisc.position.set(cam.position.x + sd.x * 2600, cam.position.y + Math.max(sd.y, 0.06) * 2600, cam.position.z + sd.z * 2600);
     sunDisc.scale.setScalar(1100); sunDisc.lookAt(cam.position); sunDisc.material.opacity = pal.disc;
     var speedTrail = P.onMoped ? cl(Math.abs(MP.speed) / 26) : 0;
-    render(0.25 + 0.35 * speedTrail, pal.tint, pal.ti);
+    render(inRoom ? 0.15 : 0.25 + 0.35 * speedTrail, pal.tint, inRoom ? 0.06 : pal.ti);
     updateHud(dt); engineSound();
     requestAnimationFrame(frame);
   }
