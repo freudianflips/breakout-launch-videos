@@ -13,6 +13,7 @@ One brand kit, a set of proven styles, and a pipeline that turns Breakout's own 
 | [`templates/`](templates/README.md) | 11 styles, each a complete template with a worked example film and a poster |
 | [`videos/`](videos/README.md) | Where new videos are made, one folder each, copied from a template |
 | [`accounts/`](accounts/README.md) | Target accounts for the ABM templates (captures of their site and chat) |
+| [`games/`](games/downtown-missions/README.md) | Playable browser games: Downtown Missions, an open-world game homage with one mission per buying signal |
 | [`skills/`](skills/README.md) | 10 agent manuals: story, voice, score, sound, mix, review, motion, 3D, brand |
 | [`docs/`](docs/) | Setup, costs, rights, the [style log](docs/breakout-style.md) and [style references](docs/styles/aesthetic-options.md) (look tests, moodboard) |
 | `scripts/`, `tools/`, `examples/` | `new-video.py`, the pre-commit check, the website-to-brand extractor and its offline test site |
