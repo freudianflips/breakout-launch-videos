@@ -28,7 +28,7 @@ Traffic includes Waymos (their sensor dome spins), Muni buses, taxis, SFPD cars,
 
 1. **Pizza for the Buying Committee:** three people from the account are looking at pricing, so CJ takes them pizza before they lose interest. "Uh, we didn't order pizza." "I know. I'm CJ, from Breakout. You were just on our site." Upstairs he books the meeting live on Breakout's booking screen.
 2. **The alert:** at CJ's desk, Breakout flags that Sarah F. just left her company.
-3. **Tail the Champion:** CJ follows her cab to Anthropic. "CJ? It's literally my first day." "Did you follow my cab here?" "...So, Thursday at two for your team?"
+3. **Tail the Champion:** CJ follows her cab to Anthropic. "CJ? I've worked here for four hours." "Did you... follow my taxi?" "We call that account-based marketing." "...Thursday, 2 PM. And bring pizza."
 
 ## Play
 
@@ -52,5 +52,6 @@ On a phone: the stick steers, the buttons get you on or off and brake.
 - `build.py` inlines the brand's logo and mark from [`brand/`](../../brand/) and writes `index.html`; `--artifact <path>` also writes the body-only page used for publishing.
 - **The look (owner's decision, 2026-10-21):** "Forget the rights, use the San Andreas look exactly. Use CJ as well." The game uses the San Andreas HUD layout and colours, the PS2 trails and colour filter, and CJ as the hero. This overrides the rights rule in [`CLAUDE.md`](../../CLAUDE.md) for this game only. It does not use the game's name or logo, any of its files, or its music. The real Pricedown font needs a paid web licence, so Bowlby One (SIL OFL) stands in.
 - **Real target accounts (owner's requests, 2026-10-21):** "add the logos of actual target companies ... and their actual hqs", then "Remove Northwind altogether, only use real company names". This overrides, for this game only, the rules that a real company appears in plain type and never with its logo, and that no customer is invented. Each is labelled "Illustrative example".
-- **CJ** is textured from the reference render the owner supplied (`cj.jpg`).
+- **CJ** has the face from the reference render the owner supplied (`cj.jpg`) and the outfit from the San Andreas screenshot the owner sent: white tee, baggy woodland camo, black cap, black sneakers.
+- **Fonts:** Bowlby One for the Pricedown-style text (the gold lowercase mission title, MISSION PASSED, the clock and money), Nunito Black for the subtitles and objectives (keywords in gold or blue), Pirata One for the area names. All are SIL OFL, loaded from Google Fonts.
 - Still in force: every other person and company is fictional and labelled "Illustrative example". `brand/brand.json` is not yet reviewed, and the two signals are not yet confirmed as product claims, so the game is a draft. Using CJ and the game's trade dress carries legal risk for anything public; check with a lawyer before release.

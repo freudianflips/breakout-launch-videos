@@ -1,14 +1,15 @@
 <title>Downtown Missions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Pirata+One&family=Manrope:wght@500;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Pirata+One&family=Nunito:wght@800;900&family=Manrope:wght@500;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
 <style>
   /* A one-screen game in the San Andreas style: the 3D city fills the window; the HUD sits on a 16:9 unit (--u = 1% of a 16:9 frame's height). */
   :root {
     --night: #0b0820; --ink: #000000; --paper: #ffffff; --violet: #4c00ff; --lilac: #be79ff;
-    --sa-gold: #e1a730; --sa-money: #3a7a34; --sa-health: #b4191d; --sa-armour: #e1e1e1; --sa-clock: #e6e6e6; --sa-yellow: #f0c850; --sa-blue: #8aa8f0; --sa-red: #c22a2a; --sa-menu: #9db7e8;
+    --sa-gold: #c9a24a; --sa-money: #2b5a27; --sa-health: #b4191d; --sa-armour: #e1e1e1; --sa-clock: #d6d6d6; --sa-yellow: #d9ad45; --sa-blue: #7c9be0; --sa-red: #c22a2a; --sa-menu: #9db7e8;
     --pd: "Bowlby One", "Arial Black", Impact, sans-serif;
+    --sub: "Nunito", "Arial Rounded MT Bold", Arial, sans-serif;
     --title: "Pirata One", "Old English Text MT", Georgia, serif;
     --body: "Manrope", "Helvetica Neue", Arial, sans-serif;
     --serif: "Fraunces", Georgia, serif;
@@ -29,15 +30,14 @@
   .cut #lbT, .cut #lbB { transform: none; }
   /* the HUD, top right: weapon, clock, health, armour, money, wanted level */
   #hud { position: absolute; right: calc(var(--u) * 5 + env(safe-area-inset-right, 0px)); top: calc(var(--u) * 4 + env(safe-area-inset-top, 0px)); width: calc(var(--u) * 46); height: calc(var(--u) * 27); pointer-events: none; transition: opacity 0.3s; }
-  #icon { position: absolute; left: 0; top: calc(var(--u) * 0.6); width: calc(var(--u) * 12); height: calc(var(--u) * 12); border-radius: 50%; box-sizing: border-box;
-    background: radial-gradient(circle at 40% 35%, #5a5a62, #1a1a1e 72%); border: calc(var(--u) * 0.45) solid var(--ink); }
-  #icon svg { position: absolute; inset: 12%; width: 76%; height: 76%; }
-  #clock { position: absolute; left: calc(var(--u) * 14.5); top: calc(var(--u) * -0.6); font-size: calc(var(--u) * 6.4); line-height: 1; color: var(--sa-clock); }
+  #icon { position: absolute; left: 0; top: calc(var(--u) * 0.2); width: calc(var(--u) * 13); height: calc(var(--u) * 13); }
+  #icon svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #clock { position: absolute; left: calc(var(--u) * 15); top: calc(var(--u) * -0.4); font-size: calc(var(--u) * 6.2); line-height: 1; letter-spacing: 0.08em; color: var(--sa-clock); }
   .bar2 { position: absolute; left: calc(var(--u) * 15); width: calc(var(--u) * 25); height: calc(var(--u) * 2.1); border: calc(var(--u) * 0.36) solid var(--ink); }
   .bar2 i { position: absolute; inset: 0; }
-  #health { top: calc(var(--u) * 6.8); background: #3d0a0c; } #health i { background: linear-gradient(#e0403f, var(--sa-health)); }
-  #armour { top: calc(var(--u) * 9.9); background: #3a3a3a; } #armour i { background: linear-gradient(#ffffff, #b9b9b9); width: 62%; }
-  #money { position: absolute; left: calc(var(--u) * 14.5); top: calc(var(--u) * 12.6); font-size: calc(var(--u) * 5.6); line-height: 1; color: var(--sa-money); }
+  #health { top: calc(var(--u) * 7.6); height: calc(var(--u) * 1.7); background: #3d0a0c; } #health i { background: linear-gradient(#e0403f, var(--sa-health)); }
+  #armour { display: none; top: calc(var(--u) * 9.9); background: #3a3a3a; } #armour i { background: linear-gradient(#ffffff, #b9b9b9); width: 62%; }
+  #money { position: absolute; left: calc(var(--u) * 14); top: calc(var(--u) * 10.6); font-size: calc(var(--u) * 5.8); line-height: 1; letter-spacing: 0.02em; color: var(--sa-money); }
   #stars { position: absolute; left: calc(var(--u) * 14.6); top: calc(var(--u) * 19.4); font-family: var(--pd); font-size: calc(var(--u) * 4); letter-spacing: calc(var(--u) * 0.4); }
   #stars span { color: rgba(0,0,0,0); -webkit-text-stroke: calc(var(--u) * 0.28) rgba(0,0,0,0.85); }
   #stars span.on { color: var(--sa-gold); -webkit-text-stroke: calc(var(--u) * 0.28) #000; }
@@ -51,14 +51,14 @@
   #help { position: absolute; left: calc(var(--u) * 5 + env(safe-area-inset-left, 0px)); top: calc(var(--u) * 5 + env(safe-area-inset-top, 0px)); max-width: calc(var(--u) * 60); padding: calc(var(--u) * 1.6) calc(var(--u) * 2.4);
     background: rgba(0,0,0,0.72); border-radius: 3px; font-family: var(--body); font-weight: 700; font-size: calc(var(--u) * 2.7); line-height: 1.32; pointer-events: none; }
   .cut #help { top: calc(12vh + var(--u) * 2); }
-  #sub, #obj { position: absolute; left: 8%; right: 8%; text-align: center; font-family: var(--body); font-weight: 800; font-size: calc(var(--u) * 3.6); text-wrap: balance; pointer-events: none; }
+  #sub, #obj { position: absolute; left: 8%; right: 8%; text-align: center; font-family: var(--sub); font-weight: 900; font-size: calc(var(--u) * 3.5); letter-spacing: 0.05em; color: #d0d0d0; text-wrap: balance; pointer-events: none; }
   #obj { bottom: calc(var(--u) * 7 + env(safe-area-inset-bottom, 0px)); }
   #sub { bottom: calc(12vh + var(--u) * 3); }
   .cut #obj { bottom: calc(12vh + var(--u) * 3); }
-  #mtitle { position: absolute; right: calc(var(--u) * 8 + env(safe-area-inset-right, 0px)); bottom: calc(12vh + var(--u) * 10); font-family: var(--title); font-size: calc(var(--u) * 9); color: #f2ead6; white-space: nowrap;
-    -webkit-text-stroke: calc(var(--u) * 0.7) var(--ink); paint-order: stroke fill; text-shadow: calc(var(--u) * 0.35) calc(var(--u) * 0.45) 0 rgba(0,0,0,0.5); pointer-events: none; }
+  #mtitle { position: absolute; right: calc(var(--u) * 7 + env(safe-area-inset-right, 0px)); bottom: calc(12vh + var(--u) * 9); font-family: var(--pd); font-size: calc(var(--u) * 7); letter-spacing: 0.07em; text-transform: lowercase; color: var(--sa-gold); white-space: nowrap;
+    -webkit-text-stroke: calc(var(--u) * 0.6) #1a1208; paint-order: stroke fill; text-shadow: calc(var(--u) * 0.35) calc(var(--u) * 0.45) 0 rgba(0,0,0,0.5); pointer-events: none; }
   #pass { position: absolute; left: 0; right: 0; top: 27%; text-align: center; pointer-events: none; }
-  #pass b { display: inline-block; font-family: var(--pd); font-weight: 400; font-size: calc(var(--u) * 11); color: var(--sa-gold); transform: scaleX(0.84);
+  #pass b { display: inline-block; font-family: var(--pd); font-weight: 400; font-size: calc(var(--u) * 10); letter-spacing: 0.04em; color: var(--sa-gold);
     -webkit-text-stroke: calc(var(--u) * 0.9) var(--ink); paint-order: stroke fill; text-shadow: calc(var(--u) * 0.45) calc(var(--u) * 0.65) 0 rgba(0,0,0,0.55); }
   #pass.fail b { color: var(--sa-red); }
   .room #pass { top: auto; bottom: calc(12vh + var(--u) * 4); }
@@ -66,7 +66,7 @@
   #pass .respect { display: block; margin-top: calc(var(--u) * 0.6); font-family: var(--pd); font-size: calc(var(--u) * 5.6); }
   #pass .line { display: block; margin-top: calc(var(--u) * 1.6); font-family: var(--body); font-weight: 800; font-size: calc(var(--u) * 3.6); }
   #pass.slam b { animation: slam 0.25s cubic-bezier(.2,1.6,.4,1); }
-  @keyframes slam { from { transform: scaleX(0.84) scale(1.6); opacity: 0; } to { transform: scaleX(0.84) scale(1); opacity: 1; } }
+  @keyframes slam { from { transform: scale(1.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   #label { position: absolute; left: calc(var(--u) * 5 + env(safe-area-inset-left, 0px)); bottom: calc(var(--u) * 34 + env(safe-area-inset-bottom, 0px)); font-family: var(--body); font-weight: 600; font-size: calc(var(--u) * 2); color: rgba(255,255,255,0.85); pointer-events: none; text-shadow: 0 1px 3px #000; }
   .cut #label { bottom: calc(var(--u) * 4); }
   #keys { position: absolute; right: calc(var(--u) * 5 + env(safe-area-inset-right, 0px)); bottom: calc(var(--u) * 4 + env(safe-area-inset-bottom, 0px)); font-family: var(--body); font-weight: 700; font-size: calc(var(--u) * 1.8); line-height: 1.6;
@@ -120,9 +120,11 @@
   <div id="grade"></div>
   <canvas id="radar" width="300" height="300"></canvas>
   <div id="hud">
-    <div id="icon"><svg viewBox="0 0 100 100" aria-hidden="true"><g fill="#c98d5e" stroke="#000" stroke-width="4" stroke-linejoin="round">
-      <rect x="22" y="30" width="16" height="26" rx="8"/><rect x="36" y="26" width="16" height="30" rx="8"/><rect x="50" y="28" width="16" height="28" rx="8"/><rect x="64" y="33" width="14" height="24" rx="7"/>
-      <path d="M22 50 L78 50 L78 66 Q74 82 54 84 L40 84 Q24 82 22 66 Z"/><path d="M22 56 Q14 50 18 40 Q30 44 34 58 Z"/></g></svg></div>
+    <div id="icon"><svg viewBox="0 0 100 100" aria-hidden="true"><g stroke="#000" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M20 44 Q18 30 30 28 L36 28 Q38 20 48 21 Q56 18 62 24 Q72 22 76 31 Q86 34 84 48 L82 66 Q80 84 60 86 L42 86 Q24 84 21 66 Z" fill="#f2f2f0"/>
+      <path d="M36 28 L37 46 M49 22 L50 45 M62 25 L63 46 M76 32 L75 48" fill="none" stroke="#9a9a9a" stroke-width="3"/>
+      <path d="M21 52 Q30 47 44 52 Q50 60 44 66 Q34 64 24 66" fill="#dedede" stroke-width="3.5"/>
+      <path d="M30 76 Q46 80 66 76" fill="none" stroke="#b5b5b5" stroke-width="3"/></g></svg></div>
     <div id="clock" class="ol pd">18:05</div>
     <div id="health" class="bar2"><i></i></div>
     <div id="armour" class="bar2"><i></i></div>
@@ -194,12 +196,12 @@
           door: [[0.6, 2.3, team, "Uh, we didn't order pizza."], [2.3, 4.3, "CJ", "I know. I'm CJ, from Breakout. You were just on our site."]],
           room: [[0.3, 3.0, team, "Okay. You've got ten minutes."], [3.1, 6.0, "CJ", "Your site gets people like you all day. We talk to them before they leave."], [6.1, 8.3, "CJ", "Want to see it properly? Thursday at two?"], [8.4, 10.3, team, "Sure. Bring pizza again, though."]],
           passed: "Meeting booked." },
-    m2: { title: "Tail the Champion", help: '<span class="v">BREAKOUT:</span> Sarah F. just left ' + F + '. Looks like a new job.',
-          alert: [[0.2, 2.9, "BREAKOUT", "Sarah F. just left " + F + ". Looks like she changed jobs."], [3.0, 5.7, "CJ", "Sarah? She always wrote back. Wonder where she's headed."]],
-          go: 'Follow <span class="b">Sarah</span>. Keep your distance.', spotted: "She saw you. That's awkward.", lost: "You lost her.",
-          intro: [[0.2, 2.4, "CJ", "There's Sarah. Box of stuff, little plant. Yeah, she's leaving."], [2.5, 4.5, "CJ", "Okay. Not too close."]],
-          door: [[0.4, 2.6, "CJ", N + ". Good for her."]],
-          room: [[0.3, 2.8, "Sarah", "CJ? It's literally my first day."], [2.9, 5.6, "CJ", "I heard you moved. Wanted to say congrats."], [5.7, 8.3, "Sarah", "Did you follow my cab here?"], [8.4, 10.3, "CJ", "...So, Thursday at two for your team?"]],
+    m2: { title: "Tail the Champion", help: '<span class="v">BREAKOUT:</span> Your champion Sarah F. just left ' + F + '. Follow her.',
+          alert: [[0.2, 2.9, "BREAKOUT", "Champion on the move: Sarah F. just left " + F + "."], [3.0, 5.7, "CJ", "Sarah? She opened every email I ever sent. Even the bad ones."]],
+          go: 'Follow <span class="b">Sarah</span>. Don\'t get too close.', spotted: "She spotted you. Now it's weird.", lost: "You lost her. And your commission.",
+          intro: [[0.2, 2.4, "CJ", "Box of desk stuff and a plant. Yeah, she's moving on."], [2.5, 4.5, "CJ", "Nice and easy, CJ. Don't be weird about it."]],
+          door: [[0.4, 2.6, "CJ", N + ", " + to.addr + ". New job, same Sarah."]],
+          room: [[0.3, 2.8, "Sarah", "CJ? I've worked here for four hours."], [2.9, 5.6, "Sarah", "Did you... follow my taxi?"], [5.7, 8.3, "CJ", "We call that account-based marketing."], [8.4, 10.3, "Sarah", "...Thursday, 2 PM. And bring pizza."]],
           passed: "New account. Same champion." },
     label1: "Illustrative example: " + A + " (" + a.addr + ") is real. The visitors, the people and the meeting are fictional.",
     label2: "Illustrative example: " + F + " and " + N + " (" + to.addr + ") are real. Sarah F., her move and the meeting are fictional." }; }
@@ -340,6 +342,9 @@
       var w = zhw(z); for (var s = -6; s <= 6; s += 2) { rect(xx + s - 0.5, z - w - 3, xx + s + 0.5, z - w, "#e6e3da"); rect(xx + s - 0.5, z + w, xx + s + 0.5, z + w + 3, "#e6e3da"); }
       for (var s2 = -w + 1; s2 <= w - 1; s2 += 2) { rect(xx - 11, z + s2 - 0.5, xx - 8, z + s2 + 0.5, "#e6e3da"); rect(xx + 8, z + s2 - 0.5, xx + 11, z + s2 + 0.5, "#e6e3da"); } }); });
     rect(-0.9, -500, -0.5, 308, "#2a2a2c"); rect(0.5, -500, 0.9, 308, "#2a2a2c");
+    XL.forEach(function (xx) { ZL.forEach(function (z) { var w = zhw(z);                                   // red-painted curbs near every corner
+      [-1, 1].forEach(function (sx) { rect(xx + sx * 8 - 0.25, z + w, xx + sx * 8 + 0.25, z + w + 14, "#9a2f2b"); rect(xx + sx * 8 - 0.25, z - w - 14, xx + sx * 8 + 0.25, z - w, "#9a2f2b"); });
+      [-1, 1].forEach(function (sz) { rect(xx + 8, z + sz * w - 0.25, xx + 22, z + sz * w + 0.25, "#9a2f2b"); rect(xx - 22, z + sz * w - 0.25, xx - 8, z + sz * w + 0.25, "#9a2f2b"); }); }); });
     rect(-47, 73, -13, 107, "#5f7d47"); for (var pq = 0; pq < 4; pq++) rect(-31, 73 + pq * 9, -29, 77 + pq * 9, "#cfc8b8");
     rect(-500, 313, BAY, 500, "#6f7a5a");
     rect(BAY, -500, 500, 500, "#2f5967"); rect(BAY - 2, -500, BAY, 500, "#57524a");
@@ -565,6 +570,26 @@
   for (var px = -480; px < 290; px += 14) { var pm = ((px % 60) + 60) % 60; if (pm > 12 && pm < 48) palm(px + 3, 0, 0, rnd(px)); }
   for (var pz = -300; pz < 300; pz += 16) if (Math.abs(pz) > 66) palm(311, h(pz), pz, rnd(pz + 3));
   for (var tk = 0; tk < 10; tk++) { var tpx = -44 + rnd(tk + 50) * 28, tpz = 76 + rnd(tk + 60) * 28; if (Math.hypot(tpx + 30, tpz - 90) > 5) palm(tpx, 0, tpz, rnd(tk)); }
+  // street trees: a trunk and a few rounded canopies, along the side streets
+  var ICO = new THREE.IcosahedronGeometry(1, 1);
+  function tree(x, z, k) { var y = h(z), ht = 4 + rnd(k) * 1.5;
+    PROPS.add(CYL6, mx(x, y + ht / 2, z, 0, 0.32, ht, 0.32), "#4a3a2c");
+    [[0, 0, 0, 2.4], [1.2, -0.4, 0.6, 1.8], [-1.1, -0.3, -0.5, 1.9], [0.3, 1.0, -0.2, 1.7]].forEach(function (b, j) {
+      PROPS.add(ICO, mx(x + b[0], y + ht + 0.8 + b[1], z + b[2], rnd(k + j), b[3], b[3] * 0.85, b[3]), ["#4c6a3a", "#57773f", "#456236", "#5f7f46"][j]); }); }
+  for (var tz = -470; tz < 300; tz += 19) XL.forEach(function (xx, j) { if (Math.abs(tz) < 24 || xx === 0) return; var tz2 = tz + (j % 2) * 9;
+    if (!hitSolid(xx + 11.6, tz2, 1.2) && rnd(tz2 * 1.7 + j) > 0.35) tree(xx + 11.6, tz2, tz2 + j); if (!hitSolid(xx - 11.6, tz2 + 4, 1.2) && rnd(tz2 * 2.3 + j) > 0.35) tree(xx - 11.6, tz2 + 4, tz2 + j + 50); });
+  // traffic lights at the downtown corners, glowing red or green
+  var sigTex = radial([[0, "rgba(255,255,255,1)"], [0.2, "rgba(255,255,255,0.7)"], [1, "rgba(255,255,255,0)"]]);
+  var SIGRED = new THREE.SpriteMaterial({ map: sigTex, color: 0xff3a2a, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }), SIGGRN = new THREE.SpriteMaterial({ map: sigTex, color: 0x3aff6a, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true });
+  var SIGS = [];
+  function signal(x, z, dx, dz, axis) { var y = h(z);
+    PROPS.add(CYL6, mx(x, y + 3.2, z, 0, 0.2, 6.4, 0.2), "#2e3134");
+    PROPS.add(BOX, mx(x + dx * 3, y + 6.2, z + dz * 3, Math.atan2(dx, dz), 0.14, 0.14, 6), "#2e3134");
+    [[x + dx * 5.6, z + dz * 5.6, 5.6], [x, z, 2.6]].forEach(function (q) { PROPS.add(BOX, mx(q[0], y + q[2], q[1], Math.atan2(dx, dz), 0.42, 1.1, 0.34), "#1b1d1f");
+      var r = new THREE.Sprite(SIGRED), g = new THREE.Sprite(SIGGRN); r.position.set(q[0], y + q[2] + 0.32, q[1]); g.position.set(q[0], y + q[2] - 0.32, q[1]); r.scale.setScalar(1.5); g.scale.setScalar(1.5);
+      scene.add(r); scene.add(g); SIGS.push({ r: r, g: g, axis: axis }); }); }
+  XL.forEach(function (xx) { if (xx < -240 || xx > 290) return; [0, 60, -60].forEach(function (z) { var w = zhw(z) + 2.2;
+    signal(xx - 10.2, z + w, 1, 0, "z"); signal(xx + 10.2, z - w, -1, 0, "z"); }); });
   var poolB = new Builder();
   function lamp(x, z, dir) {
     var y = h(z); PROPS.add(CYL6, mx(x, y + 4, z, 0, 0.22, 8, 0.22), "#3a3d40");
@@ -724,6 +749,14 @@
   var GC = {};
   function tcyl(rt, rb, hh) { var k = rt + "," + rb + "," + hh; return GC[k] || (GC[k] = new THREE.CylinderGeometry(rt, rb, hh, 12, 2, false, PI)); }
   var SPH = new THREE.SphereGeometry(1, 18, 14), CAP = new THREE.SphereGeometry(1, 18, 10, 0, 2 * PI, 0, PI * 0.52);
+  // the torso turned on a lathe: narrow waist, a chest, shoulders that round into the neck
+  var TORSO = new THREE.LatheGeometry([[0.17, 0], [0.162, 0.1], [0.18, 0.24], [0.214, 0.39], [0.226, 0.47], [0.205, 0.535], [0.13, 0.575], [0.06, 0.6]].map(function (q) { return new THREE.Vector2(q[0], q[1]); }), 16);
+  // woodland camo for CJ's pants: blobs of olive, bark and khaki
+  function camoMat() { var c = document.createElement("canvas"); c.width = c.height = 256; var g = c.getContext("2d"); g.fillStyle = "#5b6142"; g.fillRect(0, 0, 256, 256);
+    [["#3a3d29", 46], ["#7f7a55", 40], ["#2a2820", 34], ["#6b6a47", 30]].forEach(function (q, k) { g.fillStyle = q[0];
+      for (var i = 0; i < q[1]; i++) { var x = rnd(k * 97 + i * 1.7) * 256, y = rnd(k * 31 + i * 2.3) * 256; g.beginPath();
+        g.ellipse(x, y, 6 + rnd(i + k) * 16, 4 + rnd(i * 3 + k) * 9, rnd(i * 5 + k) * PI, 0, 2 * PI); g.fill(); } });
+    var tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; return new THREE.MeshLambertMaterial({ map: tx }); }
   function mesh(geo, mat, x, y, z, sx, sy, sz) { var m = new THREE.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); if (sx) m.scale.set(sx, sy, sz); return m; }
   function rgb(hex, k) { var c = new THREE.Color(hex); c.convertLinearToSRGB(); return "rgb(" + Math.round(c.r * 255 * (k || 1)) + "," + Math.round(c.g * 255 * (k || 1)) + "," + Math.round(c.b * 255 * (k || 1)) + ")"; }
   // a painted face on the head's sphere: its front (+z) sits at u = 0.25 of the texture
@@ -755,10 +788,10 @@
       return [hip, knee]; }
     var L = leg(-0.11 * s, o.thighL, o.shinL), Rg = leg(0.11 * s, o.thighR, o.shinR);
     var pel = mesh(tcyl(0.185 * s * f + (o.female ? 0.02 : 0), 0.19 * s, 0.2), o.waistMat || bot, 0, 1.0, 0); pel.scale.z = 0.7; body.add(pel);
-    var tor = mesh(tcyl(0.225 * s * f, 0.185 * s, 0.56), top, 0, 1.36, 0); tor.scale.z = 0.62; body.add(tor);
+    var tor = mesh(TORSO, top, 0, 1.07, 0, s * f, 1, 0.62 * s); body.add(tor);
     if (o.coat) { var sk = mesh(tcyl(0.2, 0.235, 0.42), top, 0, 0.9, 0); sk.scale.z = 0.72; body.add(sk); }
     if (o.female) body.add(mesh(SPH, top, 0, 1.42, 0.08, 0.15, 0.08, 0.06));
-    [-1, 1].forEach(function (k) { body.add(mesh(SPH, sleeve, k * 0.215 * s * f, 1.585, 0, 0.085 * s, 0.075, 0.08)); });
+    [-1, 1].forEach(function (k) { body.add(mesh(SPH, top, k * 0.21 * s * f, 1.58, 0, 0.07 * s, 0.065, 0.068)); });
     body.add(mesh(tcyl(0.052, 0.06, 0.13), skin, 0, 1.68, 0));
     var head = new THREE.Group(); head.position.set(0, 1.83, 0); body.add(head);
     head.add(mesh(SPH, o.headMat || faceTex(o), 0, 0, 0, 0.108, 0.128, 0.118));
@@ -766,10 +799,13 @@
     head.add(mesh(SPH, lam(darker(o.skin, 0.92)), 0, -0.012, 0.115, 0.018, 0.026, 0.02));          // nose
     [-1, 1].forEach(function (k) { head.add(mesh(SPH, skin, k * 0.105, 0, -0.005, 0.016, 0.03, 0.02)); });
     if (!o.bald) head.add(mesh(CAP, hair, 0, 0.012, -0.008, 0.114, 0.135, 0.124));
+    if (o.cap) { var cm = lam(o.cap); head.add(mesh(CAP, cm, 0, 0.03, -0.005, 0.118, 0.112, 0.127)); var brim = mesh(SPH, cm, 0, 0.035, 0.12, 0.1, 0.016, 0.085); brim.rotation.x = 0.12; head.add(brim); }
     if (o.bun) head.add(mesh(SPH, hair, 0, 0.06, -0.12, 0.055, 0.055, 0.055));
     if (o.longHair) { var lh = mesh(tcyl(0.1, 0.11, 0.24), hair, 0, -0.08, -0.05); lh.scale.z = 0.7; head.add(lh); }
     function arm(x) { var sh = new THREE.Group(); sh.position.set(x, 1.55, 0); body.add(sh);
-      sh.add(mesh(tcyl(0.058 * s, 0.047 * s, 0.31), sleeve, 0, -0.155, 0)); var el = new THREE.Group(); el.position.set(0, -0.31, 0); sh.add(el);
+      sh.add(mesh(tcyl(0.058 * s, 0.047 * s, 0.31), o.short ? skin : sleeve, 0, -0.155, 0));
+      if (o.short) sh.add(mesh(tcyl(0.068 * s, 0.062 * s, 0.15), top, 0, -0.06, 0));                  // a tee's short sleeve
+      var el = new THREE.Group(); el.position.set(0, -0.31, 0); sh.add(el);
       el.add(mesh(SPH, fore, 0, 0, 0, 0.047 * s, 0.05, 0.047 * s)); el.add(mesh(tcyl(0.046 * s, 0.036 * s, 0.27), fore, 0, -0.135, 0));
       el.add(mesh(SPH, skin, 0, -0.3, 0.005, 0.038, 0.06, 0.026)); return [sh, el]; }
     var AL = arm(-0.255 * s * f), AR = arm(0.255 * s * f);
@@ -795,7 +831,7 @@
     p.shadow.position.set(o.x, h(o.z) + 0.07, o.z);
   }
   function hands(p, fwd) { var y = p.g.position.y + p.body.position.y + 1.18, yaw = p.g.rotation.y; return [p.g.position.x + Math.sin(yaw) * fwd, y, p.g.position.z + Math.cos(yaw) * fwd, yaw]; }
-  // CJ, textured from the reference render (cj.jpg): his face on a rounded head, the tank top, the waistband and belt, baggy jeans, black sneakers
+  // CJ as he looks in the game: his face from the reference render (cj.jpg), a white tee, baggy woodland camo, black sneakers and a black cap
   var CJIMG = new Image(), CJQ = [];
   CJIMG.onload = function () { CJQ.forEach(function (f) { f(); }); }; CJIMG.src = "data:image/jpeg;base64,__CJ__";
   function keyWhite(g, w, hh, fill, thr) {          // the render's white backdrop becomes the part's own colour
@@ -803,19 +839,13 @@
     for (var i = 0; i < d.length; i += 4) { var mn = Math.min(d[i], d[i + 1], d[i + 2]), mxc = Math.max(d[i], d[i + 1], d[i + 2]); if (mn > t && mxc - mn < 34) { d[i] = fr; d[i + 1] = fg; d[i + 2] = fb; } }
     g.putImageData(im, 0, 0);
   }
-  // wrap a crop round a cylinder: the front half shows the crop, the back half shows it again (front at u = 0.5)
-  function cjWrap(r, fill, thr) { var c = document.createElement("canvas"); c.width = 512; c.height = 256; var tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace;
-    function draw() { var g = c.getContext("2d"); g.fillStyle = rgb(fill); g.fillRect(0, 0, 512, 256);
-      g.drawImage(CJIMG, r[0], r[1], r[2], r[3], 128, 0, 256, 256); g.drawImage(CJIMG, r[0], r[1], r[2], r[3], 384, 0, 256, 256); g.drawImage(CJIMG, r[0], r[1], r[2], r[3], -128, 0, 256, 256);
-      keyWhite(g, 512, 256, fill, thr); tx.needsUpdate = true; }
-    if (CJIMG.complete && CJIMG.naturalWidth) draw(); else CJQ.push(draw); return new THREE.MeshLambertMaterial({ map: tx }); }
   function cjHead() { var c = document.createElement("canvas"); c.width = 256; c.height = 128; var tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace;
     function draw() { var g = c.getContext("2d"); g.fillStyle = rgb("#4c3122"); g.fillRect(0, 0, 256, 128); g.fillStyle = rgb("#17110e"); g.fillRect(0, 0, 256, 26); g.fillRect(120, 0, 136, 52); g.fillRect(0, 0, 12, 52);
       g.drawImage(CJIMG, 82, 14, 56, 70, 64 - 30, 22, 60, 82); keyWhite(g, 256, 128, "#4c3122"); tx.needsUpdate = true; }
     if (CJIMG.complete && CJIMG.naturalWidth) draw(); else CJQ.push(draw); return new THREE.MeshLambertMaterial({ map: tx }); }
-  var heroM = human({ skin: "#4c3122", hair: "#17110e", shoes: "#1b1b1d", sole: "#e8e8e4", big: true, bare: true, baggy: true, bald: true, headMat: cjHead(),
-    topMat: cjWrap([50, 102, 136, 172], "#4c3122", 236), waistMat: cjWrap([48, 270, 142, 38], "#4b6585", 236),
-    thighL: cjWrap([42, 306, 80, 168], "#4b6585"), shinL: cjWrap([42, 474, 82, 166], "#4b6585"), thighR: cjWrap([120, 306, 82, 168], "#4b6585"), shinR: cjWrap([122, 474, 84, 166], "#4b6585") });
+  var CAMO = camoMat();
+  var heroM = human({ top: "#eceae4", skin: "#4c3122", hair: "#17110e", shoes: "#1b1b1d", sole: "#e8e8e4", big: true, short: true, baggy: true, bald: true, cap: "#121214", headMat: cjHead(),
+    botMat: CAMO, waistMat: CAMO });
   var champM = human({ top: "#d9773a", bottom: "#343a52", skin: "#e3b593", hair: "#5a3520", shoes: "#3b2a22", coat: true, female: true, longHair: true });
   var COMM = [human({ top: "#2f5f8f", bottom: "#2b2b30", skin: "#c48d68", hair: "#2a1d14", beard: true }), human({ top: "#e7e2d8", bottom: "#3a3550", skin: "#8a5a3c", hair: "#121010", shoes: "#5a4030", coat: true }),
               human({ top: "#7a3b5e", bottom: "#2e3440", skin: "#f0c8a8", hair: "#b38a52", female: true, bun: true })];
@@ -898,10 +928,10 @@
   // ------------------------------------------------------------ light from the game clock
   var PAL = {
     night:   { top: "#060a1d", hor: "#22305c", fog: "#1a2244", near: 60, far: 700, sun: "#9aa8ff", si: 0.42, dir: [0.2, 1, 0.3], hs: "#6070b0", hg: "#202030", hi: 0.7, win: 1.0, lamp: 1.0, disc: 0, tint: "#7a8ad8", ti: 0.18 },
-    morning: { top: "#8db2d8", hor: "#e2e8ea", fog: "#cbd5db", near: 70, far: 820, sun: "#fff1dc", si: 0.85, dir: [0.8, 0.45, 0.35], hs: "#e8f0ff", hg: "#6b6a66", hi: 0.8, win: 0.12, lamp: 0.1, disc: 0.35, tint: "#b8c8d8", ti: 0.22 },
-    day:     { top: "#6f9fd8", hor: "#cfe0ea", fog: "#bfcdd8", near: 110, far: 1100, sun: "#fff6e4", si: 1.0, dir: [0.3, 0.9, 0.4], hs: "#f2f6ff", hg: "#6f6a60", hi: 0.85, win: 0, lamp: 0, disc: 0, tint: "#c8ccd0", ti: 0.18 },
-    golden:  { top: "#8a8fb4", hor: "#ffc488", fog: "#efbf92", near: 130, far: 1150, sun: "#ffcf8f", si: 1.15, dir: [-0.85, 0.32, 0.25], hs: "#ffe0b0", hg: "#6b5446", hi: 0.72, win: 0.08, lamp: 0.05, disc: 1, tint: "#ffb070", ti: 0.28 },
-    dusk:    { top: "#33356e", hor: "#f0875c", fog: "#b87266", near: 90, far: 900, sun: "#ff8f66", si: 0.6, dir: [-0.9, 0.16, 0.2], hs: "#ffb39a", hg: "#3a2e3a", hi: 0.55, win: 0.65, lamp: 0.75, disc: 0.6, tint: "#ff8a70", ti: 0.24 }
+    morning: { top: "#9fb4b2", hor: "#b9c8c4", fog: "#a9bbb7", near: 30, far: 420, sun: "#eef2ee", si: 0.6, dir: [0.8, 0.45, 0.35], hs: "#e4ecea", hg: "#5d6662", hi: 0.92, win: 0.12, lamp: 0.1, disc: 0, tint: "#9fc3bb", ti: 0.24 },
+    day:     { top: "#8fa9a6", hor: "#a9bdb9", fog: "#9bb0ac", near: 40, far: 480, sun: "#f2f4ee", si: 0.7, dir: [0.3, 0.9, 0.4], hs: "#e8eeec", hg: "#5d6662", hi: 0.95, win: 0, lamp: 0, disc: 0, tint: "#9cc2b9", ti: 0.24 },
+    golden:  { top: "#5f7f7a", hor: "#7d9a94", fog: "#6f8d87", near: 22, far: 360, sun: "#dfe9e2", si: 0.55, dir: [-0.6, 0.6, 0.3], hs: "#cfe0da", hg: "#4a5450", hi: 0.95, win: 0.25, lamp: 0.35, disc: 0, tint: "#7fb3a7", ti: 0.32 },
+    dusk:    { top: "#3f5a58", hor: "#5d7a74", fog: "#506d68", near: 22, far: 340, sun: "#c9d8d0", si: 0.4, dir: [-0.6, 0.4, 0.2], hs: "#a9c2ba", hg: "#353d3a", hi: 0.85, win: 0.65, lamp: 0.75, disc: 0, tint: "#6aa093", ti: 0.32 }
   };
   var KEYS = [[0, "night"], [5.4, "night"], [6.8, "morning"], [8.8, "morning"], [10.5, "day"], [16.4, "day"], [17.6, "golden"], [18.45, "golden"], [19.3, "dusk"], [20.3, "night"], [24, "night"]];
   var cA = new THREE.Color(), cB = new THREE.Color();
@@ -919,6 +949,7 @@
     fog.color.copy(pal.fog); fog.near = pal.near; fog.far = pal.far; R.setClearColor(pal.fog);
     sun.color.copy(pal.sun); sun.intensity = pal.si; hemi.color.copy(pal.hs); hemi.groundColor.copy(pal.hg); hemi.intensity = pal.hi;
     FMAT.forEach(function (m) { m.emissiveIntensity = pal.win; });
+    var redX = Math.floor(G.t / 9) % 2 === 0; SIGS.forEach(function (q) { var red = q.axis === "z" ? redX : !redX; q.r.visible = red; q.g.visible = !red; });
     lampMat.color.setScalar(0.35 + 0.65 * pal.lamp); poolMat.opacity = pal.lamp * 0.9; headMat.color.setScalar(0.35 + 0.65 * pal.lamp); carLitMat.color.setScalar(0.45 + 0.55 * pal.lamp);
     return pal;
   }
@@ -1149,7 +1180,7 @@
       var pulse = 1 + 0.08 * Math.sin(u * 12); rr(244, 152, 124, 36, 18); sg.fillStyle = "#4c00ff"; sg.fill(); sg.fillStyle = "#ffffff"; sg.font = "800 17px Manrope, Arial"; sg.fillText("SIGNAL", 274, 176);
       sg.beginPath(); sg.arc(780, 170, 12 * pulse, 0, 2 * PI); sg.fillStyle = "#ff5ad1"; sg.fill();
       sg.fillStyle = "#040405"; sg.font = "800 40px Manrope, Arial"; sg.fillText("Champion on the move", 244, 244);
-      [["Person", "Sarah F."], ["Left", G.from.name], ["Heading to", u > 0.6 ? "Unknown" : "..."]].forEach(function (r, i) { var y = 310 + i * 52;
+      [["Person", "Sarah F."], ["Left", G.from.name], ["Heading to", u > 0.6 ? "Finding out..." : "..."]].forEach(function (r, i) { var y = 310 + i * 52;
         sg.fillStyle = "#5c5850"; sg.font = "600 24px Manrope, Arial"; sg.fillText(r[0], 244, y); sg.fillStyle = "#040405"; sg.font = "700 26px Manrope, Arial"; sg.fillText(r[1], 430, y); });
       return;
     }
@@ -1423,13 +1454,13 @@
     function tr(x, z) { var dx = x - focus[0], dz = z - focus[1]; return [c0 + (-dx * fz + dz * fx) * scale, c0 - (dx * fx + dz * fz) * scale]; }
     function poly(pts, fill) { rg.fillStyle = fill; rg.beginPath(); pts.forEach(function (q, i) { if (i) rg.lineTo(q[0], q[1]); else rg.moveTo(q[0], q[1]); }); rg.fill(); }
     rg.clearRect(0, 0, W, W); rg.save(); rg.beginPath(); rg.arc(c0, c0, Rr, 0, 2 * PI); rg.clip();
-    rg.fillStyle = "rgba(98,104,92,0.92)"; rg.fillRect(0, 0, W, W);
-    poly([tr(BAY, -2000), tr(BAY, 2000), tr(3000, 2000), tr(3000, -2000)], "rgba(70,110,150,0.95)");
-    poly([tr(-3000, NBAY), tr(3000, NBAY), tr(3000, 3000), tr(-3000, 3000)], "rgba(70,110,150,0.95)");
-    rg.strokeStyle = "rgba(48,48,52,0.95)";
-    XL.forEach(function (x) { var a = tr(x, -500), b = tr(x, 308); rg.lineWidth = Math.max(1.5, 14 * scale); rg.beginPath(); rg.moveTo(a[0], a[1]); rg.lineTo(b[0], b[1]); rg.stroke(); });
-    ZL.forEach(function (z) { var a = tr(-500, z), b = tr(BAY, z); rg.lineWidth = Math.max(1.5, (z === 0 ? 26 : 14) * scale); rg.beginPath(); rg.moveTo(a[0], a[1]); rg.lineTo(b[0], b[1]); rg.stroke(); });
-    poly([tr(-47, 73), tr(-13, 73), tr(-13, 107), tr(-47, 107)], "rgba(90,140,70,0.95)");
+    rg.fillStyle = "#9e917a"; rg.fillRect(0, 0, W, W);
+    poly([tr(BAY, -2000), tr(BAY, 2000), tr(3000, 2000), tr(3000, -2000)], "#5d7ea6");
+    poly([tr(-3000, NBAY), tr(3000, NBAY), tr(3000, 3000), tr(-3000, 3000)], "#5d7ea6");
+    rg.strokeStyle = "#f1f1ef";
+    XL.forEach(function (x) { var a = tr(x, -500), b = tr(x, 308); rg.lineWidth = Math.max(3, 18 * scale); rg.beginPath(); rg.moveTo(a[0], a[1]); rg.lineTo(b[0], b[1]); rg.stroke(); });
+    ZL.forEach(function (z) { var a = tr(-500, z), b = tr(BAY, z); rg.lineWidth = Math.max(3, (z === 0 ? 30 : 18) * scale); rg.beginPath(); rg.moveTo(a[0], a[1]); rg.lineTo(b[0], b[1]); rg.stroke(); });
+    poly([tr(-47, 73), tr(-13, 73), tr(-13, 107), tr(-47, 107)], "#4f8a3c");
     rg.restore();
     blips.forEach(function (b) {
       var q = tr(b.x, b.z), dx = q[0] - c0, dy = q[1] - c0, d = Math.hypot(dx, dy), lim = Rr - 12; if (d > lim) q = [c0 + dx / d * lim, c0 + dy / d * lim];
@@ -1440,7 +1471,7 @@
     var rel = P.yaw - Math.atan2(fx, fz);
     rg.save(); rg.translate(c0, c0); rg.rotate(-rel); rg.beginPath(); rg.moveTo(0, -13); rg.lineTo(9, 10); rg.lineTo(0, 5); rg.lineTo(-9, 10); rg.closePath();
     rg.fillStyle = "#fff"; rg.fill(); rg.strokeStyle = "#000"; rg.lineWidth = 3; rg.stroke(); rg.restore();
-    rg.lineWidth = 8; rg.strokeStyle = "#000"; rg.beginPath(); rg.arc(c0, c0, Rr + 2, 0, 2 * PI); rg.stroke();
+    rg.lineWidth = 11; rg.strokeStyle = "#000"; rg.beginPath(); rg.arc(c0, c0, Rr + 3, 0, 2 * PI); rg.stroke();
     var nq = tr(focus[0], focus[1] + 1000), na = Math.atan2(nq[1] - c0, nq[0] - c0), bx = c0 + Math.cos(na) * (Rr + 2), by = c0 + Math.sin(na) * (Rr + 2);
     rg.beginPath(); rg.arc(bx, by, 15, 0, 2 * PI); rg.fillStyle = "#111"; rg.fill(); rg.font = "bold 20px Arial, sans-serif"; rg.textAlign = "center"; rg.textBaseline = "middle"; rg.fillStyle = "#fff"; rg.fillText("N", bx, by + 1);
   }
@@ -1462,6 +1493,7 @@
     $("clock").textContent = (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm;
     if (G.moneyShown < G.money) G.moneyShown = Math.min(G.money, G.moneyShown + dt * 900); $("money").textContent = "$" + pad(G.moneyShown);
     $("health").querySelector("i").style.width = G.health + "%"; G.health = Math.min(100, G.health + dt * 0.5);
+    $("stars").style.visibility = G.wanted > 0 ? "visible" : "hidden";
     STARS.forEach(function (s, i) { s.classList.toggle("on", i >= 6 - G.wanted && (G.wantedT > 20 ? Math.floor(G.t * 4) % 2 === 0 : true)); });
     if (radioMsg > 0) { radioMsg -= dt; $("radio").hidden = false; } else $("radio").hidden = true;
     var blips = [], s = G.state;
