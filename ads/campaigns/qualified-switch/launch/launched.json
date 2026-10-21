@@ -11,9 +11,9 @@
       "post": "urn:li:share:7516083853153959936"
     },
     "QSW-009": {
-      "campaign": "912454556",
-      "creative": "urn:li:sponsoredCreative:1642263516",
-      "post": "urn:li:share:7516083860791668736"
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1652975136",
+      "post": "urn:li:share:7518625178839478272"
     },
     "QSW-014": {
       "campaign": "912454556",
@@ -31,9 +31,9 @@
       "post": "urn:li:share:7516095242282991616"
     },
     "QSW-010": {
-      "campaign": "912444656",
-      "creative": "urn:li:sponsoredCreative:1642128316",
-      "post": "urn:li:share:7516095248914337792"
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1652985066",
+      "post": "urn:li:share:7518625132324659201"
     },
     "QSW-012": {
       "campaign": "912444656",
@@ -44,8 +44,38 @@
       "campaign": "912444656",
       "creative": "urn:li:sponsoredCreative:1642273286",
       "post": "urn:li:share:7516116802150682624"
+    },
+    "QSW-060": {
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1653011976",
+      "post": "urn:li:share:7518625144664428544"
+    },
+    "QSW-061": {
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1652905346",
+      "post": "urn:li:share:7518625156353712128"
+    },
+    "QSW-062": {
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1652886096",
+      "post": "urn:li:share:7518625165811949569"
+    },
+    "QSW-063": {
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1652828886",
+      "post": "urn:li:share:7518625196644126722"
+    },
+    "QSW-064": {
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1652886106",
+      "post": "urn:li:share:7518625209026052096"
+    },
+    "QSW-065": {
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1652848636",
+      "post": "urn:li:share:7518625219259813890"
     }
   },
-  "verified": "2026-10-21T10:44:27",
+  "verified": "2026-10-21T10:54:41",
   "account": "514347134"
 }

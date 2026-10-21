@@ -2309,7 +2309,15 @@
       ]
     },
     "loaded": [
-      "QSW-005"
+      "QSW-005",
+      "QSW-010",
+      "QSW-060",
+      "QSW-061",
+      "QSW-062",
+      "QSW-009",
+      "QSW-063",
+      "QSW-064",
+      "QSW-065"
     ],
     "to_delete_on_linkedin": []
   }
