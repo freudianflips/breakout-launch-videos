@@ -66,6 +66,8 @@
   #pass b { display: inline-block; font-family: var(--pd); font-weight: 400; font-size: calc(var(--u) * 11); color: var(--sa-gold); transform: scaleX(0.84);
     -webkit-text-stroke: calc(var(--u) * 0.9) var(--ink); paint-order: stroke fill; text-shadow: calc(var(--u) * 0.45) calc(var(--u) * 0.65) 0 rgba(0,0,0,0.55); }
   #pass.fail b { color: var(--sa-red); }
+  .room #pass { top: auto; bottom: calc(12vh + var(--u) * 4); }
+  .room #pass b { font-size: calc(var(--u) * 8); } .room #pass .line { display: none; }
   #pass .respect { display: block; margin-top: calc(var(--u) * 0.6); font-family: var(--pd); font-size: calc(var(--u) * 5.6); }
   #pass .line { display: block; margin-top: calc(var(--u) * 1.6); font-family: var(--body); font-weight: 800; font-size: calc(var(--u) * 3.6); }
   #pass.slam b { animation: slam 0.25s cubic-bezier(.2,1.6,.4,1); }
@@ -1161,7 +1163,7 @@
   function cycleTarget(d) { G.target = (G.target + d + TARGETS.length) % TARGETS.length; G.W = words(T()); drawMenu(); SFX.menu(); }
   function openMenu() { if (G.state === "title") return; G.menu = true; $("menu").hidden = false; $("endScreen").hidden = true; drawMenu(); SFX.menu(); }
   function closeMenu() { G.menu = false; $("menu").hidden = true; }
-  function leaveRoom() { roomGroup.visible = false; G.roomKind = null; COMM.forEach(function (p) { pose(p, { hidden: true }); }); pose(champM, { hidden: true }); }
+  function leaveRoom() { $("game").classList.remove("room"); roomGroup.visible = false; G.roomKind = null; COMM.forEach(function (p) { pose(p, { hidden: true }); }); pose(champM, { hidden: true }); }
   function choose(id) {
     if (id === "target") { cycleTarget(1); return; }
     closeMenu(); SFX.click(); taxi.g.visible = taxi.shadow.visible = false; leaveRoom();
@@ -1195,7 +1197,7 @@
   $("game").addEventListener("pointerdown", function (e) { if (G.state === "fail" && G.st > 1.2 && !G.menu && e.target.tagName !== "BUTTON") retry(); });
   function retry() { clearUI(); fadeTo(function () { if (G.failOf === 1) { placeHeroAtShop(); G.gm = 3 * 1440 + 18 * 60 + 5; startM1(); } else startM2(); }); }
   function startM1() { G.mission = 1; G.control = false; placeSignals(T()); cut(true); setLabel(G.W.label); setHelp(G.W.m1.help); enter("m1intro"); }
-  function roomScene(kind) { G.roomKind = kind; roomGroup.visible = true; wallLogo.material.map = wallTex(kind === "alert" ? "breakout" : T().id); wallLogo.material.needsUpdate = true; cut(true); enter("room"); }
+  function roomScene(kind) { setHelp(null); $("game").classList.add("room"); G.roomKind = kind; roomGroup.visible = true; wallLogo.material.map = wallTex(kind === "alert" ? "breakout" : T().id); wallLogo.material.needsUpdate = true; cut(true); enter("room"); }
   function startM2() {
     leaveRoom(); placeSignals(T()); setRoute(T().route);
     G.gm = 7 * 1440 + 18 * 60 + 40; G.rate = 2.4; taxi.g.visible = taxi.shadow.visible = true; TX.s = 0; TX.v = 0; TX.yaw = PI / 2;
@@ -1270,14 +1272,14 @@
         if (t > 5.9) { enter("wait"); fadeTo(startM2); }
       } else {
         var m2 = k === "m2";
-        pose(heroM, { x: X + 1.0, y: Y, z: Z - 3.7, yaw: 0, mode: "stand", noShadow: true, point: t > 6.1 && t < 9 });
+        pose(heroM, { x: X + 2.55, y: Y, z: Z - 3.9, yaw: -0.5, mode: "stand", noShadow: true, point: t > 6.1 && t < 9 });
         if (m2) { pose(champM, { x: X - 1.5, y: Y, z: Z - 1.6, yaw: PI / 2, mode: "sit", noShadow: true }); pose(COMM[0], { x: X + 1.5, y: Y, z: Z - 1.6, yaw: -PI / 2, mode: "sit", noShadow: true }); pose(COMM[1], { hidden: true }); pose(COMM[2], { hidden: true }); }
         else { pose(COMM[0], { x: X - 1.5, y: Y, z: Z - 1.6, yaw: PI / 2, mode: "sit", noShadow: true }); pose(COMM[1], { x: X + 1.5, y: Y, z: Z - 1.6, yaw: -PI / 2, mode: "sit", noShadow: true }); pose(COMM[2], { x: X - 1.5, y: Y, z: Z, yaw: PI / 2, mode: "sit", noShadow: true }); }
         drawScreen("book", cl((t - 8.2) / 3.2), tg); scrTex.needsUpdate = true;
         G.cutCam = t < 3.0 ? { p: [X + 4.8, Y + 2.5, Z + 4.2], l: [X - 0.3, Y + 1.0, Z - 2.4], fov: 54 }
-          : t < 6.0 ? { p: [X - 0.6, Y + 1.45, Z - 0.6], l: [X + 1.0, Y + 1.6, Z - 3.7], fov: 50 }
+          : t < 6.0 ? { p: [X + 0.4, Y + 1.5, Z - 0.8], l: [X + 2.55, Y + 1.6, Z - 3.9], fov: 50 }
           : t < 8.2 ? { p: [X + 1.6, Y + 1.8, Z - 3.6], l: [X - 1.5, Y + 1.1, Z - 0.6], fov: 52 }
-          : { p: [X + 0.2, Y + 1.7, Z - 1.9], l: [X, Y + 1.75, Z - 4.9], fov: 52 };
+          : { p: [X, Y + 1.75, Z - 0.7], l: [X, Y + 1.75, Z - 4.9], fov: 46 };
         subtitles(m2 ? Wd.m2.room : Wd.m1.room, t);
         if (t > 10.7 && pass.hidden) { SFX.pass(); reward(); showPass("MISSION PASSED!", m2 ? Wd.m2.passed : Wd.m1.passed); }
         if (t > 15.5) { pass.hidden = true; setHelp(null);
