@@ -259,6 +259,37 @@
       "text": "Breakout writes each email from that visitor's own signals.",
       "source": "the owner, 2026-10-19",
       "checked": "2026-10-19"
+    },
+    {
+      "text": "Qualified’s signals are restricted to account-level identification. Breakout comes with 700+ signals out of the box through partnerships with various signal providers.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-21",
+      "competitive": true
+    },
+    {
+      "text": "Person-level de-anonymization: Yes, waterfall through multiple data providers (Breakout); No — account-level only (Qualified)",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-21",
+      "competitive": true,
+      "note": "Side-by-side table row"
+    },
+    {
+      "text": "LinkedIn follow-ups: Yes, integrate with HeyReach or use Breakout’s Browser extension to run Linkedin plays (Breakout); No (Qualified)",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-21",
+      "competitive": true,
+      "note": "Side-by-side table row"
+    },
+    {
+      "text": "Qualified is designed around chats as the primary engagement surface area, but your buyers engage through multiple channels – website, chat, email, Linkedin and more.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-21",
+      "competitive": true
+    },
+    {
+      "text": "Breakout runs identification, chat engagement, email outreach and follow-up, and Linkedin cadence as coordinated agents, not separate manual workflows.",
+      "source": "https://getbreakout.ai/compare/qualified-alternative",
+      "checked": "2026-10-21"
     }
   ],
   "not_usable": [
