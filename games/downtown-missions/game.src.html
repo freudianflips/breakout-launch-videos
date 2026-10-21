@@ -50,6 +50,7 @@
   #radar { position: absolute; left: calc(var(--u) * 5 + env(safe-area-inset-left, 0px)); bottom: calc(var(--u) * 5 + env(safe-area-inset-bottom, 0px)); width: calc(var(--u) * 27); height: calc(var(--u) * 27); pointer-events: none; transition: opacity 0.3s; }
   #help { position: absolute; left: calc(var(--u) * 5 + env(safe-area-inset-left, 0px)); top: calc(var(--u) * 5 + env(safe-area-inset-top, 0px)); max-width: calc(var(--u) * 60); padding: calc(var(--u) * 1.6) calc(var(--u) * 2.4);
     background: rgba(0,0,0,0.72); border-radius: 3px; font-family: var(--body); font-weight: 700; font-size: calc(var(--u) * 2.7); line-height: 1.32; pointer-events: none; }
+  .cut #help { top: calc(12vh + var(--u) * 2); }
   #sub, #obj { position: absolute; left: 8%; right: 8%; text-align: center; font-family: var(--body); font-weight: 800; font-size: calc(var(--u) * 3.6); text-wrap: balance; pointer-events: none; }
   #obj { bottom: calc(var(--u) * 7 + env(safe-area-inset-bottom, 0px)); }
   #sub { bottom: calc(12vh + var(--u) * 3); }
@@ -416,7 +417,7 @@
     });
     // storefronts: a dark glass band with a sign fascia, and awnings on the street faces
     var sb = base + 4.4;
-    PROPS.add(BOX, mx((x0 + x1) / 2, (y0 + sb) / 2, (z0 + z1) / 2, 0, x1 - x0 + 0.3, sb - y0, z1 - z0 + 0.3), "#2a313b");
+    PROPS.add(BOX, mx((x0 + x1) / 2, (y0 + sb) / 2, (z0 + z1) / 2, 0, x1 - x0 + 0.3, sb - y0, z1 - z0 + 0.3), "#3e4856");
     PROPS.add(BOX, mx((x0 + x1) / 2, sb + 0.4, (z0 + z1) / 2, 0, x1 - x0 + 0.5, 0.8, z1 - z0 + 0.5), darker(tc, 0.7));
     [z0, z1].forEach(function (fz2, k2) { if (rnd(seed + 5 + k2) > 0.45) { var aw = AWN[Math.floor(rnd(seed + 7 + k2) * AWN.length)], dz = k2 ? 1 : -1;
       PROPS.add(BOX, mx((x0 + x1) / 2, sb - 0.5, fz2 + dz * 0.9, 0, (x1 - x0) * 0.7, 0.12, 1.8, dz * 0.35), aw); } });
@@ -475,7 +476,7 @@
     [-1, 1].forEach(function (s) { var wg = new THREE.Shape(); wg.moveTo(0, 0); wg.lineTo(5, 0); wg.lineTo(1.2, 120); wg.lineTo(0, 120);
       var e = new THREE.ExtrudeGeometry(wg, { depth: 9, bevelEnabled: false }); e.translate(0, 0, -4.5);
       e.applyMatrix4(mx(cx0 + s * (b * (1 - 55 / H) * 0.98), 55, cz0, s > 0 ? 0 : PI)); PROPS.add(e, null, "#e9e5dc"); e.dispose(); });
-    PROPS.add(CONE4, mx(cx0, H + 22, cz0, PI / 4, 3.4, 44, 3.4), "#e0dcd2"); PROPS.add(BOX, mx(cx0, 3, cz0, PI / 4, 40, 6, 40), "#2a313b");
+    PROPS.add(CONE4, mx(cx0, H + 22, cz0, PI / 4, 3.4, 44, 3.4), "#e0dcd2"); PROPS.add(BOX, mx(cx0, 2.5, cz0, 0, 31, 5, 31), "#4a5260");
     solid(cx0 - b, cx0 + b, cz0 - b, cz0 + b); ROOFTOPS.push([cx0, H + 40, cz0]);
   })();
   (function salesforce() {                         // the tallest: a rounded obelisk of pale glass, tapering, with an open lattice crown
