@@ -26,10 +26,12 @@ def sized(svg):
     return svg
 
 
-logos = {n: sized(open(os.path.join(HERE, "logos", n + ".svg")).read()) for n in ("vanta", "grammarly", "anthropic")}
+logos = {n: sized(open(os.path.join(HERE, "logos", n + ".svg")).read()) for n in ("vanta", "rippling", "figma", "anthropic")}
 logos["breakout"] = sized(re.sub(r"<\?xml.*?\?>", "", open(os.path.join(BRAND, B["logo"]["file"])).read()).strip())
 logos["mark"] = sized(re.sub(r"<\?xml.*?\?>", "", open(os.path.join(BRAND, B["logo"]["mark"])).read()).strip())
 src = src.replace("__LOGOS__", json.dumps(logos))
+src = src.replace("__CJ__", base64.b64encode(open(os.path.join(HERE, "cj.jpg"), "rb").read()).decode())
+src = src.replace("__WAYMO__", base64.b64encode(open(os.path.join(HERE, "logos", "waymo.png"), "rb").read()).decode())
 page = src.replace("__LOGO__", logo).replace("__MARKSVG__", mark_svg.replace("<svg ", '<svg aria-hidden="true" ', 1)).replace("__MARK64__", mark64)
 full = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' + page + '\n</html>\n')
