@@ -239,13 +239,109 @@
       "idea": "Qualified's emails wait for a hand-raise and are generic; Breakout emails the identified visitors who never raised a hand, each email written from their own signals (the owner, 2026-10-19).",
       "awareness": "product",
       "source": "the owner, 2026-10-19; compare page: \"needs a CRM, an admin, and a hand-raise event\""
+    },
+    {
+      "code": "hand-raise",
+      "name": "Needs a hand-raise",
+      "idea": "Practitioner weak spot: the widget only works once a buyer raises a hand, and it needs a CRM and an admin.",
+      "source": "claims.json: \"Qualified runs on chat-era architecture that needs a CRM, an admin, and a hand-raise event.\""
+    },
+    {
+      "code": "manual-assign",
+      "name": "Assigned by hand",
+      "idea": "Practitioner weak spot: replies land with nobody; someone routes them by hand.",
+      "source": "claims.json: \"No assignment, replies have to be manually assigned to reps\""
+    },
+    {
+      "code": "feedback-sessions",
+      "name": "Feedback session #n",
+      "idea": "Practitioner weak spot: getting the agent's answers right takes round after round of feedback.",
+      "source": "claims.json: \"... getting responses right requires multiple feedback sessions\""
+    },
+    {
+      "code": "new-csm",
+      "name": "Meet your new CSM",
+      "idea": "Practitioner weak spot: CSMs who don't know the deployment.",
+      "source": "claims.json: \"... accounts cycle through CSMs who don't know the deployment.\""
+    },
+    {
+      "code": "on-shift",
+      "name": "Who's on shift?",
+      "idea": "CMO, ROI: you bought AI chat and still staff it with SDRs.",
+      "source": "claims.json: \"Limited AI features means that Qualified hands work back to your team\" (owner's angle, 2026-10-21)"
+    },
+    {
+      "code": "roi-receipt",
+      "name": "A fraction back",
+      "idea": "CMO, ROI: what you pay versus what you get back, itemised.",
+      "source": "claims.json: \"Teams are paying top-of-market rates and getting a fraction of it back.\""
+    },
+    {
+      "code": "vs-before-form",
+      "name": "Before the form",
+      "idea": "Side by side: hand-raise versus identifying visitors before the form.",
+      "source": "claims.json: identify page; compare page hand-raise line"
+    },
+    {
+      "code": "vs-knowledge",
+      "name": "A few instructions",
+      "idea": "Side by side: feedback sessions versus a knowledge base and a few instructions.",
+      "source": "claims.json: both knowledge-base lines from the compare page"
+    },
+    {
+      "code": "vs-routing",
+      "name": "Routed, not assigned",
+      "idea": "Side by side: manual assignment versus ownership or round-robin.",
+      "source": "claims.json: both assignment lines from the compare page"
+    },
+    {
+      "code": "vs-agents",
+      "name": "Agents, not a widget",
+      "idea": "Side by side: a widget that waits versus agents that act.",
+      "source": "claims.json: \"Modern demand gen teams need agents that act, not a widget that waits.\""
+    },
+    {
+      "code": "vs-team",
+      "name": "Back to your team",
+      "idea": "CMO side by side: work handed back to the team versus four always-on agents.",
+      "source": "claims.json: compare page"
+    },
+    {
+      "code": "vs-roadmap",
+      "name": "Ships weekly",
+      "idea": "CMO side by side: roadmap slipping after an acquisition versus shipping weekly with the builders.",
+      "source": "claims.json: compare page"
+    },
+    {
+      "code": "vs-value",
+      "name": "What you run",
+      "idea": "CMO side by side: a fraction back versus paying for what you run.",
+      "source": "claims.json: compare page"
+    },
+    {
+      "code": "switch-list",
+      "name": "The switching checklist",
+      "idea": "Practitioner, easy switch: no implementation project, no admin ticket, no handoff.",
+      "source": "claims.json: \"Go live in 3 hours. No implementation project. No admin ticket or technical handoff.\""
+    },
+    {
+      "code": "knowledge-base",
+      "name": "Point it at your knowledge base",
+      "idea": "Practitioner, easy switch: setup is a knowledge base and a few instructions.",
+      "source": "claims.json: \"Point the agent to your knowledge base and give it a few instructions to stand up an AI SDR\""
+    },
+    {
+      "code": "send-contract",
+      "name": "Send us your contract",
+      "idea": "CMO, easy switch: one document, reviewed in two business days.",
+      "source": "claims.json: \"Send us your contract. One document is all we need. Reviewed in two business days.\""
     }
   ],
   "ads": [
     {
       "id": "QSW-001",
       "status": "approved",
-      "round": 1,
+      "round": "s3",
       "concept": "hours",
       "angle": "go-live",
       "persona": "practitioner",
@@ -266,7 +362,9 @@
           "right": "<3 *hours.*",
           "source": "Source: getbreakout.ai/compare/qualified-alternative"
         }
-      }
+      },
+      "stage": "3 easy switch",
+      "li_campaign": "QSW | S3 easy switch | practitioner"
     },
     {
       "id": "QSW-002",
@@ -293,7 +391,7 @@
     {
       "id": "QSW-003",
       "status": "draft",
-      "round": 3,
+      "round": "s2",
       "concept": "signals",
       "angle": "signals",
       "persona": "practitioner",
@@ -315,12 +413,14 @@
             "*Or one.*"
           ]
         }
-      }
+      },
+      "stage": "2 side by side",
+      "li_campaign": "QSW | S2 side by side | practitioner"
     },
     {
       "id": "QSW-004",
       "status": "approved",
-      "round": "champion",
+      "round": "s4",
       "concept": "buyout",
       "angle": "contract",
       "persona": "practitioner",
@@ -342,12 +442,13 @@
         }
       },
       "ends": "2026-11-30",
-      "stage": "4 champion (weeks 5-6)"
+      "stage": "4 champion (weeks 5-6)",
+      "li_campaign": "QSW | S4 champion | practitioner"
     },
     {
       "id": "QSW-005",
       "status": "approved",
-      "round": "w1",
+      "round": "s3",
       "concept": "buyout",
       "angle": "contract",
       "persona": "cmo",
@@ -367,12 +468,12 @@
       },
       "ends": "2026-11-30",
       "li_campaign": "QSW | S3 buyout | cmo",
-      "stage": "3 habit and why now"
+      "stage": "3 easy switch"
     },
     {
       "id": "QSW-006",
       "status": "draft",
-      "round": 3,
+      "round": "s3",
       "concept": "hours",
       "angle": "go-live",
       "persona": "cmo",
@@ -390,7 +491,9 @@
           "headline": "No implementation *project.*",
           "cta": "Book a demo"
         }
-      }
+      },
+      "stage": "3 easy switch",
+      "li_campaign": "QSW | S3 buyout | cmo"
     },
     {
       "id": "QSW-007",
@@ -418,7 +521,7 @@
     {
       "id": "QSW-008",
       "status": "approved",
-      "round": 1,
+      "round": "s2",
       "concept": "pricing",
       "angle": "pricing",
       "persona": "cmo",
@@ -438,7 +541,9 @@
           "right": "From $2,000/*month.*",
           "source": "Source: getbreakout.ai/compare/qualified-alternative"
         }
-      }
+      },
+      "stage": "2 side by side",
+      "li_campaign": "QSW | S2 side by side | cmo"
     },
     {
       "id": "QSW-009",
@@ -513,7 +618,7 @@
     {
       "id": "QSW-011",
       "status": "approved",
-      "round": "w1",
+      "round": "s1",
       "concept": "pop-quiz",
       "angle": "buyer-experience",
       "persona": "practitioner",
@@ -538,7 +643,7 @@
         }
       },
       "li_campaign": "QSW | S1 need | practitioner",
-      "stage": "1 unconsidered need"
+      "stage": "1 weak spots"
     },
     {
       "id": "QSW-012",
@@ -566,7 +671,7 @@
     {
       "id": "QSW-013",
       "status": "approved",
-      "round": "w1",
+      "round": "s1",
       "concept": "breakup",
       "angle": "buyer-experience",
       "persona": "cmo",
@@ -590,7 +695,7 @@
         }
       },
       "li_campaign": "QSW | S1 why change | cmo",
-      "stage": "1 why change"
+      "stage": "1 weak spots"
     },
     {
       "id": "QSW-014",
@@ -774,7 +879,7 @@
     {
       "id": "QSW-020",
       "status": "draft",
-      "round": 3,
+      "round": "s3",
       "concept": "project-plan",
       "angle": "go-live",
       "persona": "practitioner",
@@ -830,7 +935,9 @@
           "key": "Breakout",
           "key_flag": "Live."
         }
-      }
+      },
+      "stage": "3 easy switch",
+      "li_campaign": "QSW | S3 easy switch | practitioner"
     },
     {
       "id": "QSW-021",
@@ -1057,10 +1164,10 @@
     {
       "id": "QSW-028",
       "status": "draft",
-      "round": 3,
+      "round": "s3",
       "concept": "review",
       "angle": "go-live",
-      "persona": "cmo",
+      "persona": "practitioner",
       "awareness": "product",
       "format": "img-4x5",
       "hook": "proof",
@@ -1075,7 +1182,9 @@
           "body": "\"Honestly, I was genuinely impressed by how fast we got things rolling. No messy setup, no endless back and forth, [[we were live in under 3 hours]]. The platform's super intuitive but still has all the power we need.\"",
           "source": "Growth Manager, Mid-Market (51-1000 emp.) · G2 review, quoted on getbreakout.ai/compare/qualified-alternative"
         }
-      }
+      },
+      "stage": "3 easy switch",
+      "li_campaign": "QSW | S3 easy switch | practitioner"
     },
     {
       "id": "QSW-029",
@@ -1154,7 +1263,7 @@
     {
       "id": "QSW-031",
       "status": "draft",
-      "round": 3,
+      "round": "s3",
       "concept": "fortune",
       "angle": "contract",
       "persona": "cmo",
@@ -1172,7 +1281,9 @@
           "caption": "Switch by November 30. *We'll buy out the rest.*"
         }
       },
-      "ends": "2026-11-30"
+      "ends": "2026-11-30",
+      "stage": "3 easy switch",
+      "li_campaign": "QSW | S3 buyout | cmo"
     },
     {
       "id": "QSW-032",
@@ -1204,7 +1315,7 @@
     {
       "id": "QSW-033",
       "status": "approved",
-      "round": "champion",
+      "round": "s4",
       "concept": "demo-gift",
       "angle": "incentive",
       "persona": "practitioner",
@@ -1234,7 +1345,8 @@
         }
       },
       "url": "https://getbreakout.ai/",
-      "stage": "4 champion (weeks 5-6)"
+      "stage": "4 champion (weeks 5-6)",
+      "li_campaign": "QSW | S4 champion | practitioner"
     },
     {
       "id": "QSW-034",
@@ -1349,6 +1461,481 @@
         }
       },
       "retired_note": "Owner, 2026-10-19: \"Remove this creative. Doesn't make sense.\""
+    },
+    {
+      "id": "QSW-044",
+      "status": "draft",
+      "round": "s1",
+      "concept": "hand-raise",
+      "angle": "buyer-experience",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "verdict",
+      "li_campaign": "QSW | S1 need | practitioner",
+      "stage": "1 weak spots",
+      "copy": {
+        "intro": "Qualified runs on chat-era architecture that needs a CRM, an admin, and a hand-raise event.\nEveryone who doesn't raise a hand leaves unanswered.",
+        "headline": "Agents that act, not a widget that waits."
+      },
+      "design": {
+        "template": "slam",
+        "fields": {
+          "index": "chat-era",
+          "kicker": "what the widget needs",
+          "lines": [
+            "A CRM.",
+            "An admin.",
+            "*A hand-raise.*"
+          ]
+        }
+      }
+    },
+    {
+      "id": "QSW-045",
+      "status": "draft",
+      "round": "s1",
+      "concept": "manual-assign",
+      "angle": "follow-up",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-4x5",
+      "hook": "pov",
+      "li_campaign": "QSW | S1 need | practitioner",
+      "stage": "1 weak spots",
+      "copy": {
+        "intro": "No assignment, replies have to be manually assigned to reps.\nSomeone on your team is the router.",
+        "headline": "Inbound SDR, powered by AI."
+      },
+      "design": {
+        "template": "thread",
+        "fields": {
+          "title": "marketing ops",
+          "label": "Illustrative example",
+          "messages": [
+            {
+              "from": "them",
+              "who": "Jordan, SDR",
+              "text": "a buyer replied to the chat follow-up. whose is it?"
+            },
+            {
+              "from": "me",
+              "text": "checking the account owner"
+            },
+            {
+              "from": "them",
+              "who": "Jordan, SDR",
+              "text": "same as the last one?"
+            },
+            {
+              "from": "me",
+              "text": "assigning it by hand. again."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "QSW-046",
+      "status": "draft",
+      "round": "s1",
+      "concept": "feedback-sessions",
+      "angle": "go-live",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "li_campaign": "QSW | S1 need | practitioner",
+      "stage": "1 weak spots",
+      "copy": {
+        "intro": "Point the agent to the knowledge base. Then the feedback sessions start.\nYes, point the agent to the knowledge base but getting responses right requires multiple feedback sessions",
+        "headline": "Go ahead. Ask me stuff."
+      },
+      "design": {
+        "template": "sticky",
+        "fields": {
+          "notes": [
+            "~Feedback session~",
+            "~Feedback session~",
+            "~Feedback session~",
+            "Feedback session"
+          ],
+          "answer": "Still not *right.*"
+        }
+      }
+    },
+    {
+      "id": "QSW-047",
+      "status": "draft",
+      "round": "s1",
+      "concept": "new-csm",
+      "angle": "vendor",
+      "persona": "practitioner",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "li_campaign": "QSW | S1 need | practitioner",
+      "stage": "1 weak spots",
+      "copy": {
+        "intro": "Accounts cycle through CSMs who don't know the deployment.\nYou end up teaching your vendor your own setup.",
+        "headline": "Breakout ships weekly. Work with the team that builds it."
+      },
+      "design": {
+        "template": "notice",
+        "fields": {
+          "generic": true,
+          "app": "Email",
+          "when": "Mon",
+          "message": "Hi! I'm your new CSM. Could you walk me through your setup?",
+          "caption": "Accounts cycle through CSMs *who don't know the deployment.*",
+          "label": "Illustrative example"
+        }
+      }
+    },
+    {
+      "id": "QSW-048",
+      "status": "draft",
+      "round": "s1",
+      "concept": "on-shift",
+      "angle": "headcount",
+      "persona": "cmo",
+      "awareness": "problem",
+      "format": "img-1x1",
+      "hook": "question",
+      "li_campaign": "QSW | S1 why change | cmo",
+      "stage": "1 weak spots",
+      "copy": {
+        "intro": "You bought AI chat. Is an SDR still watching it?\nLimited AI features means that Qualified hands work back to your team",
+        "headline": "Agents that act, not a widget that waits."
+      },
+      "design": {
+        "template": "slam",
+        "fields": {
+          "index": "website chat",
+          "kicker": "the AI is live",
+          "lines": [
+            "You bought",
+            "AI chat.",
+            "*Who's on shift?*"
+          ]
+        }
+      }
+    },
+    {
+      "id": "QSW-049",
+      "status": "draft",
+      "round": "s1",
+      "concept": "roi-receipt",
+      "angle": "outcome",
+      "persona": "cmo",
+      "awareness": "problem",
+      "format": "img-4x5",
+      "hook": "pattern-break",
+      "li_campaign": "QSW | S1 why change | cmo",
+      "stage": "1 weak spots",
+      "copy": {
+        "intro": "Teams are paying top-of-market rates and getting a fraction of it back.\nFeatures bought and never used. Results that don't justify the line item at renewal.",
+        "headline": "Agents that act, not a widget that waits."
+      },
+      "design": {
+        "template": "receipt",
+        "fields": {
+          "title": "WEBSITE CHAT",
+          "subtitle": "Annual plan",
+          "items": [
+            [
+              "Rate",
+              "top-of-market"
+            ],
+            [
+              "Features bought",
+              "never used"
+            ],
+            [
+              "AI chat",
+              "needs your team"
+            ],
+            [
+              "Replies",
+              "assigned by hand"
+            ]
+          ],
+          "total_label": "BACK",
+          "total": "a fraction",
+          "footer": "Itemised at renewal."
+        }
+      }
+    },
+    {
+      "id": "QSW-050",
+      "status": "draft",
+      "round": "s2",
+      "concept": "vs-before-form",
+      "angle": "identify",
+      "persona": "practitioner",
+      "awareness": "solution",
+      "format": "img-1x1",
+      "hook": "contrast",
+      "li_campaign": "QSW | S2 side by side | practitioner",
+      "stage": "2 side by side",
+      "copy": {
+        "intro": "Qualified runs on chat-era architecture that needs a CRM, an admin, and a hand-raise event.\nBreakout identifies ready-to-buy visitors before they fill a form.",
+        "headline": "Identify ready-to-buy visitors before they fill a form"
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left_label": "Qualified",
+          "left": "After the *hand-raise.*",
+          "right_label": "Breakout",
+          "right": "Before the *form.*",
+          "source": "Source: getbreakout.ai/compare/qualified-alternative"
+        }
+      }
+    },
+    {
+      "id": "QSW-051",
+      "status": "draft",
+      "round": "s2",
+      "concept": "vs-knowledge",
+      "angle": "go-live",
+      "persona": "practitioner",
+      "awareness": "solution",
+      "format": "img-1x1",
+      "hook": "contrast",
+      "li_campaign": "QSW | S2 side by side | practitioner",
+      "stage": "2 side by side",
+      "copy": {
+        "intro": "Fewer feedback sessions. More answers.\nPoint the agent to your knowledge base and give it a few instructions to stand up an AI SDR",
+        "headline": "Go ahead. Ask me stuff."
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left_label": "Qualified",
+          "left": "Multiple feedback *sessions.*",
+          "right_label": "Breakout",
+          "right": "A few *instructions.*",
+          "source": "Source: getbreakout.ai/compare/qualified-alternative"
+        }
+      }
+    },
+    {
+      "id": "QSW-052",
+      "status": "draft",
+      "round": "s2",
+      "concept": "vs-routing",
+      "angle": "follow-up",
+      "persona": "practitioner",
+      "awareness": "solution",
+      "format": "img-1x1",
+      "hook": "contrast",
+      "li_campaign": "QSW | S2 side by side | practitioner",
+      "stage": "2 side by side",
+      "copy": {
+        "intro": "No assignment, replies have to be manually assigned to reps.\nBreakout assigns outbound and nurture emails based on account ownership or round-robin.",
+        "headline": "Inbound SDR, powered by AI."
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left_label": "Qualified",
+          "left": "Assigned by *hand.*",
+          "right_label": "Breakout",
+          "right": "Owner or *round-robin.*",
+          "source": "Source: getbreakout.ai/compare/qualified-alternative"
+        }
+      }
+    },
+    {
+      "id": "QSW-053",
+      "status": "draft",
+      "round": "s2",
+      "concept": "vs-agents",
+      "angle": "signals",
+      "persona": "practitioner",
+      "awareness": "solution",
+      "format": "img-1x1",
+      "hook": "contrast",
+      "li_campaign": "QSW | S2 side by side | practitioner",
+      "stage": "2 side by side",
+      "copy": {
+        "intro": "Modern demand gen teams need agents that act, not a widget that waits.\nBreakout runs signals, engagement, follow-up, and CRM hygiene as four always-on agents.",
+        "headline": "Agents that act."
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left_label": "Qualified",
+          "left": "A widget that *waits.*",
+          "right_label": "Breakout",
+          "right": "Agents that *act.*",
+          "source": "Source: getbreakout.ai/compare/qualified-alternative"
+        }
+      }
+    },
+    {
+      "id": "QSW-054",
+      "status": "draft",
+      "round": "s2",
+      "concept": "vs-team",
+      "angle": "headcount",
+      "persona": "cmo",
+      "awareness": "product",
+      "format": "img-1x1",
+      "hook": "contrast",
+      "li_campaign": "QSW | S2 side by side | cmo",
+      "stage": "2 side by side",
+      "copy": {
+        "intro": "Limited AI features means that Qualified hands work back to your team\nBreakout runs signals, engagement, follow-up, and CRM hygiene as four always-on agents.",
+        "headline": "Agents that act, not a widget that waits."
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left_label": "Qualified",
+          "left": "Work back to *your team.*",
+          "right_label": "Breakout",
+          "right": "Four always-on *agents.*",
+          "source": "Source: getbreakout.ai/compare/qualified-alternative"
+        }
+      }
+    },
+    {
+      "id": "QSW-055",
+      "status": "draft",
+      "round": "s2",
+      "concept": "vs-roadmap",
+      "angle": "vendor",
+      "persona": "cmo",
+      "awareness": "product",
+      "format": "img-1x1",
+      "hook": "contrast",
+      "li_campaign": "QSW | S2 side by side | cmo",
+      "stage": "2 side by side",
+      "copy": {
+        "intro": "After an acquisition, roadmap items slip a quarter at a time.\nBreakout ships weekly and you work directly with the team that builds it.",
+        "headline": "Breakout ships weekly."
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left_label": "Qualified",
+          "left": "Slips a *quarter.*",
+          "right_label": "Breakout",
+          "right": "Ships *weekly.*",
+          "source": "Source: getbreakout.ai/compare/qualified-alternative"
+        }
+      }
+    },
+    {
+      "id": "QSW-056",
+      "status": "draft",
+      "round": "s2",
+      "concept": "vs-value",
+      "angle": "outcome",
+      "persona": "cmo",
+      "awareness": "product",
+      "format": "img-1x1",
+      "hook": "contrast",
+      "li_campaign": "QSW | S2 side by side | cmo",
+      "stage": "2 side by side",
+      "copy": {
+        "intro": "Teams are paying top-of-market rates and getting a fraction of it back.\nWith Breakout, what you pay for is what you're actually running.",
+        "headline": "From $2,000/month. Published."
+      },
+      "design": {
+        "template": "split",
+        "fields": {
+          "left_label": "Qualified",
+          "left": "A fraction *back.*",
+          "right_label": "Breakout",
+          "right": "What you *run.*",
+          "source": "Source: getbreakout.ai/compare/qualified-alternative"
+        }
+      }
+    },
+    {
+      "id": "QSW-057",
+      "status": "draft",
+      "round": "s3",
+      "concept": "switch-list",
+      "angle": "go-live",
+      "persona": "practitioner",
+      "awareness": "product",
+      "format": "img-1x1",
+      "hook": "pattern-break",
+      "li_campaign": "QSW | S3 easy switch | practitioner",
+      "stage": "3 easy switch",
+      "copy": {
+        "intro": "Your switching checklist, done.\nGo live in 3 hours. No implementation project. No admin ticket or technical handoff.",
+        "headline": "Go live in 3 hours."
+      },
+      "design": {
+        "template": "sticky",
+        "fields": {
+          "notes": [
+            "~Implementation project~",
+            "~Admin ticket~",
+            "~Technical handoff~"
+          ],
+          "answer": "Live in *3 hours.*"
+        }
+      }
+    },
+    {
+      "id": "QSW-058",
+      "status": "draft",
+      "round": "s3",
+      "concept": "knowledge-base",
+      "angle": "go-live",
+      "persona": "practitioner",
+      "awareness": "product",
+      "format": "img-1x1",
+      "hook": "verdict",
+      "li_campaign": "QSW | S3 easy switch | practitioner",
+      "stage": "3 easy switch",
+      "copy": {
+        "intro": "Setup, in one sentence.\nPoint the agent to your knowledge base and give it a few instructions to stand up an AI SDR",
+        "headline": "<3 hours, self-serve."
+      },
+      "design": {
+        "template": "verdict",
+        "fields": {
+          "kicker": "Switching to Breakout",
+          "headline": "Point it at your\n*knowledge base.*",
+          "sub": "A few instructions. An AI SDR.",
+          "cta": "Go live in 3 hours"
+        }
+      }
+    },
+    {
+      "id": "QSW-059",
+      "status": "draft",
+      "round": "s3",
+      "concept": "send-contract",
+      "angle": "contract",
+      "persona": "cmo",
+      "awareness": "most-aware",
+      "format": "img-1x1",
+      "hook": "verdict",
+      "li_campaign": "QSW | S3 buyout | cmo",
+      "stage": "3 easy switch",
+      "copy": {
+        "intro": "Still under contract? We'll buy out the rest of it.\nSend us your contract. One document is all we need. Reviewed in two business days.",
+        "headline": "Up to $30,000 covered.",
+        "description": "Switch by November 30, 2026."
+      },
+      "design": {
+        "template": "verdict",
+        "fields": {
+          "theme": "dark",
+          "kicker": "LIMITED OFFER · ENDS 30 NOVEMBER 2026",
+          "headline": "Send us your contract.\n*One document is all we need.*",
+          "cta": "Reviewed in two business days"
+        }
+      },
+      "ends": "2026-11-30"
     }
   ],
   "deadline": "2026-11-30",
@@ -1375,19 +1962,54 @@
   },
   "round_1_approved": "2026-10-14: owner, \"load up the creatives\" with the audience export",
   "sequence": {
-    "framework": "Four Forces (push + pull > anxiety + habit), why change vs why stay, one campaign per stage, retarget engagers and site visitors forward (2026-10-19)",
-    "practitioner": [
-      "1 unconsidered need (whole list)",
-      "2 pull: the product and proof (engagers + visitors)",
-      "3 anxiety: easy to switch (engagers + visitors)",
-      "4 champion: the buyout to take to the CMO, plus the demo gift (weeks 5-6)"
-    ],
-    "cmo": [
-      "1 why change (whole list)",
-      "2 pull and credibility (engagers + visitors)",
-      "3 habit and why now: the buyout (whole CMO list from day one, until 30 November)"
-    ],
-    "week1": [
+    "framework": "Owner's order (2026-10-21): 1 weak spots, 2 side by side, 3 easy to switch; each different for practitioners (tactical) and CMOs (ROI, team, cost). One campaign per stage, retarget engagers and visitors forward.",
+    "practitioner": {
+      "1 weak spots": [
+        "QSW-011",
+        "QSW-044",
+        "QSW-045",
+        "QSW-046",
+        "QSW-047"
+      ],
+      "2 side by side": [
+        "QSW-003",
+        "QSW-050",
+        "QSW-051",
+        "QSW-052",
+        "QSW-053"
+      ],
+      "3 easy switch": [
+        "QSW-001",
+        "QSW-020",
+        "QSW-028",
+        "QSW-057",
+        "QSW-058"
+      ],
+      "4 champion (weeks 5-6)": [
+        "QSW-004",
+        "QSW-033"
+      ]
+    },
+    "cmo": {
+      "1 weak spots": [
+        "QSW-013",
+        "QSW-048",
+        "QSW-049"
+      ],
+      "2 side by side": [
+        "QSW-008",
+        "QSW-054",
+        "QSW-055",
+        "QSW-056"
+      ],
+      "3 easy switch": [
+        "QSW-005",
+        "QSW-031",
+        "QSW-059",
+        "QSW-006"
+      ]
+    },
+    "loaded": [
       "QSW-011",
       "QSW-013",
       "QSW-005"
