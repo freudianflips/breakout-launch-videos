@@ -32,6 +32,9 @@ logos["mark"] = sized(re.sub(r"<\?xml.*?\?>", "", open(os.path.join(BRAND, B["lo
 src = src.replace("__LOGOS__", json.dumps(logos))
 src = src.replace("__CJ__", base64.b64encode(open(os.path.join(HERE, "cj.jpg"), "rb").read()).decode())
 src = src.replace("__WAYMO__", base64.b64encode(open(os.path.join(HERE, "logos", "waymo.png"), "rb").read()).decode())
+VOJ = os.path.join(HERE, "vo", "vo.json")                           # the voice takes (voice.py)
+vo = {k: {"d": v["d"], "a": base64.b64encode(open(os.path.join(HERE, "vo", v["file"]), "rb").read()).decode()} for k, v in (json.load(open(VOJ)).items() if os.path.exists(VOJ) else [])}
+src = src.replace("__VO__", json.dumps(vo))
 page = src.replace("__LOGO__", logo).replace("__MARKSVG__", mark_svg.replace("<svg ", '<svg aria-hidden="true" ', 1)).replace("__MARK64__", mark64)
 full = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' + page + '\n</html>\n')

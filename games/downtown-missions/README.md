@@ -28,7 +28,7 @@ Traffic includes Waymos (their sensor dome spins), Muni buses, taxis, SFPD cars,
 
 1. **Pizza for the Buying Committee:** three people from the account are looking at pricing, so CJ takes them pizza before they lose interest. "Uh, we didn't order pizza." "I know. I'm CJ, from Breakout. You were just on our site." Upstairs he books the meeting live on Breakout's booking screen.
 2. **The alert:** at CJ's desk, Breakout flags that Sarah F. just left her company.
-3. **Tail the Champion:** CJ follows her cab to Anthropic. "CJ? I've worked here for four hours." "Did you... follow my taxi?" "We call that account-based marketing." "...Thursday, 2 PM. And bring pizza."
+3. **Tail the Champion:** CJ follows her cab to Anthropic, and they talk it out, voiced, for about 35 seconds: "CJ? I've worked here for four hours." "Did you... follow my taxi?" "We call that account-based marketing." "That is not what that means." ... "How did you even know I left?" "Breakout told me. It keeps an eye on my favorite people." ... "So. Thursday at two?" "...Thursday, 2 PM. And bring pizza." "I always bring pizza."
 
 ## Play
 
@@ -49,7 +49,8 @@ On a phone: the stick steers, the buttons get you on or off and brake.
 ## How it is made
 
 - `game.src.html` is the whole game: the city, the cast, the physics (terraced hills you can jump off, buildings, traffic and the cable car you bump into), the missions, the HUD, the radar and all the sound (an original G-funk radio loop and the effects, synthesised with Web Audio). The city, the cast and the HUD are the same as the video template [`templates/open-world`](../../templates/open-world/README.md).
-- `build.py` inlines the brand's logo and mark from [`brand/`](../../brand/) and writes `index.html`; `--artifact <path>` also writes the body-only page used for publishing.
+- `build.py` inlines the brand's logo and mark from [`brand/`](../../brand/), the logos in `logos/` and the voice takes in `vo/`, and writes `index.html`; `--artifact <path>` also writes the body-only page used for publishing.
+- **Voices:** every CJ and Sarah line in Tail the Champion is spoken (CJ: Kokoro `am_fenrir`, Sarah: `af_heart`). `voice.py` reads the lines from `game.src.html`, speaks the new or changed ones with [Kokoro-82M](https://github.com/thewh1teagle/kokoro-onnx) (Apache 2.0, free, runs locally), levels them and writes `vo/`. The scenes time themselves to the takes, so change a line, run `voice.py`, then `build.py`. Lines from Breakout and the buying committee stay text.
 - **The look (owner's decision, 2026-10-21):** "Forget the rights, use the San Andreas look exactly. Use CJ as well." The game uses the San Andreas HUD layout and colours, the PS2 trails and colour filter, and CJ as the hero. This overrides the rights rule in [`CLAUDE.md`](../../CLAUDE.md) for this game only. It does not use the game's name or logo, any of its files, or its music. The real Pricedown font needs a paid web licence, so Bowlby One (SIL OFL) stands in.
 - **Real target accounts (owner's requests, 2026-10-21):** "add the logos of actual target companies ... and their actual hqs", then "Remove Northwind altogether, only use real company names". This overrides, for this game only, the rules that a real company appears in plain type and never with its logo, and that no customer is invented. Each is labelled "Illustrative example".
 - **CJ** has the face from the reference render the owner supplied (`cj.jpg`) and the outfit from the San Andreas screenshot the owner sent: white tee, baggy woodland camo, black cap, black sneakers.

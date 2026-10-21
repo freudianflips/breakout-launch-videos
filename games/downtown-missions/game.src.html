@@ -188,8 +188,11 @@
     { id: "anthropic", name: "Anthropic", addr: "500 Howard St", block: [193, 227, -47, -20], ht: 44, kind: "office", tint: "#efe6d8", door: [210, -47], out: [0, -1] }
   ];
   var FIDI = TARGETS.filter(function (t) { return t.fidi; }), ANTHROPIC = TARGETS[3];
+  var VO = __VO__;                                // the voice takes, base64 mp3 with their lengths (voice.py)
+  // the words, with Tail the Champion timed to its voice takes
+  function words(a, from, to) { var w = script(a, from, to); ["alert", "intro", "door", "room"].forEach(function (k) { w.m2[k] = timed(w.m2[k]); }); return w; }
   // the words: real companies, fictional people, visits and meetings
-  function words(a, from, to) { var A = a.name, F = from.name, N = to.name, team = A; return {
+  function script(a, from, to) { var A = a.name, F = from.name, N = to.name, team = A; return {
     m1: { title: "Pizza for the Buying Committee", help: '<span class="v">BREAKOUT:</span> 3 people from ' + A + ' are looking at pricing right now. Same office.',
           mount: 'Get on the <span class="b">scooter</span>.', go: 'Take the pizzas to <span class="y">' + A + '</span>, ' + a.addr + '. Go before they lose interest.', fail: "Too slow. They moved on.",
           intro: [[0.2, 2.6, "BREAKOUT", "Heads up. Three people from " + A + ", same office, all on the pricing page."], [2.7, 4.9, "CJ", "Three at once? Somebody over there's about to make a decision."]],
@@ -197,11 +200,17 @@
           room: [[0.3, 3.0, team, "Okay. You've got ten minutes."], [3.1, 6.0, "CJ", "Your site gets people like you all day. We talk to them before they leave."], [6.1, 8.3, "CJ", "Want to see it properly? Thursday at two?"], [8.4, 10.3, team, "Sure. Bring pizza again, though."]],
           passed: "Meeting booked." },
     m2: { title: "Tail the Champion", help: '<span class="v">BREAKOUT:</span> Your champion Sarah F. just left ' + F + '. Follow her.',
-          alert: [[0.2, 2.9, "BREAKOUT", "Champion on the move: Sarah F. just left " + F + "."], [3.0, 5.7, "CJ", "Sarah? She opened every email I ever sent. Even the bad ones."]],
+          alert: [[0.2, 2.9, "BREAKOUT", "Champion on the move: Sarah F. just left " + F + "."], [3.0, 5.7, "CJ", "Sarah? She opened every email I ever sent. Even the bad ones."]],   // [start, end, who, line]; voiced lines stretch to fit their take
           go: 'Follow <span class="b">Sarah</span>. Don\'t get too close.', spotted: "She spotted you. Now it's weird.", lost: "You lost her. And your commission.",
           intro: [[0.2, 2.4, "CJ", "Box of desk stuff and a plant. Yeah, she's moving on."], [2.5, 4.5, "CJ", "Nice and easy, CJ. Don't be weird about it."]],
           door: [[0.4, 2.6, "CJ", N + ", " + to.addr + ". New job, same Sarah."]],
-          room: [[0.3, 2.8, "Sarah", "CJ? I've worked here for four hours."], [2.9, 5.6, "Sarah", "Did you... follow my taxi?"], [5.7, 8.3, "CJ", "We call that account-based marketing."], [8.4, 10.3, "Sarah", "...Thursday, 2 PM. And bring pizza."]],
+          // the meeting, back and forth: [who, line], timed from the voice takes; "book" puts Thursday on the wall screen
+          room: [["Sarah", "CJ? I've worked here for four hours."], ["CJ", "And they already gave you a conference room. Big moves."], ["Sarah", "Did you... follow my taxi?"],
+                 ["CJ", "We call that account-based marketing."], ["Sarah", "That is not what that means."], ["CJ", "It is if you do it right."],
+                 ["Sarah", "How did you even know I left?"], ["CJ", "Breakout told me. It keeps an eye on my favorite people."], ["Sarah", "That's sweet. And a little creepy."],
+                 ["CJ", "Mostly sweet. You liked us at your last job. Your new team should see it too."], ["Sarah", "I don't even know where the bathroom is yet."],
+                 ["CJ", "Down the hallway, on the left. I checked."], ["Sarah", "...Of course you did."], ["CJ", "So. Thursday at two?", "book"],
+                 ["Sarah", "...Thursday, 2 PM. And bring pizza."], ["CJ", "I always bring pizza."]],
           passed: "New account. Same champion." },
     label1: "Illustrative example: " + A + " (" + a.addr + ") is real. The visitors, the people and the meeting are fictional.",
     label2: "Illustrative example: " + F + " and " + N + " (" + to.addr + ") are real. Sarah F., her move and the meeting are fictional." }; }
@@ -967,7 +976,7 @@
     ENG = [AC.createOscillator(), AC.createOscillator()]; ENG[0].type = "sawtooth"; ENG[1].type = "square";
     ENGF = AC.createBiquadFilter(); ENGF.type = "lowpass"; ENGF.frequency.value = 900; ENGG = AC.createGain(); ENGG.gain.value = 0;
     ENG.forEach(function (o) { o.connect(ENGF); o.start(); }); ENGF.connect(ENGG); ENGG.connect(FX);
-    radioStart();
+    radioStart(); voLoad();
   }
   function env(g, t, a, peak, dcy) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + dcy); }
   function tone(f, t, dur, type, peak, dest) { if (!AC) return; var o = AC.createOscillator(), g = AC.createGain(); o.type = type || "sine"; o.frequency.setValueAtTime(f, t); env(g, t, 0.004, peak || 0.3, dur); o.connect(g); g.connect(dest || FX); o.start(t); o.stop(t + dur + 0.05); return o; }
@@ -1221,8 +1230,27 @@
   function cut(on) { $("game").classList.toggle("cut", !!on); }
   function fadeTo(fn) { $("fade").classList.add("on"); setTimeout(function () { fn(); $("fade").classList.remove("on"); }, 650); }
   function enter(state) { G.state = state; G.st = 0; sub.hidden = true; }
+  // voice: one take per CJ and Sarah line (voice.py, Kokoro), keyed by who and the words; other lines stay text
+  var VOB = {};
+  function voKey(who, line) { return who + "|" + line; }
+  function voDur(who, line) { var v = VO[voKey(who, line)]; return v ? v.d : 0; }
+  function voLoad() { Object.keys(VO).forEach(function (k) { var b = atob(VO[k].a), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
+    AC.decodeAudioData(u.buffer, function (buf) { VOB[k] = buf; }, function () {}); }); }
+  var VOSRC = null;
+  function speak(who, line) { if (!AC) return; var buf = VOB[voKey(who, line)]; if (!buf) return; if (VOSRC) try { VOSRC.stop(); } catch (e) {}
+    var src = AC.createBufferSource(), g = AC.createGain(); g.gain.value = 1.5; src.buffer = buf; src.connect(g); g.connect(MASTER); src.start(); VOSRC = src;
+    MUSIC.gain.setTargetAtTime(0.12, AC.currentTime, 0.08); src.onended = function () { if (VOSRC === src) { VOSRC = null; MUSIC.gain.setTargetAtTime(0.42, AC.currentTime, 0.3); } }; }
+  function hush() { if (VOSRC) try { VOSRC.stop(); } catch (e) {} VOSRC = null; G.subOn = null; }
+  // a timed list: voiced lines last as long as their take (a timed line keeps its start); [who, line] lists run back to back
+  function timed(list) { var t = 0.3, out = [];
+    list.forEach(function (l) { var tm = typeof l[0] === "number", who = tm ? l[2] : l[0], line = tm ? l[3] : l[1], d = voDur(who, line);
+      var t0 = tm ? Math.max(l[0], t) : t, t1 = d ? t0 + d + 0.2 : tm ? t0 + (l[1] - l[0]) : t0 + Math.max(1.8, line.split(" ").length * 0.33);
+      var o = [t0, t1, who, line]; o.flag = tm ? null : l[2]; out.push(o); t = t1 + (tm ? 0.1 : 0.15); });
+    return out; }
+  function endOf(list) { return list.length ? list[list.length - 1][1] : 0; }
   function subtitles(list, t) {                   // cutscene lines, the speaker's name in the game's colours
     var on = null; list.forEach(function (l) { if (t >= l[0] && t < l[1]) on = l; });
+    if (on !== G.subOn) { G.subOn = on; if (on) speak(on[2], on[3]); }
     if (!on) { sub.hidden = true; return; }
     var html = (on[2] === "CJ" ? "" : '<span class="' + (on[2] === "BREAKOUT" ? "v" : "b") + '">' + on[2] + ":</span> ") + on[3];
     if (sub.innerHTML !== html) sub.innerHTML = html; sub.hidden = false;
@@ -1240,7 +1268,7 @@
   function closeMenu() { G.menu = false; $("menu").hidden = true; }
   function leaveRoom() { $("game").classList.remove("room"); roomGroup.visible = false; G.roomKind = null; COMM.forEach(function (p) { pose(p, { hidden: true }); }); pose(champM, { hidden: true }); }
   function choose(id) {
-    closeMenu(); SFX.click(); taxi.g.visible = taxi.shadow.visible = false; leaveRoom();
+    closeMenu(); SFX.click(); hush(); taxi.g.visible = taxi.shadow.visible = false; leaveRoom();
     fadeTo(function () {
       clearUI(); G.wanted = 0; G.health = 100;
       if (id === "m1") { G.gm = 3 * 1440 + 18 * 60 + 5; G.rate = 1; G.story = true; placeHeroAtShop(); startM1(); }
@@ -1266,20 +1294,20 @@
   $("titleScreen").addEventListener("click", start);
   $("again").addEventListener("click", function () { openMenu(); });
   $("roam").addEventListener("click", function () { $("endScreen").hidden = true; placeHeroOutside(T()); G.control = true; cut(false); enter("roam"); setHelp("Free roam. Press <span class=\"y\">Esc</span> for missions."); });
-  function fail(reason) { G.control = false; SFX.fail(); showPass("MISSION FAILED!", reason, true); setObj("Press <span class=\"y\">Enter</span> or tap to retry, <span class=\"y\">Esc</span> for missions."); enter("fail"); G.failOf = G.mission; }
+  function fail(reason) { hush(); G.control = false; SFX.fail(); showPass("MISSION FAILED!", reason, true); setObj("Press <span class=\"y\">Enter</span> or tap to retry, <span class=\"y\">Esc</span> for missions."); enter("fail"); G.failOf = G.mission; }
   $("game").addEventListener("pointerdown", function (e) { if (G.state === "fail" && G.st > 1.2 && !G.menu && e.target.tagName !== "BUTTON") retry(); });
   function retry() { clearUI(); fadeTo(function () { if (G.failOf === 1) { placeHeroAtShop(); G.gm = 3 * 1440 + 18 * 60 + 5; startM1(true); } else startM2(); }); }
   function startM1(keep) {                         // mix it up: a different FiDi account each run (the same one on a retry)
     if (!keep) G.tg = pick(FIDI, G.tg); G.from = pick(FIDI, G.tg); G.W = words(G.tg, G.from, ANTHROPIC);
     G.mission = 1; G.control = false; placeSignals(G.tg); cut(true); setLabel(G.W.label1); setHelp(G.W.m1.help); enter("m1intro"); }
-  function roomScene(kind) { setHelp(null); $("game").classList.add("room"); G.roomKind = kind; roomGroup.visible = true; wallLogo.material.map = wallTex(kind === "alert" ? "breakout" : kind === "m2" ? ANTHROPIC.id : G.tg.id); wallLogo.material.needsUpdate = true; cut(true); enter("room"); }
+  function roomScene(kind) { setHelp(null); setObj(null); $("game").classList.add("room"); G.roomKind = kind; roomGroup.visible = true; wallLogo.material.map = wallTex(kind === "alert" ? "breakout" : kind === "m2" ? ANTHROPIC.id : G.tg.id); wallLogo.material.needsUpdate = true; cut(true); enter("room"); }
   function startM2() {
     leaveRoom(); G.tg = ANTHROPIC; placeSignals(G.tg); setRoute(makeRoute(G.from, G.tg));
     G.gm = 7 * 1440 + 18 * 60 + 40; G.rate = 2.4; taxi.g.visible = taxi.shadow.visible = true; TX.s = 0; TX.v = 0; TX.yaw = routeAt(0.5)[2];
     var r1 = ROUTE[1], r2 = ROUTE[2], dl = Math.hypot(r2[0] - r1[0], r2[1] - r1[1]) || 1, dx = (r2[0] - r1[0]) / dl, dz = (r2[1] - r1[1]) / dl;
     P.onMoped = true; P.carry = false; MP.x = r1[0] - dx * 24; MP.z = r1[1] - dz * 24; MP.yaw = Math.atan2(dx, dz); MP.speed = 0; MP.air = false; MP.y = h(MP.z); MP.vyG = 0; look.yaw = 0; camYawS = MP.yaw; snapCam = true;
     var dd = doorAt(G.from, 0.4, 0); G.champ = { x: dd[0], z: dd[1], walk: 0, inTaxi: false }; G.mission = 2; G.sus = 0; G.lost = 0; G.control = false; cut(true);
-    setHelp(G.W.m2.help); setLabel(G.W.label2); setObj(null); mtitle.textContent = G.W.m2.title; SFX.phone(); enter("m2intro");
+    setHelp(G.W.m2.help); setLabel(G.W.label2); setObj(null); mtitle.textContent = G.W.m2.title; SFX.phone(); G.introEnd = Math.max(4.6, endOf(G.W.m2.intro) + 0.1); enter("m2intro");
   }
   function reward() { G.money += 1000; }
 
@@ -1347,20 +1375,24 @@
         drawScreen("alert", t / 4, tg); scrTex.needsUpdate = true;
         G.cutCam = t < 3.0 ? { p: [X + 0.4, Y + 1.6, Z - 1.4], l: [X, Y + 1.75, Z - 4.9], fov: 54 } : { p: [X - 1.8, Y + 1.5, Z + 1.4], l: [X, Y + 1.15, Z + 3.8], fov: 50 };
         subtitles(Wd.m2.alert, t);
-        if (t > 5.9) { enter("wait"); fadeTo(startM2); }
+        if (t > Math.max(5.9, endOf(Wd.m2.alert) + 0.3)) { enter("wait"); fadeTo(startM2); }
       } else {
-        var m2 = k === "m2";
-        pose(heroM, { x: X + 2.55, y: Y, z: Z - 3.9, yaw: -0.5, mode: "stand", noShadow: true, point: t > 6.1 && t < 9 });
+        var m2 = k === "m2", Lr = m2 ? Wd.m2.room : Wd.m1.room, bk = Lr.filter(function (l) { return l.flag === "book"; })[0];
+        var tBook = bk ? bk[0] : 8.2, tPass = m2 ? endOf(Lr) + 0.5 : 10.7, tOut = tPass + 4.8, on = null, oi = -1;
+        Lr.forEach(function (l, i) { if (t >= l[0] && t < l[1] + 0.15) { on = l; oi = i; } });
+        pose(heroM, { x: X + 2.55, y: Y, z: Z - 3.9, yaw: -0.5, mode: "stand", noShadow: true, point: m2 ? !!(bk && t > tBook && t < bk[1] + 0.6) : t > 6.1 && t < 9 });
         if (m2) { pose(champM, { x: X - 1.5, y: Y, z: Z - 1.6, yaw: PI / 2, mode: "sit", noShadow: true }); pose(COMM[0], { x: X + 1.5, y: Y, z: Z - 1.6, yaw: -PI / 2, mode: "sit", noShadow: true }); pose(COMM[1], { hidden: true }); pose(COMM[2], { hidden: true }); }
         else { pose(COMM[0], { x: X - 1.5, y: Y, z: Z - 1.6, yaw: PI / 2, mode: "sit", noShadow: true }); pose(COMM[1], { x: X + 1.5, y: Y, z: Z - 1.6, yaw: -PI / 2, mode: "sit", noShadow: true }); pose(COMM[2], { x: X - 1.5, y: Y, z: Z, yaw: PI / 2, mode: "sit", noShadow: true }); }
-        drawScreen("book", cl((t - 8.2) / 3.2), tg); scrTex.needsUpdate = true;
-        G.cutCam = t < 3.0 ? { p: [X + 4.8, Y + 2.5, Z + 4.2], l: [X - 0.3, Y + 1.0, Z - 2.4], fov: 54 }
-          : t < 6.0 ? { p: [X - 0.8, Y + 1.55, Z - 2.2], l: [X + 2.55, Y + 1.6, Z - 3.9], fov: 50 }
-          : t < 8.2 ? { p: [X + 1.6, Y + 1.8, Z - 3.6], l: [X - 1.5, Y + 1.1, Z - 0.6], fov: 52 }
-          : { p: [X, Y + 1.75, Z - 0.7], l: [X, Y + 1.75, Z - 4.9], fov: 46 };
-        subtitles(m2 ? Wd.m2.room : Wd.m1.room, t);
-        if (t > 10.7 && pass.hidden) { SFX.pass(); reward(); showPass("MISSION PASSED!", m2 ? Wd.m2.passed : Wd.m1.passed); }
-        if (t > 15.5) { pass.hidden = true; setHelp(null);
+        drawScreen("book", cl((t - tBook) / 3.2), tg); scrTex.needsUpdate = true;
+        var WIDE = { p: [X + 4.8, Y + 2.5, Z + 4.2], l: [X - 0.3, Y + 1.0, Z - 2.4], fov: 54 }, ONCJ = m2 ? { p: [X + 0.7, Y + 1.62, Z - 2.5], l: [X + 2.55, Y + 1.55, Z - 3.9], fov: 44 } : { p: [X - 0.8, Y + 1.55, Z - 2.2], l: [X + 2.55, Y + 1.6, Z - 3.9], fov: 50 },
+            ONHER = m2 ? { p: [X + 0.35, Y + 1.5, Z - 2.45], l: [X - 1.5, Y + 1.3, Z - 1.55], fov: 44 } : { p: [X + 1.6, Y + 1.8, Z - 3.6], l: [X - 1.5, Y + 1.1, Z - 0.6], fov: 52 }, SCREEN = { p: [X, Y + 1.75, Z - 0.7], l: [X, Y + 1.75, Z - 4.9], fov: 46 };
+        if (m2) G.cutCam = t < Lr[0][1] ? WIDE : bk && t >= tBook && t < bk[1] ? SCREEN : t >= endOf(Lr) ? SCREEN : !on ? G.lastRoomCam || WIDE
+          : oi % 6 === 5 ? WIDE : on[2] === "CJ" ? ONCJ : ONHER;
+        else G.cutCam = t < 3.0 ? WIDE : t < 6.0 ? ONCJ : t < 8.2 ? ONHER : SCREEN;
+        G.lastRoomCam = G.cutCam;
+        subtitles(Lr, t);
+        if (t > tPass && pass.hidden) { SFX.pass(); reward(); showPass("MISSION PASSED!", m2 ? Wd.m2.passed : Wd.m1.passed); }
+        if (t > tOut) { pass.hidden = true; setHelp(null);
           if (m2) { G.done.m2 = true; enter("wait"); fadeTo(function () { leaveRoom(); taxi.g.visible = taxi.shadow.visible = false; setLabel(null); cut(false); placeHeroOutside(tg); enter("close"); }); }
           else { G.done.m1 = true; enter("wait"); fadeTo(function () { leaveRoom(); cut(false); placeHeroOutside(tg); if (G.story) { setLabel(null); enter("lapse"); G.rate = 900; } else { setLabel(null); G.control = true; enter("roam"); } }); } }
       }
@@ -1372,9 +1404,9 @@
       var fr = G.from, c4 = doorAt(fr, 13, -7), l4 = doorAt(fr, 4, 0); G.cutCam = { p: [c4[0], fr.dy + 2.4, c4[1]], l: [l4[0], fr.dy + 1.6, l4[1]], fov: 52 };
       var ch = G.champ, tgt = doorAt(fr, 5.6, -1.4), dx = tgt[0] - ch.x, dz = tgt[1] - ch.z, dd = Math.hypot(dx, dz);
       if (dd > 0.2) { ch.x += dx / dd * 2.4 * dt; ch.z += dz / dd * 2.4 * dt; ch.walk += dt * 5.5; }
-      pose(champM, { x: ch.x, y: h(ch.z), z: ch.z, yaw: Math.atan2(dx, dz), mode: dd > 0.2 ? "walk" : "stand", phase: ch.walk, carry: true, hidden: t > 4.6 });
+      pose(champM, { x: ch.x, y: h(ch.z), z: ch.z, yaw: Math.atan2(dx, dz), mode: dd > 0.2 ? "walk" : "stand", phase: ch.walk, carry: true, hidden: t > G.introEnd });
       taxiPose(); subtitles(Wd.m2.intro, t); if (t > 0.6) mtitle.hidden = false;
-      if (t > 4.6) { mtitle.hidden = true; cut(false); G.control = true; ch.inTaxi = true; meter.hidden = false; $("meterName").textContent = "DISTANCE"; $("zone").hidden = false; setObj(Wd.m2.go); G.objT = 6; enter("m2"); }
+      if (t > G.introEnd) { mtitle.hidden = true; cut(false); G.control = true; ch.inTaxi = true; meter.hidden = false; $("meterName").textContent = "DISTANCE"; $("zone").hidden = false; setObj(Wd.m2.go); G.objT = 6; enter("m2"); }
     } else if (s === "m2") {
       var ch2 = G.champ, entry = doorAt(tg, 1.2, 0);
       if (G.objT > 0) { G.objT -= dt; if (G.objT <= 0) obj.hidden = true; }
@@ -1408,7 +1440,7 @@
       GLOW2.material.opacity = cl((t - 0.9) / 0.3) * 0.9; ARR[5].visible = t > 0.9; ARR[5].scale.set(1.6, 2.4, 1.6);
       var a5 = doorAt(tg, 1.5, 0); ARR[5].position.set(a5[0], tg.dy + 8 + 0.3 * Math.sin(G.t * 4), a5[1]); ARR[5].rotation.set(PI, G.t * 2, 0);
       subtitles(Wd.m2.door, t);
-      if (t > 3.0) { enter("wait"); fadeTo(function () { roomScene("m2"); }); }
+      if (t > Math.max(3.0, endOf(Wd.m2.door) + 0.3)) { enter("wait"); fadeTo(function () { roomScene("m2"); }); }
     } else if (s === "close") {
       var u = Math.min(1, t / 6), e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2, c3 = doorAt(tg, 30, -14);
       G.cutCam = { p: [lerp(c3[0], -150, e), lerp(tg.dy + 30, 320, e), lerp(c3[1], 230, e)], l: [lerp(tg.door[0], 110, e), lerp(tg.dy + 20, 0, e), lerp(tg.door[1], -60, e)], fov: 54 };
