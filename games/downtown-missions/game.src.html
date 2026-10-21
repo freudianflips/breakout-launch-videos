@@ -1223,7 +1223,7 @@
         else { pose(COMM[0], { x: X - 1.5, y: Y, z: Z - 1.6, yaw: PI / 2, mode: "sit", noShadow: true }); pose(COMM[1], { x: X + 1.5, y: Y, z: Z - 1.6, yaw: -PI / 2, mode: "sit", noShadow: true }); pose(COMM[2], { x: X - 1.5, y: Y, z: Z, yaw: PI / 2, mode: "sit", noShadow: true }); }
         drawScreen("book", cl((t - 8.2) / 3.2), tg); scrTex.needsUpdate = true;
         G.cutCam = t < 3.0 ? { p: [X + 4.8, Y + 2.5, Z + 4.2], l: [X - 0.3, Y + 1.0, Z - 2.4], fov: 54 }
-          : t < 6.0 ? { p: [X + 0.4, Y + 1.5, Z - 0.8], l: [X + 2.55, Y + 1.6, Z - 3.9], fov: 50 }
+          : t < 6.0 ? { p: [X - 0.8, Y + 1.55, Z - 2.2], l: [X + 2.55, Y + 1.6, Z - 3.9], fov: 50 }
           : t < 8.2 ? { p: [X + 1.6, Y + 1.8, Z - 3.6], l: [X - 1.5, Y + 1.1, Z - 0.6], fov: 52 }
           : { p: [X, Y + 1.75, Z - 0.7], l: [X, Y + 1.75, Z - 4.9], fov: 46 };
         subtitles(m2 ? Wd.m2.room : Wd.m1.room, t);
