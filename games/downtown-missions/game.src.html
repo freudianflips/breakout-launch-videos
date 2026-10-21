@@ -187,22 +187,22 @@
   ];
   var FIDI = TARGETS.filter(function (t) { return t.fidi; }), ANTHROPIC = TARGETS[3];
   // the words: real companies, fictional people, visits and meetings
-  function words(a, from, to) { var A = a.name, F = from.name, N = to.name, team = A + " team"; return {
-    m1: { title: "Pizza for the Buying Committee", help: '<span class="v">BREAKOUT:</span> 3 people from ' + A + ' are on the pricing page. Same office. Right now.',
-          mount: 'Get on the <span class="b">scooter</span>.', go: 'Get the pizzas to <span class="y">' + A + '</span>, ' + a.addr + ', before the signal cools.', fail: "The signal went cold. So did the pizza.",
-          intro: [[0.2, 2.6, "BREAKOUT", "Three people from " + A + ". Same office. Pricing page. Right now."], [2.7, 4.9, "CJ", "Three at once? That ain't browsing. That's a buying committee."]],
-          door: [[0.6, 2.3, team, "We didn't order pizza."], [2.3, 4.3, "CJ", "Nah. But y'all opened our pricing page three times."]],
-          room: [[0.3, 3.0, team, "Is this... how sales works now?"], [3.1, 6.0, "CJ", "Old way: forty cold emails. New way: hot pizza, on time."], [6.1, 8.3, "CJ", "Thursday, 2 PM. Bring whoever signs stuff."], [8.4, 10.3, team, "Fine. But you're bringing more pizza."]],
+  function words(a, from, to) { var A = a.name, F = from.name, N = to.name, team = A; return {
+    m1: { title: "Pizza for the Buying Committee", help: '<span class="v">BREAKOUT:</span> 3 people from ' + A + ' are looking at pricing right now. Same office.',
+          mount: 'Get on the <span class="b">scooter</span>.', go: 'Take the pizzas to <span class="y">' + A + '</span>, ' + a.addr + '. Go before they lose interest.', fail: "Too slow. They moved on.",
+          intro: [[0.2, 2.6, "BREAKOUT", "Heads up. Three people from " + A + ", same office, all on the pricing page."], [2.7, 4.9, "CJ", "Three at once? Somebody over there's about to make a decision."]],
+          door: [[0.6, 2.3, team, "Uh, we didn't order pizza."], [2.3, 4.3, "CJ", "I know. I'm CJ, from Breakout. You were just on our site."]],
+          room: [[0.3, 3.0, team, "Okay. You've got ten minutes."], [3.1, 6.0, "CJ", "Your site gets people like you all day. We talk to them before they leave."], [6.1, 8.3, "CJ", "Want to see it properly? Thursday at two?"], [8.4, 10.3, team, "Sure. Bring pizza again, though."]],
           passed: "Meeting booked." },
-    m2: { title: "Tail the Champion", help: '<span class="v">BREAKOUT:</span> Your champion Maya R. just left ' + F + '. Follow her.',
-          alert: [[0.2, 2.9, "BREAKOUT", "Champion on the move: Maya R. just left " + F + "."], [3.0, 5.7, "CJ", "Maya? She opened every email I ever sent. Even the bad ones."]],
-          go: 'Follow <span class="b">Maya</span>. Don\'t get too close.', spotted: "She spotted you. Now it's weird.", lost: "You lost her. And your commission.",
-          intro: [[0.2, 2.4, "CJ", "Box of desk stuff and a plant. Yeah, she's moving on."], [2.5, 4.5, "CJ", "Nice and easy, CJ. Don't be weird about it."]],
-          door: [[0.4, 2.6, "CJ", N + ", " + to.addr + ". New job, same Maya."]],
-          room: [[0.3, 2.8, "Maya", "CJ? I've worked here for four hours."], [2.9, 5.6, "Maya", "Did you... follow my taxi?"], [5.7, 8.3, "CJ", "We call that account-based marketing."], [8.4, 10.3, "Maya", "...Thursday, 2 PM. And bring pizza."]],
+    m2: { title: "Tail the Champion", help: '<span class="v">BREAKOUT:</span> Sarah F. just left ' + F + '. Looks like a new job.',
+          alert: [[0.2, 2.9, "BREAKOUT", "Sarah F. just left " + F + ". Looks like she changed jobs."], [3.0, 5.7, "CJ", "Sarah? She always wrote back. Wonder where she's headed."]],
+          go: 'Follow <span class="b">Sarah</span>. Keep your distance.', spotted: "She saw you. That's awkward.", lost: "You lost her.",
+          intro: [[0.2, 2.4, "CJ", "There's Sarah. Box of stuff, little plant. Yeah, she's leaving."], [2.5, 4.5, "CJ", "Okay. Not too close."]],
+          door: [[0.4, 2.6, "CJ", N + ". Good for her."]],
+          room: [[0.3, 2.8, "Sarah", "CJ? It's literally my first day."], [2.9, 5.6, "CJ", "I heard you moved. Wanted to say congrats."], [5.7, 8.3, "Sarah", "Did you follow my cab here?"], [8.4, 10.3, "CJ", "...So, Thursday at two for your team?"]],
           passed: "New account. Same champion." },
     label1: "Illustrative example: " + A + " (" + a.addr + ") is real. The visitors, the people and the meeting are fictional.",
-    label2: "Illustrative example: " + F + " and " + N + " (" + to.addr + ") are real. Maya R., her move and the meeting are fictional." }; }
+    label2: "Illustrative example: " + F + " and " + N + " (" + to.addr + ") are real. Sarah F., her move and the meeting are fictional." }; }
   var TXT = { signs: { shop: "PIZZA" } };
 
   // ------------------------------------------------------------ the city plan (metres; +x east to the bay, -z up the hill, +z north)
@@ -720,33 +720,63 @@
   function blob(w, d) { var m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), shadowMat); m.rotation.x = -PI / 2; scene.add(m); return m; }
   function lam(hex) { return new THREE.MeshLambertMaterial({ color: hex }); }
   function boxM(mat, sx, sy, sz, x, y, z) { var m = new THREE.Mesh(BOX, mat); m.scale.set(sx, sy, sz); m.position.set(x, y, z); return m; }
-  function person(o) {
+  // people: rounded, jointed bodies (tapered limbs, shoulders, hands, a shaped head with a painted face and hair)
+  var GC = {};
+  function tcyl(rt, rb, hh) { var k = rt + "," + rb + "," + hh; return GC[k] || (GC[k] = new THREE.CylinderGeometry(rt, rb, hh, 12, 2, false, PI)); }
+  var SPH = new THREE.SphereGeometry(1, 18, 14), CAP = new THREE.SphereGeometry(1, 18, 10, 0, 2 * PI, 0, PI * 0.52);
+  function mesh(geo, mat, x, y, z, sx, sy, sz) { var m = new THREE.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); if (sx) m.scale.set(sx, sy, sz); return m; }
+  function rgb(hex, k) { var c = new THREE.Color(hex); c.convertLinearToSRGB(); return "rgb(" + Math.round(c.r * 255 * (k || 1)) + "," + Math.round(c.g * 255 * (k || 1)) + "," + Math.round(c.b * 255 * (k || 1)) + ")"; }
+  // a painted face on the head's sphere: its front (+z) sits at u = 0.25 of the texture
+  function faceTex(o) {
+    var c = document.createElement("canvas"); c.width = 256; c.height = 128; var g = c.getContext("2d"), W = 256, H = 128, fx = W * 0.25;
+    g.fillStyle = rgb(o.skin); g.fillRect(0, 0, W, H);
+    var sh = g.createRadialGradient(fx, H * 0.55, 4, fx, H * 0.55, 70); sh.addColorStop(0, "rgba(255,255,255,0.08)"); sh.addColorStop(1, "rgba(0,0,0,0.18)"); g.fillStyle = sh; g.fillRect(0, 0, W, H);
+    g.fillStyle = rgb(o.hair); g.fillRect(0, 0, W, H * (o.female ? 0.3 : 0.24));
+    if (o.female || o.longHair) { g.fillRect(W * 0.42, 0, W * 0.58, H * 0.72); g.fillRect(0, 0, W * 0.08, H * 0.72); }
+    else { g.fillRect(W * 0.45, 0, W * 0.6, H * 0.42); g.fillRect(0, 0, W * 0.05, H * 0.42); }
+    g.fillStyle = rgb(o.hair, 0.9); g.fillRect(fx - 15, H * 0.4, 11, 2.5); g.fillRect(fx + 4, H * 0.4, 11, 2.5);            // brows
+    g.fillStyle = "#f4f0ea"; g.fillRect(fx - 13, H * 0.45, 8, 4); g.fillRect(fx + 5, H * 0.45, 8, 4);                     // eyes
+    g.fillStyle = "#2a1c14"; g.fillRect(fx - 10.5, H * 0.45, 4, 4); g.fillRect(fx + 7.5, H * 0.45, 4, 4);
+    g.fillStyle = rgb(o.skin, 0.78); g.fillRect(fx - 2.5, H * 0.5, 5, 11);                                               // nose shadow
+    g.fillStyle = rgb(o.skin, 0.62); g.fillRect(fx - 8, H * 0.66, 16, 3);                                                // mouth
+    if (o.female) { g.fillStyle = "rgba(170,60,70,0.55)"; g.fillRect(fx - 8, H * 0.66, 16, 3); }
+    if (o.beard) { g.fillStyle = rgb(o.hair, 0.95); g.fillRect(fx - 9, H * 0.7, 18, 7); g.fillRect(fx - 10, H * 0.62, 20, 2); }
+    var tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; return new THREE.MeshLambertMaterial({ map: tx });
+  }
+  function human(o) {
     var g = new THREE.Group(), body = new THREE.Group(); g.add(body);
-    var top = lam(o.top), bot = lam(o.bottom), skin = lam(o.skin), hair = lam(o.hair), shoe = lam(o.shoes || "#222222"), sleeve = o.bare ? skin : top;
-    var s = o.big ? 1.06 : 1;
-    function leg(x) { var hip = new THREE.Group(); hip.position.set(x, 0.95, 0); body.add(hip);
-      hip.add(boxM(bot, 0.2 * s, 0.48, 0.22 * s, 0, -0.24, 0)); var knee = new THREE.Group(); knee.position.set(0, -0.47, 0); hip.add(knee);
-      knee.add(boxM(bot, 0.18 * s, 0.44, 0.2 * s, 0, -0.22, 0)); knee.add(boxM(shoe, 0.2 * s, 0.1, 0.32, 0, -0.44, 0.06)); return [hip, knee]; }
-    var L = leg(-0.12 * s), Rg = leg(0.12 * s);
-    body.add(boxM(bot, 0.46 * s, 0.14, 0.27 * s, 0, 0.98, 0));
-    body.add(boxM(top, 0.5 * s, o.coat ? 0.8 : 0.56, 0.29 * s, 0, o.coat ? 1.2 : 1.31, 0));
-    if (o.bare) { body.add(boxM(skin, 0.5 * s, 0.1, 0.27 * s, 0, 1.57, 0)); body.add(boxM(skin, 0.18, 0.06, 0.29 * s + 0.005, 0, 1.53, 0)); }
-    body.add(boxM(skin, 0.14, 0.12, 0.14, 0, 1.66, 0));
-    var head = new THREE.Group(); head.position.set(0, 1.81, 0); body.add(head);
-    head.add(boxM(skin, 0.25, 0.28, 0.26, 0, 0, 0));
-    head.add(boxM(hair, 0.265, o.buzz ? 0.05 : 0.1, 0.275, 0, o.buzz ? 0.135 : 0.15, -0.01));
-    if (!o.buzz) head.add(boxM(hair, 0.27, 0.22, 0.08, 0, 0.04, -0.12));
-    head.add(boxM(lam("#1a1210"), 0.05, 0.035, 0.02, -0.06, 0.03, 0.135)); head.add(boxM(lam("#1a1210"), 0.05, 0.035, 0.02, 0.06, 0.03, 0.135));
-    head.add(boxM(lam(darker(o.skin, 0.8)), 0.05, 0.07, 0.05, 0, -0.02, 0.14));
-    if (o.goatee) { head.add(boxM(hair, 0.1, 0.06, 0.03, 0, -0.12, 0.135)); head.add(boxM(hair, 0.14, 0.025, 0.03, 0, -0.07, 0.135)); }
-    if (o.bun) head.add(boxM(hair, 0.14, 0.14, 0.14, 0, 0.12, -0.17));
+    var s = o.big ? 1.05 : 1, f = o.female ? 0.9 : 1, skin = lam(o.skin), top = o.topMat || lam(o.top), bot = o.botMat || lam(o.bottom), shoe = lam(o.shoes || "#222222"), hair = lam(o.hair);
+    var sleeve = o.bare ? skin : top, fore = o.bare || o.short ? skin : top, baggy = o.baggy ? 1.22 : 1;
+    function leg(x, thighM, shinM) { var hip = new THREE.Group(); hip.position.set(x, 0.97, 0); body.add(hip);
+      hip.add(mesh(tcyl(0.1 * s * baggy, 0.083 * s * baggy, 0.48), thighM || bot, 0, -0.24, 0)); hip.add(mesh(SPH, thighM || bot, 0, 0, 0, 0.1 * s * baggy, 0.08, 0.1 * s * baggy));
+      var knee = new THREE.Group(); knee.position.set(0, -0.47, 0); hip.add(knee); knee.add(mesh(SPH, shinM || bot, 0, 0, 0, 0.083 * baggy, 0.08, 0.083 * baggy));
+      knee.add(mesh(tcyl(0.08 * baggy, 0.062 * (o.baggy ? 1.4 : 1), 0.43), shinM || bot, 0, -0.215, 0));
+      knee.add(mesh(SPH, shoe, 0, -0.45, 0.06, 0.07, 0.06, 0.15)); knee.add(mesh(SPH, lam(o.sole || "#dcdcd8"), 0, -0.49, 0.06, 0.072, 0.02, 0.152));
+      return [hip, knee]; }
+    var L = leg(-0.11 * s, o.thighL, o.shinL), Rg = leg(0.11 * s, o.thighR, o.shinR);
+    var pel = mesh(tcyl(0.185 * s * f + (o.female ? 0.02 : 0), 0.19 * s, 0.2), o.waistMat || bot, 0, 1.0, 0); pel.scale.z = 0.7; body.add(pel);
+    var tor = mesh(tcyl(0.225 * s * f, 0.185 * s, 0.56), top, 0, 1.36, 0); tor.scale.z = 0.62; body.add(tor);
+    if (o.coat) { var sk = mesh(tcyl(0.2, 0.235, 0.42), top, 0, 0.9, 0); sk.scale.z = 0.72; body.add(sk); }
+    if (o.female) body.add(mesh(SPH, top, 0, 1.42, 0.08, 0.15, 0.08, 0.06));
+    [-1, 1].forEach(function (k) { body.add(mesh(SPH, sleeve, k * 0.215 * s * f, 1.585, 0, 0.085 * s, 0.075, 0.08)); });
+    body.add(mesh(tcyl(0.052, 0.06, 0.13), skin, 0, 1.68, 0));
+    var head = new THREE.Group(); head.position.set(0, 1.83, 0); body.add(head);
+    head.add(mesh(SPH, o.headMat || faceTex(o), 0, 0, 0, 0.108, 0.128, 0.118));
+    head.add(mesh(SPH, skin, 0, -0.07, 0.035, 0.07, 0.05, 0.07));                                   // jaw
+    head.add(mesh(SPH, lam(darker(o.skin, 0.92)), 0, -0.012, 0.115, 0.018, 0.026, 0.02));          // nose
+    [-1, 1].forEach(function (k) { head.add(mesh(SPH, skin, k * 0.105, 0, -0.005, 0.016, 0.03, 0.02)); });
+    if (!o.bald) head.add(mesh(CAP, hair, 0, 0.012, -0.008, 0.114, 0.135, 0.124));
+    if (o.bun) head.add(mesh(SPH, hair, 0, 0.06, -0.12, 0.055, 0.055, 0.055));
+    if (o.longHair) { var lh = mesh(tcyl(0.1, 0.11, 0.24), hair, 0, -0.08, -0.05); lh.scale.z = 0.7; head.add(lh); }
     function arm(x) { var sh = new THREE.Group(); sh.position.set(x, 1.55, 0); body.add(sh);
-      sh.add(boxM(sleeve, 0.15 * s, 0.34, 0.16 * s, 0, -0.16, 0)); var el = new THREE.Group(); el.position.set(0, -0.33, 0); sh.add(el);
-      el.add(boxM(o.coat ? top : skin, 0.13 * s, 0.3, 0.14 * s, 0, -0.15, 0)); el.add(boxM(skin, 0.12, 0.12, 0.13, 0, -0.34, 0)); return [sh, el]; }
-    var AL = arm(-0.33 * s), AR = arm(0.33 * s);
+      sh.add(mesh(tcyl(0.058 * s, 0.047 * s, 0.31), sleeve, 0, -0.155, 0)); var el = new THREE.Group(); el.position.set(0, -0.31, 0); sh.add(el);
+      el.add(mesh(SPH, fore, 0, 0, 0, 0.047 * s, 0.05, 0.047 * s)); el.add(mesh(tcyl(0.046 * s, 0.036 * s, 0.27), fore, 0, -0.135, 0));
+      el.add(mesh(SPH, skin, 0, -0.3, 0.005, 0.038, 0.06, 0.026)); return [sh, el]; }
+    var AL = arm(-0.255 * s * f), AR = arm(0.255 * s * f);
     scene.add(g);
     return { g: g, body: body, lL: L[0], kL: L[1], lR: Rg[0], kR: Rg[1], aL: AL[0], eL: AL[1], aR: AR[0], eR: AR[1], shadow: blob(0.9, 0.9) };
   }
+  function person(o) { return human(o); }
   // pose: mode walk | stand | ride; carry holds both forearms out
   function pose(p, o) {
     p.g.visible = !o.hidden; p.shadow.visible = !o.hidden && !o.noShadow; if (o.hidden) return;
@@ -765,45 +795,30 @@
     p.shadow.position.set(o.x, h(o.z) + 0.07, o.z);
   }
   function hands(p, fwd) { var y = p.g.position.y + p.body.position.y + 1.18, yaw = p.g.rotation.y; return [p.g.position.x + Math.sin(yaw) * fwd, y, p.g.position.z + Math.cos(yaw) * fwd, yaw]; }
-  // CJ, textured from the reference render (cj.jpg): his face, the tank top, the waistband and belt, baggy jeans, black sneakers
+  // CJ, textured from the reference render (cj.jpg): his face on a rounded head, the tank top, the waistband and belt, baggy jeans, black sneakers
   var CJIMG = new Image(), CJQ = [];
   CJIMG.onload = function () { CJQ.forEach(function (f) { f(); }); }; CJIMG.src = "data:image/jpeg;base64,__CJ__";
-  function cjTex(r, fill, thr) { var c = document.createElement("canvas"); c.width = Math.round(r[2] * 2); c.height = Math.round(r[3] * 2); var tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace;
-    function draw() { var g = c.getContext("2d"); g.drawImage(CJIMG, r[0], r[1], r[2], r[3], 0, 0, c.width, c.height);
-      // the render's white backdrop becomes the part's own colour, so no white edges show round the arms and head
-      var f = new THREE.Color(fill || "#4c3122"), im = g.getImageData(0, 0, c.width, c.height), d = im.data, fr = Math.round(Math.pow(f.r, 1 / 2.2) * 255), fg = Math.round(Math.pow(f.g, 1 / 2.2) * 255), fb = Math.round(Math.pow(f.b, 1 / 2.2) * 255);
-      var t = thr || 168;
-      for (var i = 0; i < d.length; i += 4) { var mn = Math.min(d[i], d[i + 1], d[i + 2]), mxc = Math.max(d[i], d[i + 1], d[i + 2]);
-        if (mn > t && mxc - mn < 34) { d[i] = fr; d[i + 1] = fg; d[i + 2] = fb; } }
-      g.putImageData(im, 0, 0); tx.needsUpdate = true; }
-    if (CJIMG.complete && CJIMG.naturalWidth) draw(); else CJQ.push(draw); return new THREE.MeshLambertMaterial({ map: tx }); }
-  function cjModel() {
-    var g = new THREE.Group(), body = new THREE.Group(); g.add(body);
-    var skin = lam("#4c3122"), hair = lam("#17110e"), jean = lam("#4b6585"), tank = lam("#d3d1cb"), shoe = lam("#1d1d1f");
-    function part(front, side, top, back, sx, sy, sz, x, y, z) { var m = new THREE.Mesh(BOX, [side, side, top || side, top || side, front, back || front]); m.scale.set(sx, sy, sz); m.position.set(x, y, z); return m; }
-    var R = { face: [78, 6, 62, 82], neck: [94, 78, 32, 26], tank: [50, 102, 136, 172], waist: [48, 270, 142, 38],
-              lu: [42, 306, 80, 168], ll: [42, 474, 82, 166], ru: [120, 306, 82, 168], rl: [122, 474, 84, 166], ls: [30, 640, 74, 42], rs: [148, 640, 78, 42],
-              au: [6, 110, 46, 134], af: [0, 244, 48, 134], bu: [186, 110, 46, 134], bf: [190, 244, 48, 134] };
-    function leg(x, u, l, sh) { var hip = new THREE.Group(); hip.position.set(x, 0.98, 0); body.add(hip);
-      var tu = cjTex(R[u], "#4b6585"); hip.add(part(tu, jean, jean, tu, 0.25, 0.5, 0.26, 0, -0.25, 0)); var knee = new THREE.Group(); knee.position.set(0, -0.49, 0); hip.add(knee);
-      var tl = cjTex(R[l], "#4b6585"); knee.add(part(tl, jean, jean, tl, 0.25, 0.44, 0.26, 0, -0.22, 0)); var ts = cjTex(R[sh], "#1d1d1f"); knee.add(part(ts, shoe, shoe, shoe, 0.22, 0.12, 0.34, 0, -0.45, 0.05)); return [hip, knee]; }
-    var L = leg(-0.13, "lu", "ll", "ls"), Rg = leg(0.13, "ru", "rl", "rs");
-    var tw = cjTex(R.waist, "#4c3122", 236); body.add(part(tw, jean, jean, tw, 0.5, 0.17, 0.29, 0, 1.03, 0));
-    var tt = cjTex(R.tank, "#4c3122", 236); body.add(part(tt, tank, tank, tt, 0.48, 0.5, 0.27, 0, 1.36, 0));
-    body.add(part(cjTex(R.neck), skin, skin, skin, 0.13, 0.12, 0.13, 0, 1.66, 0));
-    var head = new THREE.Group(); head.position.set(0, 1.83, 0); body.add(head);
-    head.add(part(cjTex(R.face), skin, hair, skin, 0.25, 0.29, 0.26, 0, 0, 0));
-    function arm(x, u, f) { var sh = new THREE.Group(); sh.position.set(x, 1.57, 0); body.add(sh);
-      var ta = cjTex(R[u]); sh.add(part(ta, skin, skin, ta, 0.14, 0.34, 0.15, 0, -0.16, 0)); var el = new THREE.Group(); el.position.set(0, -0.33, 0); sh.add(el);
-      var tf = cjTex(R[f]); el.add(part(tf, skin, skin, tf, 0.13, 0.36, 0.14, 0, -0.18, 0)); return [sh, el]; }
-    var AL = arm(-0.31, "au", "af"), AR = arm(0.31, "bu", "bf");
-    scene.add(g);
-    return { g: g, body: body, lL: L[0], kL: L[1], lR: Rg[0], kR: Rg[1], aL: AL[0], eL: AL[1], aR: AR[0], eR: AR[1], shadow: blob(0.9, 0.9) };
+  function keyWhite(g, w, hh, fill, thr) {          // the render's white backdrop becomes the part's own colour
+    var f = new THREE.Color(fill); f.convertLinearToSRGB(); var im = g.getImageData(0, 0, w, hh), d = im.data, fr = f.r * 255, fg = f.g * 255, fb = f.b * 255, t = thr || 168;
+    for (var i = 0; i < d.length; i += 4) { var mn = Math.min(d[i], d[i + 1], d[i + 2]), mxc = Math.max(d[i], d[i + 1], d[i + 2]); if (mn > t && mxc - mn < 34) { d[i] = fr; d[i + 1] = fg; d[i + 2] = fb; } }
+    g.putImageData(im, 0, 0);
   }
-  var heroM = cjModel();
-  var champM = person({ top: "#d9773a", bottom: "#343a52", skin: "#e3b593", hair: "#5a3520", shoes: "#3b2a22", coat: true, bun: true });
-  var COMM = [person({ top: "#2f5f8f", bottom: "#2b2b30", skin: "#c48d68", hair: "#2a1d14" }), person({ top: "#e7e2d8", bottom: "#3a3550", skin: "#8a5a3c", hair: "#121010", shoes: "#5a4030", coat: true }),
-              person({ top: "#7a3b5e", bottom: "#2e3440", skin: "#f0c8a8", hair: "#b38a52", bun: true })];
+  // wrap a crop round a cylinder: the front half shows the crop, the back half shows it again (front at u = 0.5)
+  function cjWrap(r, fill, thr) { var c = document.createElement("canvas"); c.width = 512; c.height = 256; var tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace;
+    function draw() { var g = c.getContext("2d"); g.fillStyle = rgb(fill); g.fillRect(0, 0, 512, 256);
+      g.drawImage(CJIMG, r[0], r[1], r[2], r[3], 128, 0, 256, 256); g.drawImage(CJIMG, r[0], r[1], r[2], r[3], 384, 0, 256, 256); g.drawImage(CJIMG, r[0], r[1], r[2], r[3], -128, 0, 256, 256);
+      keyWhite(g, 512, 256, fill, thr); tx.needsUpdate = true; }
+    if (CJIMG.complete && CJIMG.naturalWidth) draw(); else CJQ.push(draw); return new THREE.MeshLambertMaterial({ map: tx }); }
+  function cjHead() { var c = document.createElement("canvas"); c.width = 256; c.height = 128; var tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace;
+    function draw() { var g = c.getContext("2d"); g.fillStyle = rgb("#4c3122"); g.fillRect(0, 0, 256, 128); g.fillStyle = rgb("#17110e"); g.fillRect(0, 0, 256, 26); g.fillRect(120, 0, 136, 52); g.fillRect(0, 0, 12, 52);
+      g.drawImage(CJIMG, 82, 14, 56, 70, 64 - 30, 22, 60, 82); keyWhite(g, 256, 128, "#4c3122"); tx.needsUpdate = true; }
+    if (CJIMG.complete && CJIMG.naturalWidth) draw(); else CJQ.push(draw); return new THREE.MeshLambertMaterial({ map: tx }); }
+  var heroM = human({ skin: "#4c3122", hair: "#17110e", shoes: "#1b1b1d", sole: "#e8e8e4", big: true, bare: true, baggy: true, bald: true, headMat: cjHead(),
+    topMat: cjWrap([50, 102, 136, 172], "#4c3122", 236), waistMat: cjWrap([48, 270, 142, 38], "#4b6585", 236),
+    thighL: cjWrap([42, 306, 80, 168], "#4b6585"), shinL: cjWrap([42, 474, 82, 166], "#4b6585"), thighR: cjWrap([120, 306, 82, 168], "#4b6585"), shinR: cjWrap([122, 474, 84, 166], "#4b6585") });
+  var champM = human({ top: "#d9773a", bottom: "#343a52", skin: "#e3b593", hair: "#5a3520", shoes: "#3b2a22", coat: true, female: true, longHair: true });
+  var COMM = [human({ top: "#2f5f8f", bottom: "#2b2b30", skin: "#c48d68", hair: "#2a1d14", beard: true }), human({ top: "#e7e2d8", bottom: "#3a3550", skin: "#8a5a3c", hair: "#121010", shoes: "#5a4030", coat: true }),
+              human({ top: "#7a3b5e", bottom: "#2e3440", skin: "#f0c8a8", hair: "#b38a52", female: true, bun: true })];
   var PEDC = [["#3b5b8c", "#2a2a2a"], ["#8c3b3b", "#3a3a48"], ["#d6d0c4", "#4a4a52"], ["#3f6b45", "#2b2b30"], ["#c79a3c", "#2e2e36"], ["#5a4a7a", "#22222a"], ["#202024", "#5a5a62"], ["#b06a8a", "#33333a"]];
   var SKINS = ["#f1c7a4", "#d9a07a", "#a8724e", "#7a4a30", "#5a3522", "#e8b890"];
   var PEDS = [], PED_LINES = [];
@@ -812,7 +827,8 @@
   for (var pj = 0; pj < 10; pj++) { var xq = -60 + rnd(pj + 31) * 220; if (Math.abs(xq - 30) < 16) xq += 34; PED_LINES.push({ a: [xq, -190.6], b: [xq + 16, -190.6], v: 1.2, off: rnd(pj + 7) * 30 }); }
   for (var pk = 0; pk < 8; pk++) { var zq = -150 + rnd(pk + 41) * 140; PED_LINES.push({ a: [-11.4, zq], b: [-11.4, zq + 20], v: 1.0, off: pk * 5 }); }
   PED_LINES.forEach(function (L, i) { var c = PEDC[i % PEDC.length];
-    PEDS.push(person({ top: c[0], bottom: c[1], skin: SKINS[i % SKINS.length], hair: rnd(i + 3) > 0.5 ? "#2a1d14" : "#6a4a2a", coat: rnd(i + 5) > 0.7, bun: rnd(i + 6) > 0.75 })); });
+    var fem = rnd(i + 6) > 0.55; PEDS.push(human({ top: c[0], bottom: c[1], skin: SKINS[i % SKINS.length], hair: ["#2a1d14", "#6a4a2a", "#141010", "#b38a52"][Math.floor(rnd(i + 3) * 4)],
+      coat: rnd(i + 5) > 0.7, female: fem, longHair: fem && rnd(i + 8) > 0.4, bun: fem && rnd(i + 8) <= 0.4, beard: !fem && rnd(i + 9) > 0.7, short: rnd(i + 11) > 0.6 })); });
   function poseP(p, L, t) {
     var len = Math.hypot(L.b[0] - L.a[0], L.b[1] - L.a[1]), d = (t * L.v + L.off) % (2 * len), back = d > len, u = back ? 2 - d / len : d / len;
     var x = lerp(L.a[0], L.b[0], u), z = lerp(L.a[1], L.b[1], u), dx = (L.b[0] - L.a[0]) * (back ? -1 : 1), dz = (L.b[1] - L.a[1]) * (back ? -1 : 1);
@@ -1133,7 +1149,7 @@
       var pulse = 1 + 0.08 * Math.sin(u * 12); rr(244, 152, 124, 36, 18); sg.fillStyle = "#4c00ff"; sg.fill(); sg.fillStyle = "#ffffff"; sg.font = "800 17px Manrope, Arial"; sg.fillText("SIGNAL", 274, 176);
       sg.beginPath(); sg.arc(780, 170, 12 * pulse, 0, 2 * PI); sg.fillStyle = "#ff5ad1"; sg.fill();
       sg.fillStyle = "#040405"; sg.font = "800 40px Manrope, Arial"; sg.fillText("Champion on the move", 244, 244);
-      [["Person", "Maya R."], ["Left", G.from.name], ["Heading to", u > 0.6 ? "Finding out..." : "..."]].forEach(function (r, i) { var y = 310 + i * 52;
+      [["Person", "Sarah F."], ["Left", G.from.name], ["Heading to", u > 0.6 ? "Unknown" : "..."]].forEach(function (r, i) { var y = 310 + i * 52;
         sg.fillStyle = "#5c5850"; sg.font = "600 24px Manrope, Arial"; sg.fillText(r[0], 244, y); sg.fillStyle = "#040405"; sg.font = "700 26px Manrope, Arial"; sg.fillText(r[1], 430, y); });
       return;
     }
@@ -1152,7 +1168,7 @@
         if (c > 0) sg.lineTo(W / 2 - 42 + 30 * Math.min(1, c * 2), 318 + 30 * Math.min(1, c * 2)); if (c > 0.5) sg.lineTo(W / 2 - 12 + 64 * (c - 0.5) * 2, 348 - 72 * (c - 0.5) * 2); sg.stroke();
         rr(W / 2 - 270, 396, 540, 112, 16); sg.fillStyle = "rgba(255,255,255,0.97)"; sg.fill(); drawLogo("mark", W / 2 - 246, 422, 60);
         sg.fillStyle = "#040405"; sg.font = "800 26px Manrope, Arial"; sg.fillText("Breakout × " + t.name, W / 2 - 168, 448);
-        sg.fillStyle = "#5c5850"; sg.font = "600 22px Manrope, Arial"; sg.fillText("Thursday, 2:00 PM · " + (G.roomKind === "m2" ? "Maya R. and team" : "3 attendees"), W / 2 - 168, 484);
+        sg.fillStyle = "#5c5850"; sg.font = "600 22px Manrope, Arial"; sg.fillText("Thursday, 2:00 PM · " + (G.roomKind === "m2" ? "Sarah F. and team" : "3 attendees"), W / 2 - 168, 484);
         sg.globalAlpha = 1; }
     }
   }

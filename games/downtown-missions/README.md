@@ -5,7 +5,7 @@ A playable browser game in the San Andreas style, starring CJ as an SDR: ride an
 | Mission | The move | Signal | Win | Lose |
 |---|---|---|---|---|
 | Pizza for the Buying Committee | Speed: act before the signal cools | 3 visitors from 1 office | Reach the target's door before the SIGNAL meter runs out (about 60 s) | The meter empties: "The signal went cold." |
-| Tail the Champion | Patience: follow her from her old office to her new one | Your champion just changed jobs | Follow her taxi from her old company to Anthropic, staying between 9 m and 80 m | Too close for 3 s: "She spotted you." More than 80 m for 4 s: "You lost her." |
+| Tail the Champion | Patience: follow her from her old office to her new one | Your champion just changed jobs | Follow her cab from her old company to Anthropic, staying between 9 m and 80 m | Too close for 3 s: "She spotted you." More than 80 m for 4 s: "You lost her." |
 
 Pick a mission (or free roam) from the menu at the start. After a mission, the city lights violet and the Breakout wordmark comes up, with "Play again" or "Keep driving".
 
@@ -20,15 +20,15 @@ Every run mixes up the accounts: mission 1 sends the pizzas to one of the Financ
 | Figma | 760 Market St | On Market Street near Union Square | Mission 1 target, or the champion's old company |
 | Anthropic | 500 Howard St | South of Market, next to Salesforce Tower | The champion's new company |
 
-The visits, the people (the committee, Maya R.), Maya's move and the meetings are fictional, and the game says so on screen. Naming a real company as the champion's old employer can read as saying it was a Breakout customer; it is labelled as fiction, but check before anything public.
+The visits, the people (the committee, Sarah F.), Sarah's move and the meetings are fictional, and the game says so on screen. Naming a real company as the champion's old employer can read as saying it was a Breakout customer; it is labelled as fiction, but check before anything public.
 
 Traffic includes Waymos (their sensor dome spins), Muni buses, taxis, SFPD cars, SUVs and pickups.
 
 ## The story, with the SDR cutscenes
 
-1. **Pizza for the Buying Committee:** 3 people from the account are on the pricing page, so CJ rides the pizzas to its door before the signal cools. "We didn't order pizza." "Nah. But y'all opened our pricing page three times." Upstairs he books the meeting live on Breakout's booking screen.
-2. **The alert:** at CJ's desk, Breakout flags "Champion on the move: Maya R. just left" the old company.
-3. **Tail the Champion:** CJ follows her taxi to Anthropic. "Did you... follow my taxi?" "We call that account-based marketing." He books her team on the screen.
+1. **Pizza for the Buying Committee:** three people from the account are looking at pricing, so CJ takes them pizza before they lose interest. "Uh, we didn't order pizza." "I know. I'm CJ, from Breakout. You were just on our site." Upstairs he books the meeting live on Breakout's booking screen.
+2. **The alert:** at CJ's desk, Breakout flags that Sarah F. just left her company.
+3. **Tail the Champion:** CJ follows her cab to Anthropic. "CJ? It's literally my first day." "Did you follow my cab here?" "...So, Thursday at two for your team?"
 
 ## Play
 
