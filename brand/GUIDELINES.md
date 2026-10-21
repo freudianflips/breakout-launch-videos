@@ -64,6 +64,7 @@ Never show a competitor's name or logo, with one exception: the ABM templates ma
 | Split screen, low on text, the user experience side by side | `abm-split` | Requested by the owner; awaiting a verdict |
 | Cartoon story: simple, colourful characters, the agent as a friendly violet character | `cartoon` | Rejected ("This animation style is bad. The story is also too b2b"). Kept for reference only |
 | Dot matrix: a dark halftone grid; the visitor and Breakout as blooms of dots that ripple, follow and blend; wordless | [`dot-matrix`](../templates/dot-matrix/README.md) | Chosen from the abstract reel ("Use the dot matrix style"); v2 awaiting a verdict. Motion snaps on the beat ("very cool snappy motion"); upbeat swing, never downbeat ("too downbeat. Make the whole thing upbeat"); captions small and precise |
+| Open world: a 2004-era open-world game homage, low-poly downtown SF, a radar that is Breakout, one mission per signal | [`open-world`](../templates/open-world/README.md) | Asked for by the owner ("It has to look and feel like GTA San Andreas"); built as the genre, never the game; draft awaiting a verdict |
 | Voice-led Apple-style launch | `voice-led` | The kit's base; not yet judged |
 | Analog, vintage, psychedelic | `analog-psych` | Rejected for product launches ("more modern, more unexpected"); kept as a style to draw on |
 

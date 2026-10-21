@@ -1,0 +1,56 @@
+{
+  "about": "Open world: a 2004-era open-world crime game homage (the genre, never the game). A low-poly downtown San Francisco built in three.js, a third-person hero, a radar that is Breakout, mission titles, objective text and a big mission-passed state. Each mission teaches one buying signal and the move that wins it. Example: two missions, Pizza for the Buying Committee (speed) and Tail the Champion (patience). Times in bars at 92 BPM (1 bar = 2.609 s).",
+  "bpm": 92,
+  "bars": 17,
+  "brand": "../../brand",
+  "status": "DRAFT: brand/brand.json is not reviewed; the two signals are not yet confirmed as product claims",
+  "at": {
+    "open": 0,
+    "m1_title": 1.5,
+    "m1_start": 3,
+    "ride": 4,
+    "m1_pass": 6.5,
+    "m2_title": 8,
+    "tail": 9.5,
+    "night": 10.75,
+    "morning": 12,
+    "m2_pass": 13,
+    "close": 15,
+    "end": 17
+  },
+  "hero": "the rep",
+  "missions": [
+    {
+      "title": "Pizza for the Buying Committee",
+      "help": ["BREAKOUT: 3 visitors.", "1 office. Right now."],
+      "objective": ["Get there before the ", "signal", " cools."],
+      "meter": "SIGNAL",
+      "passed": "MISSION PASSED!",
+      "result": "Meeting booked."
+    },
+    {
+      "title": "Tail the Champion",
+      "help": ["PAGER: Your champion", "just changed jobs."],
+      "objective": ["Follow the ", "champion", ". Don't get too close."],
+      "meter": "DISTANCE",
+      "too_close": "TOO CLOSE",
+      "passed": "MISSION PASSED!",
+      "result": "New account. Same champion."
+    }
+  ],
+  "labels": {
+    "committee": "Illustrative example: Northwind, 3 visitors from 1 office",
+    "champion": "Illustrative example: Maya R., your champion",
+    "new_account": "Illustrative example: Maya R., now at Halcyon"
+  },
+  "signs": { "committee": "NORTHWIND", "new_account": "HALCYON", "shop": "PIZZA" },
+  "days": [["MON", "18:40"], ["WED", "21:15"], ["FRI", "08:05"]],
+  "lockup": { "line": "Pageview to *pipeline.*" },
+  "colors": {
+    "violet": "#4c00ff",
+    "lilac": "#be79ff",
+    "pink": "#ff5ad1",
+    "ink": "#140b3c"
+  },
+  "music": { "file": "score/score.wav", "make": "score.py", "gain_db": -1, "fade_out": 1.2 }
+}

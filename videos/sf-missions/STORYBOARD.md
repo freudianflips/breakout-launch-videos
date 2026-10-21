@@ -1,6 +1,6 @@
 # Storyboard: "Downtown missions" (DRAFT)
 
-**Status:** draft for the owner's review, not approved. No frames are made until it is. About 45 s at 92 BPM (1 bar = 2.61 s), 17 bars. A G-funk bed throughout, our own composition. Every company and person is fictional and labelled "Illustrative example".
+**Status:** built as a draft at the owner's request ("I want you to build the game simulation"); the open questions in BRIEF.md still stand. 44.3 s at 92 BPM (1 bar = 2.61 s), 17 bars. As built, the tail runs Monday dusk on Market, Wednesday night behind her cable car up the hill, and Friday morning across from her new office; the light follows the game clock. A G-funk bed throughout, our own composition. Every company and person is fictional and labelled "Illustrative example".
 
 ## Decisions to make first
 
@@ -11,7 +11,7 @@
 ## Frame 1: Downtown, the radar wakes
 
 - bars: 0 to 1.5 (0 to 3.9 s)
-- scene: Low-poly aerial over downtown SF at golden hour, smog haze, the camera drifting down Market Street. The HUD clicks on piece by piece: radar bottom left, clock and money top right. The radar's b-disc lights violet.
+- scene: Low-poly aerial over downtown SF at golden hour, smog haze, the camera drifting down Market Street. The HUD clicks on piece by piece: radar bottom left (Breakout's b-disc rides its rim), clock, health bar and wanted stars top right. The radar's b-disc lights violet.
 - continuity_in: the camera already moving from frame 1
 - continuity_out: the radar sweeps; a blip appears
 - signature: world-pass
@@ -68,7 +68,7 @@
 ## Frame 7: Don't lose them
 
 - bars: 9.5 to 13 (24.8 to 33.9 s)
-- scene: The champion leaves the old office carrying a box. Yellow text: "Follow them. Don't get too close." A distance meter on the HUD. The hero follows on foot, then by car, across days: the HUD clock jumps (Mon, Wed, Fri), streetlights on, then morning. The violet blip never leaves the radar: Breakout keeps tracking. Each time the meter says "Too close", the hero eases off.
+- scene: The champion leaves the old office carrying a box. Yellow text: "Follow them. Don't get too close." A distance meter on the HUD. The hero follows on foot (Monday dusk), then on the moped behind her cable car up the hill (Wednesday night), then watches from across the street (Friday morning): the HUD clock jumps and the light follows it. The violet blip never leaves the radar: Breakout keeps tracking. Each time the meter says "Too close", the hero eases off.
 - continuity_in: the blip on the radar becomes the champion in the street
 - continuity_out: the champion walking up to a new tower
 - signature: branch-and-pulse (the radar pulse every bar, Breakout listening)
