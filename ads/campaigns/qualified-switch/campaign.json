@@ -524,7 +524,7 @@
     },
     {
       "id": "QSW-006",
-      "status": "draft",
+      "status": "approved",
       "round": "s3",
       "concept": "hours",
       "angle": "go-live",
@@ -936,7 +936,7 @@
     },
     {
       "id": "QSW-020",
-      "status": "draft",
+      "status": "approved",
       "round": "s3",
       "concept": "project-plan",
       "angle": "go-live",
@@ -1221,7 +1221,7 @@
     },
     {
       "id": "QSW-028",
-      "status": "draft",
+      "status": "approved",
       "round": "s3",
       "concept": "review",
       "angle": "go-live",
@@ -1320,7 +1320,7 @@
     },
     {
       "id": "QSW-031",
-      "status": "draft",
+      "status": "approved",
       "round": "s3",
       "concept": "fortune",
       "angle": "contract",
@@ -1814,7 +1814,7 @@
     },
     {
       "id": "QSW-054",
-      "status": "draft",
+      "status": "approved",
       "round": "s2",
       "concept": "vs-team",
       "angle": "headcount",
@@ -1841,7 +1841,7 @@
     },
     {
       "id": "QSW-055",
-      "status": "draft",
+      "status": "approved",
       "round": "s2",
       "concept": "vs-roadmap",
       "angle": "vendor",
@@ -1868,7 +1868,7 @@
     },
     {
       "id": "QSW-056",
-      "status": "draft",
+      "status": "approved",
       "round": "s2",
       "concept": "vs-value",
       "angle": "outcome",
@@ -1895,7 +1895,7 @@
     },
     {
       "id": "QSW-057",
-      "status": "draft",
+      "status": "approved",
       "round": "s3",
       "concept": "switch-list",
       "angle": "go-live",
@@ -1923,7 +1923,7 @@
     },
     {
       "id": "QSW-058",
-      "status": "draft",
+      "status": "approved",
       "round": "s3",
       "concept": "knowledge-base",
       "angle": "go-live",
@@ -1949,7 +1949,7 @@
     },
     {
       "id": "QSW-059",
-      "status": "draft",
+      "status": "approved",
       "round": "s3",
       "concept": "send-contract",
       "angle": "contract",
@@ -1977,7 +1977,7 @@
     },
     {
       "id": "QSW-060",
-      "status": "draft",
+      "status": "approved",
       "round": "s1",
       "concept": "dictionary",
       "angle": "humour",
@@ -2002,7 +2002,7 @@
     },
     {
       "id": "QSW-061",
-      "status": "draft",
+      "status": "approved",
       "round": "s1",
       "concept": "dont-settle",
       "angle": "humour",
@@ -2031,7 +2031,7 @@
     },
     {
       "id": "QSW-062",
-      "status": "draft",
+      "status": "approved",
       "round": "s1",
       "concept": "break-out",
       "angle": "humour",
@@ -2054,7 +2054,7 @@
     },
     {
       "id": "QSW-063",
-      "status": "draft",
+      "status": "approved",
       "round": "s1",
       "concept": "qualified-success",
       "angle": "outcome",
@@ -2077,7 +2077,7 @@
     },
     {
       "id": "QSW-064",
-      "status": "draft",
+      "status": "approved",
       "round": "s1",
       "concept": "under-qualified",
       "angle": "headcount",
@@ -2106,7 +2106,7 @@
     },
     {
       "id": "QSW-065",
-      "status": "draft",
+      "status": "approved",
       "round": "s1",
       "concept": "dictionary",
       "angle": "humour",
@@ -2131,7 +2131,7 @@
     },
     {
       "id": "QSW-066",
-      "status": "draft",
+      "status": "approved",
       "round": "s2",
       "concept": "vs-person",
       "angle": "identify",
@@ -2158,7 +2158,7 @@
     },
     {
       "id": "QSW-067",
-      "status": "draft",
+      "status": "approved",
       "round": "s2",
       "concept": "vs-linkedin",
       "angle": "follow-up",
@@ -2185,7 +2185,7 @@
     },
     {
       "id": "QSW-068",
-      "status": "draft",
+      "status": "approved",
       "round": "s2",
       "concept": "vs-signals",
       "angle": "signals",
@@ -2212,7 +2212,7 @@
     },
     {
       "id": "QSW-069",
-      "status": "draft",
+      "status": "approved",
       "round": "s2",
       "concept": "vs-setup",
       "angle": "go-live",
@@ -2311,9 +2311,6 @@
     "loaded": [
       "QSW-005"
     ],
-    "to_delete_on_linkedin": [
-      "QSW-011",
-      "QSW-013"
-    ]
+    "to_delete_on_linkedin": []
   }
 }
