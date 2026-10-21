@@ -106,7 +106,7 @@
   <div id="hud">
     <div id="icon">
       <svg id="icPizza" viewBox="0 0 100 100"><path d="M18 22 Q50 6 82 22 L50 92 Z" fill="#f3c24f" stroke="#000" stroke-width="5" stroke-linejoin="round"/><path d="M18 22 Q50 6 82 22 L78 31 Q50 17 22 31 Z" fill="#c98a3a" stroke="#000" stroke-width="4"/><circle cx="44" cy="42" r="7" fill="#c8342b"/><circle cx="60" cy="52" r="6" fill="#c8342b"/><circle cx="49" cy="66" r="5" fill="#c8342b"/></svg>
-      <svg id="icPager" viewBox="0 0 100 100" hidden><rect x="16" y="26" width="68" height="50" rx="8" fill="#2b2b33" stroke="#000" stroke-width="5"/><rect x="25" y="35" width="50" height="20" fill="#9fd6a8" stroke="#000" stroke-width="3"/><circle cx="34" cy="65" r="4" fill="#be79ff"/><circle cx="50" cy="65" r="4" fill="#ddd"/><circle cx="66" cy="65" r="4" fill="#ddd"/></svg>
+      <svg id="icPager" viewBox="0 0 100 100" style="display:none"><rect x="16" y="26" width="68" height="50" rx="8" fill="#2b2b33" stroke="#000" stroke-width="5"/><rect x="25" y="35" width="50" height="20" fill="#9fd6a8" stroke="#000" stroke-width="3"/><circle cx="34" cy="65" r="4" fill="#be79ff"/><circle cx="50" cy="65" r="4" fill="#ddd"/><circle cx="66" cy="65" r="4" fill="#ddd"/></svg>
     </div>
     <div id="day" class="ol">THU</div>
     <div id="clock" class="ol">18:05</div>
@@ -828,6 +828,7 @@
   function setLabel(s) { if (!s) { label.hidden = true; return; } label.querySelector("span").textContent = s; label.hidden = false; }
   function showPass(top, line, fail) { pass.className = fail ? "fail" : ""; pass.querySelector("b").textContent = top; pass.querySelector("span").textContent = line; pass.hidden = false;
     var b = pass.querySelector("b"); b.style.animation = "none"; void b.offsetWidth; b.style.animation = ""; }
+  function setIcon(w) { $("icPizza").style.display = w === "pizza" ? "" : "none"; $("icPager").style.display = w === "pager" ? "" : "none"; }
   function cut(on) { $("game").classList.toggle("cut", !!on); }
   function fadeTo(fn) { $("fade").classList.add("on"); setTimeout(function () { fn(); $("fade").classList.remove("on"); }, 650); }
   function enter(state) { G.state = state; G.st = 0; }
@@ -845,7 +846,7 @@
     if (G.state === "fail" && G.st > 1.2 && (k === "enter" || k === " ")) retry();
   }
   $("titleScreen").addEventListener("click", start);
-  $("again").addEventListener("click", function () { $("endScreen").hidden = true; G.done = { m1: false, m2: false }; G.gm = 3 * 1440 + 18 * 60 + 5; G.rate = 1; fadeTo(function () { placeHeroAtShop(); G.control = true; enter("free"); setHelp(TXT.m1.help); setObj(TXT.m1.start); setLabel(TXT.label.m1); }); });
+  $("again").addEventListener("click", function () { $("endScreen").hidden = true; G.done = { m1: false, m2: false }; G.gm = 3 * 1440 + 18 * 60 + 5; G.rate = 1; fadeTo(function () { placeHeroAtShop(); setIcon("pizza"); G.control = true; enter("free"); setHelp(TXT.m1.help); setObj(TXT.m1.start); setLabel(TXT.label.m1); }); });
   $("roam").addEventListener("click", function () { $("endScreen").hidden = true; G.roam = true; G.control = true; cut(false); enter("roam"); setHelp(["BREAKOUT", " Every signal is a mission. Drive around."]); setObj(null); setLabel(null); });
   function fail(reason) { G.control = false; SFX.fail(); showPass("MISSION FAILED!", reason, true); setObj("Press <span class=\"hi\">Enter</span> or tap to retry."); enter("fail"); G.failOf = G.mission; }
   $("game").addEventListener("pointerdown", function (e) { if (G.state === "fail" && G.st > 1.2 && e.target.tagName !== "BUTTON") retry(); });
@@ -856,7 +857,7 @@
     G.gm = 7 * 1440 + 18 * 60 + 40; G.rate = 2.4; taxi.g.visible = taxi.shadow.visible = true; TX.s = 0; TX.v = 0; TX.done = false;
     P.onMoped = true; MP.x = 232; MP.z = 9.6; MP.yaw = -PI / 2; MP.speed = 0; MP.air = false; MP.y = 0; MP.vyG = 0; look.yaw = 0; camYawS = MP.yaw; snapCam = true;
     G.champ = { x: 210, z: 20.4, walk: 0, inTaxi: false, gone: false }; G.mission = 2; G.sus = 0; G.lost = 0; G.control = false; cut(true);
-    setHelp(TXT.m2.help); setLabel(TXT.label.m2); setObj(null); mtitle.textContent = TXT.m2.title; mtitle.hidden = false; $("icPizza").hidden = true; $("icPager").hidden = false; SFX.pager(); enter("m2intro");
+    setHelp(TXT.m2.help); setLabel(TXT.label.m2); setObj(null); mtitle.textContent = TXT.m2.title; mtitle.hidden = false; setIcon("pager"); SFX.pager(); enter("m2intro");
   }
 
   function step(dt) {
