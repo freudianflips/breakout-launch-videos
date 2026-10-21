@@ -103,7 +103,10 @@ class Lint(unittest.TestCase):
 class Verify(unittest.TestCase):
     def test_compare_finds_matches_and_mistakes(self):
         camp = copy.deepcopy(ads.load("qualified-switch"))
-        p = ads.plan("qualified-switch", camp, False, 1)
+        for a in camp["ads"]:
+            if a.get("round") == "s2":
+                a["status"] = "approved"
+        p = ads.plan("qualified-switch", camp, False, "s2")
         pc = p["campaigns"][0]
         live_c = [{"id": 7, "name": pc["name"], "status": "DRAFT", "objectiveType": p["objective"],
                    "dailyBudget": {"amount": "25"}, "targetingCriteria": {"include": {"and": [{"or": {"urn:li:adTargetingFacet:audienceMatchingSegments": ["x"]}}]}}}]

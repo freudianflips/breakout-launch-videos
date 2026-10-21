@@ -267,7 +267,7 @@
       "competitive": true
     },
     {
-      "text": "Person-level de-anonymization: Yes, waterfall through multiple data providers (Breakout); No — account-level only (Qualified)",
+      "text": "Person-level de-anonymization: Yes, waterfall through multiple data providers (Breakout); No, account-level only (Qualified)",
       "source": "https://getbreakout.ai/compare/qualified-alternative",
       "checked": "2026-10-21",
       "competitive": true,
