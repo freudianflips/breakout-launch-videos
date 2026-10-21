@@ -9,7 +9,7 @@ Plain guidance for making launch films you can publish. It is not legal advice. 
 - Check every generated face for a likeness to anyone famous. Regenerate rather than "fix".
 - Only clone a voice you own or have written permission to use.
 - The scratch voice is for timing only. System voices (macOS `say`) are licensed for personal, non-commercial use, so never publish a film with a scratch take in it; record or generate the real narrator first.
-- Open-weight voices whose licence allows commercial use are publishable. Kokoro-82M (Apache 2.0, weights and voices) speaks CJ and Sarah in [`games/downtown-missions`](../games/downtown-missions/README.md). Its preset voices are not cloned from anyone you need permission from, but check its model card before a paid campaign.
+- Open-weight voices whose licence allows commercial use are publishable. In [`games/downtown-missions`](../games/downtown-missions/README.md), Chatterbox (MIT) speaks every character, cloned from Kokoro-82M preset voices (Apache 2.0), so no real person's voice is cloned. Check both model cards before a paid campaign.
 
 ## Footage, films and music
 

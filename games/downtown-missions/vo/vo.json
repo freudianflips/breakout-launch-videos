@@ -1,102 +1,142 @@
 {
- "CJ|Sarah? She opened every email I ever sent. Even the bad ones.": {
-  "file": "b3461e1706.mp3",
+ "Team|Uh, we didn't order pizza.": {
+  "file": "2a075b978f.mp3",
+  "d": 1.44,
+  "voice": "team"
+ },
+ "CJ|I know. I'm CJ, from Breakout. You were just on our site.": {
+  "file": "bed252d849.mp3",
   "d": 3.576,
-  "voice": "am_fenrir"
+  "voice": "cj"
  },
- "CJ|Box of desk stuff and a plant. Yeah, she's moving on.": {
-  "file": "5af26ed057.mp3",
-  "d": 3.12,
-  "voice": "am_fenrir"
+ "Team|Okay. You've got ten minutes.": {
+  "file": "fe39e08e44.mp3",
+  "d": 1.728,
+  "voice": "team"
  },
- "CJ|Nice and easy, CJ. Don't be weird about it.": {
-  "file": "89b670f006.mp3",
-  "d": 2.52,
-  "voice": "am_fenrir"
+ "CJ|Your site gets people like you all day. We talk to them before they leave.": {
+  "file": "bc4f602364.mp3",
+  "d": 4.776,
+  "voice": "cj"
  },
- "CJ|Anthropic, 500 Howard St. New job, same Sarah.": {
-  "file": "cc11ff8f71.mp3",
-  "d": 3.552,
-  "voice": "am_fenrir"
+ "CJ|Want to see it properly? Thursday at two?": {
+  "file": "7387f65fec.mp3",
+  "d": 2.496,
+  "voice": "cj"
+ },
+ "Team|Sure. Bring pizza again, though.": {
+  "file": "34b656258f.mp3",
+  "d": 1.944,
+  "voice": "team"
  },
  "Sarah|CJ? I've worked here for four hours.": {
   "file": "82112c8d7a.mp3",
-  "d": 2.232,
-  "voice": "af_heart"
+  "d": 2.424,
+  "voice": "sarah"
  },
  "CJ|And they already gave you a conference room. Big moves.": {
   "file": "e73dd2a990.mp3",
-  "d": 2.952,
-  "voice": "am_fenrir"
+  "d": 3.504,
+  "voice": "cj"
  },
  "Sarah|Did you... follow my taxi?": {
   "file": "16e7539589.mp3",
-  "d": 1.68,
-  "voice": "af_heart"
+  "d": 1.416,
+  "voice": "sarah"
  },
  "CJ|We call that account-based marketing.": {
   "file": "0ee800371c.mp3",
-  "d": 1.752,
-  "voice": "am_fenrir"
+  "d": 2.256,
+  "voice": "cj"
  },
  "Sarah|That is not what that means.": {
   "file": "75314f20e8.mp3",
-  "d": 1.272,
-  "voice": "af_heart"
+  "d": 1.56,
+  "voice": "sarah"
  },
  "CJ|It is if you do it right.": {
   "file": "47f73f8296.mp3",
-  "d": 1.128,
-  "voice": "am_fenrir"
+  "d": 2.4,
+  "voice": "cj"
  },
  "Sarah|How did you even know I left?": {
   "file": "10970feea4.mp3",
-  "d": 1.464,
-  "voice": "af_heart"
+  "d": 1.728,
+  "voice": "sarah"
  },
  "CJ|Breakout told me. It keeps an eye on my favorite people.": {
   "file": "3a11742dcf.mp3",
-  "d": 3.312,
-  "voice": "am_fenrir"
+  "d": 3.888,
+  "voice": "cj"
  },
  "Sarah|That's sweet. And a little creepy.": {
   "file": "6129431de0.mp3",
-  "d": 1.704,
-  "voice": "af_heart"
+  "d": 2.184,
+  "voice": "sarah"
  },
  "CJ|Mostly sweet. You liked us at your last job. Your new team should see it too.": {
   "file": "38831b31ec.mp3",
-  "d": 4.44,
-  "voice": "am_fenrir"
+  "d": 4.728,
+  "voice": "cj"
  },
  "Sarah|I don't even know where the bathroom is yet.": {
   "file": "c27f7cbda8.mp3",
-  "d": 1.944,
-  "voice": "af_heart"
+  "d": 1.92,
+  "voice": "sarah"
  },
  "CJ|Down the hallway, on the left. I checked.": {
   "file": "09e165bc6e.mp3",
-  "d": 1.824,
-  "voice": "am_fenrir"
+  "d": 2.616,
+  "voice": "cj"
  },
  "Sarah|...Of course you did.": {
   "file": "bb7abb2791.mp3",
-  "d": 1.056,
-  "voice": "af_heart"
+  "d": 0.984,
+  "voice": "sarah"
  },
  "CJ|So. Thursday at two?": {
   "file": "ad2ccde5c1.mp3",
-  "d": 1.248,
-  "voice": "am_fenrir"
+  "d": 1.56,
+  "voice": "cj"
  },
  "Sarah|...Thursday, 2 PM. And bring pizza.": {
   "file": "09b58a0a36.mp3",
-  "d": 2.16,
-  "voice": "af_heart"
+  "d": 2.544,
+  "voice": "sarah"
  },
  "CJ|I always bring pizza.": {
   "file": "ccc10d1b24.mp3",
-  "d": 1.248,
-  "voice": "am_fenrir"
+  "d": 1.128,
+  "voice": "cj"
+ },
+ "DJ|You're tuned to K-Pipe, ninety-two point three. Big hills, bad parking, good music.": {
+  "file": "6d25096347.mp3",
+  "d": 4.656,
+  "voice": "dj"
+ },
+ "DJ|Fog's rolling in over the bay. Stay low, stay smooth. You're riding with K-Pipe.": {
+  "file": "46af896f4e.mp3",
+  "d": 4.44,
+  "voice": "dj"
+ },
+ "DJ|This is K-Pipe. If your phone's buzzing, let it buzz. This one's a classic.": {
+  "file": "64a9a7251b.mp3",
+  "d": 4.848,
+  "voice": "dj"
+ },
+ "DJ|Follow-Up FM. We never stop following up.": {
+  "file": "bee132f5c3.mp3",
+  "d": 2.784,
+  "voice": "dj"
+ },
+ "DJ|Still no reply? Send another one. It's Follow-Up FM.": {
+  "file": "217fe51d29.mp3",
+  "d": 3.504,
+  "voice": "dj"
+ },
+ "DJ|Traffic on Market is a mess, so take the hill and hold on tight. Follow-Up FM.": {
+  "file": "a7422c47c5.mp3",
+  "d": 5.28,
+  "voice": "dj"
  }
 }

@@ -190,14 +190,17 @@
   var FIDI = TARGETS.filter(function (t) { return t.fidi; }), ANTHROPIC = TARGETS[3];
   var VO = __VO__;                                // the voice takes, base64 mp3 with their lengths (voice.py)
   // the words, with Tail the Champion timed to its voice takes
-  function words(a, from, to) { var w = script(a, from, to); ["alert", "intro", "door", "room"].forEach(function (k) { w.m2[k] = timed(w.m2[k]); }); return w; }
+  function words(a, from, to) { var w = script(a, from, to); ["intro", "door", "room"].forEach(function (k) { w.m1[k] = timed(w.m1[k]); }); ["alert", "intro", "door", "room"].forEach(function (k) { w.m2[k] = timed(w.m2[k]); }); return w; }
+  // the radio DJs, between songs (voiced; never subtitled)
+  var DJ_LINES = { kpipe: ["You're tuned to K-Pipe, ninety-two point three. Big hills, bad parking, good music.", "Fog's rolling in over the bay. Stay low, stay smooth. You're riding with K-Pipe.", "This is K-Pipe. If your phone's buzzing, let it buzz. This one's a classic."],
+                   fufm: ["Follow-Up FM. We never stop following up.", "Still no reply? Send another one. It's Follow-Up FM.", "Traffic on Market is a mess, so take the hill and hold on tight. Follow-Up FM."] };
   // the words: real companies, fictional people, visits and meetings
   function script(a, from, to) { var A = a.name, F = from.name, N = to.name, team = A; return {
     m1: { title: "Pizza for the Buying Committee", help: '<span class="v">BREAKOUT:</span> 3 people from ' + A + ' are looking at pricing right now. Same office.',
           mount: 'Get on the <span class="b">scooter</span>.', go: 'Take the pizzas to <span class="y">' + A + '</span>, ' + a.addr + '. Go before they lose interest.', fail: "Too slow. They moved on.",
           intro: [[0.2, 2.6, "BREAKOUT", "Heads up. Three people from " + A + ", same office, all on the pricing page."], [2.7, 4.9, "CJ", "Three at once? Somebody over there's about to make a decision."]],
           door: [[0.6, 2.3, team, "Uh, we didn't order pizza."], [2.3, 4.3, "CJ", "I know. I'm CJ, from Breakout. You were just on our site."]],
-          room: [[0.3, 3.0, team, "Okay. You've got ten minutes."], [3.1, 6.0, "CJ", "Your site gets people like you all day. We talk to them before they leave."], [6.1, 8.3, "CJ", "Want to see it properly? Thursday at two?"], [8.4, 10.3, team, "Sure. Bring pizza again, though."]],
+          room: [[team, "Okay. You've got ten minutes."], ["CJ", "Your site gets people like you all day. We talk to them before they leave."], ["CJ", "Want to see it properly? Thursday at two?", "book"], [team, "Sure. Bring pizza again, though."]],
           passed: "Meeting booked." },
     m2: { title: "Tail the Champion", help: '<span class="v">BREAKOUT:</span> Your champion Sarah F. just left ' + F + '. Follow her.',
           alert: [[0.2, 2.9, "BREAKOUT", "Champion on the move: Sarah F. just left " + F + "."], [3.0, 5.7, "CJ", "Sarah? She opened every email I ever sent. Even the bad ones."]],   // [start, end, who, line]; voiced lines stretch to fit their take
@@ -964,13 +967,13 @@
   }
 
   // ------------------------------------------------------------ sound: all synthesised in the browser
-  var AC = null, MASTER, MUSIC, FX, ENG, ENGF, ENGG, NOISE, radioOn = true;
+  var AC = null, MASTER, MUSIC, FX, ENG, ENGF, ENGG, NOISE;
   function audioInit() {
     if (AC) { if (AC.state === "suspended") AC.resume(); return; }
     try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { AC = null; return; }
     MASTER = AC.createGain(); MASTER.gain.value = 0.8; MASTER.connect(AC.destination);
     var comp = AC.createDynamicsCompressor(); comp.connect(MASTER);
-    MUSIC = AC.createGain(); MUSIC.gain.value = 0.42; MUSIC.connect(comp);
+    MUSIC = AC.createGain(); MUSIC.gain.value = 0; MUSIC.connect(comp);
     FX = AC.createGain(); FX.gain.value = 0.8; FX.connect(comp);
     var nb = AC.createBuffer(1, AC.sampleRate * 2, AC.sampleRate), d = nb.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; NOISE = nb;
     ENG = [AC.createOscillator(), AC.createOscillator()]; ENG[0].type = "sawtooth"; ENG[1].type = "square";
@@ -995,33 +998,59 @@
     click: function () { if (!AC) return; tone(2400, AC.currentTime, 0.03, "square", 0.06); },
     menu: function () { if (!AC) return; tone(880, AC.currentTime, 0.06, "square", 0.05); }
   };
-  // the radio: an original G-funk loop (C minor, 92 BPM), scheduled ahead on the audio clock
-  var BPM = 92, STEP = 60 / BPM / 4, nextT = 0, stepN = 0, radioTimer = null;
-  var CH = [[48, 51, 55, 58, 62], [53, 56, 60, 63, 67]], BASSP = [[0, 36], [3, 36], [6, 39], [10, 31], [13, 34], [15, 36]], BASSP2 = [[0, 29], [3, 29], [6, 32], [10, 36], [13, 39], [15, 38]];
-  var LEADP = [[0, 79, 6], [6, 82, 2], [8, 84, 4], [12, 82, 2], [14, 79, 2], [16, 77, 6], [22, 75, 2], [24, 77, 4], [28, 79, 4]];
+  // the radio, as in the game: it plays on the scooter, R changes station. Two original stations, scheduled ahead on the audio clock
+  var nextT = 0, stepN = 0, radioTimer = null, station = 0, radioLive = 0, DJG = null, DJSRC = null, djLast = {}, djNext = 0, djN = {};
+  var BASSP = [[0, 36], [3, 36], [6, 39], [10, 31], [13, 34], [15, 36]], BASSP2 = [[0, 29], [3, 29], [6, 32], [10, 36], [13, 39], [15, 38]];
+  var STATIONS = [
+    { name: "K-Pipe 92.3", dj: "kpipe", bpm: 92, swing: 0.16, keys: "rhodes", ch: [[48, 51, 55, 58, 62], [53, 56, 60, 63, 67]], bass: [BASSP, BASSP2],              // G-funk in C minor
+      kick: [0, 8], kick2: [7], snare: [4, 12], lead: [[0, 79, 6], [6, 82, 2], [8, 84, 4], [12, 82, 2], [14, 79, 2], [16, 77, 6], [22, 75, 2], [24, 77, 4], [28, 79, 4]] },
+    { name: "Follow-Up FM", dj: "fufm", bpm: 101, swing: 0.24, keys: "organ", ch: [[51, 55, 58, 62], [48, 51, 55, 58], [53, 56, 60, 63], [46, 50, 53, 56]],           // new jack swing in E flat
+      bass: [[[0, 39], [7, 39], [10, 41], [14, 43]], [[0, 36], [7, 36], [10, 39], [13, 34]], [[0, 41], [7, 41], [10, 44], [14, 41]], [[0, 34], [6, 34], [10, 38], [12, 41], [14, 34]]],
+      kick: [0, 7, 10], kick2: [], snare: [4, 12, 15], lead: [[0, 75, 3], [4, 74, 1], [6, 72, 2], [10, 70, 6], [32, 77, 3], [36, 75, 1], [38, 74, 2], [42, 72, 2], [44, 70, 4], [48, 67, 8]] }];
   function rhodes(notes, t, dur) { notes.forEach(function (m) { var c = AC.createOscillator(), mo = AC.createOscillator(), mg = AC.createGain(), g = AC.createGain(); c.frequency.value = mo.frequency.value = mf(m);
     mg.gain.setValueAtTime(mf(m) * 2, t); mg.gain.exponentialRampToValueAtTime(mf(m) * 0.2, t + 0.5); mo.connect(mg); mg.connect(c.frequency); env(g, t, 0.005, 0.06, dur); c.connect(g); g.connect(MUSIC); c.start(t); mo.start(t); c.stop(t + dur + 0.1); mo.stop(t + dur + 0.1); }); }
-  function whine(m, t, dur) { var o = AC.createOscillator(), v = AC.createOscillator(), vg = AC.createGain(), g = AC.createGain(); o.type = "sine"; o.frequency.setValueAtTime(mf(m) * 0.94, t); o.frequency.exponentialRampToValueAtTime(mf(m), t + 0.08);
-    v.frequency.value = 5.6; vg.gain.value = mf(m) * 0.012; v.connect(vg); vg.connect(o.frequency); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.06, t + 0.05); g.gain.setValueAtTime(0.06, t + dur * 0.8); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  function organ(notes, t, dur) { var f = AC.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 2200; f.connect(MUSIC);
+    notes.forEach(function (m) { [1, 2].forEach(function (h2) { var o = AC.createOscillator(), g = AC.createGain(); o.type = h2 === 1 ? "square" : "sine"; o.frequency.value = mf(m + 12) * h2; env(g, t, 0.004, h2 === 1 ? 0.025 : 0.03, dur); o.connect(g); g.connect(f); o.start(t); o.stop(t + dur + 0.05); }); }); }
+  function whine(m, t, dur, wave) { var o = AC.createOscillator(), v = AC.createOscillator(), vg = AC.createGain(), g = AC.createGain(); o.type = wave || "sine"; o.frequency.setValueAtTime(mf(m) * 0.94, t); o.frequency.exponentialRampToValueAtTime(mf(m), t + 0.08);
+    v.frequency.value = 5.6; vg.gain.value = mf(m) * 0.012; v.connect(vg); vg.connect(o.frequency); var pk = wave ? 0.035 : 0.06; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(pk, t + 0.05); g.gain.setValueAtTime(pk, t + dur * 0.8); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     o.connect(g); g.connect(MUSIC); o.start(t); v.start(t); o.stop(t + dur + 0.05); v.stop(t + dur + 0.05); }
+  function kick(t) { var o = AC.createOscillator(), g = AC.createGain(); o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.12); env(g, t, 0.002, 0.9, 0.3); o.connect(g); g.connect(MUSIC); o.start(t); o.stop(t + 0.45); }
   function schedule() {
     if (!AC) return;
+    var S = STATIONS[Math.max(0, station)], STEP = 60 / S.bpm / 4, bars = S.ch.length;
     while (nextT < AC.currentTime + 0.25) {
-      var s = stepN % 32, bar = Math.floor(s / 16), sb = s % 16, t = nextT + (sb % 2 ? STEP * 0.16 : 0), loop = Math.floor(stepN / 32);
-      if (radioOn) {
-        if (sb === 0 || sb === 8 || (bar === 1 && sb === 7)) { var o = AC.createOscillator(), g = AC.createGain(); o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.12); env(g, t, 0.002, 0.9, 0.3); o.connect(g); g.connect(MUSIC); o.start(t); o.stop(t + 0.45); }
-        if (sb === 4 || sb === 12) { noise(t, 0.16, 0.5, "bandpass", 1800, MUSIC); noise(t + 0.01, 0.12, 0.3, "bandpass", 1500, MUSIC); }
-        noise(t, sb === 14 ? 0.2 : 0.03, sb % 2 ? 0.08 : 0.14, "highpass", 7500, MUSIC);
-        (bar ? BASSP2 : BASSP).forEach(function (n) { if (n[0] === sb) { var o2 = AC.createOscillator(), g2 = AC.createGain(); o2.type = "sine"; o2.frequency.value = mf(n[1]); env(g2, t, 0.006, 0.55, STEP * 3); o2.connect(g2); g2.connect(MUSIC); o2.start(t); o2.stop(t + STEP * 4); } });
-        if (sb === 0 || sb === 6 || sb === 10) rhodes(CH[bar], t, sb === 0 ? STEP * 6 : STEP * 3.5);
-        if (loop % 4 >= 2) LEADP.forEach(function (n) { if (n[0] === s) whine(n[1], nextT, n[2] * STEP); });
+      var s = stepN % (16 * bars), bar = Math.floor(s / 16), sb = s % 16, t = nextT + (sb % 2 ? STEP * S.swing : 0), loop = Math.floor(stepN / (16 * bars)), sect = loop % 8;
+      if (radioLive && station >= 0) {
+        var drums = stepN >= 16, brk = sect === 7 && bar >= bars - 1;                     // a bar of keys before the drums; a break before the turnaround
+        if (drums && !brk) { if (S.kick.indexOf(sb) >= 0 || (bar % 2 === 1 && S.kick2.indexOf(sb) >= 0)) kick(t);
+          if (S.snare.indexOf(sb) >= 0) { var gh = sb === 15; noise(t, 0.16, gh ? 0.18 : 0.5, "bandpass", 1800, MUSIC); noise(t + 0.01, 0.12, gh ? 0.1 : 0.3, "bandpass", 1500, MUSIC); } }
+        if (drums) noise(t, sb === 14 || (S.keys === "organ" && sb === 6) ? 0.2 : 0.03, sb % 2 ? 0.08 : 0.14, "highpass", 7500, MUSIC);
+        if (drums && !brk) S.bass[bar % S.bass.length].forEach(function (n) { if (n[0] === sb) { var o2 = AC.createOscillator(), g2 = AC.createGain(); o2.type = "sine"; o2.frequency.value = mf(n[1]); env(g2, t, 0.006, 0.55, STEP * 3); o2.connect(g2); g2.connect(MUSIC); o2.start(t); o2.stop(t + STEP * 4); } });
+        if (S.keys === "rhodes") { if (sb === 0 || sb === 6 || sb === 10) rhodes(S.ch[bar], t, sb === 0 ? STEP * 6 : STEP * 3.5); }
+        else if (sb === 0 || sb === 3 || sb === 6 || sb === 10 || sb === 13) organ(S.ch[bar], t, STEP * (sb === 0 ? 2.5 : 1.2));
+        if (sect >= 2 && sect < 6) S.lead.forEach(function (n) { if (n[0] === s % 64 && (bars > 2 || n[0] < 32)) whine(n[1], nextT, n[2] * STEP, S.keys === "organ" ? "triangle" : null); });
       }
       nextT += STEP; stepN++;
     }
   }
-  function radioStart() { nextT = AC.currentTime + 0.1; if (!radioTimer) radioTimer = setInterval(schedule, 50); }
+  function radioStart() { nextT = AC.currentTime + 0.1; if (!radioTimer) radioTimer = setInterval(schedule, 50); DJG = AC.createGain(); DJG.gain.value = 1.4; DJG.connect(MASTER); }
   var radioMsg = 0;
-  function toggleRadio() { radioOn = !radioOn; radioMsg = 2.2; $("radio").textContent = radioOn ? "Radio Los Funk" : "Radio off"; }
+  function showStation() { radioMsg = 2.6; $("radio").textContent = station >= 0 ? STATIONS[station].name : "Radio off"; }
+  function djStop() { if (DJSRC) try { DJSRC.stop(); } catch (e) {} DJSRC = null; }
+  function dj() {                                  // a DJ line over the intro, now and then
+    if (!AC || station < 0) return; var S = STATIONS[station], L = DJ_LINES[S.dj], i = (djN[S.dj] = ((djN[S.dj] || 0) + 1)) % L.length, buf = VOB[voKey("DJ", L[i])];
+    if (!buf) return; djStop(); var src = AC.createBufferSource(); src.buffer = buf; src.connect(DJG); src.start(AC.currentTime + 0.05); DJSRC = src; djLast[S.dj] = G.t; src.onended = function () { if (DJSRC === src) DJSRC = null; };
+  }
+  function tune() { if (!AC) return; stepN = 0; nextT = AC.currentTime + 0.12; noise(AC.currentTime, 0.35, 0.12, "bandpass", 2400); showStation();   // static, then the song from the top
+    if (station >= 0 && !(G.t - (djLast[STATIONS[station].dj] || -1e9) < 50)) djNext = G.t + 1.0; }
+  function toggleRadio() { if (!P.onMoped) return; station = station === STATIONS.length - 1 ? -1 : station + 1; djStop(); tune(); }
+  function radioFrame() {                          // the radio lives on the scooter: fade in on, out off; ducks under the DJ
+    if (!AC) return; var on = P.onMoped && G.control && !G.menu && station >= 0, was = radioLive; radioLive = on ? 1 : 0;
+    if (on && !was) tune();
+    if (!on) { djStop(); djNext = 0; }
+    if (djNext && G.t > djNext) { djNext = 0; dj(); }
+    MUSIC.gain.setTargetAtTime(on ? (DJSRC ? 0.16 : 0.42) : 0, AC.currentTime, on && !was ? 0.4 : 0.15);
+  }
 
   // ------------------------------------------------------------ input
   var keys = {}, look = { yaw: 0, pitch: 0, drag: false, lx: 0, ly: 0, idle: 9 }, touchAxis = { x: 0, y: 0 }, touchBrake = false;
@@ -1223,6 +1252,7 @@
   function doorAt(t, a, b) { var n = t.out; return [t.door[0] + n[0] * a - n[1] * b, t.door[1] + n[1] * a + n[0] * b]; }
   var hud = $("hud"), help = $("help"), obj = $("obj"), sub = $("sub"), mtitle = $("mtitle"), pass = $("pass"), label = $("label"), meter = $("meter"), warn = $("warn");
   function setHelp(html) { if (!html) { help.hidden = true; return; } help.innerHTML = html; help.hidden = false; SFX.ping(); }
+  var HINTS = $("keys");
   function setObj(html) { if (!html) { obj.hidden = true; return; } obj.innerHTML = html; obj.hidden = false; }
   function setLabel(s) { if (!s) { label.hidden = true; return; } label.querySelector("span").textContent = s; label.hidden = false; }
   function showPass(top, line, fail) { pass.className = fail ? "fail" : ""; pass.querySelector("b").textContent = top; pass.querySelector(".respect").hidden = !!fail; pass.querySelector(".line").textContent = line; pass.hidden = false;
@@ -1232,14 +1262,14 @@
   function enter(state) { G.state = state; G.st = 0; sub.hidden = true; }
   // voice: one take per CJ and Sarah line (voice.py, Kokoro), keyed by who and the words; other lines stay text
   var VOB = {};
-  function voKey(who, line) { return who + "|" + line; }
+  function voKey(who, line) { return (who === "CJ" || who === "Sarah" || who === "DJ" ? who : "Team") + "|" + line; }   // the committee shares one voice
   function voDur(who, line) { var v = VO[voKey(who, line)]; return v ? v.d : 0; }
   function voLoad() { Object.keys(VO).forEach(function (k) { var b = atob(VO[k].a), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
     AC.decodeAudioData(u.buffer, function (buf) { VOB[k] = buf; }, function () {}); }); }
   var VOSRC = null;
   function speak(who, line) { if (!AC) return; var buf = VOB[voKey(who, line)]; if (!buf) return; if (VOSRC) try { VOSRC.stop(); } catch (e) {}
     var src = AC.createBufferSource(), g = AC.createGain(); g.gain.value = 1.5; src.buffer = buf; src.connect(g); g.connect(MASTER); src.start(); VOSRC = src;
-    MUSIC.gain.setTargetAtTime(0.12, AC.currentTime, 0.08); src.onended = function () { if (VOSRC === src) { VOSRC = null; MUSIC.gain.setTargetAtTime(0.42, AC.currentTime, 0.3); } }; }
+    src.onended = function () { if (VOSRC === src) VOSRC = null; }; }
   function hush() { if (VOSRC) try { VOSRC.stop(); } catch (e) {} VOSRC = null; G.subOn = null; }
   // a timed list: voiced lines last as long as their take (a timed line keeps its start); [who, line] lists run back to back
   function timed(list) { var t = 0.3, out = [];
@@ -1367,7 +1397,7 @@
         pose(p, { x: px, y: h(pz), z: pz, yaw: tg.ry, mode: u < 1 ? "walk" : "stand", phase: u * 4, amp: 0.5, carry: i === 1 && t > 2.6 });
         ARR[i].visible = true; ARR[i].position.set(px, h(pz) + 2.8 + 0.12 * Math.sin(G.t * 5 + i), pz); ARR[i].rotation.set(PI, G.t * 2.5, 0); });
       subtitles(Wd.m1.door, t); if (t > 2.6) P.carry = false;
-      if (t > 4.4) { enter("wait"); fadeTo(function () { roomScene("m1"); }); }
+      if (t > Math.max(4.4, endOf(Wd.m1.door) + 0.3)) { enter("wait"); fadeTo(function () { roomScene("m1"); }); }
     } else if (s === "room") {                                     // CJ, the SDR: pitch, pick a slot, book it live on the wall screen
       var X = RM.x, Y = RM.y, Z = RM.z, k = G.roomKind;
       if (k === "alert") {
@@ -1378,17 +1408,16 @@
         if (t > Math.max(5.9, endOf(Wd.m2.alert) + 0.3)) { enter("wait"); fadeTo(startM2); }
       } else {
         var m2 = k === "m2", Lr = m2 ? Wd.m2.room : Wd.m1.room, bk = Lr.filter(function (l) { return l.flag === "book"; })[0];
-        var tBook = bk ? bk[0] : 8.2, tPass = m2 ? endOf(Lr) + 0.5 : 10.7, tOut = tPass + 4.8, on = null, oi = -1;
+        var tBook = bk ? bk[0] : 1e9, tPass = endOf(Lr) + 0.5, tOut = tPass + 4.8, on = null, oi = -1;
         Lr.forEach(function (l, i) { if (t >= l[0] && t < l[1] + 0.15) { on = l; oi = i; } });
-        pose(heroM, { x: X + 2.55, y: Y, z: Z - 3.9, yaw: -0.5, mode: "stand", noShadow: true, point: m2 ? !!(bk && t > tBook && t < bk[1] + 0.6) : t > 6.1 && t < 9 });
+        pose(heroM, { x: X + 2.55, y: Y, z: Z - 3.9, yaw: -0.5, mode: "stand", noShadow: true, point: !!(bk && t > tBook && t < bk[1] + 0.6) });
         if (m2) { pose(champM, { x: X - 1.5, y: Y, z: Z - 1.6, yaw: PI / 2, mode: "sit", noShadow: true }); pose(COMM[0], { x: X + 1.5, y: Y, z: Z - 1.6, yaw: -PI / 2, mode: "sit", noShadow: true }); pose(COMM[1], { hidden: true }); pose(COMM[2], { hidden: true }); }
         else { pose(COMM[0], { x: X - 1.5, y: Y, z: Z - 1.6, yaw: PI / 2, mode: "sit", noShadow: true }); pose(COMM[1], { x: X + 1.5, y: Y, z: Z - 1.6, yaw: -PI / 2, mode: "sit", noShadow: true }); pose(COMM[2], { x: X - 1.5, y: Y, z: Z, yaw: PI / 2, mode: "sit", noShadow: true }); }
         drawScreen("book", cl((t - tBook) / 3.2), tg); scrTex.needsUpdate = true;
-        var WIDE = { p: [X + 4.8, Y + 2.5, Z + 4.2], l: [X - 0.3, Y + 1.0, Z - 2.4], fov: 54 }, ONCJ = m2 ? { p: [X + 0.7, Y + 1.62, Z - 2.5], l: [X + 2.55, Y + 1.55, Z - 3.9], fov: 44 } : { p: [X - 0.8, Y + 1.55, Z - 2.2], l: [X + 2.55, Y + 1.6, Z - 3.9], fov: 50 },
-            ONHER = m2 ? { p: [X + 0.35, Y + 1.5, Z - 2.45], l: [X - 1.5, Y + 1.3, Z - 1.55], fov: 44 } : { p: [X + 1.6, Y + 1.8, Z - 3.6], l: [X - 1.5, Y + 1.1, Z - 0.6], fov: 52 }, SCREEN = { p: [X, Y + 1.75, Z - 0.7], l: [X, Y + 1.75, Z - 4.9], fov: 46 };
-        if (m2) G.cutCam = t < Lr[0][1] ? WIDE : bk && t >= tBook && t < bk[1] ? SCREEN : t >= endOf(Lr) ? SCREEN : !on ? G.lastRoomCam || WIDE
+        var WIDE = { p: [X + 4.8, Y + 2.5, Z + 4.2], l: [X - 0.3, Y + 1.0, Z - 2.4], fov: 54 }, ONCJ = { p: [X + 0.7, Y + 1.62, Z - 2.5], l: [X + 2.55, Y + 1.55, Z - 3.9], fov: 44 },
+            ONHER = { p: [X + 0.35, Y + 1.5, Z - 2.45], l: [X - 1.5, Y + 1.3, Z - 1.55], fov: 44 }, SCREEN = { p: [X, Y + 1.75, Z - 0.7], l: [X, Y + 1.75, Z - 4.9], fov: 46 };
+        G.cutCam = t < Lr[0][1] ? WIDE : bk && t >= tBook && t < bk[1] ? SCREEN : t >= endOf(Lr) ? SCREEN : !on ? G.lastRoomCam || WIDE
           : oi % 6 === 5 ? WIDE : on[2] === "CJ" ? ONCJ : ONHER;
-        else G.cutCam = t < 3.0 ? WIDE : t < 6.0 ? ONCJ : t < 8.2 ? ONHER : SCREEN;
         G.lastRoomCam = G.cutCam;
         subtitles(Lr, t);
         if (t > tPass && pass.hidden) { SFX.pass(); reward(); showPass("MISSION PASSED!", m2 ? Wd.m2.passed : Wd.m1.passed); }
@@ -1528,6 +1557,7 @@
     $("stars").style.visibility = G.wanted > 0 ? "visible" : "hidden";
     STARS.forEach(function (s, i) { s.classList.toggle("on", i >= 6 - G.wanted && (G.wantedT > 20 ? Math.floor(G.t * 4) % 2 === 0 : true)); });
     if (radioMsg > 0) { radioMsg -= dt; $("radio").hidden = false; } else $("radio").hidden = true;
+    radioFrame(); HINTS.style.visibility = obj.hidden ? "" : "hidden";                    // the key hints step aside for an objective
     var blips = [], s = G.state;
     var tgt = T(), bc = [(tgt.block[0] + tgt.block[1]) / 2, (tgt.block[2] + tgt.block[3]) / 2], mk = doorAt(tgt, 4.4, 0);
     if (s === "m1") [-6, 0, 6].forEach(function (o) { blips.push({ x: bc[0] + o, z: bc[1], color: "#be79ff", square: true, size: 7, pulse: true }); });
