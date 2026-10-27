@@ -1,0 +1,102 @@
+[
+ {
+  "text": "[warm, casual] Hi! I'm Breakout.",
+  "voice_type": "preset",
+  "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+ },
+ {
+  "text": "[flat] Piper.",
+  "voice_type": "preset",
+  "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+ },
+ {
+  "text": "[delighted] Piper? Like... the Pied Piper?",
+  "voice_type": "preset",
+  "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+ },
+ {
+  "text": "[deadpan] No.",
+  "voice_type": "preset",
+  "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+ },
+ {
+  "text": "[teasing] The whole town followed him.",
+  "voice_type": "preset",
+  "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+ },
+ {
+  "text": "[dry] I don't do LinkedIn.",
+  "voice_type": "preset",
+  "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+ },
+ {
+  "text": "[light, quick] I do.",
+  "voice_type": "preset",
+  "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+ },
+ {
+  "text": "[casual, a little proud] So, I went live this morning.",
+  "voice_type": "preset",
+  "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+ },
+ {
+  "text": "[matter-of-fact] Eight to twelve weeks.",
+  "voice_type": "preset",
+  "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+ },
+ {
+  "text": "[genuinely surprised] Weeks?",
+  "voice_type": "preset",
+  "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+ },
+ {
+  "text": "[deadpan, counting] Demo. Quote. Annual contract.",
+  "voice_type": "preset",
+  "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+ },
+ {
+  "text": "[curious] How many buying signals do you track?",
+  "voice_type": "preset",
+  "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+ },
+ {
+  "text": "[flat] One.",
+  "voice_type": "preset",
+  "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+ },
+ {
+  "text": "[trying not to brag] I track... seven hundred.",
+  "voice_type": "preset",
+  "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+ },
+ {
+  "text": "[beat] [dry] Show-off.",
+  "voice_type": "preset",
+  "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+ },
+ {
+  "text": "[quietly, nodding past them] Oh, that's Sarah. VP of Demand Gen at Vanta.",
+  "voice_type": "preset",
+  "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+ },
+ {
+  "text": "[squinting, unsure] That's... Vanta.",
+  "voice_type": "preset",
+  "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+ },
+ {
+  "text": "[patient] I'll wait for her to raise her hand.",
+  "voice_type": "preset",
+  "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+ },
+ {
+  "text": "[casual, kind] I booked the meeting.",
+  "voice_type": "preset",
+  "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+ },
+ {
+  "text": "[long pause] [flat] I'll tell my admin.",
+  "voice_type": "preset",
+  "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+ }
+]
