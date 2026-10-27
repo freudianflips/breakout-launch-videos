@@ -1,32 +1,35 @@
-# Storyboard: piper-pilot, "Go-live"
+# Storyboard: piper-pilot v2
 
-**Status:** draft, awaiting the owner's approval. A new `two-hander` template gets built from this spot once it is approved.
+**Status:** draft v2, awaiting the owner's approval. A new `two-hander` template gets built from this spot once it is approved.
 
 ## The look
 
 | | |
 |---|---|
 | Set | An endless white seamless, soft high-key light, no props except what a beat names. Locked-off medium-wide 2-shot; cuts to singles only for reactions. |
-| Breakout | Late 20s to 30s, relaxed, quick smile, a violet `#4c00ff` crewneck (the only saturated colour in frame). Calm, warm, a little amused. |
-| Piper | Same age range, pleasant and earnest, a grey blazer over a grey shirt, a lanyard with a blank badge. Never a villain: helpful, patient, stuck in process. |
-| Maya | A passer-by in smart casual clothes, crosses the frame behind them, never speaks. |
-| Text | Added in HyperFrames: small lower-third captions and source lines in Manrope / Fragment Mono; the end card in New Kansas with the italic key word. |
-| Sound | Dry room tone, the 2 voices, a light pizzicato sting on the turn and under the end card. No music under the dialogue. |
+| Breakout | Mid-20s, attractive, bright eyes, easy grin, a fitted violet `#4c00ff` crewneck (the only saturated colour in frame). Quick, warm, playful; carries the energy. |
+| Piper | 30s to 40s, neat grey blazer over a grey shirt, a lanyard with a blank badge. The straight man: deadpan, still, literal, answers in 1 to 5 words. Never mean, never a fool. |
+| Sarah | A passer-by in smart casual clothes, crosses the frame behind them, never speaks. |
+| Text | Added in HyperFrames: small name tags, captions and source lines in Manrope / Fragment Mono; the end card in New Kansas with the italic key word. |
+| Sound | Dry room tone, the 2 voices, a light pizzicato sting on each button, near silence under the end card. No music under the dialogue. |
 
-## Beats (30 s, about 65 spoken words)
+## Beats (45 s, about 105 spoken words)
 
 | # | Time | Picture | Words | Text on screen |
 |---|---|---|---|---|
-| 1 | 0–3 s | The 2-shot. Both already standing there, mid-moment: Breakout turns to camera. | **Breakout:** "Hi. I'm Breakout." **Piper:** "And I'm Piper. From Qualified." | `Breakout` / `Piper · Qualified's AI SDR` name tags, small |
-| 2 | 3–9 s | Breakout, easy. Piper holding a thick binder labelled nothing. | **Breakout:** "I went live this morning." **Piper:** (bright) "Oh, nice! I go live in… eight to twelve weeks." | `Breakout: <3 hours, self-serve` · `Qualified: 8-12 weeks` + source line |
-| 3 | 9–15 s | Piper counts on fingers, cheerful. Breakout nods, sympathetic. | **Piper:** "First a demo. Then a quote. Then an annual contract." **Breakout:** "I just… started." | Source line |
-| 4 | 15–22 s | Maya crosses behind them. Both turn to watch her pass. | **Breakout:** "That's Maya. VP of Marketing at Northwind." **Piper:** (squinting) "That's… someone from Northwind." | `Person-level` vs `Account-level only` · `Illustrative example` + source line |
-| 5 | 22–26 s | Single on Piper, a beat of silence. Then the 2-shot: Breakout, kindly, turns to camera. | **Breakout:** "Still under contract? We'll buy out the rest of it." | |
-| 6 | 26–30 s | Cut to the end card on white, the pizzicato sting resolves. | (silence) | "Still under contract? We'll buy out *the rest of it.*" · Up to $30,000 covered · Switch by November 30, 2026 · Breakout logo · getbreakout.ai |
+| 1 | 0–3 s | The 2-shot, both already standing there. Breakout turns to camera mid-smile. | **Breakout:** "Hi. I'm Breakout." **Piper:** "Piper." | Name tags: `Breakout` / `Piper · Qualified's AI SDR` |
+| 2 | 3–10 s | Breakout leans in, delighted. Piper doesn't move. | **Breakout:** "Piper. Like the Pied Piper?" **Piper:** "No." **Breakout:** "The whole town followed him." **Piper:** "I don't do LinkedIn." **Breakout:** "I do." | `LinkedIn follow-ups` · Breakout ✓ · Qualified: "No" + source line |
+| 3 | 10–18 s | Breakout, easy. Piper, same expression. | **Breakout:** "I went live this morning." **Piper:** "Eight to twelve weeks." **Breakout:** "Weeks?" **Piper:** "Demo. Quote. Annual contract." | `<3 hours, self-serve` vs `8-12 weeks` + source line |
+| 4 | 18–24 s | Breakout, curious. Piper, flat. A beat. | **Breakout:** "How many buying signals do you track?" **Piper:** "One." **Breakout:** "I track seven hundred." **Piper:** (beat) "Show-off." | `700+` vs `1` + source line |
+| 5 | 24–33 s | Sarah crosses behind them. Both turn to watch her pass. | **Breakout:** "That's Sarah. VP of Demand Gen at Vanta." **Piper:** "That's Vanta." | `Person-level` vs `Account-level only` · `Illustrative example` + source line |
+| 6 | 33–39 s | Piper, deadpan, starts to raise a hand a few inches, waiting. Breakout glances at it. | **Piper:** "I'll wait for her to raise her hand." **Breakout:** "I booked the meeting." **Piper:** (lowers hand) "I'll tell my admin." | Source line |
+| 7 | 39–45 s | Cut to the end card on white, the sting resolves into near silence. | (silence) | Breakout logo · "Pageview to *pipeline.*" |
+
+The 30 s cut-down drops beats 4 and 6.
 
 ## Checks before building
 
-- Every line traces to a row in `BRIEF.md` (beat 3 is "Qualified requires a demo, a quote, and an annual contract"; beat 4 is "No &mdash; account-level only").
-- "I just… started." is the only line written for the film; it states no fact beyond "<3 hours, self-serve".
-- Logo swap: no other vendor could run this spot, because every beat is a Qualified-specific row.
-- Open questions for the owner: the tone of Piper (likeable rival, as written, or more of a straight man?), and whether the end card keeps the buyout or ends on "Pageview to *pipeline.*".
+- Every line traces to a row in `BRIEF.md`. The lines written for the film ("The whole town followed him.", "Weeks?", "Show-off.") state no fact.
+- "I track seven hundred" stands for "700+": the caption shows `700+`.
+- Logo swap: no other vendor could run this spot, because every joke is a Qualified-specific row.
+- Pied Piper: the legend only, nothing from the TV series.
