@@ -26,16 +26,20 @@
         #tagB { left: 674px; color: var(--violet); }
         #tagP { left: 1179px; color: var(--grey); }
 
-        .claim { position: absolute; left: 64px; top: 60px; min-width: 430px; padding: 22px 26px 20px; border-radius: 18px; background: rgba(255, 255, 255, 0.95);
+        .claim { position: absolute; left: 64px; top: 60px; min-width: 430px; max-width: 640px; padding: 22px 26px 20px; border-radius: 18px; background: rgba(255, 255, 255, 0.95);
           box-shadow: 0 30px 70px -36px rgba(20, 11, 60, 0.45), 0 0 0 1px rgba(20, 11, 60, 0.08); visibility: hidden; }
         .clab { font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink2); margin-bottom: 14px; }
-        .crow { display: flex; align-items: baseline; gap: 18px; font-size: 30px; line-height: 1.35; }
+        .crow { display: flex; align-items: baseline; gap: 18px; font-size: 30px; line-height: 1.25; margin-bottom: 6px; }
         .crow span { width: 128px; flex: none; font-size: 19px; font-weight: 700; }
         .crow.b span, .crow.b b { color: var(--violet); }
         .crow.q span, .crow.q b { color: #77737e; font-weight: 600; }
         .cnote { margin-top: 12px; font-size: 15px; font-family: var(--mono); color: var(--ink2); }
         #source { position: absolute; left: 56px; bottom: 30px; padding: 5px 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.86); font-size: 16px; color: var(--ink2); visibility: hidden; }
 
+        .lower { position: absolute; left: 64px; bottom: 170px; padding: 14px 20px; border-radius: 14px; background: rgba(255, 255, 255, 0.94); z-index: 5; visibility: hidden;
+          box-shadow: 0 24px 50px -30px rgba(20, 11, 60, 0.45); }
+        .lower b { display: block; font-size: 28px; font-weight: 700; color: var(--ink); }
+        .lower span { display: block; margin-top: 6px; font-size: 15px; color: var(--ink2); }
         .sub { position: absolute; left: 0; right: 0; bottom: 92px; text-align: center; visibility: hidden; }
         .sub span { display: inline-block; padding: 10px 22px; border-radius: 12px; background: rgba(4, 4, 5, 0.72); color: #fff; font-size: 36px; font-weight: 600; letter-spacing: -0.01em; }
 
@@ -59,7 +63,7 @@
           var S = '[data-composition-id="two"] ';
           var q = function (sel) { return document.querySelector(S + sel); };
           var tl = gsap.timeline({ paused: true });
-          tl.set(S + '.shot, ' + S + '.claim, ' + S + '.sub, ' + S + '.tag, #source, #endc, #sarah', { autoAlpha: 0 }, 0);
+          tl.set(S + '.shot, ' + S + '.claim, ' + S + '.sub, ' + S + '.tag, ' + S + '.lower, #source, #endc, #sarah', { autoAlpha: 0 }, 0);
 
           // shots: a hard cut on each change of frame, a slow push while it holds
           T.cuts.forEach(function (c) {
@@ -82,10 +86,16 @@
               tl.set('#source', { autoAlpha: 1 }, b.start + 0.2);
               tl.set('#source', { autoAlpha: 0 }, off + 0.25);
             }
-            if (b.sarah) {   // she crosses behind them, right to left, before the first line lands
-              tl.set('#sarah', { autoAlpha: 1 }, b.start - 0.2);
-              tl.fromTo('#sarah', { x: 1960 }, { x: -640, duration: 4.6, ease: 'none', immediateRender: false }, b.start - 0.2);
-              tl.set('#sarah', { autoAlpha: 0 }, b.start + 4.4);
+            if (b.sarah) {   // she crosses behind them, right to left; "sarah": seconds before the beat's first line
+              var s0 = b.start - (b.sarah === true ? 0.2 : b.sarah);
+              tl.set('#sarah', { autoAlpha: 1 }, s0);
+              tl.fromTo('#sarah', { x: 1960 }, { x: -640, duration: 4.6, ease: 'none', immediateRender: false }, s0);
+              tl.set('#sarah', { autoAlpha: 0 }, s0 + 4.6);
+            }
+            if (b.lower) {
+              var lw = q('#lower' + b.beat);
+              tl.fromTo(lw, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: 'power2.out', immediateRender: false }, b.start + 0.1);
+              tl.to(lw, { autoAlpha: 0, duration: 0.25 }, off);
             }
           });
 

@@ -1,0 +1,104 @@
+{
+ "model": "elevenlabs_v4",
+ "voices": {
+  "breakout": "Liza",
+  "piper": "Onyx"
+ },
+ "dialogue": [
+  {
+   "text": "[proud, a little formal] Big week. Kickoff.",
+   "voice_type": "preset",
+   "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+  },
+  {
+   "text": "[warm, genuinely happy for her] Oh, congrats! When do you go live?",
+   "voice_type": "preset",
+   "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+  },
+  {
+   "text": "[pleased] Eight to twelve weeks.",
+   "voice_type": "preset",
+   "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+  },
+  {
+   "text": "[polite] Nice.",
+   "voice_type": "preset",
+   "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+  },
+  {
+   "text": "[politely] You?",
+   "voice_type": "preset",
+   "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+  },
+  {
+   "text": "[casual] This morning.",
+   "voice_type": "preset",
+   "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+  },
+  {
+   "text": "[pause] [confused] ...Was there a kickoff?",
+   "voice_type": "preset",
+   "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+  },
+  {
+   "text": "[shrugs, light] There was a coffee.",
+   "voice_type": "preset",
+   "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+  },
+  {
+   "text": "[clears throat] [proudly listing] Well. First there's a demo. Then a quote. Then an annual contract.",
+   "voice_type": "preset",
+   "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+  },
+  {
+   "text": "[gently curious] And then they find out the price?",
+   "voice_type": "preset",
+   "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+  },
+  {
+   "text": "[satisfied] Then they find out the price.",
+   "voice_type": "preset",
+   "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+  },
+  {
+   "text": "[softly, friendly] Hi, Sarah.",
+   "voice_type": "preset",
+   "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+  },
+  {
+   "text": "[squinting, unsure] ...Vanta.",
+   "voice_type": "preset",
+   "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+  },
+  {
+   "text": "[puzzled] What are you doing?",
+   "voice_type": "preset",
+   "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+  },
+  {
+   "text": "[matter-of-fact] Waiting for her to raise her hand.",
+   "voice_type": "preset",
+   "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+  },
+  {
+   "text": "[kindly] I booked her a meeting.",
+   "voice_type": "preset",
+   "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+  },
+  {
+   "text": "[pause] [a little deflated] I'll let my admin know.",
+   "voice_type": "preset",
+   "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+  },
+  {
+   "text": "[surprised] You have an admin?",
+   "voice_type": "preset",
+   "voice_id": "1e7feef5-2436-55bd-8778-cb075ecd081e"
+  },
+  {
+   "text": "[long pause] [quietly] I'm getting one.",
+   "voice_type": "preset",
+   "voice_id": "8911390e-4b59-459b-ba84-19010917e1df"
+  }
+ ]
+}

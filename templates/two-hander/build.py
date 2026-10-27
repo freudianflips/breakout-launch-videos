@@ -91,31 +91,42 @@ if os.path.exists(gsap):
     GSAP = f"{A}/gsap.min.js"
 
 # ------------------------------------------------------------------ timing
+# Two ways in: 1 file per line (placed with gaps), or 1 dialogue track generated as a conversation (film "dialogue"),
+# where each line carries "at": [start, end] in the track (from word timings) and the track plays from lead_in.
+DLG = F.get("dialogue")
 t = F["lead_in"]
 lines, beats, cuts = [], [], []
 for b in F["beats"]:
-    if lines:
+    if lines and not DLG:
         t += b.get("gap", F["gap"])
-    b0 = t
+    b0 = None
     for i, ln in enumerate(b["lines"]):
-        if i:
-            t += ln.get("gap", F["gap"])
-        elif "gap" in ln:
-            t += ln["gap"]
-        wav = os.path.join(HERE, F["voices"][ln["who"]]["dir"], f"line-{ln['line']}.wav")
-        d = dur(wav) if os.path.exists(wav) else None
-        d = d or ln["dur"]
-        lines.append({**ln, "beat": b["beat"], "start": round(t, 3), "end": round(t + d, 3), "wav": os.path.relpath(wav, HERE)})
-        cut = max(t - 0.12, 0) if cuts else 0
+        if DLG:
+            s0, s1 = F["lead_in"] + ln["at"][0], F["lead_in"] + ln["at"][1]
+            rec = {**ln, "beat": b["beat"], "start": round(s0, 3), "end": round(s1, 3)}
+            t = s1
+        else:
+            if i:
+                t += ln.get("gap", F["gap"])
+            elif "gap" in ln:
+                t += ln["gap"]
+            wav = os.path.join(HERE, F["voices"][ln["who"]]["dir"], f"line-{ln['line']}.wav")
+            d = (dur(wav) if os.path.exists(wav) else None) or ln["dur"]
+            rec = {**ln, "beat": b["beat"], "start": round(t, 3), "end": round(t + d, 3), "wav": os.path.relpath(wav, HERE)}
+            t += d
+        lines.append(rec)
+        b0 = rec["start"] if b0 is None else b0
+        cut = max(rec["start"] - 0.12, 0) if cuts else 0
         if not cuts or cuts[-1]["frame"] != ln["frame"]:
             cuts.append({"frame": ln["frame"], "start": round(cut, 3)})
-        t += d
     beats.append({**{k: v for k, v in b.items() if k != "lines"}, "start": round(b0, 3), "end": round(t, 3)})
 END0 = round(t + F["tail"], 3)
 TOTAL = round(END0 + F["end"]["hold"], 3)
 for i, c in enumerate(cuts):
     c["end"] = cuts[i + 1]["start"] if i + 1 < len(cuts) else END0
 T = {"lines": lines, "beats": beats, "cuts": cuts, "end": END0, "total": TOTAL}
+if DLG:
+    T["dialogue"] = {"file": DLG["file"], "at": F["lead_in"]}
 json.dump(T, open(os.path.join(HERE, "timing.json"), "w"), indent=1)
 
 # ------------------------------------------------------------------ markup
@@ -128,10 +139,13 @@ for b in beats:
     claims += (f'<div class="claim" id="claim{b["beat"]}"><div class="clab mono">{E(c["label"])}</div>'
                f'<div class="crow b"><span>Breakout</span><b>{E(c["breakout"])}</b></div>'
                f'<div class="crow q"><span>Qualified</span><b>{E(c["piper"])}</b></div>{note}</div>')
+lowers = "".join(f'<div class="lower" id="lower{b["beat"]}"><b>{E(b["lower"]["text"])}</b>'
+                 + (f'<span class="mono">{E(b["lower"]["note"])}</span>' if b["lower"].get("note") else "") + '</div>'
+                 for b in beats if b.get("lower"))
 subs = "".join(f'<div class="sub" id="sub{i}"><span>{E(ln["text"])}</span></div>' for i, ln in enumerate(lines)) if F.get("subtitles") else ""
 tags = (f'<div class="tag" id="tagB">{E(F["names"]["breakout"])}</div><div class="tag" id="tagP">{E(F["names"]["piper"])}</div>')
 tpl = open(os.path.join(HERE, "template.html")).read()
-rep = {"__FONTFACES__": "\n        ".join(fontfaces), "__CLAIMS__": claims, "__SUBS__": subs, "__TAGS__": tags,
+rep = {"__FONTFACES__": "\n        ".join(fontfaces), "__CLAIMS__": claims, "__SUBS__": subs, "__TAGS__": tags + lowers,
        "__SOURCE__": E(F["source"]), "__ENDLINE__": kw(F["end"]["line"]), "__T__": json.dumps(T)}
 for k, v in rep.items():
     tpl = tpl.replace(k, v)

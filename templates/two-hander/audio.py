@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lay the voice lines at their times (timing.json), master to -14 LUFS and -1 dBTP, and mux onto the picture.
+"""Lay the dialogue track, or the voice lines, at their times (timing.json), master to -14 LUFS and -1 dBTP, and mux onto the picture.
 
   python3 audio.py      # renders/picture.mp4 + the lines -> renders/two-hander.mp4
 
@@ -16,11 +16,12 @@ R = os.path.join(HERE, "renders")
 os.makedirs(R, exist_ok=True)
 
 ins, chain = [], []
-for i, l in enumerate(T["lines"]):
-    ins += ["-i", os.path.join(HERE, l["wav"])]
-    ms = int(round(l["start"] * 1000))
-    chain.append(f"[{i}:a]aresample=48000,aformat=channel_layouts=mono,adelay={ms}[v{i}]")
-n = len(T["lines"])
+# 1 dialogue track (a generated conversation) or 1 file per line, each placed at its time
+clips = [(T["dialogue"]["file"], T["dialogue"]["at"])] if "dialogue" in T else [(l["wav"], l["start"]) for l in T["lines"]]
+for i, (f, at) in enumerate(clips):
+    ins += ["-i", os.path.join(HERE, f)]
+    chain.append(f"[{i}:a]aresample=48000,aformat=channel_layouts=mono,adelay={int(round(at * 1000))}[v{i}]")
+n = len(clips)
 ins += ["-f", "lavfi", "-t", f"{T['total']:.3f}", "-i", "anoisesrc=color=brown:amplitude=0.0025:sample_rate=48000"]
 chain.append(f"[{n}:a]lowpass=f=900,aformat=channel_layouts=mono[room]")
 mix = "".join(f"[v{i}]" for i in range(n)) + "[room]"

@@ -1,12 +1,12 @@
 ---
 workflow: product-video
-message: "Breakout goes live today and knows who is on your site. Piper is still waiting."
+message: "Breakout went live this morning and already booked the meeting. Piper is still at kickoff."
 destination: LinkedIn, paid social (16:9 master, 4:5 and 9:16 cuts later)
 aspect: 1920x1080
 language: en
-length: 45s
-angle: Two-hander comedy (the genre of the classic two-person computer ads), a run of short jokes, each a real difference
-status: storyboard approved by the owner on 2026-10-27
+length: 35s
+angle: Two-hander comedy in the tone of the classic two-person computer ads: 1 premise (kickoff), the rival proud and oblivious, Breakout kind
+status: cast and look approved 2026-10-27; v4 dialogue awaiting sign-off
 ---
 
 ## Intent
@@ -17,6 +17,8 @@ The owner chose 1 pilot for LinkedIn and paid ads (2026-10-27), with realistic g
 
 v2, from the owner's notes (2026-10-27): "Replace Maya Northwind with Sarah, VP Demand Gen at Vanta. Piper says Vanta. Say 'Piper' don't say 'From Qualified'. Add a few more jokes. Maybe a Pied Piper joke. Breakout needs to look young, attractive. Let Piper play a straight man. Keep the end card with Breakout logo + pageview to pipeline." The run grew from 30 s to 45 s to hold the jokes; a 30 s cut-down drops beats 4 and 6.
 
+v4, after the first animatic ("this is terrible, not sounding natural at all"; "need better jokes here. Make it sound like the pc/mac joke tone"; "breakout comes off as braggy in the opener, skip that. Let's jump directly to 'Big week. Kickoff.'"): 1 premise, about 35 s. Piper is proud and oblivious and gets the jokes; Breakout is kind. The Pied Piper, LinkedIn and signals jokes are saved for later spots. The voices are generated as 1 conversation (Eleven v4 dialogue) instead of line by line.
+
 While `brand/brand.json` says `"reviewed": false`, this film is a draft.
 
 ## Claims (sources saved 2026-10-27)
@@ -25,16 +27,14 @@ From getbreakout.ai/compare/qualified-alternative, verbatim:
 
 | Joke | Breakout | Qualified |
 |---|---|---|
-| Pied Piper (follow-ups) | (`brand.json` copy) "Converts drop-offs with personalized email and LinkedIn follow-ups" | LinkedIn follow-ups: "No" |
-| Go-live | "<3 hours, self-serve" | "8-12 weeks, enterprise sales only" |
-| Buying | | "Qualified requires a demo, a quote, and an annual contract before you see a number." |
-| Signals | "Breakout tracks 700+ buying signals. Qualified tracks one." | |
-| Who | Person-level de-anonymization: "Yes, waterfall through multiple data providers" | "No &mdash; account-level only" |
+| Kickoff, go-live | "<3 hours, self-serve" | "8-12 weeks, enterprise sales only" |
+| Price | "Transparent pricing, published." | "Qualified requires a demo, a quote, and an annual contract before you see a number." |
+| Sarah | Person-level de-anonymization: "Yes, waterfall through multiple data providers" | "No &mdash; account-level only" |
 | Hand-raise, admin | (`brand.json` copy) "qualifies and books meetings" | "Qualified runs on chat-era architecture that needs a CRM, an admin, and a hand-raise event." |
 
-About Piper (qualified.com, the 2024 launch release and the AI FAQ): Piper is Qualified's AI SDR agent. The claims above are about Qualified, the platform Piper runs on; the Piper character speaks for it. Piper is never introduced aloud as "from Qualified"; the on-screen name tag carries it.
+Saved for later spots: signals ("Breakout tracks 700+ buying signals. Qualified tracks one."), LinkedIn follow-ups (Breakout, `brand.json` copy: "Converts drop-offs with personalized email and LinkedIn follow-ups"; Qualified: "No").
 
-The Pied Piper is the folk legend (public domain): the piper the whole town followed. Not the TV series of the same name, and nothing from it.
+About Piper (qualified.com, the 2024 launch release and the AI FAQ): Piper is Qualified's AI SDR agent. The claims above are about Qualified, the platform Piper runs on; the Piper character speaks for it. Piper is never introduced aloud as "from Qualified"; the on-screen name tag carries it.
 
 ## Rules for this film
 
