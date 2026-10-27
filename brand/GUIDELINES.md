@@ -30,7 +30,7 @@ How a Breakout video looks, sounds and speaks. This page sums up the brand kit (
 
 ## Competitors
 
-Any video may name Qualified and its AI SDR Piper, and may play Piper as a character (owner, 2026-10-26). Never show Qualified's logo, brand assets or real people; the Piper character is a fictional performer, never a lookalike. Every statement about them is true and sourced (the compare page or another public page, saved with its date in the video's `BRIEF.md`); a joke may exaggerate a sourced point but never invent a fact. A target's chat widget appears only as captured on the target's own site, and anything said about it describes that capture. Show the source on screen while a quoted claim is up. Every other competitor stays unnamed and without its logo.
+Any video may name Qualified and its AI SDR Piper, and may play Piper as a character (owner, 2026-10-26). Never show Qualified's logo, brand assets or real people; the Piper character is a fictional performer, never a lookalike. Every statement about them is true and sourced (the compare page or another public page, saved with its date in the video's `BRIEF.md`); a joke may exaggerate a sourced point but never invent a fact. A target's chat widget appears only as captured on the target's own site, and anything said about it describes that capture. Show the source on screen while a quoted claim is up. The exception is the [`two-hander`](../templates/two-hander/README.md), where the claims are spoken jokes: no claim cards or source line on screen (owner, 2026-10-27), and the sources stay in the video's `BRIEF.md`. Every other competitor stays unnamed and without its logo.
 
 ## Story
 

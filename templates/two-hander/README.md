@@ -1,6 +1,6 @@
 # two-hander
 
-Two generated people on a white seamless, talking: Breakout and a rival, cut on the dialogue, with a verbatim claim card per joke, subtitles for muted autoplay, and the Breakout end card. The genre of the classic two-person comparison ads, never their lines, music or casting.
+Two generated people on a white seamless, talking: Breakout and a rival, cut on the dialogue, with name tags, subtitles for muted autoplay, and the Breakout end card. No claim cards or product visuals: the jokes carry the claims. The genre of the classic two-person comparison ads, never their lines, music or casting.
 
 ![](cast/contact.jpg)
 
@@ -8,7 +8,7 @@ Two generated people on a white seamless, talking: Breakout and a rival, cut on 
 
 ## The example
 
-The pilot "Kickoff" (about 45 s): Breakout (young, warm, a violet crewneck) and Piper, Qualified's AI SDR (proud, proper, oblivious, in grey). Piper's big kickoff week against Breakout going live this morning, the price after the contract, Sarah from Vanta walking past, the raised hand and the admin, then the logo and "Pageview to *pipeline.*". Story in [`STORYBOARD.md`](STORYBOARD.md), claims and rules in [`BRIEF.md`](BRIEF.md).
+The pilot "Kickoff" (about 45 s): Breakout (young, warm, a deep indigo hoodie with the Breakout wordmark) and Piper, Qualified's AI SDR (proud, proper, oblivious, in grey). Piper's big kickoff week against Breakout going live this morning, the price after the contract, Sarah from Vanta walking past, the raised hand and the admin, then the logo and "Pageview to *pipeline.*". Story in [`STORYBOARD.md`](STORYBOARD.md), claims and rules in [`BRIEF.md`](BRIEF.md).
 
 ## How it is made
 
@@ -35,6 +35,6 @@ The tone of the classic two-person computer ads, never their lines: the rival ge
 ## Rules this style keeps
 
 - Dialogue is the one place a Breakout film has voices; there is still no narrator.
-- Every joke is a verbatim, dated claim (`BRIEF.md`), shown on a card with its source while it is up.
+- Every joke stages a dated, sourced claim kept in `BRIEF.md`. Nothing is cited on screen (owner, 2026-10-27); `film.json` can still carry a `claim` card per beat for other uses.
 - Qualified and Piper by name only: no logo, colours, UI, staff or Piper's own character. Example people and companies are labelled "Illustrative example".
-- On-screen text is markup, never generated inside the footage.
+- On-screen text is markup, never generated inside the footage; the one exception is Breakout's hoodie wordmark, generated from the real logo as a reference and checked in every shot.

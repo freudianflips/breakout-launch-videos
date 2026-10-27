@@ -40,6 +40,8 @@
           box-shadow: 0 24px 50px -30px rgba(20, 11, 60, 0.45); }
         .lower b { display: block; font-size: 28px; font-weight: 700; color: var(--ink); }
         .lower span { display: block; margin-top: 6px; font-size: 15px; color: var(--ink2); }
+        .lower.note { bottom: 30px; left: 56px; padding: 5px 10px; border-radius: 6px; box-shadow: none; background: rgba(255, 255, 255, 0.86); }
+        .lower.note span { margin: 0; font-size: 16px; }
         .sub { position: absolute; left: 0; right: 0; bottom: 92px; text-align: center; visibility: hidden; }
         .sub span { display: inline-block; padding: 10px 22px; border-radius: 12px; background: rgba(4, 4, 5, 0.72); color: #fff; font-size: 36px; font-weight: 600; letter-spacing: -0.01em; }
 
@@ -86,11 +88,11 @@
               tl.set('#source', { autoAlpha: 1 }, b.start + 0.2);
               tl.set('#source', { autoAlpha: 0 }, off + 0.25);
             }
-            if (b.sarah) {   // she crosses behind them, right to left; "sarah": seconds before the beat's first line
-              var s0 = b.start - (b.sarah === true ? 0.2 : b.sarah);
+            if (b.sarah) {   // she crosses behind them the way she faces: {lead: s before the beat's first line, dir: "ltr" | "rtl"}
+              var sa = b.sarah === true ? {} : b.sarah, s0 = b.start - (sa.lead || 0.2), ltr = sa.dir !== 'rtl';
               tl.set('#sarah', { autoAlpha: 1 }, s0);
-              tl.fromTo('#sarah', { x: 1960 }, { x: -640, duration: 4.6, ease: 'none', immediateRender: false }, s0);
-              tl.set('#sarah', { autoAlpha: 0 }, s0 + 4.6);
+              tl.fromTo('#sarah', { x: ltr ? -640 : 1960 }, { x: ltr ? 1960 : -640, duration: sa.dur || 4.6, ease: 'none', immediateRender: false }, s0);
+              tl.set('#sarah', { autoAlpha: 0 }, s0 + (sa.dur || 4.6));
             }
             if (b.lower) {
               var lw = q('#lower' + b.beat);

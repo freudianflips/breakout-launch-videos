@@ -5,14 +5,14 @@
  "lead_in": 0.6,
  "gap": 0.32,
  "cast": {
-  "two": "cast/twoshot-b.png",
-  "breakout": "cast/breakout-c.png",
+  "two": "cast/twoshot-c.png",
+  "breakout": "cast/breakout-c-hoodie.png",
   "piper": "cast/piper-d.png",
   "sarah": "cast/sarah-a.png"
  },
  "cutouts": {
   "sarah": "cast/sarah-a.png",
-  "people": "cast/twoshot-b.png"
+  "people": "cast/twoshot-c.png"
  },
  "voices": {
   "breakout": {
@@ -30,7 +30,7 @@
   "breakout": "Breakout",
   "piper": "Piper \u00b7 Qualified's AI SDR"
  },
- "source": "Source: getbreakout.ai/compare/qualified-alternative",
+ "source": "",
  "subtitles": true,
  "beats": [
   {
@@ -59,11 +59,6 @@
   },
   {
    "beat": 2,
-   "claim": {
-    "label": "Go-live",
-    "breakout": "<3 hours, self-serve",
-    "piper": "8-12 weeks"
-   },
    "lines": [
     {
      "who": "piper",
@@ -123,11 +118,6 @@
   },
   {
    "beat": 3,
-   "claim": {
-    "label": "Pricing",
-    "breakout": "Transparent pricing, published.",
-    "piper": "A demo, a quote, and an annual contract"
-   },
    "lines": [
     {
      "who": "piper",
@@ -160,15 +150,12 @@
   },
   {
    "beat": 4,
-   "sarah": 1.0,
-   "lower": {
-    "text": "Sarah \u00b7 VP Demand Gen, Vanta",
-    "note": "Illustrative example"
+   "sarah": {
+    "lead": 1.0,
+    "dir": "ltr"
    },
-   "claim": {
-    "label": "Who's on your site",
-    "breakout": "Person-level",
-    "piper": "Account-level only"
+   "lower": {
+    "note": "Illustrative example"
    },
    "lines": [
     {
@@ -193,11 +180,6 @@
   },
   {
    "beat": 5,
-   "claim": {
-    "label": "To book a meeting",
-    "breakout": "Qualifies and books meetings",
-    "piper": "Needs a CRM, an admin, and a hand-raise event"
-   },
    "lines": [
     {
      "who": "breakout",

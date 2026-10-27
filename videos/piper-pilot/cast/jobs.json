@@ -66,5 +66,23 @@
    "breakout-c",
    "piper-d"
   ]
+ },
+ "breakout-c-hoodie": {
+  "model": "nano_banana_pro",
+  "job": "a1df7c06-b14c-4c8d-9d18-b87db05f108b",
+  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KGWihaMXK7aGBVFyj0vulIdY7x/hf_20261027_105747_a1df7c06-b14c-4c8d-9d18-b87db05f108b.png",
+  "refs": [
+   "breakout-c",
+   "logo-on-indigo"
+  ]
+ },
+ "twoshot-c": {
+  "model": "nano_banana_pro",
+  "job": "7bfeef30-a57e-4cae-a89d-8137159be6e9",
+  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KGWihaMXK7aGBVFyj0vulIdY7x/hf_20261027_105902_7bfeef30-a57e-4cae-a89d-8137159be6e9.png",
+  "refs": [
+   "twoshot-b",
+   "breakout-c-hoodie"
+  ]
  }
 }

@@ -43,14 +43,14 @@ About Piper (qualified.com, the 2024 launch release and the AI FAQ): Piper is Qu
 - **The genre, not the ads.** A white seamless and two people talking is a genre. No lines, music, wardrobe, casting or framing copied from Apple's campaign; no "Hi, I'm a ..." opener.
 - **People:** 3 generated, fictional adults (Breakout, Piper, Sarah). Check every face for a likeness to anyone famous; regenerate rather than fix.
 - **Vanta:** a real company, named in plain type only, never its logo, colours or site, with "Illustrative example" on screen while it is up. Sarah is a fictional person; the film implies nothing about Vanta's vendors or customers.
-- **On-screen text** is added in HyperFrames, never generated inside the footage (generated text garbles).
+- **On-screen text** is added in HyperFrames, never generated inside the footage (generated text garbles). The one exception is the Breakout wordmark on Breakout's hoodie, generated with the real `logo-on-dark` as a reference and checked to read correctly in every shot.
+- **No claim cards or source line on screen** (owner, 2026-10-27: "Remove the product visuals/cards from here and the source call out"). The claims are spoken jokes; their sources stay in the table above.
 
 ## Assets
 
 - Generated: the 3 actors (character stills first, then video), both voices.
-- Brand: `logo.svg`, New Kansas / Fraunces, Manrope, violet `#4c00ff` for Breakout's single accent (a violet sweater), grey `#17161b` only for Piper's side.
+- Brand: `logo.svg`, New Kansas / Fraunces, Manrope, Breakout's deep indigo `#1C1778` hoodie with the wordmark (the bright violet sweater was "too bright"), grey `#17161b` only for Piper's side.
 - End card: the Breakout logo and "Pageview to *pipeline.*" (`brand.json` `copy.site_h1`).
-- Source captions: small Fragment Mono line, "Source: getbreakout.ai/compare/qualified-alternative", while a claim is up.
 
 ## Production (after the storyboard is approved)
 

@@ -139,14 +139,15 @@ for b in beats:
     claims += (f'<div class="claim" id="claim{b["beat"]}"><div class="clab mono">{E(c["label"])}</div>'
                f'<div class="crow b"><span>Breakout</span><b>{E(c["breakout"])}</b></div>'
                f'<div class="crow q"><span>Qualified</span><b>{E(c["piper"])}</b></div>{note}</div>')
-lowers = "".join(f'<div class="lower" id="lower{b["beat"]}"><b>{E(b["lower"]["text"])}</b>'
+lowers = "".join(f'<div class="lower{"" if b["lower"].get("text") else " note"}" id="lower{b["beat"]}">'
+                 + (f'<b>{E(b["lower"]["text"])}</b>' if b["lower"].get("text") else "")
                  + (f'<span class="mono">{E(b["lower"]["note"])}</span>' if b["lower"].get("note") else "") + '</div>'
                  for b in beats if b.get("lower"))
 subs = "".join(f'<div class="sub" id="sub{i}"><span>{E(ln["text"])}</span></div>' for i, ln in enumerate(lines)) if F.get("subtitles") else ""
 tags = (f'<div class="tag" id="tagB">{E(F["names"]["breakout"])}</div><div class="tag" id="tagP">{E(F["names"]["piper"])}</div>')
 tpl = open(os.path.join(HERE, "template.html")).read()
 rep = {"__FONTFACES__": "\n        ".join(fontfaces), "__CLAIMS__": claims, "__SUBS__": subs, "__TAGS__": tags + lowers,
-       "__SOURCE__": E(F["source"]), "__ENDLINE__": kw(F["end"]["line"]), "__T__": json.dumps(T)}
+       "__SOURCE__": E(F.get("source", "")), "__ENDLINE__": kw(F["end"]["line"]), "__T__": json.dumps(T)}
 for k, v in rep.items():
     tpl = tpl.replace(k, v)
 os.makedirs(os.path.join(HERE, "compositions"), exist_ok=True)
