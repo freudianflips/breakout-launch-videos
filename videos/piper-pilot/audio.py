@@ -7,6 +7,7 @@ Dialogue only: dry voices on a quiet room tone, no music under the words (the st
 """
 import json
 import os
+import re
 import subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -23,10 +24,20 @@ n = len(T["lines"])
 ins += ["-f", "lavfi", "-t", f"{T['total']:.3f}", "-i", "anoisesrc=color=brown:amplitude=0.0025:sample_rate=48000"]
 chain.append(f"[{n}:a]lowpass=f=900,aformat=channel_layouts=mono[room]")
 mix = "".join(f"[v{i}]" for i in range(n)) + "[room]"
-chain.append(f"{mix}amix=inputs={n + 1}:normalize=0,apad,atrim=0:{T['total']:.3f},"
-             f"loudnorm=I=-14:TP=-1.5:LRA=7,alimiter=limit=0.84,pan=stereo|c0=c0|c1=c0[out]")
+chain.append(f"{mix}amix=inputs={n + 1}:normalize=0,apad,atrim=0:{T['total']:.3f},pan=stereo|c0=c0|c1=c0[out]")
+raw = os.path.join(R, "mix-raw.wav")
+subprocess.run(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", ";".join(chain), "-map", "[out]", "-ar", "48000", raw], check=True)
+
+
+def lufs(path):
+    log = subprocess.run(["ffmpeg", "-nostats", "-i", path, "-af", "ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr
+    return float(re.findall(r"I:\s+(-?[\d.]+) LUFS", log)[-1])
+
+
+# a static gain to -14 LUFS, then a -3.2 dB brickwall so the AAC encode stays under -1 dBTP
+gain = -14.0 - lufs(raw)
 wav = os.path.join(R, "mix.wav")
-subprocess.run(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", ";".join(chain), "-map", "[out]", "-ar", "48000", wav], check=True)
+subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", f"volume={gain:.2f}dB,alimiter=limit=0.69:level=disabled", wav], check=True)
 pic = os.path.join(R, "picture.mp4")
 out = os.path.join(R, "two-hander.mp4")
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", pic, "-i", wav, "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", out], check=True)
