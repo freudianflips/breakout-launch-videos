@@ -42,3 +42,6 @@ __pycache__/
 scripts/private-terms.txt
 /docs/styles/*/renders/
 /docs/styles/*/snapshots/
+
+# generated cast stills: keep prompts and job ids (cast/prompts.json, cast/jobs.json), not the images
+/videos/*/cast/*.png

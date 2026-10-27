@@ -1,6 +1,6 @@
 # Storyboard: piper-pilot v2
 
-**Status:** draft v2, awaiting the owner's approval. A new `two-hander` template gets built from this spot once it is approved.
+**Status:** approved by the owner on 2026-10-27 ("okay let's create"). The `two-hander` template gets built from this spot.
 
 ## The look
 

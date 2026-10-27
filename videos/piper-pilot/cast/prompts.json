@@ -1,0 +1,17 @@
+{
+ "model": "text2image_soul_v2",
+ "aspect_ratio": "3:4",
+ "set": "Full-length photo of one person standing on an endless seamless pure white studio backdrop, soft even high-key light, no shadows on the wall, shot on a 50mm lens at chest height, natural skin texture, photorealistic, commercial advertising photography, plain clothes with no logos or text.",
+ "casts": {
+  "breakout-a": "A woman in her mid-20s, attractive, bright eyes, easy confident grin, shoulder-length dark wavy hair, wearing a fitted vivid violet (#4c00ff) crewneck sweater, dark slim trousers, white sneakers, relaxed playful stance, hands in pockets.",
+  "breakout-b": "A man in his mid-20s, attractive, warm grin, short textured black hair, light stubble, wearing a fitted vivid violet (#4c00ff) crewneck sweater, dark slim chinos, white sneakers, relaxed playful stance, one hand in pocket.",
+  "breakout-c": "A woman in her mid-20s, attractive, warm brown skin, curly natural hair pulled back, big easy smile, wearing a fitted vivid violet (#4c00ff) crewneck sweater, black straight jeans, white sneakers, relaxed confident stance.",
+  "breakout-d": "A man in his mid-20s, attractive, friendly smile, wavy light brown hair, clean shaven, wearing a fitted vivid violet (#4c00ff) crewneck sweater, grey trousers, white sneakers, relaxed confident stance.",
+  "piper-a": "A man in his late 30s, neat side-parted hair, completely deadpan neutral expression, standing perfectly straight, wearing a plain grey blazer over a grey button-up shirt, grey trousers, black shoes, a lanyard with a blank white badge, arms at his sides.",
+  "piper-b": "A woman in her late 30s, hair in a tidy low bun, completely deadpan neutral expression, standing perfectly straight, wearing a plain grey blazer over a grey blouse, grey trousers, black flats, a lanyard with a blank white badge, hands clasped in front.",
+  "piper-c": "A man in his early 40s, short greying hair, rimless glasses, completely deadpan neutral expression, standing very still, wearing a plain grey blazer over a grey shirt, grey trousers, a lanyard with a blank white badge, arms at his sides.",
+  "piper-d": "A woman in her mid-30s, straight shoulder-length hair tucked behind ears, completely deadpan neutral expression, standing very still, wearing a plain grey blazer over a grey turtleneck, grey trousers, a lanyard with a blank white badge, hands at her sides.",
+  "sarah-a": "A woman in her late 30s, a senior marketing executive, smart casual navy knit top and camel trousers, walking briskly in profile, looking at her phone, mid-stride.",
+  "sarah-b": "A woman in her early 40s, a senior marketing executive, smart casual cream blouse and dark trousers, walking briskly in profile, holding a laptop under one arm, mid-stride."
+ }
+}

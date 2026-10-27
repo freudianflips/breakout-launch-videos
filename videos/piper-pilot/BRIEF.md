@@ -6,7 +6,7 @@ aspect: 1920x1080
 language: en
 length: 45s
 angle: Two-hander comedy (the genre of the classic two-person computer ads), a run of short jokes, each a real difference
-status: draft v2, awaiting the owner's approval
+status: storyboard approved by the owner on 2026-10-27
 ---
 
 ## Intent
