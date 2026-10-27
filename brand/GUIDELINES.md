@@ -64,6 +64,7 @@ Any video may name Qualified and its AI SDR Piper, and may play Piper as a chara
 | Split screen, low on text, the user experience side by side | `abm-split` | Requested by the owner; awaiting a verdict |
 | Cartoon story: simple, colourful characters, the agent as a friendly violet character | `cartoon` | Rejected ("This animation style is bad. The story is also too b2b"). Kept for reference only |
 | Dot matrix: a dark halftone grid; the visitor and Breakout as blooms of dots that ripple, follow and blend; wordless | [`dot-matrix`](../templates/dot-matrix/README.md) | Chosen from the abstract reel ("Use the dot matrix style"); v2 awaiting a verdict. Motion snaps on the beat ("very cool snappy motion"); upbeat swing, never downbeat ("too downbeat. Make the whole thing upbeat"); captions small and precise |
+| Two-hander: two generated people on a white seamless, Breakout vs Piper, dialogue, a sourced claim card per joke | [`two-hander`](../templates/two-hander/README.md) | Requested by the owner (2026-10-27); pilot animatic awaiting a verdict. The one style with voices that are not a narrator |
 | Voice-led Apple-style launch | `voice-led` | The kit's base; not yet judged |
 | Analog, vintage, psychedelic | `analog-psych` | Rejected for product launches ("more modern, more unexpected"); kept as a style to draw on |
 

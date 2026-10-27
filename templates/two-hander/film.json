@@ -1,0 +1,57 @@
+{
+  "title": "Breakout vs Piper: pilot",
+  "brand": "../../brand",
+  "fps": 30,
+  "lead_in": 0.6,
+  "gap": 0.32,
+  "cast": {
+    "two": "cast/twoshot-b.png",
+    "breakout": "cast/breakout-c.png",
+    "piper": "cast/piper-d.png",
+    "sarah": "cast/sarah-a.png"
+  },
+  "cutouts": {"sarah": "cast/sarah-a.png", "people": "cast/twoshot-b.png"},
+  "voices": {
+    "breakout": {"dir": "vo/breakout-lines", "voice": "Liza", "engine": "elevenlabs"},
+    "piper": {"dir": "vo/piper-lines", "voice": "Onyx", "engine": "elevenlabs"}
+  },
+  "names": {"breakout": "Breakout", "piper": "Piper · Qualified's AI SDR"},
+  "source": "Source: getbreakout.ai/compare/qualified-alternative",
+  "subtitles": true,
+  "beats": [
+    {"beat": 1, "names": true, "lines": [
+      {"who": "breakout", "line": "01", "text": "Hi. I'm Breakout.", "dur": 1.516, "frame": "two"},
+      {"who": "piper", "line": "01", "text": "Piper.", "dur": 0.452, "frame": "two", "gap": 0.55}
+    ]},
+    {"beat": 2, "gap": 0.7, "claim": {"label": "LinkedIn follow-ups", "breakout": "Yes", "piper": "No"}, "lines": [
+      {"who": "breakout", "line": "02", "text": "Piper. Like the Pied Piper?", "dur": 2.836, "frame": "two"},
+      {"who": "piper", "line": "02", "text": "No.", "dur": 0.448, "frame": "piper", "gap": 0.5},
+      {"who": "breakout", "line": "03", "text": "The whole town followed him.", "dur": 1.36, "frame": "breakout"},
+      {"who": "piper", "line": "03", "text": "I don't do LinkedIn.", "dur": 1.642, "frame": "piper", "gap": 0.45},
+      {"who": "breakout", "line": "04", "text": "I do.", "dur": 0.538, "frame": "two"}
+    ]},
+    {"beat": 3, "gap": 0.8, "claim": {"label": "Go-live", "breakout": "<3 hours, self-serve", "piper": "8-12 weeks"}, "lines": [
+      {"who": "breakout", "line": "05", "text": "I went live this morning.", "dur": 1.322, "frame": "two"},
+      {"who": "piper", "line": "04", "text": "Eight to twelve weeks.", "dur": 1.44, "frame": "piper", "gap": 0.4},
+      {"who": "breakout", "line": "06", "text": "Weeks?", "dur": 0.832, "frame": "breakout"},
+      {"who": "piper", "line": "05", "text": "Demo. Quote. Annual contract.", "dur": 2.84, "frame": "piper", "gap": 0.4}
+    ]},
+    {"beat": 4, "gap": 0.8, "claim": {"label": "Buying signals", "breakout": "700+", "piper": "1"}, "lines": [
+      {"who": "breakout", "line": "07", "text": "How many buying signals do you track?", "dur": 1.962, "frame": "two"},
+      {"who": "piper", "line": "06", "text": "One.", "dur": 0.392, "frame": "piper", "gap": 0.45},
+      {"who": "breakout", "line": "08", "text": "I track seven hundred.", "dur": 1.6, "frame": "breakout"},
+      {"who": "piper", "line": "07", "text": "Show-off.", "dur": 0.636, "frame": "piper", "gap": 0.9}
+    ]},
+    {"beat": 5, "gap": 0.8, "sarah": true, "claim": {"label": "Who's on your site", "breakout": "Person-level", "piper": "Account-level only", "note": "Illustrative example"}, "lines": [
+      {"who": "breakout", "line": "09", "text": "That's Sarah. VP of Demand Gen at Vanta.", "dur": 2.933, "frame": "two", "gap": 1.4},
+      {"who": "piper", "line": "08", "text": "That's Vanta.", "dur": 1.44, "frame": "piper", "gap": 0.45}
+    ]},
+    {"beat": 6, "gap": 0.8, "lines": [
+      {"who": "piper", "line": "09", "text": "I'll wait for her to raise her hand.", "dur": 1.819, "frame": "two"},
+      {"who": "breakout", "line": "10", "text": "I booked the meeting.", "dur": 0.814, "frame": "breakout", "gap": 0.45},
+      {"who": "piper", "line": "10", "text": "I'll tell my admin.", "dur": 1.006, "frame": "piper", "gap": 0.7}
+    ]}
+  ],
+  "tail": 0.9,
+  "end": {"line": "Pageview to *pipeline.*", "hold": 4.5}
+}

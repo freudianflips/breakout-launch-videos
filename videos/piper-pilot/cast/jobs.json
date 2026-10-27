@@ -48,5 +48,23 @@
   "job": "9f71dd0b-b054-4984-b108-e45d78e084fb",
   "seed": 551819,
   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KGWihaMXK7aGBVFyj0vulIdY7x/hf_20261027_094919_9f71dd0b-b054-4984-b108-e45d78e084fb.png"
+ },
+ "twoshot-a": {
+  "model": "nano_banana_pro",
+  "job": "05c4aebc-5484-44da-8621-02a250826e28",
+  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KGWihaMXK7aGBVFyj0vulIdY7x/hf_20261027_100127_05c4aebc-5484-44da-8621-02a250826e28.png",
+  "refs": [
+   "breakout-c",
+   "piper-d"
+  ]
+ },
+ "twoshot-b": {
+  "model": "nano_banana_pro",
+  "job": "655f6b56-1345-47b3-8006-60ad6db88d9d",
+  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KGWihaMXK7aGBVFyj0vulIdY7x/hf_20261027_100320_655f6b56-1345-47b3-8006-60ad6db88d9d.png",
+  "refs": [
+   "breakout-c",
+   "piper-d"
+  ]
  }
 }

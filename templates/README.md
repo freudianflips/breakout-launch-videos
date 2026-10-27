@@ -1,6 +1,6 @@
 # Templates
 
-Each folder is one video style (10 so far), complete with a worked example film: its data file (the words, beats and timing), its look (`template.html`), and the scripts that build, score, mix and render it. Never edit a template to make one video. Copy it first:
+Each folder is one video style (11 so far), complete with a worked example film: its data file (the words, beats and timing), its look (`template.html`), and the scripts that build, score, mix and render it. Never edit a template to make one video. Copy it first:
 
 ```bash
 python3 scripts/new-video.py                         # list the templates
@@ -19,6 +19,7 @@ Then follow the order in `CLAUDE.md`: brief and storyboard approved first, then 
 | [`particle-swarm`](particle-swarm/README.md) | ![](particle-swarm/poster.jpg) | Teasers, openers, logo reveals, 6 to 10 s social cuts | Liked |
 | [`abm-cinematic`](abm-cinematic/README.md) | ![](abm-cinematic/poster.jpg) | Per-account ABM: their site and chat, a hard-cut hook, wins, an offer | Awaiting a verdict |
 | [`abm-split`](abm-split/README.md) | ![](abm-split/poster.jpg) | Per-account ABM: the same visitor on their site today and with Breakout | Awaiting a verdict |
+| [`two-hander`](two-hander/README.md) | ![](two-hander/cast/contact.jpg) | Two generated people talking on a white seamless: Breakout vs a named rival, a sourced claim per joke | Awaiting a verdict |
 | [`voice-led`](voice-led/README.md) | ![](voice-led/poster.jpg) | Narrated launch films, 30 to 60 s, hooks on a shared body | The kit's base |
 | [`analog-psych`](analog-psych/README.md) | ![](analog-psych/poster.jpg) | Conceptual brand pieces with a nerdy-fact hook | Rejected for launches; kept as a style |
 

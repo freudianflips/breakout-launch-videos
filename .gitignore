@@ -45,3 +45,4 @@ scripts/private-terms.txt
 
 # generated cast stills: keep prompts and job ids (cast/prompts.json, cast/jobs.json), not the images
 /videos/*/cast/*.png
+/templates/*/cast/*.png
