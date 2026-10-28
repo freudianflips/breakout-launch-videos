@@ -159,6 +159,11 @@ class Client:
                    "offsiteDeliveryEnabled", "audienceExpansionEnabled", "targetingCriteria", "associatedEntity",
                    "politicalIntent", "unitCost", "campaignGroup", "storyDeliveryEnabled")
 
+    def update_campaign(self, account, campaign_id, fields):
+        """Change a live campaign's fields in place, e.g. {"status": "PAUSED"}, {"dailyBudget": {...}}, {"runSchedule": {...}}."""
+        return self.call("POST", f"/adAccounts/{account}/adCampaigns/{campaign_id}", {"patch": {"$set": fields}},
+                         headers={"X-RestLi-Method": "PARTIAL_UPDATE"})
+
     def copy_campaign(self, account, src, name, daily_budget):
         """A new DRAFT campaign with the source campaign's audience and settings, and its own daily budget."""
         body = {k: src[k] for k in self.COPY_FIELDS if k in src}
