@@ -54,6 +54,8 @@ Then the same `npm install`, venv and model steps as on macOS. Headless Chrome n
 | `BLENDER_GPU` | `METAL` (`CUDA`, `OPTIX` or `NONE` elsewhere) | `blender_glass_object.py` |
 | `PYTHON` | `python3` | `study_reference.sh` |
 | `SF2` | `/usr/share/sounds/sf2/FluidR3_GM.sf2` | the orchestral score scripts |
+| `FRAMER_PROJECT_URL` | none | `tools/framer-cms.mjs` |
+| `FRAMER_API_KEY` | none, never in the repo | `tools/framer-cms.mjs` |
 
 ## Optional tools
 
@@ -64,6 +66,31 @@ Then the same `npm install`, venv and model steps as on macOS. Headless Chrome n
 - **ACE-Step 1.5:** follow its README to install it into its own folder with its own venv, then set `ACE_STEP_ROOT`. Models download on first run (several GB).
 - **Dragonfly Reverb:** free and open source (GPL); install the VST3 plug-in from its website. Without it the sound palette uses pedalboard's built-in reverb.
 - **Local voice clone:** `skills/launch-voice/scripts/clone_local.py` pulls Chatterbox through `uv` on first run (a few GB).
+
+## Framer CMS
+
+`tools/framer-cms.mjs` reads and updates the CMS of the Framer site through Framer's Server API (`framer-api`, installed by `npm install`).
+
+1. In Framer, open the site project, then settings (Cmd+K, "open settings"), **API Keys**, and create a key.
+2. Set `FRAMER_PROJECT_URL` (the project's `https://framer.com/projects/...` address) and `FRAMER_API_KEY` in your shell, or in a cloud session's environment settings. Never commit the key.
+3. Check the connection:
+
+```bash
+npm run cms -- collections
+npm run cms -- fields "Blog"
+npm run cms -- items "Blog" --json
+```
+
+Writes print a plan first and change nothing until `--yes`. Edits stay in the Framer project until you publish (a preview deployment) and then deploy that deployment to the live domains:
+
+```bash
+npm run cms -- upsert "Blog" items.json          # plan
+npm run cms -- upsert "Blog" items.json --yes    # write
+npm run cms -- publish                           # preview link
+npm run cms -- deploy <deploymentId> --yes       # live
+```
+
+The CMS text is public copy: the same voice and claim rules as the films apply (`CLAUDE.md`).
 
 ## Check the install
 
