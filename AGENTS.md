@@ -11,6 +11,7 @@ Read README.md, then [`brand/GUIDELINES.md`](brand/GUIDELINES.md), then [`templa
 - Order of work: the owner says what the video is; pick a template with them; write `videos/<name>/BRIEF.md` and `STORYBOARD.md` (skill `launch-story`) and clarify them with the owner; only after the owner approves the storyboard, make frames or video. Do not generate style frames or renders before that.
 - Show frames before building. A contact sheet or snapshots of every new beat come before a full render, and a free render (scratch voice, free score, synthesised sound) comes before any paid generation.
 - Paid generation (Higgsfield or any other provider) runs only on the team's own account, and only after you state the cost of the job and the reader says yes. Never write an API key into the repo.
+- The site's Framer CMS is read and written with `tools/framer-cms.mjs` (`docs/setup.md`, "Framer CMS"). Show the plan before any write, and run `upsert --yes`, `remove --yes`, `publish` or `deploy` only after the owner says yes to that change. The key lives in the environment, never in the repo.
 - Scratch voices are for timing only and are never published (`docs/rights.md`). Generated people are fictional; no famous people, lookalikes, real films or third-party brands. Example accounts, visitors and emails are fictional and labelled "Illustrative example".
 - Product screens in `assets/screens/` must be real Breakout UI with customer data blurred or replaced. Never commit an unblurred screen.
 - Every frame stays a pure function of time.
