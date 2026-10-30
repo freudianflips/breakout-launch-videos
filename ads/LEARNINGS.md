@@ -17,6 +17,7 @@ Starting beliefs, borrowed from Wispr Flow's playbook and not yet tested on Brea
 
 ## Log
 
+- 2026-10-30: 2026-10-30: stage 1 closed after 10 days ($910, 2,019 impressions, 718 people, 284 of 382 companies, 11 clicks; QSW-060 the winner at 1.05% CTR, but its CTR fell to 0.43% once scaled alone on the saturated practitioner list). Owner switched every audience to the next set: stage 2 side by side, loaded into the same two campaigns (practitioners QSW-066 to 069; CMOs QSW-008, 054, 055, 056); all stage 1 ads paused. Compare stage 2 CTR against stage 1's 0.54%.
 - 2026-10-28: 2026-10-28 correction: the owner meant pause only the other practitioner ads. CMO campaign and its 4 ads back on at $25/day, extended to 30 November; practitioners run QSW-060 alone at $75/day.
 - 2026-10-28: 2026-10-28, week 1 of stage 1 ($663, 1,630 impressions, 629 people, 8 clicks): the practitioner dictionary ad QSW-060 (qualified = limited, 'Or break out.') won with 5 of 8 clicks, 1.62% CTR, $28 per click; the same ad got 0 clicks from CMOs, and CMOs clicked once in 692 impressions (QSW-063). Owner: scale only the dictionary ad, pause the rest. QSW-060 runs alone in S1 practitioner at $75/day to 30 November; the other 7 ads paused and the CMO campaign paused. Watch frequency: one ad on about 1,000 people.
 - 2026-10-21: 2026-10-21: stage 1 loaded over the API and the 8 ads set ACTIVE at the owner's word (QSW-010, 060, 061, 062 in S1 practitioner; QSW-009, 063, 064, 065 in S1 CMO); QSW-011 and QSW-013 deleted. Campaigns still DRAFT until launched in Campaign Manager.

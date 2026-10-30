@@ -6,9 +6,9 @@
       "post": "urn:li:share:7517908879876354048"
     },
     "QSW-008": {
-      "campaign": "912454556",
-      "creative": "urn:li:sponsoredCreative:1642207036",
-      "post": "urn:li:share:7516083853153959936"
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1668249936",
+      "post": "urn:li:share:7521931310517628928"
     },
     "QSW-009": {
       "campaign": "914655726",
@@ -74,8 +74,43 @@
       "campaign": "914655726",
       "creative": "urn:li:sponsoredCreative:1652848636",
       "post": "urn:li:share:7518625219259813890"
+    },
+    "QSW-066": {
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1668319926",
+      "post": "urn:li:share:7521931271153872896"
+    },
+    "QSW-067": {
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1668289986",
+      "post": "urn:li:share:7521931281040031746"
+    },
+    "QSW-068": {
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1668429876",
+      "post": "urn:li:share:7521931289768378369"
+    },
+    "QSW-069": {
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1668229996",
+      "post": "urn:li:share:7521931299641778176"
+    },
+    "QSW-054": {
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1668429886",
+      "post": "urn:li:share:7521931320881549312"
+    },
+    "QSW-055": {
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1668409916",
+      "post": "urn:li:share:7521931330604072961"
+    },
+    "QSW-056": {
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1668409936",
+      "post": "urn:li:share:7521931340280262656"
     }
   },
-  "verified": "2026-10-21T11:04:20",
+  "verified": "2026-10-30T13:50:09",
   "account": "514347134"
 }
