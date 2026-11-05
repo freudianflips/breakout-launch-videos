@@ -125,7 +125,9 @@ try {
       }
       const old = existing.get(row.slug);
       const item = { slug: row.slug, fieldData };
+      // An update without `draft` clears it, so keep the item's current state unless the row sets one.
       if (row.draft !== undefined) item.draft = Boolean(row.draft);
+      else if (old) item.draft = Boolean(old.draft);
       if (old) item.id = old.id;
       console.log(`${old ? 'update' : 'create'}\t${row.slug}\t${Object.keys(row.fields ?? {}).join(', ')}`);
       return item;
