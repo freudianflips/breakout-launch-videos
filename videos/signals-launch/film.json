@@ -1,7 +1,7 @@
 {
   "about": "Signals launch, from the swiss-grid template: a visitor lands on a pricing page and the camera snaps onto her cursor; Breakout listens to 35+ signals and lists them under her name, one at a time; then Breakout's website agent (recreated from the owner's screenshot, assets/refs/agent-widget.png) and the AI SDR email use them, the camera zooming onto each personalization token. Headlines verbatim from the Signals launch email (Sachin, 2026-11); signal names verbatim from getbreakout.ai/signals; findings, chat and email illustrative and approved by the owner. Times in bars at 128 BPM (1 bar = 1.875 s).",
   "bpm": 128,
-  "bars": 14,
+  "bars": 15.75,
   "brand": "../../brand",
   "disclaimer": "Illustrative example",
   "brandtag": "Breakout \u00b7 Signals",
@@ -11,59 +11,33 @@
     "listen": 1.25,
     "signals": [
       1.6,
-      1.95,
-      2.3,
-      2.65,
-      3.0
+      2.25,
+      2.9,
+      3.55,
+      4.2
     ],
-    "load": 0.15,
-    "act": 3.5,
-    "agent": 4.5,
+    "load": 0.25,
+    "act": 4.9,
+    "agent": 5.75,
     "type": [
-      4.85,
-      6.6
+      6.1,
+      8.1
     ],
-    "reply": 7.0,
-    "email": 8.0,
+    "reply": 8.5,
+    "email": 9.5,
     "subject": [
-      8.15,
-      8.4
+      9.65,
+      9.9
     ],
     "body": [
-      8.5,
-      10.6
+      10.0,
+      12.2
     ],
-    "sent": 10.9,
-    "close": 11.5,
-    "end": 14
+    "sent": 12.5,
+    "close": 13.25,
+    "end": 15.75
   },
-  "headlines": [
-    {
-      "at": 0,
-      "until": 1.25,
-      "text": "A pricing-page visit is good..."
-    },
-    {
-      "at": 1.25,
-      "until": 3.5,
-      "text": "Now it also tells you *what just changed* at that company."
-    },
-    {
-      "at": 3.5,
-      "until": 4.5,
-      "text": "Know which visits to *drop everything for*"
-    },
-    {
-      "at": 4.5,
-      "until": 8,
-      "text": "The agent picks it up *in the conversation*"
-    },
-    {
-      "at": 8,
-      "until": 11.5,
-      "text": "...or *the follow-up email.*"
-    }
-  ],
+  "headlines": [],
   "visitor": {
     "name": "Sarah",
     "role": "VP Marketing",

@@ -4,10 +4,10 @@ message: "Now it also tells you what just changed at that company."
 destination: owner's choice; see "Real company" below
 aspect: 1920x1080
 language: en
-length: 26.3s
+length: 29.5s
 angle: A visitor lands on the pricing page; the camera snaps onto her cursor and Breakout lists what just changed at her company under her name; the website agent and the AI SDR email use it
 template: swiss-grid
-status: v3 built from the owner's notes on the v2 cut (2026-11-11)
+status: v4 built from the owner's notes on v3 (2026-11-11)
 ---
 
 ## Intent
@@ -16,7 +16,7 @@ Launch Signals tactically (owner: "more tactical + more wordy"): show the produc
 
 ## Words
 
-- **Headlines:** verbatim from the Signals launch email (Sachin, 2026-11).
+- **No headlines** (owner: "Avoid commentary on the top"); the only line is the close.
 - **Signal names:** verbatim from the signals library (getbreakout.ai/signals, saved 2026-11-11).
 - **Close:** "Signals, now live in Breakout." (owner's line).
 - **Findings, chat and email:** illustrative, approved by the owner ("rest are good").
@@ -28,4 +28,4 @@ The visitor is "Sarah at Anthropic" (VP Marketing) with Anthropic's logo, as the
 
 ## Look and sound
 
-Swiss grid (approved): off-white paper, hairline grid, Manrope, violet for what matters; the visitor's site is a neutral pricing page (`yoursite.com/pricing`). The website agent is recreated from the owner's screenshot (`assets/refs/agent-widget.png`, cropped to the widget alone). Snappy: hard cuts between page, agent, email and close; camera snaps onto the cursor and punches in on each personalization token. Upbeat swing score (the dot-matrix band, free), cued from the picture.
+Swiss grid (approved): off-white paper, hairline grid, Manrope, violet for what matters; the visitor's site is a neutral pricing page (`yoursite.com/pricing`). The website agent is recreated from the owner's screenshot (`assets/refs/agent-widget.png`, cropped to the widget alone). Snappy: hard cuts between page, agent, email and close; one camera framing per beat with fast snaps; personalization tokens flash violet once typed. Upbeat swing score (the dot-matrix band, free), cued from the picture.

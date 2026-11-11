@@ -77,17 +77,17 @@ AGENT = ('<span class="wav"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="
 ICONS = ('<span class="wic"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg>'
          '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></span>')
 v, site, wg = F["visitor"], F["site"], F["widget"]
-plans = "".join(f'<div class="plan{" hot" if i == site["hover"] else ""}"><b>{E(p)}</b><i class="bar w60"></i><i class="bar w40 tall"></i>'
-                f'<i class="ln"></i><i class="ln"></i><i class="ln s"></i><i class="ln"></i><span class="btn"></span></div>' for i, p in enumerate(site["plans"]))
+plans = "".join(f'<div class="plan{" hot" if i == site["hover"] else ""}"><i class="bar name"></i><i class="bar w60"></i><i class="bar w40 tall"></i>'
+                f'<i class="ln"></i><i class="ln"></i><i class="ln s"></i><i class="ln"></i><span class="btn"></span></div>' for i, _ in enumerate(site["plans"]))
 widget = (f'<div id="widget"><div class="wh">{AGENT}<b>{E(wg["name"])}</b>{ICONS}</div><div class="wbook">{E(wg["book"])}</div>'
           f'<div class="wmsg">{typed(F["agent"]["text"])}</div><div class="wme">{E(F["agent"]["reply"])}</div>'
           f'<div class="win"><span>{E(wg["placeholder"])}</span><i class="wsend"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></i></div></div>'
           f'<div id="launcher"><svg viewBox="0 0 40 40"><rect x="13" y="12" width="5" height="16" rx="2.5" fill="#8b7cf6"/><rect x="22" y="12" width="5" height="16" rx="2.5" fill="#8b7cf6"/></svg></div>')
-browser = (f'<div id="browser"><div class="chrome"><i></i><i></i><i></i><span class="url">{E(site["url"])}</span></div>'
-           f'<div class="page"><div class="ptitle">{E(site["title"])}</div><div class="plans">{plans}</div></div>{widget}</div>')
-sigs = "".join(f'<div class="sg">{SPIN}{CHECK}<span class="st">{E(x["title"])}</span><span class="sf">{E(x["finding"])}</span></div>' for x in F["signals"])
-cursor = (f'<div id="cursor">{ARROW}<div id="tag"><div class="who"><img src="{VLOGO}" alt=""><b>{E(v["name"])}</b>'
-          f'<span class="role">{E(v["role"])}, {E(v["company"])}</span><span class="pill act" id="act">{E(F["act"])}</span></div>'
+browser = (f'<div id="browser"><div class="chrome"><i></i><i></i><i></i><span class="url"><i></i></span></div>'
+           f'<div class="page"><i class="ptitle"></i><i class="psub"></i><div class="plans">{plans}</div></div>{widget}</div>')
+sigs = "".join(f'<div class="sg"><span class="sgi">{SPIN}{CHECK}</span><div class="sgt"><b>{E(x["title"])}</b><span>{E(x["finding"])}</span></div></div>' for x in F["signals"])
+cursor = (f'<div id="cursor">{ARROW}<div id="tag"><div class="who"><img src="{VLOGO}" alt=""><div class="nm"><b>{E(v["name"])}</b>'
+          f'<span>{E(v["role"])}, {E(v["company"])}</span></div><span class="pill act" id="act">{E(F["act"])}</span></div>'
           f'<div id="listen">{SPIN}<span>{E(F["listening"])}</span></div><div id="sigs">{sigs}</div></div></div>')
 em = F["email"]
 email = (f'<div id="email"><div class="eh">{MARK}<span>{E(em["head"])}</span><span class="pill sent" id="sent">{CHECK}{E(em["sent"])}</span></div>'
