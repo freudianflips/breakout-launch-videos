@@ -69,7 +69,7 @@ def kw(text):
 SPIN = '<svg class="spin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 9 9"/></svg>'
 CHECK = '<svg class="ok" viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></svg>'
 ARROW = ('<svg id="arrow" viewBox="0 0 32 32"><path d="M5 3 L5 25 L11 19.5 L15.5 29 L19.5 27.2 L15 18 L23 18 Z" '
-         'fill="#0b0b0f" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>')
+         'fill="var(--cur)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>')
 
 # ------------------------------------------------------------------ markup
 AGENT = ('<span class="wav"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#16151f"/>'
@@ -85,10 +85,14 @@ widget = (f'<div id="widget"><div class="wh">{AGENT}<b>{E(wg["name"])}</b>{ICONS
           f'<div id="launcher"><svg viewBox="0 0 40 40"><rect x="13" y="12" width="5" height="16" rx="2.5" fill="#8b7cf6"/><rect x="22" y="12" width="5" height="16" rx="2.5" fill="#8b7cf6"/></svg></div>')
 browser = (f'<div id="browser"><div class="chrome"><i></i><i></i><i></i><span class="url"><i></i></span></div>'
            f'<div class="page"><i class="ptitle"></i><i class="psub"></i><div class="plans">{plans}</div></div>{widget}</div>')
-sigs = "".join(f'<div class="sg"><span class="sgi">{SPIN}{CHECK}</span><div class="sgt"><b>{E(x["title"])}</b><span>{E(x["finding"])}</span></div></div>' for x in F["signals"])
-cursor = (f'<div id="cursor">{ARROW}<div id="tag"><div class="who"><img src="{VLOGO}" alt=""><div class="nm"><b>{E(v["name"])}</b>'
-          f'<span>{E(v["role"])}, {E(v["company"])}</span></div><span class="pill act" id="act">{E(F["act"])}</span></div>'
-          f'<div id="listen">{SPIN}<span>{E(F["listening"])}</span></div><div id="sigs">{sigs}</div></div></div>')
+ICO = {"funding": '<path d="M4 17l5-5 4 4 7-8M15 8h5v5"/>', "people": '<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.6 3.8-5.4 7-5.4s5.8 1.8 7 5.4"/>',
+       "hiring": '<path d="M8 7V5h8v2M4 7h16v12H4zM4 12h16"/>', "intent": '<path d="M4 18V9M10 18V5M16 18v-7M21 18H3"/>',
+       "committee": '<circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M2.5 19c.9-2.8 3-4.2 5.5-4.2s4.6 1.4 5.5 4.2M12.5 15.2c1-.3 2.2-.4 3.5-.4 2.5 0 4.6 1.4 5.5 4.2"/>'}
+COL = F["colors"]
+sigs = "".join(f'<div class="sg"><span class="sgi" style="--c:{COL["icons"][i % len(COL["icons"])]}">{SPIN}<svg class="ico" viewBox="0 0 24 24">{ICO.get(x["key"], "")}</svg></span>'
+               f'<div class="sgt"><b>{E(x["title"])}</b><span>{E(x["finding"])}</span></div><svg class="ok" viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></svg></div>' for i, x in enumerate(F["signals"]))
+cursor = (f'<div id="cursor" style="--cur:{COL["cursor"]}">{ARROW}<div id="tag"><img src="{VLOGO}" alt=""><b>{E(v["name"])}</b><span>{E(v["role"])}, {E(v["company"])}</span></div>'
+          f'<div id="card"><div id="listen">{SPIN}<span>{E(F["listening"])}</span></div><div id="sigs">{sigs}</div></div></div>')
 em = F["email"]
 email = (f'<div id="email"><div class="eh">{MARK}<span>{E(em["head"])}</span><span class="pill sent" id="sent">{CHECK}{E(em["sent"])}</span></div>'
          f'<div class="eto">To&nbsp;&nbsp;{E(em["to"])}</div>'

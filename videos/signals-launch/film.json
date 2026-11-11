@@ -1,7 +1,7 @@
 {
-  "about": "Signals launch, from the swiss-grid template: a visitor lands on a pricing page and the camera snaps onto her cursor; Breakout listens to 35+ signals and lists them under her name, one at a time; then Breakout's website agent (recreated from the owner's screenshot, assets/refs/agent-widget.png) and the AI SDR email use them, the camera zooming onto each personalization token. Headlines verbatim from the Signals launch email (Sachin, 2026-11); signal names verbatim from getbreakout.ai/signals; findings, chat and email illustrative and approved by the owner. Times in bars at 128 BPM (1 bar = 1.875 s).",
+  "about": "Signals launch, from the swiss-grid template: a visitor lands on a pricing page and the camera snaps onto her cursor; Breakout listens to 35+ signals and lists them under her name, one at a time; then Breakout's website agent (recreated from the owner's screenshot, assets/refs/agent-widget.png) and the AI SDR email use them (the agent opens on the same page while she is still browsing), the camera zooming onto each personalization token. Headlines verbatim from the Signals launch email (Sachin, 2026-11); signal names verbatim from getbreakout.ai/signals; findings, chat and email illustrative and approved by the owner. Times in bars at 128 BPM (1 bar = 1.875 s).",
   "bpm": 128,
-  "bars": 15.75,
+  "bars": 15.25,
   "brand": "../../brand",
   "disclaimer": "Illustrative example",
   "brandtag": "Breakout \u00b7 Signals",
@@ -17,25 +17,25 @@
       4.2
     ],
     "load": 0.25,
-    "act": 4.9,
-    "agent": 5.75,
+    "agent": 4.9,
     "type": [
-      6.1,
-      8.1
+      5.25,
+      7.25
     ],
-    "reply": 8.5,
-    "email": 9.5,
+    "move": 7.4,
+    "reply": 7.9,
+    "email": 9.0,
     "subject": [
-      9.65,
-      9.9
+      9.15,
+      9.4
     ],
     "body": [
-      10.0,
-      12.2
+      9.5,
+      11.7
     ],
-    "sent": 12.5,
-    "close": 13.25,
-    "end": 15.75
+    "sent": 12.0,
+    "close": 12.75,
+    "end": 15.25
   },
   "headlines": [],
   "visitor": {
@@ -52,10 +52,9 @@
       "Growth",
       "Enterprise"
     ],
-    "hover": 1
+    "hover": 0
   },
   "listening": "Listening to 35+ signals",
-  "act": "Act today",
   "agent": {
     "text": "Hi Sarah, congrats on the [funding]Series B[/funding]! [hiring]Building out the SDR team?[/hiring] I can show you the plan teams your size pick, or set up a quick call.",
     "reply": "What\u2019s included for 6 reps?"
@@ -73,8 +72,8 @@
   },
   "music": {
     "file": "score/score.wav",
-    "gain_db": -2,
-    "fade_out": 1.5
+    "gain_db": -1,
+    "fade_out": 1.2
   },
   "signals": [
     {
@@ -107,5 +106,15 @@
     "name": "Breakout",
     "book": "Book a Meeting",
     "placeholder": "What can I help you with?"
+  },
+  "colors": {
+    "cursor": "#ff3d9a",
+    "icons": [
+      "#22c55e",
+      "#3b82f6",
+      "#f59e0b",
+      "#ef4444",
+      "#8b5cf6"
+    ]
   }
 }

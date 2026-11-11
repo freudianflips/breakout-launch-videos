@@ -45,30 +45,31 @@
         .plan.hot .btn { background: var(--ink); }
 
         /* the cursor, who she is, and what Breakout hears */
+        /* the visitor: a multiplayer cursor, Figma style, with what Breakout hears under it */
         #cursor { position: absolute; left: 0; top: 0; z-index: 30; opacity: 0; }
-        #arrow { position: absolute; left: 0; top: 0; width: 34px; height: 34px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25)); }
-        #tag { position: absolute; left: 28px; top: 30px; width: 500px; border-radius: 18px; background: #141318; color: #fff; opacity: 0; overflow: hidden;
-          box-shadow: 0 24px 48px -18px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06) inset; transform-origin: 0 0; }
-        .who { display: flex; align-items: center; gap: 14px; padding: 18px 20px; }
-        .who img { width: 46px; height: 46px; border-radius: 11px; flex: none; }
-        .nm b { display: block; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
-        .nm span { display: block; font-size: 16px; color: #a9a8b3; margin-top: 3px; }
-        .pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-size: 15px; font-weight: 700; }
-        .pill.act { background: var(--violet); color: #fff; margin-left: auto; opacity: 0; }
-        #listen { display: flex; align-items: center; gap: 10px; padding: 0 20px; height: 40px; border-top: 1px solid rgba(255, 255, 255, 0.08);
-          font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: #b9a8ff; text-transform: uppercase; }
+        #arrow { position: absolute; left: 0; top: 0; width: 36px; height: 36px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.22)); }
+        #tag { position: absolute; left: 26px; top: 32px; display: flex; align-items: center; gap: 9px; padding: 6px 14px 6px 6px; border-radius: 10px;
+          background: var(--cur); color: #fff; font-size: 19px; white-space: nowrap; box-shadow: 0 10px 22px -10px var(--cur); transform-origin: 0 0; opacity: 0; }
+        #tag img { width: 28px; height: 28px; border-radius: 7px; }
+        #tag b { font-weight: 800; }
+        #tag span { opacity: 0.9; font-weight: 500; }
+        #card { position: absolute; left: 26px; top: 82px; width: 470px; padding: 6px 18px 8px; border-radius: 16px; background: #fff; opacity: 0; transform-origin: 0 0;
+          box-shadow: 0 0 0 2px var(--cur), 0 26px 50px -24px rgba(20, 10, 40, 0.45); }
+        #listen { display: flex; align-items: center; gap: 9px; height: 40px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--cur); text-transform: uppercase; }
         #listen .spin { width: 16px; height: 16px; }
-        .spin circle { fill: none; stroke: rgba(185, 168, 255, 0.25); stroke-width: 3; }
-        .spin path { fill: none; stroke: #b9a8ff; stroke-width: 3; stroke-linecap: round; }
+        .spin circle { fill: none; stroke: currentColor; stroke-opacity: 0.22; stroke-width: 3; }
+        .spin path { fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; }
         #listen.done .spin { visibility: hidden; }
-        #sigs { padding: 0 20px; }
-        .sg { display: flex; align-items: center; gap: 14px; height: 0; overflow: hidden; opacity: 0; }
-        .sgi { width: 28px; height: 28px; border-radius: 50%; background: rgba(139, 124, 246, 0.16); display: inline-flex; align-items: center; justify-content: center; flex: none; position: relative; }
-        .sgi svg { width: 16px; height: 16px; position: absolute; }
-        .sgi .ok { fill: none; stroke: #b9a8ff; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
-        .sgt b { display: block; font-size: 17px; font-weight: 700; white-space: nowrap; }
-        .sgt span { display: block; font-size: 15px; color: #c7b8ff; margin-top: 2px; white-space: nowrap; }
-        .sg.fresh { background: linear-gradient(90deg, rgba(76, 0, 255, 0.28), rgba(76, 0, 255, 0)); margin: 0 -20px; padding: 0 20px; }
+        .sg { display: flex; align-items: center; gap: 14px; height: 0; overflow: hidden; opacity: 0; border-top: 1px solid #f0eef3; margin: 0 -18px; padding: 0 18px; }
+        .sgi { width: 38px; height: 38px; border-radius: 11px; flex: none; position: relative; display: inline-flex; align-items: center; justify-content: center;
+          color: var(--c); background: color-mix(in srgb, var(--c) 14%, white); }
+        .sgi svg { width: 20px; height: 20px; position: absolute; }
+        .sgi .ico { fill: none; stroke: var(--c); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .sgt { flex: 1; min-width: 0; }
+        .sgt b { display: block; font-size: 17px; font-weight: 700; color: #16151f; white-space: nowrap; line-height: 1.2; }
+        .sgt span { display: block; font-size: 15px; color: #6b6a76; margin-top: 3px; white-space: nowrap; line-height: 1.2; }
+        .sg .ok { width: 20px; height: 20px; flex: none; fill: none; stroke: #22c55e; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+        .sg.fresh { background: color-mix(in srgb, var(--cur) 7%, white); }
 
         /* Breakout's website agent, from the owner's screenshot */
         #widget { position: absolute; right: 40px; bottom: 40px; width: 520px; height: 620px; background: #fff; border-radius: 22px; opacity: 0; z-index: 5;
@@ -151,7 +152,7 @@
           }
 
           var cam = one("#cam"), heads = all(".hl"), browser = one("#browser"), widget = one("#widget"), launcher = one("#launcher"), wme = one(".wme");
-          var cursor = one("#cursor"), tag = one("#tag"), act = one("#act"), listen = one("#listen"), sigs = all(".sg");
+          var cursor = one("#cursor"), tag = one("#tag"), card = one("#card"), listen = one("#listen"), sigs = all(".sg");
           var email = one("#email"), sent = one("#sent"), closeEl = one("#close");
           var agCh = all(".wmsg .ch"), subCh = all("#email .stx .ch"), bodyCh = all("#email .ebody .ch");
           var spins = all(".spin");
@@ -165,15 +166,18 @@
           }
           var chatTok = tokens(".wmsg", agCh, A.type[0], A.type[1]), mailTok = tokens("#email .ebody", bodyCh, A.body[0], A.body[1]);
 
-          // the cursor: in fast from the bottom right, onto the Growth plan
-          var LAND = [905, 470];
-          function curAt(t) { var u = io((t - B(0.12)) / (B(A.land) - B(0.12))); return [lerp(1750, LAND[0], u), lerp(1080, LAND[1], u)]; }
+          // the cursor: in fast onto the first plan; later, over to the agent to reply
+          var LAND = [520, 430], REPLY = [1290, 935];
+          function curAt(t) {
+            if (t < B(A.move)) { var u = io((t - B(0.12)) / (B(A.land) - B(0.12))); return [lerp(1750, LAND[0], u), lerp(1080, LAND[1], u)]; }
+            var v = io((t - B(A.move)) / 0.4); return [lerp(LAND[0], REPLY[0], v), lerp(LAND[1], REPLY[1], v)];
+          }
 
-          // the camera: [time, centre x, centre y, scale, move time (0 = cut)]
-          function shots() {                                       // one framing per beat; moves are fast snaps
-            var card = [LAND[0] + 28 + 250, LAND[1] + 30 + 206], wc = centre(widget), mc = centre(one(".wmsg")), rc = centre(wme), ec = centre(email), bc = centre(one("#email .ebody"));
-            return [[0, 960, 540, 1, 0], [B(A.land), card[0], card[1], 1.95, 0.2],
-                    [B(A.agent), wc[0], wc[1], 1.2, 0], [B(A.type[0]), mc[0], mc[1] + 20, 2.05, 0.18], [B(A.reply), mc[0], (mc[1] + rc[1]) / 2, 1.85, 0.18],
+          // the camera: [time, centre x, centre y, scale, move time (0 = cut)]; one framing per beat, fast snaps
+          function shots() {
+            var cc = [LAND[0] + 26 + 235, LAND[1] + 32 + 225], wc = centre(widget), ec = centre(email), bc = centre(one("#email .ebody"));
+            return [[0, 960, 540, 1, 0], [B(A.land), cc[0], cc[1], 1.9, 0.2],
+                    [B(A.agent), 1075, 690, 1.5, 0.25], [B(A.move), wc[0], wc[1], 1.45, 0.3],
                     [B(A.email), ec[0], ec[1], 1.22, 0], [B(A.body[0]), bc[0], bc[1], 1.5, 0.18], [B(A.sent), ec[0], ec[1], 1.22, 0.18]];
           }
           function camAt(t, k) {                                   // each shot moves from the last one's framing to its own
@@ -189,23 +193,24 @@
 
             // the page and the cursor (until the cut to the email)
             browser.style.opacity = inPage ? 1 : 0;
-            if (inPage && t >= B(0.12) && t < B(A.agent)) { var p = curAt(t); cursor.style.opacity = 1; cursor.style.transform = "translate(" + p[0].toFixed(1) + "px," + p[1].toFixed(1) + "px)"; }
-            else if (inPage && t >= B(A.agent)) { cursor.style.opacity = 1; cursor.style.transform = "translate(560px,700px)"; }
+            if (inPage && t >= B(0.12)) { var p = curAt(t); cursor.style.opacity = 1; cursor.style.transform = "translate(" + p[0].toFixed(1) + "px," + p[1].toFixed(1) + "px)"; }
             else cursor.style.opacity = 0;
-            var tu = snap(tag, t, A.land, A.agent, 0);
-            if (tu) tag.style.transform = "scale(" + (0.86 + 0.14 * tu).toFixed(3) + ")";
+            var tu = snap(tag, t, A.land, 99, 0);
+            if (tu) tag.style.transform = "scale(" + (0.8 + 0.2 * tu).toFixed(3) + ")";
+            var ku = snap(card, t, A.listen, A.move, 0), kout = 1 - io((t - B(A.move)) / 0.18);
+            if (ku) card.style.transform = "scale(" + (0.9 + 0.1 * ku).toFixed(3) + ")";
+            if (t >= B(A.move) && t < B(A.move) + 0.18) { card.style.opacity = kout; card.style.transform = "scale(" + (0.9 + 0.1 * kout).toFixed(3) + ")"; }
             // listening, then each signal: a spinner, then a tick and its finding, held so it can be read
             listen.classList.toggle("done", t >= B(A.signals[A.signals.length - 1] + A.load));
             sigs.forEach(function (sg, i) {
               var a = B(A.signals[i]), done = t >= a + B(A.load), u = out4((t - a) / 0.12);
-              sg.style.opacity = t >= a ? 1 : 0; sg.style.height = (t >= a ? 58 * u : 0).toFixed(1) + "px";
+              sg.style.opacity = t >= a ? 1 : 0; sg.style.height = (t >= a ? 64 * u : 0).toFixed(1) + "px";
               sg.querySelector(".spin").style.display = done ? "none" : "block";
-              sg.querySelector(".ok").style.display = done ? "block" : "none";
-              var tx = sg.querySelector(".sgt span"); tx.style.opacity = done ? 1 : 0.0;
-              sg.classList.toggle("fresh", done && t < a + B(A.load) + 0.5);
+              sg.querySelector(".ico").style.display = done ? "block" : "none";
+              sg.querySelector(".ok").style.opacity = done ? 1 : 0;
+              sg.querySelector(".sgt span").style.opacity = done ? 1 : 0;
+              sg.classList.toggle("fresh", done && t < a + B(A.load) + 0.45);
             });
-            act.style.opacity = t >= B(A.act) ? 1 : 0;
-            act.style.transform = "scale(" + (1.35 - 0.35 * out4((t - B(A.act)) / 0.14)).toFixed(3) + ")";
 
             // the agent
             var wu = snap(widget, t, A.agent, A.email, 0);

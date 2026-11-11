@@ -4,10 +4,10 @@ message: "Now it also tells you what just changed at that company."
 destination: owner's choice; see "Real company" below
 aspect: 1920x1080
 language: en
-length: 29.5s
+length: 28.6s
 angle: A visitor lands on the pricing page; the camera snaps onto her cursor and Breakout lists what just changed at her company under her name; the website agent and the AI SDR email use it
 template: swiss-grid
-status: v4 built from the owner's notes on v3 (2026-11-11)
+status: v5 built from the owner's notes on v4 (2026-11-11)
 ---
 
 ## Intent
@@ -28,4 +28,4 @@ The visitor is "Sarah at Anthropic" (VP Marketing) with Anthropic's logo, as the
 
 ## Look and sound
 
-Swiss grid (approved): off-white paper, hairline grid, Manrope, violet for what matters; the visitor's site is a neutral pricing page (`yoursite.com/pricing`). The website agent is recreated from the owner's screenshot (`assets/refs/agent-widget.png`, cropped to the widget alone). Snappy: hard cuts between page, agent, email and close; one camera framing per beat with fast snaps; personalization tokens flash violet once typed. Upbeat swing score (the dot-matrix band, free), cued from the picture.
+Swiss grid (approved): off-white paper, hairline grid, Manrope, violet for what matters; the visitor's site is a neutral pricing page (`yoursite.com/pricing`). The website agent is recreated from the owner's screenshot (`assets/refs/agent-widget.png`, cropped to the widget alone). Snappy: hard cuts between page, agent, email and close; one camera framing per beat with fast snaps; personalization tokens flash violet once typed. The visitor is a Figma-style multiplayer cursor in pink. The agent opens on the same page while she browses. Score: punchy, emotional UK house in the Fred again.. vein (owner), synthesised in `score.py` with no samples or vocals, cued from the picture.

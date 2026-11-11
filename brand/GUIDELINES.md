@@ -38,6 +38,7 @@ Never show a competitor's name or logo, with one exception: the ABM templates ma
 - Tell it abstractly, not literally: no B2B set dressing (desks, Slack alerts, inboxes, org charts as scenery). Abstract forms and compelling motion carry the meaning; words are minimal ("too b2b", "more abstracted away", "more minimal less texty").
 - Never let Breakout go idle on screen. Quiet periods in a story show it working: listening for signals and reaching the buyer with each one ("doesn't show how Breakout chases a buyer even during the slow period").
 - Feature launches are tactical, not abstract: show the product doing the job (the visitor on the page, the intel as it arrives, the agent and the email using it), with more words on screen. Abstract worlds (dot matrix) are for brand stories ("too abstract", "more tactical + more wordy").
+- Music for feature launches: punchy electronic (UK house in the Fred again.. vein), not jazz ("use punchy electronic fred again type music instead of jazz").
 
 ## Motion
 
