@@ -1,159 +1,141 @@
 {
-  "about": "Signals launch, from the dot-matrix template: a visit is a pink bloom on the indigo dot grid; signals are live particle motifs borrowed from the signals library art (assets/refs/signals). Words verbatim from the Signals launch email (Sachin, 2026-11) and getbreakout.ai/signals (saved 2026-11-11). Times in bars at 128 BPM (1 bar = 1.875 s).",
+  "about": "Signals launch, from the swiss-grid template: a visitor on a pricing page, Breakout listening to 35+ signals, the intel arriving next to the cursor one signal at a time, then the website agent and the AI SDR email using it (lines from each signal to the words it shaped). Headlines verbatim from the Signals launch email (Sachin, 2026-11); card titles verbatim from getbreakout.ai/signals; the findings, chat and email are illustrative and approved by the owner (2026-11-11). Times in bars at 128 BPM (1 bar = 1.875 s).",
   "bpm": 128,
-  "bars": 21.5,
+  "bars": 26,
   "brand": "../../brand",
-  "source": "Signals launch email; getbreakout.ai/signals",
+  "disclaimer": "Illustrative example",
+  "brandtag": "Breakout \u00b7 Signals",
   "at": {
-    "q": [
-      0.5,
-      1.25,
-      2.0,
-      2.75
+    "visit": 0,
+    "tag": 1,
+    "listen": 2,
+    "cards": [
+      4,
+      5.5,
+      7,
+      8.5,
+      10
     ],
-    "turn": 3.5,
-    "two": 5,
-    "sort": 7,
-    "lib": 9,
-    "hot": 10.5,
-    "rep": 12,
-    "agent": 13.75,
-    "run": 15.5,
-    "same": 16.75,
-    "close": 18,
-    "end": 21.5
+    "load": 0.6,
+    "act": 11.5,
+    "agent": 13,
+    "type": [
+      13.5,
+      15.75
+    ],
+    "reply": 16.5,
+    "email": 18.5,
+    "subject": [
+      19,
+      19.4
+    ],
+    "body": [
+      19.6,
+      22
+    ],
+    "sent": 22.5,
+    "close": 23,
+    "lockup": 23.75,
+    "end": 26
   },
-  "questions": [
+  "headlines": [
     {
-      "text": "Did they raise a round recently?",
-      "motif": "funding"
-    },
-    {
-      "text": "Did they hire a new VP Sales?",
-      "motif": "people"
-    },
-    {
-      "text": "Are they scaling their SDR team?",
-      "motif": "hiring"
-    },
-    {
-      "text": "Are they comparing you to a competitor on G2?",
-      "motif": "intent"
-    }
-  ],
-  "captions": [
-    {
-      "at": 3.5,
-      "until": 5,
-      "text": "Now it also tells you what just changed at that company."
-    },
-    {
-      "at": 5,
-      "until": 7,
+      "at": 0,
+      "until": 2,
       "text": "A pricing-page visit is good..."
     },
     {
-      "at": 7,
-      "until": 9,
-      "text": "Signals shows you which is which."
+      "at": 2,
+      "until": 4,
+      "text": "Every visit is backed by *35+ signals*"
     },
     {
-      "at": 9,
-      "until": 10.5,
-      "text": "Every visit is backed by 35+ signals"
+      "at": 4,
+      "until": 11.5,
+      "text": "Now it also tells you *what just changed* at that company."
     },
     {
-      "at": 10.5,
-      "until": 12,
-      "text": "Know which visits to drop everything for"
+      "at": 11.5,
+      "until": 13,
+      "text": "Know which visits to *drop everything for*"
     },
     {
-      "at": 12,
-      "until": 13.75,
-      "text": "Reps get the signal with the hook already found."
+      "at": 13,
+      "until": 18.5,
+      "text": "The agent picks it up *in the conversation*"
     },
     {
-      "at": 13.75,
-      "until": 15.5,
-      "text": "The agent picks it up in the conversation or the follow-up email."
+      "at": 18.5,
+      "until": 23,
+      "text": "...or *the follow-up email.*"
     },
     {
-      "at": 15.5,
-      "until": 16.75,
-      "text": "Works with what you already run"
-    },
-    {
-      "at": 16.75,
-      "until": 18,
-      "text": "Breakout puts them on the same account."
+      "at": 23,
+      "until": 26,
+      "text": "Every visit is backed by 35+ signals, so you know *why this visitor matters right now.*"
     }
   ],
-  "which": [
+  "visitor": {
+    "name": "Sarah",
+    "company": "Anthropic",
+    "logo": "media/visitor-logo.png"
+  },
+  "site": {
+    "url": "yoursite.com/pricing",
+    "title": "Pricing",
+    "plans": [
+      "Starter",
+      "Growth",
+      "Enterprise"
+    ],
+    "hover": 1
+  },
+  "listening": "Listening to 35+ signals",
+  "loading": "Checking",
+  "cards": [
     {
-      "motif": "funding",
-      "label": "Funding round announced"
+      "key": "funding",
+      "family": "Funding & corporate events",
+      "title": "Funding round announced",
+      "finding": "Series B, 3 weeks ago"
     },
     {
-      "motif": "people",
-      "label": "Past champion joins a tracked account"
+      "key": "people",
+      "family": "People & job movement",
+      "title": "New exec in a buyer-persona role",
+      "finding": "New VP Sales, started last month"
+    },
+    {
+      "key": "hiring",
+      "family": "Hiring & headcount",
+      "title": "Hiring surge in watched roles",
+      "finding": "6 open SDR roles"
+    },
+    {
+      "key": "intent",
+      "family": "Third-party intent",
+      "title": "Competitor comparison viewed (G2)",
+      "finding": "This week"
+    },
+    {
+      "key": "committee",
+      "family": "Website de-anonymization",
+      "title": "Buying-committee surge",
+      "finding": "3 people from Anthropic this week"
     }
   ],
-  "library": [
-    {
-      "img": "deanon.jpg",
-      "name": "Website de-anonymization"
-    },
-    {
-      "img": "intent.jpg",
-      "name": "Third-party intent"
-    },
-    {
-      "img": "research.jpg",
-      "name": "AI account research"
-    },
-    {
-      "img": "people.jpg",
-      "name": "People & job movement"
-    },
-    {
-      "img": "hiring.jpg",
-      "name": "Hiring & headcount"
-    },
-    {
-      "img": "funding.jpg",
-      "name": "Funding & corporate events"
-    },
-    {
-      "img": "techno.jpg",
-      "name": "Technographic"
-    },
-    {
-      "img": "web.jpg",
-      "name": "Web & digital footprint"
-    },
-    {
-      "img": "social.jpg",
-      "name": "Social activity"
-    },
-    {
-      "img": "relationship.jpg",
-      "name": "Relationship & network"
-    }
-  ],
-  "library_dir": "../../assets/refs/signals",
-  "streams": [
-    "Clay columns",
-    "G2 data",
-    "Bombora intent"
-  ],
-  "colors": {
-    "ground": "#1a1534",
-    "dot": "#2e2758",
-    "visitor": "#ff5ad1",
-    "breakout": "#7b4dff",
-    "rep": "#68e6ff",
-    "particle": "#9a95ff",
-    "hot": "#ffffff"
+  "act": "Act today",
+  "agent": {
+    "name": "Breakout",
+    "text": "Hi Sarah, congrats on the [funding]Series B[/funding]. [hiring]Building out the SDR team?[/hiring] I can show you the plan teams your size pick, or set up a quick call.",
+    "reply": "What\u2019s included for 6 reps?"
+  },
+  "email": {
+    "head": "AI SDR \u00b7 Follow-up",
+    "to": "Sarah \u00b7 Anthropic",
+    "subject": "Anthropic\u2019s new SDR team",
+    "body": "Hi Sarah, congrats on closing the [funding]Series B[/funding]. With [hiring]six SDR roles open[/hiring] and [people]a new VP Sales in seat[/people], here\u2019s the plan we talked about, sized for 6 reps.",
+    "sent": "Sent"
   },
   "lockup": {
     "line": "Every buying signal, in one place.",
@@ -161,8 +143,7 @@
   },
   "music": {
     "file": "score/score.wav",
-    "make": "score.py",
-    "gain_db": -1,
-    "fade_out": 1.0
+    "gain_db": -2,
+    "fade_out": 1.5
   }
 }

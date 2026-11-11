@@ -1,13 +1,15 @@
 # Signals launch
 
-A 40 s launch film for Signals, made from the [`dot-matrix`](../../templates/dot-matrix/README.md) template: why one pricing-page visit matters more than another, with the signals library's own art as the signals.
+A 48.8 s launch film for Signals, made from the [`swiss-grid`](../../templates/swiss-grid/README.md) template: a visitor on a pricing page, Breakout listening to 35+ signals, the intel arriving next to the cursor one signal at a time, then the website agent and the AI SDR email using it.
 
 ![Signals launch](poster.jpg)
 
+**Before sharing:** the visitor is Anthropic, by the owner's choice, with illustrative findings; see [`BRIEF.md`](BRIEF.md). Not for public posting as is.
+
 | | |
 |---|---|
-| Story | [`BRIEF.md`](BRIEF.md), [`STORYBOARD.md`](STORYBOARD.md); words verbatim from the Signals launch email and getbreakout.ai/signals |
-| Data | `film.json`: beats in bars (`at`), the questions and their motifs, captions, the library tiles (`library`, from `assets/refs/signals/`), the stream labels, the lockup |
-| Look | `template.html`: the dot grid plus live particle motifs (`motif()`: funding, people, hiring, intent) |
-| Sound | `score.py` (upbeat swing, cued from `at`), `audio.py` (cues, mix, mux) |
+| Story | [`BRIEF.md`](BRIEF.md), [`STORYBOARD.md`](STORYBOARD.md) |
+| Data | `film.json`: every word and every time (`at`, in bars): headlines, the visitor (`visitor.logo` in `media/`), the pricing page, the five signal cards, the agent's message and the email (`[key]phrase[/key]` marks the words a card shaped), the lockup |
+| Look | `template.html`: the page, the cursor and its tag, the loading cards, the chat, the email and the wires; `draw(t)` sets every frame |
+| Sound | `score.py` (upbeat swing), `audio.py` (cues from `at`, the mix, the mux) |
 | Render | `./render.sh` -> `renders/signals-launch.mp4` |

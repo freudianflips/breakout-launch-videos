@@ -1,20 +1,13 @@
 #!/usr/bin/env python3
-"""The score for the Signals launch: upbeat swing, written as MIDI on the film's bar grid and rendered free.
+"""The score for the Signals launch: upbeat swing on the film's bar grid, rendered free.
 
   .venv/bin/python score.py [--out score/score.wav]   (from this folder)
 
 Needs fluidsynth and a General MIDI soundfont (apt install fluidsynth fluid-soundfont-gm, or SF2=...).
 The dot-matrix band (piano, walking bass, jazz kit, vibraphone, trumpet, alto sax, trombone), cued from film.json "at":
-
-  questions   a drum pickup, then a band stab on each question while the bass and ride keep moving
-  turn        the hit, and the full band swings
-  two         down to piano, bass and ride ("good...")
-  sort        the horns climb back in; a hit when the second visit lights up
-  library     a vibraphone note per tile
-  hot         a stab per flaring visit
-  rep, agent  a trumpet fanfare when the hook lands; vibraphone and alto trade; a run for the comet
-  run, same   each stream brings in a part; the hit on "the same account"
-  close       the shockwave hit, a vibraphone run under the wordmark, B-flat, C, F and a button
+a pickup into the visit, the band in when Breakout starts listening, a vibraphone figure as each signal lands
+(rising card by card), a hit on "Act today", lighter comping under the typing, a horn line for "Sent", and the
+button under the lockup.
 """
 import argparse
 import json
@@ -67,14 +60,11 @@ SIX, DOM, MIN, DOM9 = (4, 7, 9, 14), (4, 10, 14, 21), (3, 7, 10, 14), (4, 10, 14
 F_, D_, G_, C_, BB, A_ = 41, 38, 43, 36, 46, 45
 TURN = [(F_, SIX), (D_, DOM), (G_, MIN), (C_, DOM9)]
 BLUES = [(F_, DOM), (BB, DOM), (F_, DOM), (C_, DOM9), (BB, DOM), (F_, SIX)]
-PROG = [(x, TURN[i % 4]) for i, x in enumerate(A["q"])]
-x, i = A["turn"], 0
-while x < A["close"] - 1e-9:
-    PROG.append((x, [(F_, SIX), (D_, DOM), (G_, MIN), (C_, DOM9)][i % 4] if not (A["two"] <= x < A["sort"]) else [(BB, SIX), (G_, MIN), (C_, DOM9), (F_, SIX)][i % 4]))
-    x += 1
-    i += 1
-PROG += [(A["same"], (F_, SIX)), (A["close"], (BB, SIX)), (A["close"] + 1, (C_, DOM9)), (A["close"] + 2, (F_, SIX))]
-PROG.sort()
+PROG = []
+for i, x in enumerate(range(0, int(A["end"]) + 1)):
+    PROG.append((x, TURN[i % 4]))
+PROG += [(A["lockup"], (BB, SIX)), (A["lockup"] + 0.75, (C_, DOM9)), (A["lockup"] + 1.25, (F_, SIX))]
+PROG = sorted(p for p in PROG if p[0] < A["lockup"] or p in PROG[-3:])
 
 
 def chord(bar):
@@ -155,96 +145,64 @@ ev.append((0, 0, mido.Message("program_change", channel=DRUM, program=32)))     
 
 end = A["end"]
 BAR = 240 / F["bpm"]
-SEC = 1 / BAR                                                   # one second, in bars
-q = A["q"]
 
-# ---- the questions: a pickup, then a stab per question over bass and ride
-fill(q[0] - 0.25, 92)
+# ---- the visit: a pickup, piano and bass; the band comes in when Breakout starts listening
+fill(0.0, 84)
+walk(0.25, A["lockup"], 104)
+comp(0.25, A["lockup"], 74)
+drums(0.25, A["listen"], 66, snare=False)
+stab(A["tag"], 100, 0.1, horns=False)
 for p, ch in ((77, "tpt"), (72, "alto"), (65, "bone")):
-    note(ch, p, 0.05, 0.4, 76)
-walk(q[0], A["two"], 104)
-drums(q[0], A["turn"], 70, snare=False)
-for k, at in enumerate(q):
-    stab(at, 100 + 4 * k, 0.1)
-    note(DRUM, CRASH if k == 0 else SNARE, at, 0.3, 96)
-    r, v = chord(at)
+    note(ch, p, A["listen"] - 0.25, 0.25, 84)
+fill(A["listen"] - 0.25, 96)
+stab(A["listen"], 108, 0.15)
+note(DRUM, CRASH, A["listen"], 1, 104)
+drums(A["listen"], A["agent"], 82)
+
+# ---- the intel: a loading shimmer on the ride, then a vibraphone figure as each signal lands
+for k, c in enumerate(A["cards"]):
+    for i in range(4):
+        note("vibes", 89 + k, c + i / 16, 0.05, 40)
+    land = c + A["load"]
+    r, v = chord(land)
     for i, s_ in enumerate((v[0], v[1], v[3])):
-        note("vibes", r + 36 + s_, at + 0.25 + i / 24, 0.2, 90)
+        note("vibes", r + 36 + s_ + (12 if k >= 3 else 0), land + i / 32, 0.25, 96 + 2 * k)
+    note(DRUM, SNARE, land, 0.05, 96)
+stab(A["act"], 118, 0.25)
+note(DRUM, CRASH, A["act"], 1, 116)
+note(DRUM, KICK, A["act"], 0.1, 118)
 
-# ---- the turn: the hit, full swing
-tn = A["turn"] + 0.3 * SEC
-fill(A["turn"] - 0.25, 100)
-stab(tn, 116, 0.25)
-note(DRUM, CRASH, tn, 1, 116)
-note(DRUM, KICK, tn, 0.1, 118)
-drums(A["turn"], A["two"], 84)
-comp(A["turn"], A["two"], 82)
-
-# ---- two visits: down to the trio, then the horns climb back
-walk(A["two"], A["close"], 108)
-drums(A["two"], A["sort"], 66, snare=False)
-comp(A["two"], A["sort"], 72)
-for i, p in enumerate((65, 69, 72, 77, 81, 84)):
-    note("tpt" if i % 2 else "alto", p, A["sort"] + i / 8, 0.12, 86 + i * 4)
-lit = A["sort"] + 2.5 * 0.25
-stab(lit, 118, 0.3)
-note(DRUM, CRASH, lit, 1, 112)
-drums(A["sort"], A["close"], 84)
-comp(A["sort"], A["close"], 80)
-
-# ---- the library: a vibraphone note per tile
-for i in range(10):
-    r, v = chord(A["lib"] + i / 16)
-    note("vibes", r + 36 + [0, 4, 7, 9, 12][i % 5] + (12 if i >= 5 else 0), A["lib"] + i / 16, 0.25, 96)
-
-# ---- hot: a stab per flare
-for k in range(3):
-    stab(A["hot"] + (1 + k) * 0.25, 104 + 4 * k, 0.08)
-
-# ---- the rep and the agent
-hook = A["rep"] + 0.25 + 0.4 * SEC
-for i, p in enumerate((72, 77, 81, 84)):
-    note("tpt", p, hook + i / 24, 0.1 if i < 3 else 0.3, 106)
-for b_, ch, ps in ((1, "vibes", (84, 88, 91)), (2, "alto", (76, 79)), (3, "vibes", (86, 89, 93))):
-    at = A["agent"] + b_ * 0.25
-    for i, p in enumerate(ps):
-        note(ch, p, at + i / 24, 0.15, 100)
-for i, p in enumerate((96, 93, 89, 86, 84, 81, 77, 81, 84, 89)):
-    note("vibes", p, A["agent"] + 4.5 * 0.25 + i / 24, 0.15, 92)
-
-# ---- what you already run: a part per stream, then the hit
-for k in range(3):
-    at = A["run"] + k * 1.5 * 0.25
-    for i, p in enumerate([(65, 69, 72), (72, 77, 81), (77, 81, 84)][k]):
-        note(["piano", "alto", "tpt"][k], p, at + i / 16, 0.1, 96 + 4 * k)
-stab(A["same"], 118, 0.3)
-note(DRUM, CRASH, A["same"], 1, 114)
+# ---- the agent and the email: lighter under the typing, horns for the reply and for Sent
+drums(A["agent"], A["sent"], 70, snare=False)
+for i, p in enumerate((84, 88, 91)):
+    note("vibes", p, A["agent"] + i / 24, 0.3, 92)
+for i, p in enumerate((76, 79, 84)):
+    note("alto", p, A["reply"] + i / 16, 0.1, 96)
+stab(A["email"], 104, 0.1)
+for i, p in enumerate((72, 77, 81, 84, 89)):
+    note("tpt", p, A["sent"] + i / 24, 0.1 if i < 4 else 0.4, 108)
+note(DRUM, CRASH, A["sent"], 1, 112)
+drums(A["sent"], A["lockup"], 84)
 riff = [(0, 72, 0.12), (1, 74, 0.06), (2, 77, 0.12), (3, 81, 0.06), (4, 84, 0.2), (6, 82, 0.08), (7, 81, 0.12)]
 for e, p, d in riff:
-    at = off(A["same"] + 0.25, e)
-    if at < A["close"] - 0.05:
-        note("tpt", p, at, d, 106)
-        note("alto", p - 4, at, d, 98)
-        note("bone", p - 12, at, d, 94)
-fill(A["close"] - 0.25, 108)
+    at = off(A["close"], e)
+    note("tpt", p, at, d, 104)
+    note("alto", p - 4, at, d, 96)
+    note("bone", p - 12, at, d, 92)
+fill(A["lockup"] - 0.25, 106)
 
-# ---- close: the shockwave hit, the wordmark, B-flat, C, F, the button
-sh = A["close"] + 0.2 * SEC
-stab(sh, 120, 0.4)
-note(DRUM, CRASH, sh, 2, 120)
-note(DRUM, KICK, sh, 0.2, 120)
-note("bass", BB - 12, sh, 0.9, 124)
-for i, p in enumerate((77, 81, 84, 89, 93, 96, 101, 105)):
-    note("vibes", p, A["close"] + 0.5 + i / 24, 0.4, 94 - i * 3)
-walk(A["close"] + 1, A["close"] + 2, 104)
-drums(A["close"] + 0.5, A["close"] + 2, 76)
-comp(A["close"] + 0.5, A["close"] + 2, 78)
+# ---- the lockup: B-flat, C, F, a vibraphone run, the button
+lk = A["lockup"]
+stab(lk, 116, 0.3)
+note(DRUM, CRASH, lk, 1.5, 116)
+walk(lk, lk + 1.25, 104)
+drums(lk, lk + 1.25, 76)
+comp(lk, lk + 1.25, 78)
+for i, p in enumerate((81, 84, 88, 91, 93, 96, 100, 105)):
+    note("vibes", p, lk + 1.25 + i / 24, 0.6, 92 - i * 3)
 for s_ in (0, 4, 7, 9, 14):
-    note("piano", F_ + 12 + s_, A["close"] + 2, 0.9, 92)
-note("bass", F_, A["close"] + 2, 0.9, 110)
-for p, ch in ((84, "tpt"), (81, "alto"), (72, "bone")):
-    note(ch, p, A["close"] + 2, 0.8, 92)
-note(DRUM, CRASH, A["close"] + 2, 1.0, 96)
+    note("piano", F_ + 12 + s_, lk + 1.25, 0.7, 92)
+note("bass", F_, lk + 1.25, 0.7, 110)
 button = end - 0.375
 stab(button, 116, 0.1)
 note("bass", F_ - 12, button, 0.1, 124)

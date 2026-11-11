@@ -3,8 +3,8 @@
 
   python3 build.py
 
-The world is the dot-matrix grid (template.html draws it on a canvas); signals are live particle motifs
-re-created from the signals library art, and the library beat shows that art itself (copied into assets/media).
+All text is written as markup here (typed text as 1 span per character), so nothing falls back to a
+system font at render time. Times live in film.json "at", in bars on the 128 BPM grid.
 """
 import html
 import json
@@ -21,57 +21,90 @@ BAR = 240 / F["bpm"]
 END = F["bars"] * BAR
 E = html.escape
 
+# ------------------------------------------------------------------ assets
 A = "assets"
 if os.path.exists(A):
     shutil.rmtree(A)
 os.makedirs(f"{A}/fonts")
-fontfaces = []
-for role in ("body", "mono", "display"):
+faces = []
+for role in ("display", "body", "mono"):
     f = BRAND["fonts"][role]
     for face in f.get("faces", []):
         shutil.copy(os.path.join(BRAND_DIR, face["file"]), os.path.join(A, face["file"]))
-        src, family = f'url("{A}/{face["file"]}") format("woff2")', f["family"]
-        if role == "display":
-            family = "NK"
-            src = ", ".join(f'local("{n}")' for n in f.get("local", [])) + ", " + src
-        fontfaces.append(f'@font-face {{ font-family: "{family}"; src: {src}; font-weight: {face["weight"]}; font-style: {face.get("style", "normal")}; }}')
+        faces.append(f'@font-face {{ font-family: "{f["family"]}"; src: url("{A}/{face["file"]}") format("woff2"); '
+                     f'font-weight: {face["weight"]}; font-style: {face.get("style", "normal")}; }}')
+for k in ("file", "mark_on_dark"):
+    shutil.copy(os.path.join(BRAND_DIR, BRAND["logo"][k]), f"{A}/{os.path.basename(BRAND['logo'][k])}")
+VLOGO = f"{A}/{os.path.basename(F['visitor']['logo'])}"
+shutil.copy(F["visitor"]["logo"], VLOGO)
 gsap = os.path.join(HERE, "..", "..", "node_modules", "gsap", "dist", "gsap.min.js")
 GSAP = "https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
 if os.path.exists(gsap):
     shutil.copy(gsap, f"{A}/gsap.min.js")
     GSAP = f"{A}/gsap.min.js"
+MARK = f'<span class="av"><img src="{A}/{os.path.basename(BRAND["logo"]["mark_on_dark"])}" alt=""></span>'
 
-svg = open(os.path.join(BRAND_DIR, BRAND["logo"]["on_dark"])).read()
-vb = [float(x) for x in re.search(r'viewBox="([^"]+)"', svg).group(1).split()]
-paths = [[re.search(r'fill="([^"]+)"', m.group(0)).group(1), re.sub(r"\s+", " ", re.search(r'd="([^"]+)"', m.group(0)).group(1))]
-         for m in re.finditer(r"<path[^>]*>", svg)]
+
+# ------------------------------------------------------------------ text helpers
+def chars(text):
+    """1 span per character; spaces kept as spaces so lines wrap naturally."""
+    return "".join(f'<span class="ch">{E(c)}</span>' if c != " " else '<span class="ch sp"> </span>' for c in text)
+
+
+def typed(text):
+    """'[key]phrase[/key]' marks become phrase spans the wires point at."""
+    out, pos = [], 0
+    for m in re.finditer(r"\[(\w+)\](.*?)\[/\1\]", text):
+        out.append(chars(text[pos:m.start()]))
+        out.append(f'<span class="ph" data-ph="{m.group(1)}">{chars(m.group(2))}</span>')
+        pos = m.end()
+    out.append(chars(text[pos:]))
+    return "".join(out)
 
 
 def kw(text):
-    return re.sub(r"\*(.+?)\*", r"<em>\1</em>", E(text))
+    return re.sub(r"\*(.+?)\*", r'<em class="v">\1</em>', E(text))
 
 
-os.makedirs(f"{A}/media")
-LIB = os.path.normpath(os.path.join(HERE, F["library_dir"]))
-for it in F["library"]:
-    shutil.copy(os.path.join(LIB, it["img"]), f"{A}/media/{it['img']}")
-caps = [[q, F["at"]["q"][i + 1] if i + 1 < len(F["at"]["q"]) else F["at"]["turn"], x["text"]] for i, (q, x) in enumerate(zip(F["at"]["q"], F["questions"]))]
-caps += [[c["at"], c["until"], c["text"]] for c in F["captions"]]
-cfg = {"bpm": F["bpm"], "bars": F["bars"], "at": F["at"], "colors": F["colors"], "caps": [[a, b] for a, b, _ in caps],
-       "motifs": [q["motif"] for q in F["questions"]], "which": [w["motif"] for w in F["which"]],
-       "logo": {"vb": vb, "paths": paths}}
-rep = {
-    "__FONTFACES__": "\n        ".join(fontfaces),
-    "__CAPTIONS__": "".join(f'<div class="cap"><i></i>{E(t)}</div>' for _, _, t in caps),
-    "__TILES__": "".join(f'<figure class="tile"><img src="{A}/media/{E(it["img"])}" alt=""/><figcaption>{E(it["name"])}</figcaption></figure>' for it in F["library"]),
-    "__WHICH__": "".join(f'<div class="tag which">{E(w["label"])}</div>' for w in F["which"]),
-    "__STREAMS__": "".join(f'<div class="tag stream">{E(x)}</div>' for x in F["streams"]),
-    "__LOCK__": kw(F["lockup"]["line"]), "__URL__": E(F["lockup"]["url"]),
-    "__T__": json.dumps(cfg),
-}
+SPIN = '<svg class="spin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 9 9"/></svg>'
+CHECK = '<svg class="ok" viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></svg>'
+ARROW = ('<svg id="arrow" viewBox="0 0 32 32"><path d="M5 3 L5 25 L11 19.5 L15.5 29 L19.5 27.2 L15 18 L23 18 Z" '
+         'fill="#0b0b0f" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>')
+
+# ------------------------------------------------------------------ markup
+v, site = F["visitor"], F["site"]
+plans = "".join(f'<div class="plan{" hot" if i == site["hover"] else ""}"><b>{E(p)}</b><i class="bar w60"></i><i class="bar w40 tall"></i>'
+                f'<i class="ln"></i><i class="ln"></i><i class="ln s"></i><i class="ln"></i><span class="btn"></span></div>' for i, p in enumerate(site["plans"]))
+browser = (f'<div id="browser"><div class="chrome"><i></i><i></i><i></i><span class="url">{E(site["url"])}</span></div>'
+           f'<div class="page"><div class="ptitle">{E(site["title"])}</div><div class="plans">{plans}</div></div>'
+           f'<div id="chat"><div class="chd">{MARK}<b>{E(F["agent"]["name"])}</b><span class="live"></span></div>'
+           f'<div class="bub ag">{typed(F["agent"]["text"])}</div><div class="bub me">{E(F["agent"]["reply"])}</div></div></div>')
+cursor = (f'<div id="cursor">{ARROW}<div id="tag"><img src="{VLOGO}" alt=""><b>{E(v["name"])}</b><span class="at">{E(v["company"])}</span>'
+          f'<span class="pill act" id="act">{E(F["act"])}</span></div>'
+          f'<div id="listen">{MARK}{SPIN}<span>{E(F["listening"])}</span></div></div>')
+cards = "".join(f'<div class="ic" data-key="{E(c["key"])}"><div class="fam">{E(c["family"])}</div>'
+                f'<div class="ld">{SPIN}<span>{E(F["loading"])}</span><i class="shim"></i></div>'
+                f'<div class="ct"><b>{E(c["title"])}</b><span>{E(c["finding"])}</span></div>{CHECK}</div>' for c in F["cards"])
+em = F["email"]
+email = (f'<div id="email"><div class="eh">{MARK}<span>{E(em["head"])}</span><span class="pill sent" id="sent">{CHECK}{E(em["sent"])}</span></div>'
+         f'<div class="eto">To&nbsp;&nbsp;{E(em["to"])}</div>'
+         f'<div class="esub"><span class="lab">Subject</span><span class="stx">{chars(em["subject"])}</span></div>'
+         f'<div class="ebody">{typed(em["body"])}</div></div>')
+WIRES = [("chat", k) for k in re.findall(r"\[(\w+)\]", F["agent"]["text"])] + [("email", k) for k in re.findall(r"\[(\w+)\]", em["body"])]
+wires = "".join(f'<path id="w-{s}-{k}"/><circle id="d-{s}-{k}" r="6" opacity="0"/>' for s, k in WIRES)
+heads = "".join(f'<div class="hl">{kw(h["text"])}</div>' for h in F["headlines"])
+lk = F["lockup"]
+
+T = {"bpm": F["bpm"], "bars": F["bars"], "at": F["at"], "heads": [[h["at"], h["until"]] for h in F["headlines"]],
+     "keys": [c["key"] for c in F["cards"]], "wires": WIRES}
 tpl = open("template.html").read()
-for k, v in rep.items():
-    tpl = tpl.replace(k, v)
+rep = {
+    "__FONTFACES__": "\n        ".join(faces), "__HEADS__": heads, "__BROWSER__": browser, "__CURSOR__": cursor, "__CARDS__": cards,
+    "__EMAIL__": email, "__WIRES__": wires, "__DISCLAIMER__": E(F["disclaimer"]), "__BRANDTAG__": E(F["brandtag"]),
+    "__LOGO__": f'{A}/{os.path.basename(BRAND["logo"]["file"])}', "__LINE__": E(lk["line"]), "__URL__": E(lk["url"]), "__T__": json.dumps(T),
+}
+for k, val in rep.items():
+    tpl = tpl.replace(k, val)
 os.makedirs("compositions", exist_ok=True)
 open("compositions/signals.html", "w").write(tpl)
 open("index.html", "w").write(f'''<!doctype html>
@@ -90,7 +123,7 @@ open("index.html", "w").write(f'''<!doctype html>
   </head>
   <body>
     <div id="main" data-composition-id="main" data-start="0" data-duration="{END:.3f}" data-width="1920" data-height="1080">
-      <div id="el-d" data-composition-id="signals" data-composition-src="compositions/signals.html" data-start="0" data-duration="{END:.3f}" data-track-index="1"></div>
+      <div id="el-signals" data-composition-id="signals" data-composition-src="compositions/signals.html" data-start="0" data-duration="{END:.3f}" data-track-index="1"></div>
     </div>
     <script>
       window.__timelines["main"] = gsap.timeline({{ paused: true }});

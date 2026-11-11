@@ -1,30 +1,30 @@
 ---
 workflow: product-launch
 message: "Now it also tells you what just changed at that company."
-destination: the Signals launch email, getbreakout.ai/signals, LinkedIn
+destination: owner's choice; see "Real company" below
 aspect: 1920x1080
 language: en
-length: about 40s
-angle: Two pricing-page visits look the same until Signals shows which one matters right now
-template: dot-matrix
-status: storyline approved by the owner on 2026-11-11 ("ok create it. borrow imagery from https://getbreakout.ai/signals for signals")
+length: 48.8s
+angle: A visitor on the pricing page; Breakout listens to 35+ signals and the intel arrives next to the cursor, one signal at a time; the website agent and the AI SDR email use it
+template: swiss-grid
+status: storyboard v2 approved by the owner on 2026-11-11; first cut built
 ---
 
 ## Intent
 
-Launch Signals: Breakout already knows who is on the site and which company they are from; now it also knows what just changed at that company, so the team knows which visit to act on today, and the rep or the agent acts on it.
+Launch Signals tactically (owner: "more tactical + more wordy"): show the product doing the job on a real-looking pricing page, then the agent and the follow-up email using the context.
 
-## Sources (words used verbatim, nothing invented)
+## Words
 
-- **The launch email** (Sachin, 2026-11): the four questions, "Now it also tells you what just changed at that company.", "A pricing-page visit is good...", "Signals shows you which is which.", "Every visit is backed by 35+ signals", "Know which visits to drop everything for", "Reps get the signal with the hook already found.", "The agent picks it up in the conversation or the follow-up email.", "Works with what you already run", "Breakout puts them on the same account."
-- **The signals library** (getbreakout.ai/signals, saved 2026-11-11): the page headline "Every buying signal, in one place." and the signal names used as tiny labels ("Funding round announced", "New exec in a buyer-persona role", "Past champion joins a tracked account", "Competitor comparison viewed (G2)", "Hiring surge in watched roles").
+- **Headlines:** verbatim from the Signals launch email (Sachin, 2026-11).
+- **Card titles and families:** verbatim from the signals library (getbreakout.ai/signals, saved 2026-11-11).
+- **Findings, chat and email:** illustrative, approved by the owner ("rest are good").
+- "Illustrative example" sits in the corner throughout.
 
-## The world
+## Real company (owner's decision, 2026-11-11)
 
-The dot grid from the full-suite film, re-coloured to the signals library's deep indigo (`#1a1534`): the visitor is a pink bloom, Breakout violet, the rep cyan. **Signals borrow the library's imagery** (owner): the four in the hook are live particle versions of its art (the funding peak, the people trail, the hiring rings, the intent arcs), and the "35+" beat shows the ten library illustrations themselves (`assets/refs/signals/`), each with its family name. No UI, no people.
+The visitor is "Sarah at Anthropic" with Anthropic's logo, as the owner asked. Asked whether to use a fictional company, Anthropic with true facts only, or Anthropic as drafted, the owner chose "Anthropic as drafted": the option offered for use only with Anthropic's permission, for an internal or 1:1 send, not for public posting. The findings (a Series B, a new VP Sales, 6 SDR roles, a G2 comparison, a buying-committee surge) are not facts about Anthropic. Do not post this cut publicly; for a public version, swap `visitor` in `film.json` to a fictional company.
 
-## Decisions taken without an answer yet (flagged to the owner)
+## Look and sound
 
-1. Template: dot-matrix, as recommended.
-2. Clay, G2 and Bombora appear as words only, quoted from the email, never their logos.
-3. The end card: the library headline "Every buying signal, in one place." with getbreakout.ai/signals.
+Swiss grid (approved): off-white paper, hairline grid, Manrope, violet for what matters; the visitor's site is a neutral pricing page (`yoursite.com/pricing`). Upbeat swing score (the dot-matrix band, free), cued from the picture.
