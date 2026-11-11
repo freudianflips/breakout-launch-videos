@@ -418,7 +418,7 @@
         }
       },
       "stage": "3 easy switch",
-      "li_campaign": "QSW | S3 easy switch | practitioner"
+      "li_campaign": "QSW | S1 need | practitioner"
     },
     {
       "id": "QSW-002",
@@ -519,7 +519,7 @@
         }
       },
       "ends": "2026-11-30",
-      "li_campaign": "QSW | S3 buyout | cmo",
+      "li_campaign": "QSW | S1 why change | cmo",
       "stage": "3 easy switch"
     },
     {
@@ -545,7 +545,7 @@
         }
       },
       "stage": "3 easy switch",
-      "li_campaign": "QSW | S3 buyout | cmo"
+      "li_campaign": "QSW | S1 why change | cmo"
     },
     {
       "id": "QSW-007",
@@ -572,7 +572,7 @@
     },
     {
       "id": "QSW-008",
-      "status": "approved",
+      "status": "paused",
       "round": "s2",
       "concept": "pricing",
       "angle": "pricing",
@@ -995,7 +995,7 @@
         }
       },
       "stage": "3 easy switch",
-      "li_campaign": "QSW | S3 easy switch | practitioner"
+      "li_campaign": "QSW | S1 need | practitioner"
     },
     {
       "id": "QSW-021",
@@ -1242,7 +1242,7 @@
         }
       },
       "stage": "3 easy switch",
-      "li_campaign": "QSW | S3 easy switch | practitioner"
+      "li_campaign": "QSW | S1 need | practitioner"
     },
     {
       "id": "QSW-029",
@@ -1341,7 +1341,7 @@
       },
       "ends": "2026-11-30",
       "stage": "3 easy switch",
-      "li_campaign": "QSW | S3 buyout | cmo"
+      "li_campaign": "QSW | S1 why change | cmo"
     },
     {
       "id": "QSW-032",
@@ -1814,7 +1814,7 @@
     },
     {
       "id": "QSW-054",
-      "status": "approved",
+      "status": "paused",
       "round": "s2",
       "concept": "vs-team",
       "angle": "headcount",
@@ -1841,7 +1841,7 @@
     },
     {
       "id": "QSW-055",
-      "status": "approved",
+      "status": "paused",
       "round": "s2",
       "concept": "vs-roadmap",
       "angle": "vendor",
@@ -1868,7 +1868,7 @@
     },
     {
       "id": "QSW-056",
-      "status": "approved",
+      "status": "paused",
       "round": "s2",
       "concept": "vs-value",
       "angle": "outcome",
@@ -1903,7 +1903,7 @@
       "awareness": "product",
       "format": "img-1x1",
       "hook": "pattern-break",
-      "li_campaign": "QSW | S3 easy switch | practitioner",
+      "li_campaign": "QSW | S1 need | practitioner",
       "stage": "3 easy switch",
       "copy": {
         "intro": "Your switching checklist, done.\nGo live in 3 hours. No implementation project. No admin ticket or technical handoff.",
@@ -1931,7 +1931,7 @@
       "awareness": "product",
       "format": "img-1x1",
       "hook": "verdict",
-      "li_campaign": "QSW | S3 easy switch | practitioner",
+      "li_campaign": "QSW | S1 need | practitioner",
       "stage": "3 easy switch",
       "copy": {
         "intro": "Setup, in one sentence.\nPoint the agent to your knowledge base and give it a few instructions to stand up an AI SDR",
@@ -1957,7 +1957,7 @@
       "awareness": "most-aware",
       "format": "img-1x1",
       "hook": "verdict",
-      "li_campaign": "QSW | S3 buyout | cmo",
+      "li_campaign": "QSW | S1 why change | cmo",
       "stage": "3 easy switch",
       "copy": {
         "intro": "Still under contract? We'll buy out the rest of it.\nSend us your contract. One document is all we need. Reviewed in two business days.",
@@ -2131,7 +2131,7 @@
     },
     {
       "id": "QSW-066",
-      "status": "approved",
+      "status": "paused",
       "round": "s2",
       "concept": "vs-person",
       "angle": "identify",
@@ -2158,7 +2158,7 @@
     },
     {
       "id": "QSW-067",
-      "status": "approved",
+      "status": "paused",
       "round": "s2",
       "concept": "vs-linkedin",
       "angle": "follow-up",
@@ -2185,7 +2185,7 @@
     },
     {
       "id": "QSW-068",
-      "status": "approved",
+      "status": "paused",
       "round": "s2",
       "concept": "vs-signals",
       "angle": "signals",
@@ -2212,7 +2212,7 @@
     },
     {
       "id": "QSW-069",
-      "status": "approved",
+      "status": "paused",
       "round": "s2",
       "concept": "vs-setup",
       "angle": "go-live",
@@ -2309,13 +2309,21 @@
       ]
     },
     "loaded": [
+      "QSW-001",
       "QSW-005",
+      "QSW-006",
       "QSW-008",
       "QSW-009",
       "QSW-010",
+      "QSW-020",
+      "QSW-028",
+      "QSW-031",
       "QSW-054",
       "QSW-055",
       "QSW-056",
+      "QSW-057",
+      "QSW-058",
+      "QSW-059",
       "QSW-060",
       "QSW-061",
       "QSW-062",
@@ -2330,24 +2338,25 @@
     "to_delete_on_linkedin": [],
     "live": {
       "QSW | S1 need | practitioner": [
-        "QSW-066",
-        "QSW-067",
-        "QSW-068",
-        "QSW-069"
+        "QSW-001",
+        "QSW-020",
+        "QSW-028",
+        "QSW-057",
+        "QSW-058"
       ],
       "QSW | S1 why change | cmo": [
-        "QSW-008",
-        "QSW-054",
-        "QSW-055",
-        "QSW-056"
+        "QSW-005",
+        "QSW-031",
+        "QSW-059",
+        "QSW-006"
       ],
       "budget": {
         "practitioner": 75,
         "cmo": 25
       },
       "ends": "2026-11-30",
-      "set": "2026-10-30",
-      "note": "stage 2 swapped into the stage 1 campaigns (same audiences)"
+      "set": "2026-11-11",
+      "note": "stage 3 (easy switch) swapped into the same two campaigns; the separate 'QSW | S3 buyout | cmo' draft is no longer needed"
     }
   }
 }

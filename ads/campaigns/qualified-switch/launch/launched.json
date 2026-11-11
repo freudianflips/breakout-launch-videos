@@ -1,9 +1,9 @@
 {
   "ads": {
     "QSW-005": {
-      "campaign": "914628286",
-      "creative": "urn:li:sponsoredCreative:1648731466",
-      "post": "urn:li:share:7517908879876354048"
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1684707776",
+      "post": "urn:li:share:7526226855759286274"
     },
     "QSW-008": {
       "campaign": "914655726",
@@ -21,9 +21,9 @@
       "post": "urn:li:share:7516083878298800128"
     },
     "QSW-001": {
-      "campaign": "912444656",
-      "creative": "urn:li:sponsoredCreative:1642216596",
-      "post": "urn:li:share:7516095233722572800"
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1684852566",
+      "post": "urn:li:share:7526226802697220096"
     },
     "QSW-004": {
       "campaign": "912444656",
@@ -109,8 +109,43 @@
       "campaign": "914655726",
       "creative": "urn:li:sponsoredCreative:1668409936",
       "post": "urn:li:share:7521931340280262656"
+    },
+    "QSW-020": {
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1684833616",
+      "post": "urn:li:share:7526226814332231680"
+    },
+    "QSW-028": {
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1684746526",
+      "post": "urn:li:share:7526226823794421761"
+    },
+    "QSW-057": {
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1684736486",
+      "post": "urn:li:share:7526226834401685504"
+    },
+    "QSW-058": {
+      "campaign": "914704826",
+      "creative": "urn:li:sponsoredCreative:1684910666",
+      "post": "urn:li:share:7526226845214777344"
+    },
+    "QSW-006": {
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1684881776",
+      "post": "urn:li:share:7526226865196457984"
+    },
+    "QSW-031": {
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1684757076",
+      "post": "urn:li:share:7526226873953968128"
+    },
+    "QSW-059": {
+      "campaign": "914655726",
+      "creative": "urn:li:sponsoredCreative:1684717266",
+      "post": "urn:li:share:7526226885786316801"
     }
   },
-  "verified": "2026-10-30T13:50:09",
+  "verified": "2026-11-11T10:19:07",
   "account": "514347134"
 }
