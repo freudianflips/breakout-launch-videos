@@ -2,124 +2,122 @@
 <html>
   <body>
     <template>
-      <!-- Signals launch, in the Swiss-grid look: a visitor on a pricing page, Breakout listening to 35+ signals,
-           the intel arriving next to the cursor one signal at a time, then the website agent and the AI SDR email
-           using it, with a line from each signal to the words it shaped. Built by build.py; every frame is a pure
-           function of t (draw(t) sets every element from nothing). -->
+      <!-- Signals launch, Swiss-grid look, snappy: the visitor lands on a pricing page and the camera snaps onto her
+           cursor; Breakout listens to 35+ signals and lists them under her name, one at a time; hard cut to Breakout's
+           website agent (recreated from the owner's screenshot) and then the AI SDR email, the camera punching in on
+           each personalization token as it is typed; hard cut to the close. Built by build.py; every frame is a pure
+           function of t (draw(t) sets everything from nothing). -->
       <style>
         __FONTFACES__
-        [data-composition-id="signals"] { --paper: #f2f1ee; --ink: #040405; --ink2: #5c5850; --mute: #8a8a92; --violet: #4c00ff;
-          --card: #2b2a2e; --line: rgba(4, 4, 5, 0.08); --sans: "Manrope", system-ui, sans-serif; --mono: "Fragment Mono", ui-monospace, monospace; }
+        [data-composition-id="signals"] { --paper: #f2f1ee; --ink: #040405; --ink2: #5c5850; --mute: #8a8a92; --violet: #4c00ff; --agent: #4f46e5;
+          --line: rgba(4, 4, 5, 0.08); --sans: "Manrope", system-ui, sans-serif; --mono: "Fragment Mono", ui-monospace, monospace; }
         #root { position: absolute; inset: 0; overflow: hidden; background: var(--paper); font-family: var(--sans); color: var(--ink); }
-        #gridH, #gridV { position: absolute; inset: 0; }
+        #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+        #gridH, #gridV { position: absolute; inset: -1080px -1920px; }
         #gridH { background-image: linear-gradient(var(--line) 1px, transparent 1px); background-size: 100% 120px; }
         #gridV { background-image: linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 160px 100%; }
-        .mono { font-family: var(--mono); }
-        #brandtag { position: absolute; right: 160px; top: 64px; font-size: 22px; }
-        #disc { position: absolute; right: 160px; bottom: 54px; font-family: var(--mono); font-size: 18px; color: var(--mute); }
-        .hl { position: absolute; left: 160px; top: 110px; width: 1600px; font-size: 68px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.02; opacity: 0; }
+        #top { position: absolute; left: 0; top: 0; width: 1920px; height: 300px; background: linear-gradient(var(--paper) 62%, rgba(242, 241, 238, 0)); z-index: 40; }
+        #brandtag { position: absolute; right: 160px; top: 64px; font-family: var(--mono); font-size: 22px; z-index: 41; }
+        #disc { position: absolute; right: 160px; bottom: 54px; font-family: var(--mono); font-size: 18px; color: var(--mute); z-index: 41; }
+        .hl { position: absolute; left: 160px; top: 100px; width: 1500px; font-size: 68px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.02; opacity: 0; z-index: 41; }
         .v { color: var(--violet); font-style: normal; }
 
         /* the pricing page */
-        #browser { position: absolute; left: 160px; top: 300px; width: 1000px; height: 650px; background: #fff; border-radius: 18px; overflow: hidden;
-          box-shadow: 0 50px 100px -50px rgba(10, 10, 20, 0.35), 0 0 0 1px #e3e1dc; opacity: 0; }
-        .chrome { height: 54px; background: #f6f5f2; border-bottom: 1px solid #e8e6e1; display: flex; align-items: center; gap: 9px; padding: 0 20px; }
+        #browser { position: absolute; left: 260px; top: 250px; width: 1400px; height: 780px; background: #fff; border-radius: 20px; overflow: hidden;
+          box-shadow: 0 50px 100px -50px rgba(10, 10, 20, 0.35), 0 0 0 1px #e3e1dc; }
+        .chrome { height: 56px; background: #f6f5f2; border-bottom: 1px solid #e8e6e1; display: flex; align-items: center; gap: 9px; padding: 0 22px; }
         .chrome i { width: 13px; height: 13px; border-radius: 50%; background: #dcd9d2; }
-        .chrome .url { margin-left: 20px; flex: 1; height: 32px; border-radius: 8px; background: #fff; border: 1px solid #e8e6e1; font-family: var(--mono); font-size: 17px;
+        .chrome .url { margin-left: 20px; flex: 1; height: 34px; border-radius: 8px; background: #fff; border: 1px solid #e8e6e1; font-family: var(--mono); font-size: 18px;
           color: var(--ink2); display: flex; align-items: center; padding: 0 14px; }
-        .page { padding: 34px 44px; }
-        .ptitle { font-size: 42px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 26px; }
-        .plans { display: flex; gap: 22px; }
-        .plan { flex: 1; height: 440px; border-radius: 16px; border: 1.5px solid #e6e4df; padding: 24px; position: relative; }
+        .page { padding: 40px 50px; }
+        .ptitle { font-size: 48px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 30px; }
+        .plans { display: flex; gap: 26px; }
+        .plan { flex: 1; height: 540px; border-radius: 18px; border: 1.5px solid #e6e4df; padding: 28px; position: relative; }
         .plan.hot { border-color: var(--ink); }
-        .plan b { display: block; font-size: 24px; font-weight: 700; margin-bottom: 20px; }
-        .plan .bar { display: block; height: 16px; border-radius: 6px; background: #ebe9e4; margin-bottom: 12px; }
-        .plan .bar.tall { height: 34px; background: #e2e0da; margin-bottom: 26px; }
+        .plan b { display: block; font-size: 28px; font-weight: 700; margin-bottom: 22px; }
+        .plan .bar { display: block; height: 18px; border-radius: 6px; background: #ebe9e4; margin-bottom: 14px; }
+        .plan .bar.tall { height: 40px; background: #e2e0da; margin-bottom: 30px; }
         .plan .w60 { width: 60%; } .plan .w40 { width: 45%; }
-        .plan .ln { display: block; height: 11px; border-radius: 5px; background: #f0eee9; margin-bottom: 14px; width: 85%; }
+        .plan .ln { display: block; height: 12px; border-radius: 6px; background: #f0eee9; margin-bottom: 16px; width: 85%; }
         .plan .ln.s { width: 60%; }
-        .plan .btn { position: absolute; left: 24px; right: 24px; bottom: 24px; height: 48px; border-radius: 10px; background: #ebe9e4; }
+        .plan .btn { position: absolute; left: 28px; right: 28px; bottom: 28px; height: 56px; border-radius: 12px; background: #ebe9e4; }
         .plan.hot .btn { background: var(--ink); }
 
-        /* the cursor, its name tag and Breakout listening */
+        /* the cursor, who she is, and what Breakout hears */
         #cursor { position: absolute; left: 0; top: 0; z-index: 30; opacity: 0; }
-        #arrow { position: absolute; left: 0; top: 0; width: 38px; height: 38px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25)); }
-        #tag { position: absolute; left: 30px; top: 34px; display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px; border-radius: 12px;
-          background: var(--ink); color: #fff; font-size: 22px; white-space: nowrap; opacity: 0; box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.4); }
-        #tag img { width: 34px; height: 34px; border-radius: 8px; }
-        #tag b { font-weight: 700; }
-        #tag .at { color: #b9b8c0; }
-        #tag .act { margin-left: 6px; }
-        #listen { position: absolute; left: 30px; top: 92px; display: flex; align-items: center; gap: 10px; padding: 8px 16px 8px 8px; border-radius: 12px;
-          background: #fff; color: var(--ink); font-size: 20px; font-weight: 600; white-space: nowrap; opacity: 0; box-shadow: 0 0 0 1.5px var(--violet), 0 16px 30px -14px rgba(76, 0, 255, 0.5); }
-        #listen .spin { width: 22px; height: 22px; }
-        .spin circle { fill: none; stroke: rgba(76, 0, 255, 0.18); stroke-width: 3; }
-        .spin path { fill: none; stroke: var(--violet); stroke-width: 3; stroke-linecap: round; }
-        .av { width: 34px; height: 34px; border-radius: 50%; background: var(--violet); display: inline-flex; align-items: center; justify-content: center; flex: none; }
-        .av img { width: 34px; height: 34px; }
-        .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 8px; font-size: 18px; font-weight: 700; }
-        .pill.act { background: var(--violet); color: #fff; opacity: 0; }
+        #arrow { position: absolute; left: 0; top: 0; width: 34px; height: 34px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25)); }
+        #tag { position: absolute; left: 26px; top: 30px; width: 470px; padding: 12px 14px 12px; border-radius: 14px; background: var(--ink); color: #fff; opacity: 0;
+          box-shadow: 0 18px 36px -14px rgba(0, 0, 0, 0.45); transform-origin: 0 0; }
+        .who { display: flex; align-items: center; gap: 9px; font-size: 19px; white-space: nowrap; }
+        .who img { width: 30px; height: 30px; border-radius: 7px; }
+        .who b { font-weight: 700; }
+        .who .role { color: #b9b8c0; }
+        .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 7px; font-size: 15px; font-weight: 700; }
+        .pill.act { background: var(--violet); color: #fff; margin-left: auto; opacity: 0; }
+        #listen { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.12);
+          font-family: var(--mono); font-size: 13px; letter-spacing: 0.04em; color: #b9a8ff; text-transform: uppercase; height: 0; overflow: hidden; opacity: 0; }
+        #listen .spin { width: 15px; height: 15px; }
+        .spin circle { fill: none; stroke: rgba(185, 168, 255, 0.25); stroke-width: 3; }
+        .spin path { fill: none; stroke: #b9a8ff; stroke-width: 3; stroke-linecap: round; }
+        .sg { display: flex; align-items: center; gap: 8px; font-size: 15px; line-height: 1; height: 0; overflow: hidden; opacity: 0; white-space: nowrap; }
+        .sg .spin { width: 14px; height: 14px; flex: none; }
+        .sg .ok { width: 14px; height: 14px; flex: none; fill: none; stroke: #8b7cf6; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+        .sg .st { font-weight: 700; color: #fff; }
+        .sg .sf { color: #c7b8ff; }
 
-        /* the intel, one signal at a time */
-        #stack { position: absolute; left: 1220px; top: 300px; width: 540px; }
-        .ic { position: relative; height: 112px; margin-bottom: 14px; border-radius: 16px; background: var(--card); color: #f1f1f3; padding: 16px 22px; opacity: 0;
-          box-shadow: 0 30px 60px -36px rgba(10, 10, 20, 0.55); }
-        .ic.lit { box-shadow: 0 0 0 3px var(--violet), 0 30px 60px -36px rgba(10, 10, 20, 0.55); }
-        .ic .fam { font-family: var(--mono); font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; color: #a9a7b8; }
-        .ic .ld { position: absolute; left: 22px; right: 22px; top: 50px; display: flex; align-items: center; gap: 12px; font-size: 20px; color: #c9c7d6; }
-        .ic .ld .spin { width: 24px; height: 24px; }
-        .ic .ld .spin circle { stroke: rgba(255, 255, 255, 0.15); } .ic .ld .spin path { stroke: #b9a8ff; }
-        .ic .shim { flex: 1; height: 14px; border-radius: 7px; background: linear-gradient(90deg, #3a3940 0%, #55535e 50%, #3a3940 100%); background-size: 300px 100%; }
-        .ic .ct { position: absolute; left: 22px; right: 70px; top: 44px; opacity: 0; }
-        .ic .ct b { display: block; font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
-        .ic .ct span { display: block; font-size: 20px; color: #c7b8ff; margin-top: 4px; }
-        .ic .ok { position: absolute; right: 22px; top: 38px; width: 34px; height: 34px; padding: 6px; border-radius: 50%; background: var(--violet);
-          fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
-
-        /* the website agent */
-        #chat { position: absolute; left: 520px; top: 150px; width: 450px; background: #fff; border-radius: 18px; opacity: 0; z-index: 5;
-          box-shadow: 0 40px 80px -30px rgba(10, 10, 20, 0.45), 0 0 0 1px #e3e1dc; transform-origin: 100% 100%; }
-        .chd { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #eeece8; font-size: 21px; }
-        .chd .live { width: 10px; height: 10px; border-radius: 50%; background: #2fb37a; margin-left: auto; }
-        .bub { margin: 16px 20px; padding: 14px 18px; border-radius: 16px; font-size: 22px; line-height: 1.42; font-weight: 500; }
-        .bub.ag { background: #f3f1fb; border-top-left-radius: 4px; }
-        .bub.me { background: var(--ink); color: #fff; margin-left: 120px; border-top-right-radius: 4px; opacity: 0; }
+        /* Breakout's website agent, from the owner's screenshot */
+        #widget { position: absolute; right: 40px; bottom: 40px; width: 520px; height: 620px; background: #fff; border-radius: 22px; opacity: 0; z-index: 5;
+          box-shadow: 0 30px 70px -20px rgba(20, 16, 60, 0.35), 0 0 0 1px #e5e4ea; transform-origin: 100% 100%; font-family: var(--sans); }
+        .wh { display: flex; align-items: center; gap: 12px; padding: 22px 24px 0; font-size: 26px; }
+        .wh b { font-weight: 600; color: #16151f; }
+        .wav svg { width: 40px; height: 40px; display: block; }
+        .wic { margin-left: auto; display: flex; gap: 18px; }
+        .wic svg { width: 22px; height: 22px; fill: none; stroke: #6b6b78; stroke-width: 2; stroke-linecap: round; }
+        .wbook { display: inline-block; margin: 14px 24px 0; padding: 9px 20px; border-radius: 12px; background: var(--agent); color: #fff; font-size: 21px; font-weight: 500; }
+        .wmsg { margin: 26px 24px 0; font-size: 21px; line-height: 1.5; color: #16151f; font-weight: 500; }
+        .wme { margin: 18px 24px 0 auto; width: fit-content; max-width: 380px; padding: 12px 20px; border-radius: 16px; background: #ebebef; color: #16151f; font-size: 21px; opacity: 0; }
+        .win { position: absolute; left: 24px; right: 24px; bottom: 20px; padding-top: 18px; border-top: 1px solid #e5e4ea; display: flex; align-items: center;
+          font-size: 20px; color: #7a7a88; }
+        .wsend { margin-left: auto; width: 48px; height: 48px; border-radius: 14px; background: #a59cf0; display: inline-flex; align-items: center; justify-content: center; }
+        .wsend svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+        #launcher { position: absolute; right: 580px; bottom: 40px; width: 64px; height: 64px; border-radius: 16px; background: #16151f; opacity: 0;
+          box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.4); }
+        #launcher svg { width: 64px; height: 64px; }
         .ch { opacity: 0; }
-        .ph.on { background: rgba(76, 0, 255, 0.12); color: var(--violet); border-radius: 5px; box-shadow: 0 0 0 3px rgba(76, 0, 255, 0.12); }
+        .ph { border-radius: 6px; }
+        .ph.on { background: rgba(76, 0, 255, 0.12); color: var(--violet); box-shadow: 0 0 0 3px rgba(76, 0, 255, 0.12); }
 
         /* the AI SDR email */
-        #email { position: absolute; left: 160px; top: 300px; width: 1000px; padding: 34px 44px 40px; background: #fff; border-radius: 18px; opacity: 0;
+        #email { position: absolute; left: 360px; top: 300px; width: 1200px; padding: 38px 50px 46px; background: #fff; border-radius: 20px; opacity: 0;
           box-shadow: 0 50px 100px -50px rgba(10, 10, 20, 0.35), 0 0 0 1px #e3e1dc; }
-        #email .eh { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 19px; color: var(--ink2); }
-        #email .sent { margin-left: auto; background: var(--violet); color: #fff; font-family: var(--sans); opacity: 0; }
+        #email .eh { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 20px; color: var(--ink2); }
+        .av { width: 34px; height: 34px; border-radius: 50%; background: var(--violet); display: inline-flex; align-items: center; justify-content: center; flex: none; }
+        .av img { width: 34px; height: 34px; }
+        #email .sent { margin-left: auto; background: var(--violet); color: #fff; font-family: var(--sans); font-size: 20px; padding: 6px 14px; opacity: 0; }
         #email .sent svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-        #email .eto { font-size: 21px; color: var(--ink2); margin-top: 18px; }
-        #email .esub { margin-top: 14px; padding-bottom: 20px; border-bottom: 1px solid #ecebe7; display: flex; gap: 16px; align-items: baseline; }
-        #email .lab { font-family: var(--mono); font-size: 18px; color: var(--mute); }
-        #email .stx { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; }
-        #email .ebody { margin-top: 24px; font-size: 30px; line-height: 1.5; font-weight: 500; color: #26262b; }
-
-        #wires { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; pointer-events: none; z-index: 20; }
-        #wires path { fill: none; stroke: var(--violet); stroke-width: 3; }
-        #wires circle { fill: var(--violet); }
+        #email .eto { font-size: 22px; color: var(--ink2); margin-top: 20px; }
+        #email .esub { margin-top: 14px; padding-bottom: 22px; border-bottom: 1px solid #ecebe7; display: flex; gap: 16px; align-items: baseline; }
+        #email .lab { font-family: var(--mono); font-size: 19px; color: var(--mute); }
+        #email .stx { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; }
+        #email .ebody { margin-top: 26px; font-size: 34px; line-height: 1.5; font-weight: 500; color: #26262b; }
 
         /* the close */
-        #llogo { position: absolute; left: 160px; top: 520px; height: 96px; opacity: 0; }
-        #lline { position: absolute; left: 160px; top: 680px; font-size: 64px; font-weight: 800; letter-spacing: -0.04em; opacity: 0; }
-        #lurl { position: absolute; left: 160px; top: 790px; font-family: var(--mono); font-size: 28px; color: var(--violet); opacity: 0; }
+        #close { position: absolute; inset: 0; z-index: 45; background: var(--paper); opacity: 0; }
+        #llogo { position: absolute; left: 50%; top: 330px; height: 110px; transform: translateX(-50%); }
+        #lline { position: absolute; left: 0; right: 0; top: 520px; text-align: center; font-size: 104px; font-weight: 800; letter-spacing: -0.05em; }
+        #lurl { position: absolute; left: 0; right: 0; top: 690px; text-align: center; font-family: var(--mono); font-size: 30px; color: var(--violet); }
       </style>
       <div id="root" data-composition-id="signals" data-width="1920" data-height="1080">
-        <div id="gridH"></div><div id="gridV"></div>
-        <div id="brandtag" class="mono">__BRANDTAG__</div>
+        <div id="cam">
+          <div id="gridH"></div><div id="gridV"></div>
+          __BROWSER__
+          __EMAIL__
+          __CURSOR__
+        </div>
+        <div id="top"></div>
+        <div id="brandtag">__BRANDTAG__</div>
         __HEADS__
-        __BROWSER__
-        <div id="stack">__CARDS__</div>
-        __EMAIL__
-        <svg id="wires">__WIRES__</svg>
-        __CURSOR__
-        <img id="llogo" src="__LOGO__" alt="">
-        <div id="lline">__LINE__</div>
-        <div id="lurl">__URL__</div>
+        <div id="close"><img id="llogo" src="__LOGO__" alt=""><div id="lline">__LINE__</div><div id="lurl">__URL__</div></div>
         <div id="disc">__DISCLAIMER__</div>
       </div>
       <script>
@@ -134,12 +132,11 @@
           var T = __T__;
           var BAR = 240 / T.bpm, END = T.bars * BAR, A = T.at;
           function B(x) { return x * BAR; }
-          // a hard cut in with a 4-frame settle; out the same way
           function snap(el, t, a, b, dy) {
             if (t < B(a) || t >= B(b)) { el.style.opacity = 0; return 0; }
-            var u = out4((t - B(a)) / 0.14);
+            var u = out4((t - B(a)) / 0.12);
             el.style.opacity = 1;
-            el.style.transform = "translateY(" + ((1 - u) * (dy === undefined ? 16 : dy)).toFixed(1) + "px) scale(" + (1 + (1 - u) * 0.025).toFixed(4) + ")";
+            el.style.transform = "translateY(" + ((1 - u) * (dy === undefined ? 14 : dy)).toFixed(1) + "px) scale(" + (1 + (1 - u) * 0.03).toFixed(4) + ")";
             return u;
           }
           function typeOn(spans, t, t0, t1) {
@@ -147,102 +144,95 @@
             for (var i = 0; i < n; i++) spans[i].style.opacity = i < k ? 1 : 0;
             return k;
           }
-          var gH = one("#gridH"), gV = one("#gridV");
-          function grid(t) { var u = io(t / 0.5); gH.style.clipPath = "inset(0 " + ((1 - u) * 100).toFixed(2) + "% 0 0)"; gV.style.clipPath = "inset(0 0 " + ((1 - u) * 100).toFixed(2) + "% 0)"; }
 
-          var heads = all(".hl"), browser = one("#browser"), chat = one("#chat"), me = one("#chat .bub.me");
-          var cursor = one("#cursor"), tag = one("#tag"), act = one("#act"), listen = one("#listen");
-          var cards = all(".ic"), email = one("#email"), sent = one("#sent");
-          var agCh = all("#chat .bub.ag .ch"), subCh = all("#email .stx .ch"), bodyCh = all("#email .ebody .ch");
-          var llogo = one("#llogo"), lline = one("#lline"), lurl = one("#lurl"), root = one("#root");
+          var cam = one("#cam"), heads = all(".hl"), browser = one("#browser"), widget = one("#widget"), launcher = one("#launcher"), wme = one(".wme");
+          var cursor = one("#cursor"), tag = one("#tag"), act = one("#act"), listen = one("#listen"), sigs = all(".sg");
+          var email = one("#email"), sent = one("#sent"), closeEl = one("#close");
+          var agCh = all(".wmsg .ch"), subCh = all("#email .stx .ch"), bodyCh = all("#email .ebody .ch");
           var spins = all(".spin");
-
-          // the cursor's path: in from the bottom right, onto the plan, then aside for the chat
-          var CUR = [[0.15, 1500, 1060], [0.9, 640, 790], [A.agent, 640, 790], [A.agent + 0.35, 330, 760]];
-          function curAt(t) {
-            var b = t / BAR, k = CUR;
-            if (b <= k[0][0]) return [k[0][1], k[0][2]];
-            for (var i = 0; i < k.length - 1; i++) if (b < k[i + 1][0]) { var u = io((b - k[i][0]) / (k[i + 1][0] - k[i][0])); return [lerp(k[i][1], k[i + 1][1], u), lerp(k[i][2], k[i + 1][2], u)]; }
-            var l = k[k.length - 1]; return [l[1], l[2]];
+          // where things sit in the camera's (unscaled) space
+          function pos(el) { var x = 0, y = 0, e = el; while (e && e !== cam) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; } return [x, y, el.offsetWidth, el.offsetHeight]; }
+          function centre(el) { var p = pos(el); return [p[0] + p[2] / 2, p[1] + p[3] / 2]; }
+          // the tokens: when each starts typing, and where it is
+          function tokens(sel, pool, t0, t1) {
+            return all(sel + " .ph").map(function (ph) { var first = ph.querySelector(".ch"), i = pool.indexOf(first);
+              return { el: ph, at: B(t0) + (B(t1) - B(t0)) * (i / pool.length), end: B(t0) + (B(t1) - B(t0)) * ((i + ph.querySelectorAll(".ch").length) / pool.length) }; });
           }
-          // wires: from the card a phrase came from to the phrase itself
-          var wireEls = T.wires.map(function (w) {
-            var ph = one((w[0] === "chat" ? "#chat .bub.ag" : "#email .ebody") + ' .ph[data-ph="' + w[1] + '"]');
-            var pool = w[0] === "chat" ? agCh : bodyCh, first = ph.querySelector(".ch");
-            return { src: w[0], key: w[1], ph: ph, path: one("#w-" + w[0] + "-" + w[1]), dot: one("#d-" + w[0] + "-" + w[1]),
-                     card: cards[T.keys.indexOf(w[1])], startIdx: pool.indexOf(first), box: w[0] === "chat" ? one("#chat") : one("#email") };
-          });
-          function rel(el) { var r = el.getBoundingClientRect(), o = root.getBoundingClientRect(); return { x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height }; }
-          function wire(w, t, at, live) {
-            if (!live || t < at) { w.path.setAttribute("d", ""); w.dot.setAttribute("opacity", 0); w.ph.classList.remove("on"); return false; }
-            var c = rel(w.card), lastCh = w.ph.querySelectorAll(".ch"), p = rel(lastCh[lastCh.length - 1]), box = rel(w.box);
-            var x0 = c.x, y0 = c.y + c.h / 2, x1 = box.x + box.w, y1 = p.y + p.h / 2, mx = (x0 + x1) / 2;
-            var u = io((t - at) / 0.35);
-            w.path.setAttribute("d", "M" + x0 + "," + y0 + " C" + mx + "," + y0 + " " + mx + "," + y1 + " " + x1 + "," + y1);
-            var L = w.path.getTotalLength();
-            w.path.style.strokeDasharray = L; w.path.style.strokeDashoffset = (L * (1 - u)).toFixed(1);
-            w.dot.setAttribute("cx", x0); w.dot.setAttribute("cy", y0); w.dot.setAttribute("opacity", 1);
-            w.ph.classList.add("on");
-            return true;
+          var chatTok = tokens(".wmsg", agCh, A.type[0], A.type[1]), mailTok = tokens("#email .ebody", bodyCh, A.body[0], A.body[1]);
+
+          // the cursor: in fast from the bottom right, onto the Growth plan
+          var LAND = [905, 470];
+          function curAt(t) { var u = io((t - B(0.12)) / (B(A.land) - B(0.12))); return [lerp(1750, LAND[0], u), lerp(1080, LAND[1], u)]; }
+
+          // the camera: [time, centre x, centre y, scale, move time (0 = cut)]
+          function shots() {
+            var tagC = [LAND[0] + 270, LAND[1] + 150], wc = centre(widget), ec = centre(email);
+            var k = [[0, 960, 600, 1, 0], [B(A.land), tagC[0], tagC[1], 2.15, 0.22], [B(A.act), tagC[0] - 20, tagC[1] - 40, 2.35, 0.18],
+                     [B(A.agent), wc[0], wc[1] - 50, 1.2, 0]];
+            chatTok.forEach(function (tk) { var c = centre(tk.el); k.push([tk.at, c[0] + 60, c[1] + 40, 1.9, 0.2]); k.push([tk.end + 0.35, wc[0], wc[1] - 50, 1.2, 0.2]); });
+            k.push([B(A.email), ec[0], ec[1], 1.18, 0]);
+            mailTok.forEach(function (tk) { var c = centre(tk.el); k.push([tk.at, c[0], c[1], 2.0, 0.2]); k.push([tk.end + 0.3, ec[0], ec[1], 1.18, 0.2]); });
+            var sc = centre(sent); k.push([B(A.sent), lerp(ec[0], sc[0], 0.6), lerp(ec[1], sc[1], 0.6), 1.5, 0.18]);
+            return k;
+          }
+          function camAt(t, k) {                                   // each shot moves from the last one's framing to its own
+            var i = 0; for (var j = 0; j < k.length; j++) if (t >= k[j][0]) i = j;
+            var cur = k[i], from = k[Math.max(0, i - 1)], u = cur[4] ? io((t - cur[0]) / cur[4]) : 1;
+            return [lerp(from[1], cur[1], u), lerp(from[2], cur[2], u), lerp(from[3], cur[3], u)];
           }
 
           function draw(t) {
-            grid(t);
-            spins.forEach(function (s) { s.style.transform = "rotate(" + ((t * 400) % 360).toFixed(1) + "deg)"; });
-            T.heads.forEach(function (h, i) { snap(heads[i], t, h[0] + (i ? 0 : 0.02), h[1], 18); });
+            spins.forEach(function (s) { s.style.transform = "rotate(" + ((t * 480) % 360).toFixed(1) + "deg)"; });
+            T.heads.forEach(function (h, i) { snap(heads[i], t, h[0] + (i ? 0 : 0.02), h[1], 14); });
+            var inPage = t < B(A.email), inMail = t >= B(A.email) && t < B(A.close);
 
-            // the page, until the email takes over
-            var out = io((t - B(A.email)) / 0.3);
-            if (t < B(A.email) + 0.35) { snap(browser, t, 0.02, 99, 24); browser.style.transform += " translateX(" + (-1300 * out).toFixed(1) + "px)"; }
-            else browser.style.opacity = 0;
-
-            // the cursor, its tag, and Breakout listening
-            if (t >= B(0.15) && t < B(A.email) + 0.35) {
-              var p = curAt(t);
-              cursor.style.opacity = 1; cursor.style.transform = "translate(" + (p[0] - 1300 * out).toFixed(1) + "px," + p[1].toFixed(1) + "px)";
-            } else cursor.style.opacity = 0;
-            snap(tag, t, A.tag, 99, 8);
-            snap(listen, t, A.listen, A.act, 8);
+            // the page and the cursor (until the cut to the email)
+            browser.style.opacity = inPage ? 1 : 0;
+            if (inPage && t >= B(0.12) && t < B(A.agent)) { var p = curAt(t); cursor.style.opacity = 1; cursor.style.transform = "translate(" + p[0].toFixed(1) + "px," + p[1].toFixed(1) + "px)"; }
+            else if (inPage && t >= B(A.agent)) { cursor.style.opacity = 1; cursor.style.transform = "translate(560px,700px)"; }
+            else cursor.style.opacity = 0;
+            var tu = snap(tag, t, A.land, A.agent, 0);
+            if (tu) tag.style.transform = "scale(" + (0.85 + 0.15 * tu).toFixed(3) + ")";
+            if (t >= B(A.agent)) { tag.style.opacity = 0; }
+            // listening, then each signal: a spinner, then a tick and the finding
+            var lu = out4((t - B(A.listen)) / 0.12);
+            listen.style.opacity = t >= B(A.listen) && t < B(A.act) ? 1 : 0; listen.style.height = (t >= B(A.listen) && t < B(A.act) ? 26 * lu : 0).toFixed(1) + "px";
+            listen.style.marginTop = listen.style.paddingTop = (t >= B(A.listen) && t < B(A.act) ? 10 * lu : 0).toFixed(1) + "px";
+            sigs.forEach(function (sg, i) {
+              var a = B(A.signals[i]), done = t >= a + B(A.load), u = out4((t - a) / 0.1);
+              sg.style.opacity = t >= a ? 1 : 0; sg.style.height = (t >= a ? 27 * u : 0).toFixed(1) + "px";
+              sg.querySelector(".spin").style.display = done ? "none" : "block";
+              sg.querySelector(".ok").style.display = done ? "block" : "none";
+              sg.querySelector(".sf").style.opacity = done ? 1 : 0;
+            });
             act.style.opacity = t >= B(A.act) ? 1 : 0;
-            act.style.transform = "scale(" + (1.25 - 0.25 * out4((t - B(A.act)) / 0.15)).toFixed(3) + ")";
+            act.style.transform = "scale(" + (1.35 - 0.35 * out4((t - B(A.act)) / 0.14)).toFixed(3) + ")";
 
-            // the intel: each card loads, then its finding snaps in
-            var cardsOut = io((t - B(A.close)) / 0.3);
-            cards.forEach(function (c, i) {
-              var a = A.cards[i];
-              snap(c, t, a, 99, 14);
-              if (t >= B(a)) c.style.transform += " translateX(" + (700 * cardsOut).toFixed(1) + "px)";
-              var done = t >= B(a + A.load);
-              c.querySelector(".ld").style.opacity = done ? 0 : 1;
-              c.querySelector(".shim").style.backgroundPosition = ((t * 600) % 300).toFixed(1) + "px 0";
-              var ct = c.querySelector(".ct"), ok = c.querySelector(".ok"), u = out4((t - B(a + A.load)) / 0.14);
-              ct.style.opacity = done ? 1 : 0; ct.style.transform = "translateY(" + ((1 - u) * 8).toFixed(1) + "px)";
-              ok.style.opacity = done ? 1 : 0; ok.style.transform = "scale(" + (done ? 0.6 + 0.4 * u : 0.6).toFixed(3) + ")";
-              c.classList.toggle("lit", t >= B(a + A.load) && t < B(a + A.load) + 0.4);
-            });
+            // the agent
+            var wu = snap(widget, t, A.agent, A.email, 0);
+            if (wu) widget.style.transform = "scale(" + (0.9 + 0.1 * wu).toFixed(3) + ")";
+            launcher.style.opacity = t >= B(A.agent) && inPage ? 1 : 0;
+            typeOn(agCh, t, A.type[0], A.type[1]);
+            snap(wme, t, A.reply, 99, 10);
+            chatTok.forEach(function (tk) { tk.el.classList.toggle("on", t >= tk.at); });
 
-            // the website agent
-            var cu = snap(chat, t, A.agent, A.email + 0.2, 30);
-            if (t >= B(A.agent)) chat.style.transform = "scale(" + (0.92 + 0.08 * cu).toFixed(4) + ") translateX(" + (-1300 * out).toFixed(1) + "px)";
-            var kAg = typeOn(agCh, t, A.type[0], A.type[1]);
-            snap(me, t, A.reply, 99, 10);
-
-            // the AI SDR email
-            snap(email, t, A.email + 0.15, A.close, 24);
-            if (t >= B(A.close)) email.style.opacity = 1 - io((t - B(A.close)) / 0.3);
+            // the email
+            var eu = snap(email, t, A.email, A.close, 0);
             typeOn(subCh, t, A.subject[0], A.subject[1]);
-            var kBody = typeOn(bodyCh, t, A.body[0], A.body[1]);
-            snap(sent, t, A.sent, 99, 6);
+            typeOn(bodyCh, t, A.body[0], A.body[1]);
+            mailTok.forEach(function (tk) { tk.el.classList.toggle("on", t >= tk.at); });
+            var su = snap(sent, t, A.sent, 99, 0);
+            if (su) sent.style.transform = "scale(" + (1.4 - 0.4 * su).toFixed(3) + ")";
 
-            // wires from the cards to the words they shaped
-            wireEls.forEach(function (w) {
-              var k = w.src === "chat" ? kAg : kBody, live = w.src === "chat" ? (t >= B(A.agent) && t < B(A.email)) : (t >= B(A.email) && t < B(A.close));
-              var at = w.src === "chat" ? B(A.type[0]) + (B(A.type[1]) - B(A.type[0])) * (w.startIdx / agCh.length) : B(A.body[0]) + (B(A.body[1]) - B(A.body[0])) * (w.startIdx / bodyCh.length);
-              if (wire(w, t, at, live && k > w.startIdx)) w.card.classList.add("lit");
-            });
+            // the camera
+            var c = t >= B(A.close) ? [960, 600, 1] : camAt(t, shots());
+            cam.style.transform = "translate(" + (960 - c[0] * c[2]).toFixed(1) + "px," + (600 - c[1] * c[2]).toFixed(1) + "px) scale(" + c[2].toFixed(4) + ")";
 
-            // the close
-            snap(llogo, t, A.lockup, 99, 10); snap(lline, t, A.lockup + 0.25, 99, 10); snap(lurl, t, A.lockup + 0.5, 99, 8);
+            // the close: a hard cut
+            closeEl.style.opacity = t >= B(A.close) ? 1 : 0;
+            var cu = out4((t - B(A.close)) / 0.14);
+            one("#lline").style.transform = "translateY(" + (20 * (1 - cu)).toFixed(1) + "px)";
+            one("#lurl").style.opacity = t >= B(A.close + 0.5) ? 1 : 0;
           }
 
           var drv = { t: 0 };

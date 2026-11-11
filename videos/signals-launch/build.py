@@ -52,7 +52,7 @@ def chars(text):
 
 
 def typed(text):
-    """'[key]phrase[/key]' marks become phrase spans the wires point at."""
+    """'[key]phrase[/key]' marks become the personalization tokens the camera zooms onto."""
     out, pos = [], 0
     for m in re.finditer(r"\[(\w+)\](.*?)\[/\1\]", text):
         out.append(chars(text[pos:m.start()]))
@@ -72,36 +72,37 @@ ARROW = ('<svg id="arrow" viewBox="0 0 32 32"><path d="M5 3 L5 25 L11 19.5 L15.5
          'fill="#0b0b0f" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>')
 
 # ------------------------------------------------------------------ markup
-v, site = F["visitor"], F["site"]
+AGENT = ('<span class="wav"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#16151f"/>'
+         '<rect x="13" y="13" width="5" height="14" rx="2.5" fill="#8b7cf6"/><rect x="22" y="13" width="5" height="14" rx="2.5" fill="#8b7cf6"/></svg></span>')
+ICONS = ('<span class="wic"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg>'
+         '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></span>')
+v, site, wg = F["visitor"], F["site"], F["widget"]
 plans = "".join(f'<div class="plan{" hot" if i == site["hover"] else ""}"><b>{E(p)}</b><i class="bar w60"></i><i class="bar w40 tall"></i>'
                 f'<i class="ln"></i><i class="ln"></i><i class="ln s"></i><i class="ln"></i><span class="btn"></span></div>' for i, p in enumerate(site["plans"]))
+widget = (f'<div id="widget"><div class="wh">{AGENT}<b>{E(wg["name"])}</b>{ICONS}</div><div class="wbook">{E(wg["book"])}</div>'
+          f'<div class="wmsg">{typed(F["agent"]["text"])}</div><div class="wme">{E(F["agent"]["reply"])}</div>'
+          f'<div class="win"><span>{E(wg["placeholder"])}</span><i class="wsend"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></i></div></div>'
+          f'<div id="launcher"><svg viewBox="0 0 40 40"><rect x="13" y="12" width="5" height="16" rx="2.5" fill="#8b7cf6"/><rect x="22" y="12" width="5" height="16" rx="2.5" fill="#8b7cf6"/></svg></div>')
 browser = (f'<div id="browser"><div class="chrome"><i></i><i></i><i></i><span class="url">{E(site["url"])}</span></div>'
-           f'<div class="page"><div class="ptitle">{E(site["title"])}</div><div class="plans">{plans}</div></div>'
-           f'<div id="chat"><div class="chd">{MARK}<b>{E(F["agent"]["name"])}</b><span class="live"></span></div>'
-           f'<div class="bub ag">{typed(F["agent"]["text"])}</div><div class="bub me">{E(F["agent"]["reply"])}</div></div></div>')
-cursor = (f'<div id="cursor">{ARROW}<div id="tag"><img src="{VLOGO}" alt=""><b>{E(v["name"])}</b><span class="at">{E(v["company"])}</span>'
-          f'<span class="pill act" id="act">{E(F["act"])}</span></div>'
-          f'<div id="listen">{MARK}{SPIN}<span>{E(F["listening"])}</span></div></div>')
-cards = "".join(f'<div class="ic" data-key="{E(c["key"])}"><div class="fam">{E(c["family"])}</div>'
-                f'<div class="ld">{SPIN}<span>{E(F["loading"])}</span><i class="shim"></i></div>'
-                f'<div class="ct"><b>{E(c["title"])}</b><span>{E(c["finding"])}</span></div>{CHECK}</div>' for c in F["cards"])
+           f'<div class="page"><div class="ptitle">{E(site["title"])}</div><div class="plans">{plans}</div></div>{widget}</div>')
+sigs = "".join(f'<div class="sg">{SPIN}{CHECK}<span class="st">{E(x["title"])}</span><span class="sf">{E(x["finding"])}</span></div>' for x in F["signals"])
+cursor = (f'<div id="cursor">{ARROW}<div id="tag"><div class="who"><img src="{VLOGO}" alt=""><b>{E(v["name"])}</b>'
+          f'<span class="role">{E(v["role"])}, {E(v["company"])}</span><span class="pill act" id="act">{E(F["act"])}</span></div>'
+          f'<div id="listen">{SPIN}<span>{E(F["listening"])}</span></div><div id="sigs">{sigs}</div></div></div>')
 em = F["email"]
 email = (f'<div id="email"><div class="eh">{MARK}<span>{E(em["head"])}</span><span class="pill sent" id="sent">{CHECK}{E(em["sent"])}</span></div>'
          f'<div class="eto">To&nbsp;&nbsp;{E(em["to"])}</div>'
          f'<div class="esub"><span class="lab">Subject</span><span class="stx">{chars(em["subject"])}</span></div>'
          f'<div class="ebody">{typed(em["body"])}</div></div>')
-WIRES = [("chat", k) for k in re.findall(r"\[(\w+)\]", F["agent"]["text"])] + [("email", k) for k in re.findall(r"\[(\w+)\]", em["body"])]
-wires = "".join(f'<path id="w-{s}-{k}"/><circle id="d-{s}-{k}" r="6" opacity="0"/>' for s, k in WIRES)
 heads = "".join(f'<div class="hl">{kw(h["text"])}</div>' for h in F["headlines"])
 lk = F["lockup"]
 
-T = {"bpm": F["bpm"], "bars": F["bars"], "at": F["at"], "heads": [[h["at"], h["until"]] for h in F["headlines"]],
-     "keys": [c["key"] for c in F["cards"]], "wires": WIRES}
+T = {"bpm": F["bpm"], "bars": F["bars"], "at": F["at"], "heads": [[h["at"], h["until"]] for h in F["headlines"]]}
 tpl = open("template.html").read()
 rep = {
-    "__FONTFACES__": "\n        ".join(faces), "__HEADS__": heads, "__BROWSER__": browser, "__CURSOR__": cursor, "__CARDS__": cards,
-    "__EMAIL__": email, "__WIRES__": wires, "__DISCLAIMER__": E(F["disclaimer"]), "__BRANDTAG__": E(F["brandtag"]),
-    "__LOGO__": f'{A}/{os.path.basename(BRAND["logo"]["file"])}', "__LINE__": E(lk["line"]), "__URL__": E(lk["url"]), "__T__": json.dumps(T),
+    "__FONTFACES__": "\n        ".join(faces), "__HEADS__": heads, "__BROWSER__": browser, "__CURSOR__": cursor,
+    "__EMAIL__": email, "__DISCLAIMER__": E(F["disclaimer"]), "__BRANDTAG__": E(F["brandtag"]),
+    "__LOGO__": f'{A}/{os.path.basename(BRAND["logo"]["file"])}', "__LINE__": kw(lk["line"]), "__URL__": E(lk["url"]), "__T__": json.dumps(T),
 }
 for k, val in rep.items():
     tpl = tpl.replace(k, val)

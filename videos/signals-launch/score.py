@@ -5,9 +5,9 @@
 
 Needs fluidsynth and a General MIDI soundfont (apt install fluidsynth fluid-soundfont-gm, or SF2=...).
 The dot-matrix band (piano, walking bass, jazz kit, vibraphone, trumpet, alto sax, trombone), cued from film.json "at":
-a pickup into the visit, the band in when Breakout starts listening, a vibraphone figure as each signal lands
-(rising card by card), a hit on "Act today", lighter comping under the typing, a horn line for "Sent", and the
-button under the lockup.
+a pickup and a hit as the camera lands on the visitor, the band in when Breakout starts listening, a vibraphone figure
+as each signal lands (rising one by one), a hit on "Act today", lighter comping under the typing, a horn line for
+"Sent", and the button under the close.
 """
 import argparse
 import json
@@ -63,8 +63,8 @@ BLUES = [(F_, DOM), (BB, DOM), (F_, DOM), (C_, DOM9), (BB, DOM), (F_, SIX)]
 PROG = []
 for i, x in enumerate(range(0, int(A["end"]) + 1)):
     PROG.append((x, TURN[i % 4]))
-PROG += [(A["lockup"], (BB, SIX)), (A["lockup"] + 0.75, (C_, DOM9)), (A["lockup"] + 1.25, (F_, SIX))]
-PROG = sorted(p for p in PROG if p[0] < A["lockup"] or p in PROG[-3:])
+LK = A["close"]
+PROG = [p for p in PROG if p[0] < LK] + [(LK, (BB, SIX)), (LK + 0.75, (C_, DOM9)), (LK + 1.25, (F_, SIX))]
 
 
 def chord(bar):
@@ -148,10 +148,11 @@ BAR = 240 / F["bpm"]
 
 # ---- the visit: a pickup, piano and bass; the band comes in when Breakout starts listening
 fill(0.0, 84)
-walk(0.25, A["lockup"], 104)
-comp(0.25, A["lockup"], 74)
+walk(0.25, A["close"], 104)
+comp(0.25, A["close"], 74)
 drums(0.25, A["listen"], 66, snare=False)
-stab(A["tag"], 100, 0.1, horns=False)
+stab(A["land"], 104, 0.1, horns=False)
+note(DRUM, CRASH, A["land"], 0.6, 96)
 for p, ch in ((77, "tpt"), (72, "alto"), (65, "bone")):
     note(ch, p, A["listen"] - 0.25, 0.25, 84)
 fill(A["listen"] - 0.25, 96)
@@ -160,9 +161,7 @@ note(DRUM, CRASH, A["listen"], 1, 104)
 drums(A["listen"], A["agent"], 82)
 
 # ---- the intel: a loading shimmer on the ride, then a vibraphone figure as each signal lands
-for k, c in enumerate(A["cards"]):
-    for i in range(4):
-        note("vibes", 89 + k, c + i / 16, 0.05, 40)
+for k, c in enumerate(A["signals"]):
     land = c + A["load"]
     r, v = chord(land)
     for i, s_ in enumerate((v[0], v[1], v[3])):
@@ -182,17 +181,17 @@ stab(A["email"], 104, 0.1)
 for i, p in enumerate((72, 77, 81, 84, 89)):
     note("tpt", p, A["sent"] + i / 24, 0.1 if i < 4 else 0.4, 108)
 note(DRUM, CRASH, A["sent"], 1, 112)
-drums(A["sent"], A["lockup"], 84)
+drums(A["sent"], A["close"], 84)
 riff = [(0, 72, 0.12), (1, 74, 0.06), (2, 77, 0.12), (3, 81, 0.06), (4, 84, 0.2), (6, 82, 0.08), (7, 81, 0.12)]
-for e, p, d in riff:
-    at = off(A["close"], e)
+for e, p, d in riff[:4]:
+    at = off(A["sent"] + 0.25, e)
     note("tpt", p, at, d, 104)
     note("alto", p - 4, at, d, 96)
     note("bone", p - 12, at, d, 92)
-fill(A["lockup"] - 0.25, 106)
+fill(A["close"] - 0.25, 106)
 
 # ---- the lockup: B-flat, C, F, a vibraphone run, the button
-lk = A["lockup"]
+lk = A["close"]
 stab(lk, 116, 0.3)
 note(DRUM, CRASH, lk, 1.5, 116)
 walk(lk, lk + 1.25, 104)

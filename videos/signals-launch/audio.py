@@ -23,13 +23,13 @@ def cue(bar, sound, gain, pan=0, **args):
     return {"t": round(bar * BAR, 4), "sound": sound, "gain_db": gain, "args": args, "pan": pan}
 
 
-cues = [cue(0.15, "air", -20, 0.6, dur=0.5), cue(AT["tag"], "press", -14, -0.1), cue(AT["listen"], "arrive", -15, degree=2)]
-for k, c in enumerate(AT["cards"]):
-    cues += [cue(c, "glass_tick", -22, 0.5, degree=0), cue(c + AT["load"], "lock", -15, 0.5), cue(c + AT["load"], "glass_tick", -16, 0.5, degree=k + 2)]
+cues = [cue(0.12, "air", -18, 0.6, dur=0.4), cue(AT["land"], "felt_thump", -11), cue(AT["land"], "press", -14), cue(AT["listen"], "arrive", -15, degree=2)]
+for k, c in enumerate(AT["signals"]):
+    cues += [cue(c, "key_tap", -20, 0.2), cue(c + AT["load"], "glass_tick", -15, 0.2, degree=k + 2)]
 cues += [cue(AT["act"], "felt_thump", -10), cue(AT["act"], "press", -14)]
-cues += [cue(AT["agent"], "arrive", -16, -0.1, degree=4), cue(AT["type"][0], "typing", -22, -0.1, dur=round((AT["type"][1] - AT["type"][0]) * BAR, 2)), cue(AT["reply"], "press", -15)]
-cues += [cue(AT["email"], "air", -15, -0.6, dur=0.4), cue(AT["body"][0], "typing", -22, -0.2, dur=round((AT["body"][1] - AT["body"][0]) * BAR, 2)), cue(AT["sent"], "logo_sting", -14)]
-cues += [cue(AT["lockup"], "sub_drop", -10), cue(AT["lockup"], "arrive", -16, degree=0)]
+cues += [cue(AT["agent"], "felt_thump", -12), cue(AT["agent"], "arrive", -16, 0.3, degree=4), cue(AT["type"][0], "typing", -22, -0.1, dur=round((AT["type"][1] - AT["type"][0]) * BAR, 2)), cue(AT["reply"], "press", -15)]
+cues += [cue(AT["email"], "felt_thump", -12), cue(AT["email"], "air", -15, -0.6, dur=0.3), cue(AT["body"][0], "typing", -22, -0.2, dur=round((AT["body"][1] - AT["body"][0]) * BAR, 2)), cue(AT["sent"], "logo_sting", -14)]
+cues += [cue(AT["close"], "sub_drop", -10), cue(AT["close"], "arrive", -16, degree=0)]
 os.makedirs("sfx", exist_ok=True)
 json.dump({"duration": round(END + 1, 3), "key": "F", "cues": cues}, open("sfx/cues.json", "w"), indent=1)
 subprocess.run([PY, os.path.join(REPO, "skills/launch-sound/scripts/sfx_forge.py"), "render", "sfx/cues.json", "sfx/sfx.wav"], check=True)
