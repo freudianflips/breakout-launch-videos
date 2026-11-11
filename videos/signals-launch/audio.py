@@ -23,13 +23,13 @@ def cue(bar, sound, gain, pan=0, **args):
     return {"t": round(bar * BAR, 4), "sound": sound, "gain_db": gain, "args": args, "pan": pan}
 
 
-cues = [cue(0.12, "air", -18, 0.6, dur=0.4), cue(AT["land"], "press", -14), cue(AT["listen"], "arrive", -15, degree=2)]
-for k, c in enumerate(AT["signals"]):
-    cues += [cue(c, "key_tap", -20, 0.2), cue(c + AT["load"], "glass_tick", -19, 0.2, degree=k + 2)]
-cues += [cue(AT["move"], "air", -18, 0.5, dur=0.4)]
-cues += [cue(AT["agent"], "arrive", -16, 0.3, degree=4), cue(AT["type"][0], "typing", -22, -0.1, dur=round((AT["type"][1] - AT["type"][0]) * BAR, 2)), cue(AT["reply"], "press", -15)]
-cues += [cue(AT["email"], "air", -15, -0.6, dur=0.3), cue(AT["body"][0], "typing", -22, -0.2, dur=round((AT["body"][1] - AT["body"][0]) * BAR, 2)), cue(AT["sent"], "logo_sting", -14)]
-cues += [cue(AT["close"], "sub_drop", -10), cue(AT["close"], "arrive", -16, degree=0)]
+# only soft, low sounds: the score carries the hits (no bells, ticks or chimes)
+cues = [cue(0.12, "air", -20, 0.6, dur=0.4), cue(AT["land"], "press", -17)]
+cues += [cue(c, "key_tap", -24, 0.2) for c in AT["signals"]]
+cues += [cue(AT["move"], "air", -20, 0.5, dur=0.4)]
+cues += [cue(AT["agent"], "press", -18, 0.3), cue(AT["type"][0], "typing", -24, -0.1, dur=round((AT["type"][1] - AT["type"][0]) * BAR, 2)), cue(AT["reply"], "press", -17)]
+cues += [cue(AT["email"], "air", -18, -0.6, dur=0.3), cue(AT["body"][0], "typing", -24, -0.2, dur=round((AT["body"][1] - AT["body"][0]) * BAR, 2))]
+cues += [cue(AT["close"], "sub_drop", -12)]
 os.makedirs("sfx", exist_ok=True)
 json.dump({"duration": round(END + 1, 3), "key": "F", "cues": cues}, open("sfx/cues.json", "w"), indent=1)
 subprocess.run([PY, os.path.join(REPO, "skills/launch-sound/scripts/sfx_forge.py"), "render", "sfx/cues.json", "sfx/sfx.wav"], check=True)

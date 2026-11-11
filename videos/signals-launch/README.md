@@ -11,5 +11,5 @@ A 28.6 s launch film for Signals, made from the [`swiss-grid`](../../templates/s
 | Story | [`BRIEF.md`](BRIEF.md), [`STORYBOARD.md`](STORYBOARD.md) |
 | Data | `film.json`: every word and every time (`at`, in bars): headlines, the visitor (`visitor.logo` in `media/`), the pricing page, the five signals, the agent's widget and message and the email (`[key]phrase[/key]` marks a personalization token), the close |
 | Look | `template.html`: the page, the cursor and its tag with the signals, the widget, the email and the camera (`shots()`); `draw(t)` sets every frame |
-| Sound | `score.py` (synthesised UK house: kick, pump, chords, sub, vocal-like chops; cued from `at`), `audio.py` (cues, the mix, the mux) |
+| Sound | `score.py` (synthesised deep house: kick and pump, rolling bassline, dark electric-piano stabs, soft hats; cued from `at`), `audio.py` (cues, the mix, the mux) |
 | Render | `./render.sh` -> `renders/signals-launch.mp4` |
