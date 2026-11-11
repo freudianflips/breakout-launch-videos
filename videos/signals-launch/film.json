@@ -1,0 +1,168 @@
+{
+  "about": "Signals launch, from the dot-matrix template: a visit is a pink bloom on the indigo dot grid; signals are live particle motifs borrowed from the signals library art (assets/refs/signals). Words verbatim from the Signals launch email (Sachin, 2026-11) and getbreakout.ai/signals (saved 2026-11-11). Times in bars at 128 BPM (1 bar = 1.875 s).",
+  "bpm": 128,
+  "bars": 21.5,
+  "brand": "../../brand",
+  "source": "Signals launch email; getbreakout.ai/signals",
+  "at": {
+    "q": [
+      0.5,
+      1.25,
+      2.0,
+      2.75
+    ],
+    "turn": 3.5,
+    "two": 5,
+    "sort": 7,
+    "lib": 9,
+    "hot": 10.5,
+    "rep": 12,
+    "agent": 13.75,
+    "run": 15.5,
+    "same": 16.75,
+    "close": 18,
+    "end": 21.5
+  },
+  "questions": [
+    {
+      "text": "Did they raise a round recently?",
+      "motif": "funding"
+    },
+    {
+      "text": "Did they hire a new VP Sales?",
+      "motif": "people"
+    },
+    {
+      "text": "Are they scaling their SDR team?",
+      "motif": "hiring"
+    },
+    {
+      "text": "Are they comparing you to a competitor on G2?",
+      "motif": "intent"
+    }
+  ],
+  "captions": [
+    {
+      "at": 3.5,
+      "until": 5,
+      "text": "Now it also tells you what just changed at that company."
+    },
+    {
+      "at": 5,
+      "until": 7,
+      "text": "A pricing-page visit is good..."
+    },
+    {
+      "at": 7,
+      "until": 9,
+      "text": "Signals shows you which is which."
+    },
+    {
+      "at": 9,
+      "until": 10.5,
+      "text": "Every visit is backed by 35+ signals"
+    },
+    {
+      "at": 10.5,
+      "until": 12,
+      "text": "Know which visits to drop everything for"
+    },
+    {
+      "at": 12,
+      "until": 13.75,
+      "text": "Reps get the signal with the hook already found."
+    },
+    {
+      "at": 13.75,
+      "until": 15.5,
+      "text": "The agent picks it up in the conversation or the follow-up email."
+    },
+    {
+      "at": 15.5,
+      "until": 16.75,
+      "text": "Works with what you already run"
+    },
+    {
+      "at": 16.75,
+      "until": 18,
+      "text": "Breakout puts them on the same account."
+    }
+  ],
+  "which": [
+    {
+      "motif": "funding",
+      "label": "Funding round announced"
+    },
+    {
+      "motif": "people",
+      "label": "Past champion joins a tracked account"
+    }
+  ],
+  "library": [
+    {
+      "img": "deanon.jpg",
+      "name": "Website de-anonymization"
+    },
+    {
+      "img": "intent.jpg",
+      "name": "Third-party intent"
+    },
+    {
+      "img": "research.jpg",
+      "name": "AI account research"
+    },
+    {
+      "img": "people.jpg",
+      "name": "People & job movement"
+    },
+    {
+      "img": "hiring.jpg",
+      "name": "Hiring & headcount"
+    },
+    {
+      "img": "funding.jpg",
+      "name": "Funding & corporate events"
+    },
+    {
+      "img": "techno.jpg",
+      "name": "Technographic"
+    },
+    {
+      "img": "web.jpg",
+      "name": "Web & digital footprint"
+    },
+    {
+      "img": "social.jpg",
+      "name": "Social activity"
+    },
+    {
+      "img": "relationship.jpg",
+      "name": "Relationship & network"
+    }
+  ],
+  "library_dir": "../../assets/refs/signals",
+  "streams": [
+    "Clay columns",
+    "G2 data",
+    "Bombora intent"
+  ],
+  "colors": {
+    "ground": "#1a1534",
+    "dot": "#2e2758",
+    "visitor": "#ff5ad1",
+    "breakout": "#7b4dff",
+    "rep": "#68e6ff",
+    "particle": "#9a95ff",
+    "hot": "#ffffff"
+  },
+  "lockup": {
+    "line": "Every buying signal, in one place.",
+    "url": "getbreakout.ai/signals"
+  },
+  "music": {
+    "file": "score/score.wav",
+    "make": "score.py",
+    "gain_db": -1,
+    "fade_out": 1.0
+  }
+}

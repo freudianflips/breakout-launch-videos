@@ -6,8 +6,8 @@ aspect: 1920x1080
 language: en
 length: about 40s
 angle: Two pricing-page visits look the same until Signals shows which one matters right now
-template: proposed dot-matrix (same world as the full-suite film), to confirm with the owner
-status: draft storyline, awaiting the owner's approval
+template: dot-matrix
+status: storyline approved by the owner on 2026-11-11 ("ok create it. borrow imagery from https://getbreakout.ai/signals for signals")
 ---
 
 ## Intent
@@ -21,10 +21,10 @@ Launch Signals: Breakout already knows who is on the site and which company they
 
 ## The world
 
-The dot grid from the full-suite film: the visitor is a pink bloom, Breakout violet, the rep cyan. New here: **a signal is a white dot that snaps into orbit around a visitor**; the more signals, the brighter and bigger the visitor burns. No UI, no people.
+The dot grid from the full-suite film, re-coloured to the signals library's deep indigo (`#1a1534`): the visitor is a pink bloom, Breakout violet, the rep cyan. **Signals borrow the library's imagery** (owner): the four in the hook are live particle versions of its art (the funding peak, the people trail, the hiring rings, the intent arcs), and the "35+" beat shows the ten library illustrations themselves (`assets/refs/signals/`), each with its family name. No UI, no people.
 
-## Open questions
+## Decisions taken without an answer yet (flagged to the owner)
 
-1. Template: dot-matrix (recommended, abstract and consistent with full-suite) or swiss-grid (approved; would show the real Signals UI, which needs real, blurred screens we do not have yet in `assets/screens/`).
-2. Clay, G2 and Bombora appear as words only, quoted from the email, never their logos. OK?
-3. The end card: the library headline "Every buying signal, in one place." with getbreakout.ai/signals, or the email's ask ("Book a 30-minute walkthrough")?
+1. Template: dot-matrix, as recommended.
+2. Clay, G2 and Bombora appear as words only, quoted from the email, never their logos.
+3. The end card: the library headline "Every buying signal, in one place." with getbreakout.ai/signals.
