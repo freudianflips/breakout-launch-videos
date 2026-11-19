@@ -42,3 +42,4 @@ __pycache__/
 scripts/private-terms.txt
 /docs/styles/*/renders/
 /docs/styles/*/snapshots/
+/videos/*/music/
