@@ -127,6 +127,10 @@
         .word, #idx, #tc, #disc, #elabels { display: none !important; }
         #cam .card { left: 620px; }
         #cam #c-bk { left: 510px; }
+        .alogo { width: 40px; height: 40px; border-radius: 9px; background: #fff; overflow: hidden; flex: none; display: inline-flex; }
+        .alogo img { width: 40px; height: 40px; }
+        .ulx { position: relative; }
+        .ul { position: absolute; left: 0; right: 0; bottom: -6px; height: 3px; border-radius: 2px; background: #8b7cf6; transform-origin: 0 50%; transform: scaleX(0); }
       </style>
       <div id="root" data-composition-id="signal" data-width="1920" data-height="1080">
         <div id="gridH"></div><div id="gridV"></div>
@@ -271,12 +275,22 @@
 
           var cam = one("#cam");
           // [bar, focus rect in layout px, scale]: holds push in slowly, moves glide between cards
-          var CAMK = [[2.0, [620, 176, 680, 132], 1.5], [2.45, [620, 176, 680, 132], 1.58], [2.7, [620, 326, 680, 360], 1.38], [2.95, [620, 470, 680, 200], 1.68], [3.95, [620, 470, 680, 200], 1.74],
+          var CAMK = [[2.0, [620, 176, 680, 132], 1.5], [2.45, [620, 176, 680, 132], 1.58], [2.7, [620, 326, 680, 360], 1.38], [2.78, "big", 2.1], [2.97, "big", 2.18], [3.03, 0, 2.7], [3.22, 0, 2.78],
+                      [3.28, 1, 2.7], [3.47, 1, 2.78], [3.55, "rows", 1.72], [3.95, "rows", 1.78],
                       [4.2, [620, 716, 680, 232], 1.55], [5.5, [620, 716, 680, 232], 1.63], [5.95, [0, 0, 1920, 1080], 1.0]];
+          // a camera target: a rect, or a part of the account card ("big" = the account line, 0..2 = a row, "rows" = all three)
+          function box(el) { var x = 0, y = 0, e = el; while (e && e !== cam) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; } return [x, y, el.offsetWidth, el.offsetHeight]; }
+          function rectOf(r) {
+            if (Array.isArray(r)) return r;
+            if (r === "big") return box(accLine);
+            var rs = all("#c-acc .sig");
+            if (r === "rows") { var a = box(rs[0]), c = box(rs[rs.length - 1]); return [a[0], a[1], a[2], c[1] + c[3] - a[1]]; }
+            return box(rs[r]);
+          }
           var PAIR = [-420, 0, 1];                                 // bars 6 to 8: the cards and the email side by side, centred together
           function camAt(t) {
             var b = t / BAR, k = CAMK;
-            function m(r, sc) { var cx = r[0] + r[2] / 2, cy = r[1] + r[3] / 2; return sc === 1 ? [0, 0, 1] : [960 - cx * sc, 560 - cy * sc, sc]; }
+            function m(r, sc) { r = rectOf(r); var cx = r[0] + r[2] / 2, cy = r[1] + r[3] / 2; return sc === 1 ? [0, 0, 1] : [960 - cx * sc, 560 - cy * sc, sc]; }
             if (b < k[0][0]) return [0, 0, 1];
             if (b >= 6) return b < 8 ? PAIR : [0, 0, 1];
             for (var i = 0; i < k.length - 1; i++) if (b < k[i + 1][0]) {
@@ -291,8 +305,18 @@
 
           var drv = { t: 0 };
           // the slowed stretch: real time -> the template's time (T.warp, in bars)
-          var WP = T.warp || { from: 0, to: 0, factor: 1 }, W0 = WP.from * BAR, W1 = WP.to * BAR, WK = WP.factor, EXTRA = (W1 - W0) * (WK - 1);
-          function warp(r) { return r < W0 ? r : r < W0 + (W1 - W0) * WK ? W0 + (r - W0) / WK : r - EXTRA; }
+          var SEG = (T.warp && T.warp.segments) || [], EXTRA = 0;
+          SEG.forEach(function (g) { EXTRA += (g[1] - g[0]) * (g[2] - 1) * BAR; });
+          function warp(r) {                                       // real time -> template time, segment by segment
+            var shift = 0;
+            for (var i = 0; i < SEG.length; i++) {
+              var a = SEG[i][0] * BAR + shift, len = (SEG[i][1] - SEG[i][0]) * BAR, k = SEG[i][2];
+              if (r < a) return r - shift;
+              if (r < a + len * k) return SEG[i][0] * BAR + (r - a) / k;
+              shift += len * (k - 1);
+            }
+            return r - shift;
+          }
           var REAL_END = END + EXTRA;
           function render() {
             try { draw(warp(drv.t)); }
@@ -318,6 +342,8 @@
             // 02 / Play: the agent reads the account, card by card, then thinks
             var c = camAt(t);
             cam.style.transform = "translate(" + c[0].toFixed(2) + "px," + c[1].toFixed(2) + "px) scale(" + c[2].toFixed(4) + ")";
+            var ulu = io((t - B(2.8)) / (B(2.93) - B(2.8)));
+            one("#c-acc .ul").style.transform = "scaleX(" + ulu.toFixed(3) + ")";
             if (on(t, 6, 8)) measure();   // measured live, after this frame's camera: fonts and layout are settled by then
             snap(cRun, t, 2, 8); snap(cAcc, t, 2.5, 8);
             runChip.classList.toggle("on", t >= B(2.25));

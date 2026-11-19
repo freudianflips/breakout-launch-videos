@@ -18,8 +18,8 @@ FILM = json.load(open("film.json"))
 BRAND_DIR = os.path.normpath(os.path.join(HERE, FILM.get("brand", "../../brand")))
 BRAND = json.load(open(os.path.join(BRAND_DIR, "brand.json")))
 BAR = 240 / FILM["bpm"]
-W = FILM.get("warp", {"from": 0, "to": 0, "factor": 1})
-END = (FILM["bars"] + (W["to"] - W["from"]) * (W["factor"] - 1)) * BAR   # real length, with the slowed stretch
+W = FILM.get("warp", {"segments": []})
+END = (FILM["bars"] + sum((b - a) * (k - 1) for a, b, k in W["segments"])) * BAR   # real length, with the slowed stretches
 E = html.escape
 
 # ------------------------------------------------------------------ assets
@@ -36,6 +36,8 @@ for role in ("display", "body", "mono"):
                      f'font-weight: {face["weight"]}; font-style: {face.get("style", "normal")}; }}')
 for k in ("file", "mark_on_dark"):
     shutil.copy(os.path.join(BRAND_DIR, BRAND["logo"][k]), f"{A}/{os.path.basename(BRAND['logo'][k])}")
+if FILM["agent"]["account"].get("logo"):
+    shutil.copy(FILM["agent"]["account"]["logo"], f"{A}/{os.path.basename(FILM['agent']['account']['logo'])}")
 gsap = os.path.join(HERE, "..", "..", "node_modules", "gsap", "dist", "gsap.min.js")
 GSAP = "https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
 if os.path.exists(gsap):
@@ -84,8 +86,9 @@ card_run = (f'<div class="card" id="c-run">{head(MARK, run["title"], run["time"]
 acc = ag["account"]
 rows = "".join(f'<div class="rw sig" data-act="{1 if tag == "Act" else 0}">{ICON[ic]}<span class="tx">{E(text)}</span>'
                f'<span class="pill {"act" if tag == "Act" else "no"}">{E(tag)}</span></div>' for ic, text, tag in acc["rows"])
+acc_icon = (f'<span class="alogo"><img src="{A}/{os.path.basename(acc["logo"])}" alt=""></span>' if acc.get("logo") else ICON["building"])
 card_acc = (f'<div class="card" id="c-acc">{head(MARK, acc["title"], acc["time"])}'
-            f'<div class="rw big">{ICON["building"]}<div><div class="tx">{E(acc["line"])}</div><div class="sub">{E(acc["sub"])}</div></div></div>'
+            f'<div class="rw big">{acc_icon}<div><div class="tx"><span class="ulx">{E(acc["line"])}<i class="ul"></i></span></div><div class="sub">{E(acc["sub"])}</div></div></div>'
             f'<div class="sep"></div>{rows}</div>')
 th = ag["think"]
 people = "".join(f'<span class="pill no">{E(p)}</span>' for p in th["people"])

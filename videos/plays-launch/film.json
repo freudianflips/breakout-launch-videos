@@ -44,7 +44,8 @@
           "Pricing page viewed 3\u00d7",
           "Act"
         ]
-      ]
+      ],
+      "logo": "media/account-mark.png"
     },
     "think": {
       "title": "Breakout",
@@ -427,9 +428,18 @@
     "note": "Dana \u00b7 CFO, and 2 more from Notion"
   },
   "warp": {
-    "from": 3.0,
-    "to": 4.0,
-    "factor": 2.0,
-    "why": "the detected changes (New CFO hired, Pricing page viewed 3x) play at half speed under a closer camera; one extra bar keeps later cuts on the song's downbeats"
+    "segments": [
+      [
+        2.7,
+        3.0,
+        3.0
+      ],
+      [
+        3.0,
+        4.0,
+        2.4
+      ]
+    ],
+    "why": "hold on the account line (logo, underline), then each detected change in turn (2 blog views, New CFO hired, Pricing page viewed 3x) under its own zoom; two extra bars in all, so later cuts stay on the song's downbeats"
   }
 }
