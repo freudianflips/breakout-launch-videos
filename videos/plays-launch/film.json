@@ -101,10 +101,10 @@
   "music": {
     "file": "score/after-that.wav",
     "source": "music/after-that.mp3",
-    "offset": 209.786,
+    "offset": 0.249,
     "gain_db": -3,
     "fade_out": 2.5,
-    "note": "Sebastien Leger, 'After That (Original Mix)', supplied by the owner; 126 BPM, the drop (213.595 s) lands on bar 2. Commercial track: internal review only until licensed (docs/rights.md). Not committed (music/ is git-ignored)."
+    "note": "Sebastien Leger, 'After That (Original Mix)', supplied by the owner; 126 BPM; played from its first beat (0.249 s), on the film's bar 0. Commercial track: internal review only until licensed (docs/rights.md). Not committed (music/ is git-ignored)."
   },
   "sfx": [
     {

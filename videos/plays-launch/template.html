@@ -123,6 +123,10 @@
         .card .rw.sig, .card .rw.big { transition: none; }
         .card .row-hide { opacity: 0; }
         #flash { position: absolute; inset: 0; background: var(--ink); opacity: 0; }
+        /* just the cards: no words beside them, no index, timecode, disclaimer or email labels */
+        .word, #idx, #tc, #disc, #elabels { display: none !important; }
+        #cam .card { left: 620px; }
+        #cam #c-bk { left: 510px; }
       </style>
       <div id="root" data-composition-id="signal" data-width="1920" data-height="1080">
         <div id="gridH"></div><div id="gridV"></div>
@@ -267,14 +271,16 @@
 
           var cam = one("#cam");
           // [bar, focus rect in layout px, scale]: holds push in slowly, moves glide between cards
-          var CAMK = [[2.0, [160, 176, 680, 132], 1.5], [2.45, [160, 176, 680, 132], 1.58], [2.7, [160, 326, 680, 360], 1.38], [2.95, [160, 470, 680, 200], 1.68], [3.95, [160, 470, 680, 200], 1.74],
-                      [4.2, [160, 716, 680, 232], 1.55], [5.5, [160, 716, 680, 232], 1.63], [5.95, [0, 0, 1920, 1080], 1.0]];
+          var CAMK = [[2.0, [620, 176, 680, 132], 1.5], [2.45, [620, 176, 680, 132], 1.58], [2.7, [620, 326, 680, 360], 1.38], [2.95, [620, 470, 680, 200], 1.68], [3.95, [620, 470, 680, 200], 1.74],
+                      [4.2, [620, 716, 680, 232], 1.55], [5.5, [620, 716, 680, 232], 1.63], [5.95, [0, 0, 1920, 1080], 1.0]];
+          var PAIR = [-420, 0, 1];                                 // bars 6 to 8: the cards and the email side by side, centred together
           function camAt(t) {
             var b = t / BAR, k = CAMK;
-            function m(r, sc) { var cx = r[0] + r[2] / 2, cy = r[1] + r[3] / 2; return sc === 1 ? [0, 0, 1] : [(sc > 1.6 ? 615 : 650) - cx * sc, 560 - cy * sc, sc]; }
-            if (b < k[0][0] || b >= 6) return [0, 0, 1];
+            function m(r, sc) { var cx = r[0] + r[2] / 2, cy = r[1] + r[3] / 2; return sc === 1 ? [0, 0, 1] : [960 - cx * sc, 560 - cy * sc, sc]; }
+            if (b < k[0][0]) return [0, 0, 1];
+            if (b >= 6) return b < 8 ? PAIR : [0, 0, 1];
             for (var i = 0; i < k.length - 1; i++) if (b < k[i + 1][0]) {
-              var u = io((b - k[i][0]) / (k[i + 1][0] - k[i][0])), a = m(k[i][1], k[i][2]), c = m(k[i + 1][1], k[i + 1][2]);
+              var u = io((b - k[i][0]) / (k[i + 1][0] - k[i][0])), a = m(k[i][1], k[i][2]), c = i + 1 === k.length - 1 ? PAIR : m(k[i + 1][1], k[i + 1][2]);
               return [a[0] + (c[0] - a[0]) * u, a[1] + (c[1] - a[1]) * u, a[2] + (c[2] - a[2]) * u];
             }
             return [0, 0, 1];
@@ -293,7 +299,6 @@
             catch (e) { var d = one("#err"); d.textContent = "t=" + drv.t.toFixed(2) + " " + e.message + " | " + (e.stack || "").split("\n").slice(0, 3).join(" / "); d.style.display = "block"; }
           }
           function draw(t) {
-            if (on(t, 6, 8)) measure();   // measured live: fonts and layout are settled by then
             grid(t); index(t);
             var f = Math.floor(t * 30);
             tc.textContent = "00:00:" + pad(Math.floor(f / 30)) + ":" + pad(f % 30);
@@ -313,6 +318,7 @@
             // 02 / Play: the agent reads the account, card by card, then thinks
             var c = camAt(t);
             cam.style.transform = "translate(" + c[0].toFixed(2) + "px," + c[1].toFixed(2) + "px) scale(" + c[2].toFixed(4) + ")";
+            if (on(t, 6, 8)) measure();   // measured live, after this frame's camera: fonts and layout are settled by then
             snap(cRun, t, 2, 8); snap(cAcc, t, 2.5, 8);
             runChip.classList.toggle("on", t >= B(2.25));
             accLine.style.opacity = t >= B(2.62) ? 1 : 0;
